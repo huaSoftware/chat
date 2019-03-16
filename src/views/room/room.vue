@@ -4,8 +4,8 @@
         <div class="content_wapper" ref="bscroll" @touchstart="colseDefIconsShow()">
             <div class="bscroll-container">
                 <ul>
-                    <li v-for="(key, index) in data">
-                        <div class="chat-item" v-if="key.data.uuid == ''">
+                    <li v-for="(key, index) in msgList">
+                        <!-- <div class="chat-item" v-if="key.data.uuid == ''">
                             <div class="otherchat">
                                 <img class="img" src="static/img/head/ni4.jpg" />
                                 <div class="nt">
@@ -13,34 +13,34 @@
                                 </div>
                                 <div class="msg" v-html="key.data.msg"></div>
                             </div>
-                        </div>
-                        <div class="chat-item" v-else-if="key.data.uuid == uuidVal">
+                        </div> -->
+                        <div class="chat-item" v-if="key.id == user.id">
                             <div class="mychat">
-                                <img src="static/img/head/ni2.jpg" alt="" class="img">
+                                <img :src="key.head_img" alt="" class="img">
                                 <div class="nt">
-                                    <span v-html="key.data.name"></span>
+                                    <span v-html="key.name"></span>
                                 </div>
-                                <div v-if="key.data.type == 0" class="msg" @touchstart="amrPlay(key.data.msg, index)">
+                                <div v-if="key.type == 0" class="msg" @touchstart="amrPlay(key.msg, index)">
                                     <img class="vioce_start" style="margin-right:-3px" src="static/img/voice_left.gif"
-                                        :alt="key.data.msg" v-show="key.data.status">
-                                    <i class="vioce_stop_left" v-show="!key.data.status"></i><span class="vioce_second">{{key.data.duration}}s</span>
+                                        :alt="key.msg" v-show="key.status"/>
+                                    <i class="vioce_stop_left" v-show="!key.status"></i><span class="vioce_second">{{key.duration}}s</span>
                                 </div>
-                                <div v-else-if="key.data.type == 1" class="rawMsg" v-html="key.data.msg"></div>
-                                <div v-else class="msg" v-html="key.data.msg"></div>
+                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg"></div>
+                                <div v-else class="msg" v-html="key.msg"></div>
                             </div>
                         </div>
-                        <div class="chat-item" v-else>
+                        <div class="chat-item"  v-else>
                             <div class="otherchat">
-                                <img class="img" src="static/img/head/ni3.jpg" />
+                                <img class="img"  :src="key.head_img" />
                                 <div class="nt">
-                                    <span v-html="key.data.name"></span>
+                                    <span v-html="key.name"></span>
                                 </div>
-                                <div v-if="key.data.type == 0" class="msg" @touchstart="amrPlay(key.data.msg, index)">
-                                    <img class="chat_right vioce_start" src="static/img/voice_right.gif" v-show="key.data.status">
-                                    <i class="vioce_stop_right" v-show="!key.data.status"></i><span class="vioce_second">{{key.data.duration}}s</span>
+                                <div v-if="key.type == 0" class="msg" @touchstart="amrPlay(key.msg, index)">
+                                    <img class="chat_right vioce_start" src="static/img/voice_right.gif" v-show="key.status">
+                                    <i class="vioce_stop_right" v-show="!key.status"></i><span class="vioce_second">{{key.duration}}s</span>
                                 </div>
-                                <div v-else-if="key.data.type == 1" class="rawMsg" v-html="key.data.msg"></div>
-                                <div v-else class="msg" v-html="key.data.msg"></div>
+                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg"></div>
+                                <div v-else class="msg" v-html="key.msg"></div>
                             </div>
                         </div>
                     </li>
@@ -137,25 +137,21 @@
 </template>
 <script>
     import Vue from 'vue'
+    import { mapGetters, mapMutations} from "vuex";
     import vEditDiv from '@/components/v-edit-div/v-edit-div'
     import BScroll from 'better-scroll'
     import VConsole from 'vconsole/dist/vconsole.min.js'
-    import {
-        uploadBase64,
-        uploadFile
-    } from '@/api/common'
+    import {uploadBase64,uploadFile} from '@/api/common'
     import VueCropper from 'vue-cropper'
-    import {
-        mapGetters
-    } from "vuex"
     import utils from '@/utils/utils'
+    import storage from "@/utils/localstorage"
     export default {
         components: {
             vEditDiv,
             VueCropper
         },
         computed: {
-            ...mapGetters(["isPaused"])
+            ...mapGetters(["msgList"])
         },
         data() {
             return {
@@ -195,16 +191,15 @@
                     canMoveBox: false,
                     autoCropHeight: 100,
                     autoCropWidth: 100
-                }
+                },
+                user:{}
             }
         },
         created() {
-            if (typeof this.$route.query !== 'undefined') {
-                window.uuid = this.uuid()
-                window.name = this.getRandomName()
+            this.user = storage.get('user')
+            if(typeof this.$route.query.room_uuid !== 'undefined'){
+                window.uuid = this.$route.query.room_uuid
             }
-            this.uuidVal = window.uuid
-            //new VConsole()
             try {
                 // 扩展API加载完毕后调用onPlusReady回调函数 
                 document.addEventListener("plusready", onPlusReady(), false);
@@ -382,14 +377,14 @@
                 }
             },
             sendMsg() {
-                console.log(this.content)
                 window.roomSocket.emit('chat', {
                     data: {
                         msg: this.content,
-                        name: window.name,
-                        uuid: window.uuid
-                    },
-                    room: 'test'
+                        //name: window.name,
+                        uuid: window.uuid,
+                        user: this.user.id,
+                        type: 1 //1是文字，0是语音
+                    }
                 })
                 document.getElementById('edit').innerHTML = ''
                 this.content = ''
@@ -481,47 +476,6 @@
 
                 var uuid = s.join("");
                 return uuid;
-            },
-            getRandomName() {
-                var firstNames = new Array(
-                    '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈',
-
-                    '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许',
-                    '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏',
-
-                    '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章',
-                    '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦',
-
-                    '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳',
-                    '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺',
-
-                    '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常',
-                    '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余',
-
-                    '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹',
-                    '阳', '容'
-                );
-                var secondNames = new Array(
-                    '璇', '淼', '栋', '子', '堂', '甜', '敏', '尚', '贤', '祥', '涛',
-                    '轩', '轩', '辰', '帆', '冉', '春', '昆', '齐', '杨', '昊',
-                    '东', '霖', '晨', '涵', '溶', '枫', '欣', '豪', '慧', '政',
-                    '欣', '慧', '轩', '杰', '源', '林', '润', '汝', '嘉', '建',
-                    '林', '菲', '林', '洁', '欣', '涵', '辰', '美', '惠', '洋',
-                    '越', '丽', '翔', '华', '莹', '晶', '溪', '涵', '怡', '毅',
-                    '辰', '琪', '轩', '辰', '蕊', '萌', '远', '宜', '远', '怡',
-                    '怡', '惠', '茜', '璐', '昊', '鑫', '君', '滢', '莎', '汕',
-                    '钰', '玉', '庆', '鸣', '晨', '池', '昊', '泽', '晗', '涵',
-                    '妍', '悦', '乐', '涵', '赫', '傲', '昊', '昊', '萌', '萌'
-                );
-
-                var firstLength = firstNames.length;
-                var secondLength = secondNames.length;
-
-                var i = parseInt(Math.random() * firstLength);
-                var j = parseInt(Math.random() * secondLength);
-
-                var name = firstNames[i] + secondNames[j];
-                return name;
             },
             // 录音开始
             startRecord() {

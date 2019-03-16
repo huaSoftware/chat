@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addAddressBookBeg} from "@/utils/indexedDB"
@@ -58,7 +58,7 @@ export default {
         this.$router.push({
           name: 'room',
           query:{
-            room_uuid: data.room_uuid
+            room_uuid: data.data.room_uuid
           }
         })
       }else{
@@ -71,15 +71,27 @@ export default {
     });		
     ///监听回复的消息
     window.roomSocket.on('chat',(data)=>{
-      //逻辑处理
+      //逻辑处理,存放indexdDB,存放一份实时的在vuex
+      let msgList = []
+      console.log(this.msgList)
+      Object.assign(msgList, this.msgList)
+      msgList = msgList.concat(data.data)
+      this.updateMsgList(msgList)
+      //console.log(this.msgList)
     });
 
   },
   mounted() {
   },
-  methods: {},
+  methods: {
+    ...mapMutations({
+      updateMsgList:'updateMsgList'
+    })
+  },
   watch: {},
-  computed: {},
+  computed: {
+    ...mapGetters(["msgList"])
+  },
   data() {
     return {
       footerMenu: [

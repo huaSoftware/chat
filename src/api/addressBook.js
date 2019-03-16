@@ -17,3 +17,12 @@ export function addressBookGet(data){
         data
     })
 }
+
+// 发送添加好友请求
+export function addressBookBeg(data){
+    return request({
+        url: '/api/v2/addressBook/beg',
+        method: 'post',
+        data
+    })
+}

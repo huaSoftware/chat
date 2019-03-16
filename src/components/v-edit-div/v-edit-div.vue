@@ -5,7 +5,7 @@
          @focus="isLocked = true"
          @blur="isLocked = false"
          @input="changeText"
-         @keyup.enter.stop="addBr($event)"
+        
         >
     </div>
 </template>

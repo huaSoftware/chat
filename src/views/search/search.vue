@@ -21,7 +21,7 @@
 
 <script type="text/babel">
     import {search} from '@/api/search'
-    import {addressBookAdd} from '@/api/addressBook'
+    import {addressBookBeg} from '@/api/addressBook'
     import storage from "@/utils/localstorage"
     import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
     export default {
@@ -51,9 +51,13 @@
                 //this.$dialog.toast({mes: `搜索：${value}`});
             },
             handleAddAddressBook(item){
-                addressBookAdd({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
+                //发送好友申请
+                addressBookBeg({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
                     Toast({mes: res.msg})
                 })
+                /* addressBookAdd({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
+                    Toast({mes: res.msg})
+                }) */
             }
         },
         watch: {
