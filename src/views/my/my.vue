@@ -23,6 +23,8 @@
         <CrossItem name="设置" :borderBot="false" @click.native="$router.push({name: 'mySet'})">
             <span class="icon-custom-shezhi2 font18 icon_style"></span>
         </CrossItem>
+        <CrossLine ></CrossLine>
+        <yd-button size="large" bgcolor="#ffffff" color="#000000" @click.native="handleExit">退出登录</yd-button>
     </div>
 </template>
 <script>
@@ -37,7 +39,13 @@ export default {
         }
     },
     methods: {
-
+        handleExit(){
+                window.localStorage.clear();
+                this.$store.commit('SET_TOKEN', '')
+                setTimeout(() => {
+                    this.$router.push({ name: "authLogin" });
+                }, 100);
+            },
     },
     created() {
 

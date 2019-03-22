@@ -377,12 +377,13 @@
                 }
             },
             sendMsg() {
+                console.log(this.user)
                 window.roomSocket.emit('chat', {
                     data: {
                         msg: this.content,
                         //name: window.name,
                         uuid: window.uuid,
-                        user: this.user.id,
+                        userId: this.user.id,
                         type: 1 //1是文字，0是语音
                     }
                 })
@@ -406,6 +407,9 @@
                 } else {
                     this.sendShow = false
                 }
+
+            },
+            handleMsgListToBottom(){
                 this.$nextTick(() => {
                     if (!this.scroll) {
                         this.scroll = new BScroll(this.$refs.bscroll, {
@@ -586,7 +590,8 @@
         watch: {
             //监听聊天数据变动
             'content': 'handleSendShow',
-            'data': 'handleSendShow'
+            'data': 'handleSendShow',
+            'msgList': 'handleMsgListToBottom'
         },
     }
 </script>
@@ -596,6 +601,7 @@
         width: 100%;
         position: fixed;
         bottom: 0px;
+        z-index:2;
     }
 
     .voice {
@@ -714,7 +720,7 @@
         width: 100%;
         padding-left: 12px;
         padding-right: 12px;
-        padding-bottom: 54px;
+        padding-bottom: 74px;
         padding-top: 20px;
     }
 
@@ -734,12 +740,12 @@
         height: 0px;
     }
 
-    .chat-item .otherchat {
+    .chat-item .mychat {
         width: 100%;
         position: relative;
     }
 
-    .chat-item .otherchat .img {
+    .chat-item .mychat .img {
         width: 39px;
         height: 39px;
         border-radius: 50%;
@@ -751,7 +757,7 @@
         cursor: pointer;
     }
 
-    .chat-item .otherchat .nt {
+    .chat-item .mychat .nt {
         font-size: 12px;
         left: 50px;
         top: -26px;
@@ -759,15 +765,15 @@
         color: #686868;
     }
 
-    .chat-item .otherchat .nt span {
+    .chat-item .mychat .nt span {
         padding-right: .3rem;
     }
 
-    .chat-item .otherchat .nt span:nth-child(2) {
+    .chat-item .mychat .nt span:nth-child(2) {
         font-size: 12px;
     }
 
-    .chat-item .otherchat .msg {
+    .chat-item .mychat .msg {
         float: left;
         min-height: 21px;
         max-width: 60% !important;
@@ -779,29 +785,43 @@
         background-color: #fff;
     }
 
-    .chat-item .otherchat .rawMsg {
+    .chat-item .mychat .rawMsg {
         float: left;
         min-height: 21px;
         max-width: 60% !important;
-        margin-left: 50px;
+        margin-left: 45px;
         padding: 6px;
         border-radius: 8px;
         font-size: 14px;
         /* line-height: 2.34rem; */
-        /* background-color: #fff; */
+        background-color: rgb(238, 238, 238);
+        position: relative;
+        top: 5px;
     }
-
+    .mychat .rawMsg::before{
+        content: "";
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        font-size: 0;
+        line-height: 0;
+        border-width: 10px;
+        border-style: solid dashed dashed dashed;
+        border-color: transparent transparent rgb(238, 238, 238) transparent;
+        position: absolute;
+        top: -15px;
+        left: 0px;
+    }
     /* my */
-    .chat-item .mychat {
+    .chat-item .otherchat {
         width: 100%;
         position: relative;
     }
 
-    .chat-item .mychat .img {
+    .chat-item .otherchat .img {
         width: 39px;
         height: 39px;
         border-radius: 50%;
-        right: 0;
         position: absolute;
         top: 50%;
         right: 4px;
@@ -809,7 +829,7 @@
         transform: translateY(-50%);
     }
 
-    .chat-item .mychat .nt {
+    .chat-item .otherchat .nt {
         font-size: 12px;
         right: 50px;
         top: -26px;
@@ -817,7 +837,7 @@
         color: #686868;
     }
 
-    .chat-item .mychat .msg {
+    .chat-item .otherchat .msg {
         float: right;
         max-width: 60%;
         margin-right: 50px;
@@ -829,16 +849,33 @@
         word-wrap: break-word;
     }
 
-    .chat-item .mychat .rawMsg {
+    .chat-item .otherchat .rawMsg {
         float: right;
         max-width: 60%;
         margin-right: 50px;
         padding: 6px;
         border-radius: 8px;
         font-size: 14px;
-        /*  background-color: #b2e281; */
+         background-color: #b2e281;
         color: #fff;
         word-wrap: break-word;
+        position: relative;
+        top: 5px;
+    }
+
+    .otherchat .rawMsg::before{
+        content: "";
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        font-size: 0;
+        line-height: 0;
+        border-width: 10px;
+        border-style: solid dashed dashed dashed;
+        border-color: transparent transparent #b2e281 transparent;
+        position: absolute;
+        top: -15px;
+        right: 0px;
     }
 
     /* 声音 */
