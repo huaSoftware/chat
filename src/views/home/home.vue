@@ -2,107 +2,16 @@
 <template>
 	<div class="content">
 		<article class="yd-list yd-list-theme4">
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
+			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList">
+				<div class="yd-list-img"><img :src="item.users.head_img"></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
+						<span class="title-left">{{item.users.nick_name}}</span>
+						<span class="title-right">{{formatTime(item.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
-					</div>
-				</div>
-			</a>
-			<a href="javascript:;" class="yd-list-item">
-				<div class="yd-list-img"><img src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg"></div>
-				<div class="yd-list-mes">
-					<div class="yd-list-title">
-						<span class="title-left">名字名字名字名字名字名字</span>
-						<span class="title-right">下午4:26</span>
-					</div>
-					<div class="yd-list-other">
-						<div><span class="demo-list-price">留言留言留言留言留言留言</span></div>
-						<div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div>
+						<div><span class="demo-list-price">{{item.last_msg}}</span></div>
+						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
 					</div>
 				</div>
 			</a>
@@ -111,26 +20,50 @@
 </template>
 <script>
 	import {
-		mapGetters
+		mapGetters, mapMutations
 	} from 'vuex'
+	import utils from '@/utils/utils'
+	import {roomGet} from '@/api/room'
 
 	export default {
 		components: {},
-		name: 'app',
+		name: 'home',
 		data() {
 			return {
 			}
 		},
 		computed: {
 			...mapGetters([
-				'navbarTitle'
+				'navbarTitle',
+				"roomList"
 			])
 		},
 		methods: {
-
+			...mapMutations({
+				updateRoomList: 'updateRoomList'
+			}),
+			init(){
+				roomGet({page_no:1, per_page:100000000}).then(res=>{
+					this.updateRoomList(res.data.roomList)
+				})
+			},
+			handleJoinRoom(item){
+				window.roomSocket.emit('join',{
+					name: item.users.nick_name,
+					unread_number: 0,
+					be_unread_number: 0,
+					last_msg: '',
+					be_focused_user_id: item.be_focused_user_id,
+					focused_user_id: item.focused_user_id,
+					is_alert: 0
+				})
+			},
+			formatTime(value){
+				return utils.time.formatDate(value, 'hh:mm:ss')
+			}
 		},
 		created() {
-
+			this.init()
 		},
 		mounted() {}
 	}

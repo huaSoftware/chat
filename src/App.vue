@@ -36,7 +36,7 @@ export default {
     let userId = storage.get('user')['id']
     if(userId){
       window.newFriendSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/'+userId);
-      //监听房间状态的消息
+      //监听好友请求
       window.newFriendSocket.on('beg',(data)=>{
         // 复制原来的值
         data['user_id'] = data['id'];
@@ -47,6 +47,21 @@ export default {
         console.log(data)
         this.$dialog.toast({mes: `${data.nick_name}申请加你好友`});
         addAddressBookBeg(data)
+      });
+
+      //监听房间动态消息
+      window.newFriendSocket.on('room',(data)=>{
+        console.log(data)
+        this.updateRoomList(data)
+        /* // 复制原来的值
+        data['user_id'] = data['id'];
+        // 删除原来的键
+        delete data['id'];
+        // 增加状态,0申请，1通过，2拒绝
+        data['status'] = 0
+        console.log(data)
+        this.$dialog.toast({mes: `${data.nick_name}申请加你好友`});
+        addAddressBookBeg(data) */
       });
     }
     // 创建聊天室套接字监听
@@ -85,7 +100,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateMsgList:'updateMsgList'
+      updateMsgList:'updateMsgList',
+      updateRoomList: 'updateRoomList'
     })
   },
   watch: {},
