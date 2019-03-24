@@ -10,7 +10,7 @@
 						<span class="title-right">{{formatTime(item.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
-						<div><span class="demo-list-price">{{item.last_msg}}</span></div>
+						<div><span class="demo-list-price" v-html="item.last_msg">{{item.last_msg}}</span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
 					</div>
 				</div>

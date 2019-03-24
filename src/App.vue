@@ -112,7 +112,7 @@ export default {
     return {
       footerMenu: [
         {
-          icon: "xiaoxi",
+          icon: "xiaox",
           iconActive: "xiaoxi_active",
           name: "消息",
           router: "/home"

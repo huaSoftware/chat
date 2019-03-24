@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?jltqoz');
-  src:  url('fonts/icomoon.eot?jltqoz#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?jltqoz') format('truetype'),
-    url('fonts/icomoon.woff?jltqoz') format('woff'),
-    url('fonts/icomoon.svg?jltqoz#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?53lbkp');
+  src:  url('fonts/icomoon.eot?53lbkp#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?53lbkp') format('truetype'),
+    url('fonts/icomoon.woff?53lbkp') format('woff'),
+    url('fonts/icomoon.svg?53lbkp#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-custom-xiaoxi:before {
+  content: "\e601";
+}
+.icon-custom-xiaoxi_active:before {
+  content: "\e67c";
+}
+.icon-custom-tongxunlu_active:before {
+  content: "\e53d";
+}
+.icon-custom-tongxunlu:before {
+  content: "\e53e";
+}
+.icon-custom-lingsheng:before {
+  content: "\e74c";
+}
+.icon-custom-lingsheng-jingyin:before {
+  content: "\e74d";
+}
 .icon-custom-more:before {
   content: "\e602";
 }
@@ -258,7 +276,7 @@
 .icon-custom-wode:before {
   content: "\e929";
 }
-.icon-custom-wode2:before {
+.icon-custom-wode_active:before {
   content: "\e92a";
 }
 .icon-custom-xuanche:before {
@@ -357,6 +375,12 @@
 .icon-custom-location:before {
   content: "\e94a";
 }
+.icon-custom-404:before {
+  content: "\e94b";
+}
+.icon-custom-1:before {
+  content: "\e94c";
+}
 .icon-custom-dui-01:before {
   content: "\e95a";
 }
@@ -377,10 +401,4 @@
 }
 .icon-custom-xiajiantou:before {
   content: "\f034e";
-}
-.icon-custom-404:before {
-  content: "\e94b";
-}
-.icon-custom-1:before {
-  content: "\e94c";
 }
