@@ -7,11 +7,12 @@
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
 						<span class="title-left">{{item.users.nick_name}}</span>
-						<span class="title-right">{{formatTime(item.updated_at)}}</span>
+						<span class="title-right">{{formatTime(item.room.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
-						<div><span class="demo-list-price" v-html="item.last_msg">{{item.last_msg}}</span></div>
+						<div><span class="demo-list-price" v-html="item.room.last_msg">{{item.room.last_msg}}</span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
+						<div><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
 				</div>
 			</a>
@@ -24,12 +25,14 @@
 	} from 'vuex'
 	import utils from '@/utils/utils'
 	import {roomGet} from '@/api/room'
+	import storage from "@/utils/localstorage"
 
 	export default {
 		components: {},
 		name: 'home',
 		data() {
 			return {
+				user:{}
 			}
 		},
 		computed: {
@@ -43,19 +46,21 @@
 				updateRoomList: 'updateRoomList'
 			}),
 			init(){
+				this.user = storage.get('user')
 				roomGet({page_no:1, per_page:100000000}).then(res=>{
-					this.updateRoomList(res.data.roomList)
+					this.updateRoomList(res.data)
 				})
 			},
 			handleJoinRoom(item){
 				window.roomSocket.emit('join',{
 					name: item.users.nick_name,
-					unread_number: 0,
-					be_unread_number: 0,
-					last_msg: '',
-					be_focused_user_id: item.be_focused_user_id,
-					focused_user_id: item.focused_user_id,
-					is_alert: 0
+					room_uuid: item.room_uuid
+				})
+				this.$router.push({
+					name: 'room',
+					query:{
+						room_uuid: item.room_uuid
+					}
 				})
 			},
 			formatTime(value){

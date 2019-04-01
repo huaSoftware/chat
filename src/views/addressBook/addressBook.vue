@@ -72,9 +72,16 @@ export default {
                 unread_number: 0,
                 be_unread_number: 0,
                 last_msg: '',
+                room_uuid:item.room_uuid,
                 be_focused_user_id: item.be_focused_user_id,
                 focused_user_id: item.focused_user_id,
                 is_alert: 0
+            })
+            this.$router.push({
+                name: 'room',
+                query:{
+                    room_uuid: item.room_uuid
+                }
             })
         }
     },

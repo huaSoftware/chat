@@ -68,17 +68,6 @@ export default {
     window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/room');
     window.roomSocket.on('join',(data)=>{
       //逻辑处理
-      console.log(data)
-      if(data.code == 200){
-        this.$router.push({
-          name: 'room',
-          query:{
-            room_uuid: data.data.room_uuid
-          }
-        })
-      }else{
-        Toast({mes: data.data.msg})
-      }
     });			
     //监听回复的消息
     window.roomSocket.on('leave',(data)=>{
@@ -112,7 +101,7 @@ export default {
     return {
       footerMenu: [
         {
-          icon: "xiaox",
+          icon: "xiaoxi",
           iconActive: "xiaoxi_active",
           name: "消息",
           router: "/home"

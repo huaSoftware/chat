@@ -740,12 +740,12 @@
         height: 0px;
     }
 
-    .chat-item .mychat {
+    .chat-item .otherchat {
         width: 100%;
         position: relative;
     }
 
-    .chat-item .mychat .img {
+    .chat-item .otherchat .img {
         width: 39px;
         height: 39px;
         border-radius: 50%;
@@ -757,7 +757,7 @@
         cursor: pointer;
     }
 
-    .chat-item .mychat .nt {
+    .chat-item .otherchat .nt {
         font-size: 12px;
         left: 50px;
         top: -26px;
@@ -765,15 +765,15 @@
         color: #686868;
     }
 
-    .chat-item .mychat .nt span {
+    .chat-item .otherchat .nt span {
         padding-right: .3rem;
     }
 
-    .chat-item .mychat .nt span:nth-child(2) {
+    .chat-item .otherchat .nt span:nth-child(2) {
         font-size: 12px;
     }
 
-    .chat-item .mychat .msg {
+    .chat-item .otherchat .msg {
         float: left;
         min-height: 21px;
         max-width: 60% !important;
@@ -785,7 +785,7 @@
         background-color: #fff;
     }
 
-    .chat-item .mychat .rawMsg {
+    .chat-item .otherchat .rawMsg {
         float: left;
         min-height: 21px;
         max-width: 60% !important;
@@ -798,7 +798,7 @@
         position: relative;
         top: 5px;
     }
-    .mychat .rawMsg::before{
+    .otherchat .rawMsg::before{
         content: "";
         width: 0;
         height: 0;
@@ -813,12 +813,12 @@
         left: 0px;
     }
     /* my */
-    .chat-item .otherchat {
+    .chat-item .mychat {
         width: 100%;
         position: relative;
     }
 
-    .chat-item .otherchat .img {
+    .chat-item .mychat .img {
         width: 39px;
         height: 39px;
         border-radius: 50%;
@@ -829,7 +829,7 @@
         transform: translateY(-50%);
     }
 
-    .chat-item .otherchat .nt {
+    .chat-item .mychat .nt {
         font-size: 12px;
         right: 50px;
         top: -26px;
@@ -837,7 +837,7 @@
         color: #686868;
     }
 
-    .chat-item .otherchat .msg {
+    .chat-item .mychat .msg {
         float: right;
         max-width: 60%;
         margin-right: 50px;
@@ -849,7 +849,7 @@
         word-wrap: break-word;
     }
 
-    .chat-item .otherchat .rawMsg {
+    .chat-item .mychat .rawMsg {
         float: right;
         max-width: 60%;
         margin-right: 50px;
@@ -863,7 +863,7 @@
         top: 5px;
     }
 
-    .otherchat .rawMsg::before{
+    .mychat .rawMsg::before{
         content: "";
         width: 0;
         height: 0;
