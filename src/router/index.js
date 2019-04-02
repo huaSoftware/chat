@@ -62,6 +62,20 @@ const router = new Router({
       component: _import('my/set/set'), // 载入组件
       meta: { title: '设置', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'my'} // 定义一些公共状态，你喜欢就好
     },
+    // 我的/设置/新消息提醒
+    {
+      path: '/my/set/alert', // 路径
+      name: 'mySetAlert', // 给他个名字，后期路由传参用
+      component: _import('my/set/alert'), // 载入组件
+      meta: { title: '新消息提醒', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'mySet'} // 定义一些公共状态，你喜欢就好
+    },
+    // 我的/设置/关于我们
+    {
+      path: '/my/set/about', // 路径
+      name: 'mySetAbout', // 给他个名字，后期路由传参用
+      component: _import('my/set/about'), // 载入组件
+      meta: { title: '关于我们', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'mySet'} // 定义一些公共状态，你喜欢就好
+    },
     // 新的朋友
     {
       path: '/my/newFriend', // 路径

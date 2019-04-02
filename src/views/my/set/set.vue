@@ -2,19 +2,19 @@
 <template>
     <div class="content">
         <!-- 功能区 -->
-        <CrossItem name="账号和安全" :borderBot="false" :isIcon="false">  
-        </CrossItem>
+        <!-- <CrossItem name="账号和安全" :borderBot="false" :isIcon="false">  
+        </CrossItem> -->
         <CrossLine ></CrossLine>
-        <CrossItem name="新消息提醒" :borderBot="true" :isIcon="false">  
+        <CrossItem name="新消息提醒" :borderBot="true" :isIcon="false" @click.native="$router.push({name: 'mySetAlert'})">  
         </CrossItem>
-        <CrossItem name="关于聊天室" :borderBot="true" :isIcon="false">  
+        <CrossItem name="关于我们" :borderBot="true" :isIcon="false" @click.native="$router.push({name: 'mySetAbout'})">    
         </CrossItem>
-        <CrossItem name="帮助和反馈" :borderBot="true" :isIcon="false">  
-        </CrossItem>
+        <!-- <CrossItem name="帮助和反馈" :borderBot="true" :isIcon="false">  
+        </CrossItem> -->
         <CrossLine ></CrossLine>
-        <CrossItem name="切换账号" :borderBot="true" :isIcon="false">  
+        <CrossItem  @click.native="handleExit" name="切换账号" :borderBot="true" :isIcon="false">  
         </CrossItem>
-        <CrossItem name="退出" :borderBot="true" :isIcon="false">  
+        <CrossItem @click.native="handleExit" name="退出" :borderBot="true" :isIcon="false">  
         </CrossItem>
     </div>
 </template>
@@ -32,6 +32,13 @@ export default {
     methods: {
         go(){
             alert(1)
+        },
+        handleExit(){
+            window.localStorage.clear();
+            this.$store.commit('SET_TOKEN', '')
+            setTimeout(() => {
+                this.$router.push({ name: "authLogin" });
+            }, 100);
         }
     },
     created() {

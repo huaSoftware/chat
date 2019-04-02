@@ -27,7 +27,7 @@
 import { mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {addAddressBookBeg} from "@/utils/indexedDB"
+import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
 export default {
   components: {},
   name: "app",
@@ -81,6 +81,7 @@ export default {
       Object.assign(msgList, this.msgList)
       msgList = msgList.concat(data.data)
       this.updateMsgList(msgList)
+      addRoomMsg(data.data)
       //console.log(this.msgList)
     });
 

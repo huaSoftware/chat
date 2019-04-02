@@ -12,7 +12,7 @@
 					<div class="yd-list-other">
 						<div><span class="demo-list-price" v-html="item.room.last_msg">{{item.room.last_msg}}</span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
-						<div><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
+						<div  v-if="alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
 				</div>
 			</a>
@@ -32,7 +32,8 @@
 		name: 'home',
 		data() {
 			return {
-				user:{}
+				user:{},
+				alert: true
 			}
 		},
 		computed: {
@@ -47,6 +48,7 @@
 			}),
 			init(){
 				this.user = storage.get('user')
+				this.alert = storage.get('alert')
 				roomGet({page_no:1, per_page:100000000}).then(res=>{
 					this.updateRoomList(res.data)
 				})

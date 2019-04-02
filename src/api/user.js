@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 登录接口
 export function login (email, password) {
   return request({
@@ -8,6 +9,14 @@ export function login (email, password) {
       email,
       password
     }
+  })
+}
+
+// 用户信息
+export function userInfo(){
+  return request({
+    url: '/api/v2/user.info',
+    method: 'get'
   })
 }
 

@@ -2,12 +2,12 @@
 <template>
     <div class="content">
         <div class="header_wrapper">
-            <img class="header_img" src="//img1.shikee.com/try/2016/06/23/14381920926024616259.jpg">
+            <img class="header_img" :src="userInfo.head_img">
             <div class="header_name">
-                PYTHON软工
+                {{userInfo.nick_name}}
             </div>
             <div class="header_id">
-                账号：PYTHON软工
+                账号：{{userInfo.email}}
             </div>
             <span class="icon-custom-you icon_right"></span>
         </div>
@@ -16,39 +16,40 @@
         <CrossItem name="新的朋友"  @click.native="$router.push({name: 'newFriend'})">
             <span class="icon-custom-jia font18 icon_style"></span>
         </CrossItem>
-        <CrossItem name="收藏" :borderBot="false">
+        <!-- <CrossItem name="收藏" :borderBot="false">
             <span class="icon-custom-guanzhu2 font18 icon_style"></span>
-        </CrossItem>
+        </CrossItem> -->
         <CrossLine ></CrossLine>
         <CrossItem name="设置" :borderBot="false" @click.native="$router.push({name: 'mySet'})">
             <span class="icon-custom-shezhi2 font18 icon_style"></span>
         </CrossItem>
         <CrossLine ></CrossLine>
-        <yd-button size="large" bgcolor="#ffffff" color="#000000" @click.native="handleExit">退出登录</yd-button>
     </div>
 </template>
 <script>
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import { mapGetters} from 'vuex'
+import { userInfo } from '@/api/user'
 
 export default {
     components: {CrossLine, CrossItem},
     data() {
         return {
+            userInfo:{
+
+            }
         }
     },
     methods: {
-        handleExit(){
-                window.localStorage.clear();
-                this.$store.commit('SET_TOKEN', '')
-                setTimeout(() => {
-                    this.$router.push({ name: "authLogin" });
-                }, 100);
-            },
+        init(){
+            userInfo().then(res=>{
+                this.userInfo = res.data
+            })
+        }
     },
     created() {
-
+        this.init()
     },
     mounted() {}
 }

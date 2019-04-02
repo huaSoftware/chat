@@ -1,7 +1,7 @@
 <template>
     <div style="font-size: 0;height:100%">
         <!-- 内容 -->
-        <div class="content_wapper" ref="bscroll" @touchstart="colseDefIconsShow()">
+        <div class="content_wapper" ref="bscroll" @touchstart="closeDefIconsShow()">
             <div class="bscroll-container">
                 <ul>
                     <li v-for="(key, index) in msgList">
@@ -14,7 +14,7 @@
                                 <div class="msg" v-html="key.data.msg"></div>
                             </div>
                         </div> -->
-                        <div class="chat-item" v-if="key.id == user.id">
+                        <div class="chat-item" v-if="key.user_id == user.id">
                             <div class="mychat">
                                 <img :src="key.head_img" alt="" class="img">
                                 <div class="nt">
@@ -58,7 +58,7 @@
             <div :class="touched? 'record touched':'record'" v-show="recordShow" @touchstart="startRecord" @touchend="stopRecord">按住
                 说话</div>
             <!-- 输入栏 -->
-            <vEditDiv v-show="!recordShow" @click.native="colseDefIconsShow" class='input' id="edit" placeholder='请输入文字'
+            <vEditDiv v-show="!recordShow" @click.native="closeDefIconsShow" class='input' id="edit" placeholder='请输入文字'
                 v-model="content"></vEditDiv>
             <div class="def" @click="handleIconsShow">
                 <yd-icon slot="icon" name="uniE905" custom></yd-icon>
@@ -115,7 +115,7 @@
                 </div>
             </div>
             <!-- 隐藏的输入框 -->
-            <input name="img" style="display:none;" id="img" type="file" @change="handleOnChange($event)" />
+            <input name="img" style="display:none;" id="img" type="file" accept="image/*" @change="handleOnChange($event)" />
             <input name="file" style="display:none;" id="file" type="file" @change="handleFileOnChange($event)" />
         </div>
         <!-- 裁剪图 -->
@@ -125,7 +125,7 @@
                 <vueCropper style="height:100%;position:absoloute;width:100%;z-index:9999" ref="cropper" :img="option.img"
                     :outputSize="option.size" :outputType="option.outputType" :canMoveBox="option.canMoveBox" :canMove="option.canMove"
                     :autoCrop="true" :autoCropWidth="option.autoCropWidth" :autoCropHeight="option.autoCropHeight"
-                    @imgLoad="handleUploadBase64"></vueCropper>
+                    ></vueCropper>
             </div>
             <!-- 截图功能键 -->
             <div style="position:fixed;width:100%;height:40px; bottom: 10px;z-index: 99999;">
@@ -141,10 +141,12 @@
     import vEditDiv from '@/components/v-edit-div/v-edit-div'
     import BScroll from 'better-scroll'
     import VConsole from 'vconsole/dist/vconsole.min.js'
-    import {uploadBase64,uploadFile} from '@/api/common'
-    import VueCropper from 'vue-cropper'
+    import {uploadBase64, uploadFile} from '@/api/common'
+    import { VueCropper } from "vue-cropper"
     import utils from '@/utils/utils'
     import storage from "@/utils/localstorage"
+    import {getRoomMsg} from "@/utils/indexedDB"
+    import { Confirm, Alert, Toast, Notify, Loading } from 'vue-ydui/dist/lib.rem/dialog'
     export default {
         components: {
             vEditDiv,
@@ -196,9 +198,13 @@
             }
         },
         created() {
+            //this.updateMsgList(getRoomMsg())
             this.user = storage.get('user')
             if(typeof this.$route.query.room_uuid !== 'undefined'){
                 window.uuid = this.$route.query.room_uuid
+                getRoomMsg(window.uuid).then(res=>{
+                    this.updateMsgList(res)
+                })
             }
             try {
                 // 扩展API加载完毕后调用onPlusReady回调函数 
@@ -250,27 +256,35 @@
             window.physicsBackRouter = '/home'
         },
         methods: {
+            ...mapMutations({
+                updateMsgList:'updateMsgList'
+            }),
             handleFileOnChange(event) {
                 let file = event.target.files[0];
                 let data = new FormData(); //重点在这里 如果使用 var data = {}; data.inputfile=... 这样的方式不能正常上传
-                data.append("test", file)
+                data.append("file", file)
                 uploadFile(data).then(res => {
                     let file_path = process.env.BASE_API + res.data.path
-                    let msg =
+                    let file =
                         `<a ontouchstart="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`
                     window.roomSocket.emit('chat', {
                         data: {
-                            msg: msg,
-                            name: window.name,
-                            uuid: window.uuid
-                        },
-                        room: 'test'
+                            msg: file,
+                            userId: this.user.id,
+                            uuid: window.uuid,
+                            type: 1
+                        }
                     })
                 })
             },
             handleOnChange(event) {
                 let that = this
                 let file = event.target.files[0];
+                console.log((file.type).indexOf("image/"))
+                if((file.type).indexOf("image/")==-1){  
+                    Alert({mes: "请上传图片!"})
+                    return 
+                } 
                 //创建读取文件的对象
                 let reader = new FileReader();
 
@@ -278,6 +292,7 @@
                 reader.onload = function (e) {
                     that.option.img = e.target.result;
                     that.cropperShow = true
+                    console.log(that.option.img)
                 }
                 //正式读取文件
                 reader.readAsDataURL(file);
@@ -292,16 +307,15 @@
                     this.option.img = ''
                     //将剪裁后的图片执行上传
                     uploadBase64(this.reqImgData).then(res => {
-                        let img = '<img ontouchstart="magPic(event)" height="50" src="' + res.data +
+                        let img = '<img ontouchstart="magPic(event)" height="50" src="' + process.env.VUE_APP_CLIENT_API + res.data.path +
                             '">'
                         window.roomSocket.emit('chat', {
                             data: {
                                 msg: img,
-                                name: window.name,
+                                userId: this.user.id,
                                 uuid: window.uuid,
                                 type: 1
-                            },
-                            room: 'test'
+                            }
                         })
 
                     })
@@ -314,15 +328,15 @@
                 //先将显示图片地址清空，防止重复显示
                 this.option.img = ''
                 uploadBase64(this.reqImgData).then(res => {
-                    let img = '<img ontouchstart="magPic(event)" height="50" src="' + res.data + '">'
+                    let img = '<img ontouchstart="magPic(event)" height="50" src="' +process.env.VUE_APP_CLIENT_API+ res.data.path + '">'
+                    console.log(img)
                     window.roomSocket.emit('chat', {
                         data: {
                             msg: img,
-                            name: window.name,
+                            userId: this.user.id,
                             uuid: window.uuid,
                             type: 1
-                        },
-                        room: 'test'
+                        }
                     })
                 })
             },
@@ -335,53 +349,55 @@
                     this.$router.push('/person/favHistory')
                 }
                 if (value == 'position') {
-                    try {
-                        // 扩展API加载完毕后调用onPlusReady回调函数 
-                        document.addEventListener('plusready', onPlusReady(), false);
-                        // 扩展API加载完毕，现在可以正常调用扩展API
-                        function onPlusReady() {
-                            plus.geolocation.getCurrentPosition(function (p) {
-                                console.log(p)
-                                window.roomSocket.emit('chat', {
-                                    data: {
-                                        msg: p.addresses,
-                                        name: window.name,
-                                        uuid: window.uuid
-                                    },
-                                    room: 'test'
-                                })
-                            }, function (e) {
-                                console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
-                                switch (e.code) {
-                                    case e.PERMISSION_DENIED:
-                                        alert('User denied the request for Geolocation.');
-                                        break;
-                                    case e.POSITION_UNAVAILABLE:
-                                        alert('Location information is unavailable.');
-                                        break;
-                                    case e.TIMEOUT:
-                                        alert('The request to get user location timed out.');
-                                        break;
-                                    case e.UNKNOWN_ERROR:
-                                        alert('An unknown error occurred.');
-                                        break;
-                                }
-                            });
-                        }
-                    } catch (e) {
-                        console.log(e)
+                    if(window.plus){
+                        this.getCurrentPosition()
+                    }else{
+                        setTimeout(
+                            ()=>{
+                                Alert({mes:'该定位只能在app内使用'})
+                            },300
+                        )
                     }
                 }
                 if (value == 'file') {
                     document.getElementById('file').click()
                 }
             },
+            // 扩展API加载完毕，现在可以正常调用扩展API
+            getCurrentPosition() {
+                plus.geolocation.getCurrentPosition(function (p) {
+                    console.log(p)
+                    window.roomSocket.emit('chat', {
+                        data: {
+                            msg: p.addresses,
+                            userId: this.user.id,
+                            uuid: window.uuid,
+                            type: 1
+                        }
+                    })
+                }, function (e) {
+                    console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
+                    switch (e.code) {
+                        case e.PERMISSION_DENIED:
+                            alert('User denied the request for Geolocation.');
+                            break;
+                        case e.POSITION_UNAVAILABLE:
+                            alert('Location information is unavailable.');
+                            break;
+                        case e.TIMEOUT:
+                            alert('The request to get user location timed out.');
+                            break;
+                        case e.UNKNOWN_ERROR:
+                            alert('An unknown error occurred.');
+                            break;
+                    }
+                });
+            },
             sendMsg() {
                 console.log(this.user)
                 window.roomSocket.emit('chat', {
                     data: {
                         msg: this.content,
-                        //name: window.name,
                         uuid: window.uuid,
                         userId: this.user.id,
                         type: 1 //1是文字，0是语音
@@ -394,7 +410,7 @@
             handleRecordShow() {
                 this.recordShow = !this.recordShow
             },
-            colseDefIconsShow() {
+            closeDefIconsShow() {
                 this.iconsShow = false
                 this.defsShow = false
                 this.recordShow = false
@@ -484,82 +500,88 @@
             // 录音开始
             startRecord() {
                 let that = this
-                this.defsShow = false
-                this.iconsShow = false
-                this.recordingShow = true
                 this.touched = true
-                if (typeof window.r == 'undefined') {
-                    this.recordingShow = false
-                    this.touched = false
-                    alert("Device not ready!");
-                    return;
-                }
-                window.r.record({
-                    filename: "_doc/audio/"
-                }, function (p) {
-                    console.log('录音完成:' + p)
-                    //上传
-                    var task = plus.uploader.createUpload('http://118.25.6.169:89/v2.api/upload', {
-                        method: "post"
-                    }, function (t, status) {
-                        if (status == 200) {
-                            let data = JSON.parse(t.responseText)
-                            that.recordingShow = false
-                            var BenzAMRRecorder = require('benz-amr-recorder');
-                            var amr = new BenzAMRRecorder();
-                            let url = 'http://118.25.6.169:89' + data.data.path
-                            amr.initWithUrl(url).then(function () {
-                                //获取录音长度
-                                //amr.getDuration(); 
-                    
-                                window.roomSocket.emit('chat', {
-                                    data: {
-                                        msg: url,
-                                        duration: amr.getDuration(),
-                                        status: false,
-                                        name: window.name,
-                                        uuid: window.uuid,
-                                        type: 0
-                                    },
-                                    room: 'test'
+                if(window.plus){
+                    this.defsShow = false
+                    this.iconsShow = false
+                    this.recordingShow = true
+                    if (typeof window.r == 'undefined') {
+                        this.recordingShow = false
+                        this.touched = false
+                        alert("Device not ready!");
+                        return;
+                    }
+                    window.r.record({
+                        filename: "_doc/audio/"
+                    }, function (p) {
+                        console.log('录音完成:' + p)
+                        //上传
+                        var task = plus.uploader.createUpload('http://118.25.6.169:89/v2.api/upload', {
+                            method: "post"
+                        }, function (t, status) {
+                            if (status == 200) {
+                                let data = JSON.parse(t.responseText)
+                                that.recordingShow = false
+                                var BenzAMRRecorder = require('benz-amr-recorder');
+                                var amr = new BenzAMRRecorder();
+                                let url = 'http://118.25.6.169:89' + data.data.path
+                                amr.initWithUrl(url).then(function () {
+                                    //获取录音长度
+                                    //amr.getDuration(); 
+                        
+                                    window.roomSocket.emit('chat', {
+                                        data: {
+                                            msg: url,
+                                            duration: amr.getDuration(),
+                                            status: false,
+                                            name: window.name,
+                                            uuid: window.uuid,
+                                            type: 0
+                                        },
+                                        room: 'test'
+                                    })
                                 })
-                            })
-                        } else {
-                            console.log(t.responseText)
-                            console.log("上传失败：" + status);
-                        }
-                    })
-                    let fileName = p.replace("_doc/audio/", '')
-                    task.addFile(p, {
-                        "key": "test",
-                        "name": fileName
-                    });
-                    task.start();
+                            } else {
+                                console.log(t.responseText)
+                                console.log("上传失败：" + status);
+                            }
+                        })
+                        let fileName = p.replace("_doc/audio/", '')
+                        task.addFile(p, {
+                            "key": "test",
+                            "name": fileName
+                        });
+                        task.start();
 
-                    /* plus.io.resolveLocalFileSystemURL(p, function(entry){
-              //播放
-              let cp = plus.audio.createPlayer('http://118.25.6.169:1215/upload/test.amr');//'_doc/audio/'+entry.name);
-              cp.play(function(){
-                console.log('播放完成！');
-                // 操作播放对象
-                if(cp){
-                  cp.stop();
-                  cp=null;
-                }
-              }, function(e){
-                console.log('播放音频文件"_doc/audio/'+entry+'"失败：'+e.message);
-              });
-            }, function(e){
-              console.log('读取录音文件错误：'+e.message);
-            });
-          }, function (e) {
-            alert( "Audio record failed: " + e.message ); */
+                        /* plus.io.resolveLocalFileSystemURL(p, function(entry){
+                //播放
+                let cp = plus.audio.createPlayer('http://118.25.6.169:1215/upload/test.amr');//'_doc/audio/'+entry.name);
+                cp.play(function(){
+                    console.log('播放完成！');
+                    // 操作播放对象
+                    if(cp){
+                    cp.stop();
+                    cp=null;
+                    }
+                }, function(e){
+                    console.log('播放音频文件"_doc/audio/'+entry+'"失败：'+e.message);
                 });
+                }, function(e){
+                console.log('读取录音文件错误：'+e.message);
+                });
+            }, function (e) {
+                alert( "Audio record failed: " + e.message ); */
+                    });
+                }else{
+                    Alert({mes:'录音只能在app内使用'})
+                }
             },
             // 录音结束
             stopRecord() {
                 this.touched = false
-                window.r.stop();
+                if(window.plus){
+                    window.r.stop();
+                }
             },
             amrPlay(url, index) {
                 let that = this
