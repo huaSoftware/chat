@@ -17,6 +17,12 @@
 				</div>
 			</a>
 		</article>
+		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:fixed;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
+		<!-- 参数空时页面 -->
+		<div class="empty" v-if="roomList.length==0 && loading==false">
+			<span class="icon-custom-xiaoxi"></span>
+			<span class="empty_text">暂无消息</span>
+		</div>
 	</div>
 </template>
 <script>
@@ -26,6 +32,7 @@
 	import utils from '@/utils/utils'
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
+	import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
 
 	export default {
 		components: {},
@@ -33,25 +40,79 @@
 		data() {
 			return {
 				user:{},
-				alert: true
+				alert: true,
+				loading: true
 			}
 		},
 		computed: {
 			...mapGetters([
 				'navbarTitle',
-				"roomList"
+				'roomList',
+				'msgList'
 			])
 		},
 		methods: {
 			...mapMutations({
-				updateRoomList: 'updateRoomList'
+				updateRoomList: 'updateRoomList',
+				updateMsgList:'updateMsgList'
 			}),
 			init(){
 				this.user = storage.get('user')
-				this.alert = storage.get('alert')
+				if(window.localStorage.getItem('alert') == undefined){
+					this.alert = true
+				}else{
+					this.alert = storage.get('alert')
+				}
 				roomGet({page_no:1, per_page:100000000}).then(res=>{
 					this.updateRoomList(res.data)
+					this.loading = false
 				})
+
+				// 创建添加新好友套接字连接
+				let userId = storage.get('user')['id']
+				if(userId && window.newFriendSocket == undefined){
+					window.newFriendSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/'+userId);
+					//监听好友请求
+					window.newFriendSocket.on('beg',(data)=>{
+						// 复制原来的值
+						data['user_id'] = data['id'];
+						// 删除原来的键
+						delete data['id'];
+						// 增加状态,0申请，1通过，2拒绝
+						data['status'] = 0
+						console.log(data)
+						this.$dialog.toast({mes: `${data.nick_name}申请加你好友`});
+						addAddressBookBeg(data)
+					});
+
+					//监听房间动态消息
+					window.newFriendSocket.on('room',(data)=>{
+						console.log(data)
+						this.updateRoomList(data)
+					});
+				}
+				if(window.roomSocket == undefined){
+					// 创建聊天室套接字监听
+					window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/room');
+					window.roomSocket.on('join',(data)=>{
+					//逻辑处理
+					});			
+					//监听回复的消息
+					window.roomSocket.on('leave',(data)=>{
+					//逻辑处理
+					});		
+					///监听回复的消息
+					window.roomSocket.on('chat',(data)=>{
+						//逻辑处理,存放indexdDB,存放一份实时的在vuex
+						let msgList = []
+						console.log(this.msgList)
+						Object.assign(msgList, this.msgList)
+						msgList = msgList.concat(data.data)
+						this.updateMsgList(msgList)
+						addRoomMsg(data.data)
+						//console.log(this.msgList)
+					});
+				}
 			},
 			handleJoinRoom(item){
 				window.roomSocket.emit('join',{
@@ -88,14 +149,43 @@
 }
 .title-right{
 	font-weight: normal;
-	float:right;
+	display: inline-block;
 	font-size:12px;
-	width:30%;
+	width:40%;
 	overflow: hidden;
 	text-align: right;
 }
 .title-left{
 	width:60%;
 	overflow: hidden;
+	display: inline-block;
+}
+.yd-list-title{
+    line-height: 0.4rem!important;
+}
+/* 页面为空时 */
+.empty {
+    width: 100%;
+	height: 100%;
+	z-index:2;
+	position: relative;
+}
+.icon-custom-xiaoxi{
+	font-size: 2rem;
+	position: relative;
+	display: block;
+	text-align: center;
+	padding-top:50%;
+}
+.icon-custom-xiaoxi:before {
+	color:#aaaaaa;
+}
+.empty_text{
+	width:100%;
+	display: block;
+	text-align: center;
+	color:#aaaaaa;
+	font-size: 0.56rem;
+	margin-top:0.2rem;
 }
 </style>

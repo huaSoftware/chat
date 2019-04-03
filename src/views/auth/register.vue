@@ -112,7 +112,8 @@
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import { allvalidated, validatedError } from "@/utils/validator"
 import CrossLine from '@/components/cross-line/cross-line'
-import { register, uploadImgByBase64 } from '@/api/user'
+import { register } from '@/api/user'
+import {uploadBase64} from '@/api/common'
 import { setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
 import md5 from 'js-md5'
@@ -204,7 +205,7 @@ export default {
             this.$refs.cropper_header.getCropData(data => {
                 console.log( process.env)
                 this.option.img = data;
-                uploadImgByBase64({ imgBase64: this.option.img, type:"png"})
+                uploadBase64({ imgDatas: this.option.img})
                 .then(res => {
                     this.headImg = process.env.VUE_APP_CLIENT_API+res.data.path
                 })

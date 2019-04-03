@@ -7,6 +7,10 @@
         <CrossLine ></CrossLine>
         <CrossItem name="新消息提醒" :borderBot="true" :isIcon="false" @click.native="$router.push({name: 'mySetAlert'})">  
         </CrossItem>
+        <CrossItem name="清空添加记录" :borderBot="true" :isIcon="false" @click.native="handleClean('addressBookBeg')">  
+        </CrossItem>
+        <CrossItem name="清空聊天记录" :borderBot="true" :isIcon="false" @click.native="handleClean('msg')">  
+        </CrossItem>
         <CrossItem name="关于我们" :borderBot="true" :isIcon="false" @click.native="$router.push({name: 'mySetAbout'})">    
         </CrossItem>
         <!-- <CrossItem name="帮助和反馈" :borderBot="true" :isIcon="false">  
@@ -33,9 +37,41 @@ export default {
         go(){
             alert(1)
         },
+        handleClean(name){
+            this.$dialog.confirm({
+                title: '是否清除',
+                mes: '清除后不可还原',
+                opts: () => {
+                    window.indexedDB.deleteDatabase(name)
+                    this.$dialog.toast({mes: '清除成功', timeout: 1000});
+                }
+            });
+        },
         handleExit(){
+            //清除localstorage数据
             window.localStorage.clear();
+            //清除indexdb数据
+            window.indexedDB.deleteDatabase('addressBookBeg')
+            window.indexedDB.deleteDatabase('msg')
+            //失效token
             this.$store.commit('SET_TOKEN', '')
+            //清除socketio监听
+            window.newFriendSocket.io.disconnect()
+            window.roomSocket.io.disconnect()
+            //删除所有监听
+            for(var listener in window.newFriendSocket.$events){
+                if(listener != undefined){
+                    window.newFriendSocket.removeAllListeners(listener);
+                }
+            }
+            //删除所有监听
+            for(var listener in window.roomSocket.$events){
+                if(listener != undefined){
+                    window.roomSocket.removeAllListeners(listener);
+                }
+            }
+            window.newFriendSocket = undefined
+            window.roomSocket = undefined
             setTimeout(() => {
                 this.$router.push({ name: "authLogin" });
             }, 100);

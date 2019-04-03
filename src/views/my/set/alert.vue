@@ -23,7 +23,11 @@
     },
     methods: {
         init(){
-            this.alert = storage.get('alert')
+            if(window.localStorage.getItem('alert') == undefined){
+                this.alert = true
+            }else{
+                this.alert = storage.get('alert')
+            }
         }
     },
     created() {
