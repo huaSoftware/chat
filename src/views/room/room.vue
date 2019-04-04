@@ -402,6 +402,8 @@
                         userId: this.user.id,
                         type: 1 //1是文字，0是语音
                     }
+                },  (e)=>{
+                    console.log('发送成功')
                 })
                 document.getElementById('edit').innerHTML = ''
                 this.content = ''

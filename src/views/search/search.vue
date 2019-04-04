@@ -53,11 +53,8 @@
             handleAddAddressBook(item){
                 //发送好友申请
                 addressBookBeg({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
-                    Toast({mes: res.msg})
+
                 })
-                /* addressBookAdd({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
-                    Toast({mes: res.msg})
-                }) */
             }
         },
         watch: {

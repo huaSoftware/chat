@@ -38,16 +38,22 @@ export default {
     if(userId && window.newFriendSocket == undefined){
       window.newFriendSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/'+userId);
       //监听好友请求
-      window.newFriendSocket.on('beg',(data)=>{
-        // 复制原来的值
-        data['user_id'] = data['id'];
-        // 删除原来的键
-        delete data['id'];
-        // 增加状态,0申请，1通过，2拒绝
-        data['status'] = 0
+      window.newFriendSocket.on('beg',(data, callback)=>{
         console.log(data)
-        this.$dialog.toast({mes: `${data.nick_name}申请加你好友`});
-        addAddressBookBeg(data)
+        if(data['action'] == 'beg_add'){
+          // 复制原来的值
+          data['data']['user_id'] = data['data']['id'];
+          // 删除原来的键
+          delete data['data']['id'];
+          // 增加状态,0申请，1通过，2拒绝
+          data['data']['status'] = 0
+          this.$dialog.toast({mes: `${data.data.nick_name}申请加你好友`});
+          addAddressBookBeg(data['data'])
+          callback(data)
+        }
+        if(data['action'] == 'beg_rev'){
+          this.$dialog.toast({mes: '发送成功'});
+        }
       });
 
       //监听房间动态消息
