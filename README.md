@@ -1,6 +1,9 @@
 ### 聊天室
     一个基于socketio开发的简易聊天室，功能精简，易扩展。
 
+### 体验地址
+http://www.zhuhui.store    
+
 ### 项目架构
     前端vue+ydui+cli3，后端flask
 
@@ -37,3 +40,5 @@
 #### 捐助作者
 ![捐助作者](https://images.gitee.com/uploads/images/2019/0124/105407_661d1190_1588193.png "mm_facetoface_collect_qrcode_1548297043215.png")	
 
+### 后端有偿开源
+    有需要的可以扫描以上付款码，作者会在第一时间将后端源码发送给你，99元一套
