@@ -9,11 +9,7 @@
 				{{this.$route.meta.defName}}
 			</router-link>
     	</yd-navbar>
-      
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"></router-view>
-    </keep-alive>
-		<router-view v-if="!$route.meta.keepAlive"></router-view>
+		<router-view ></router-view>
     <!--公共底部导航-->
 		<yd-tabbar slot="tabbar"  v-if="this.$route.meta.isShowFoot">
 			<yd-tabbar-item :title="item.name" type="link" :link="item.router" v-for="(item, index) in footerMenu" :key="index" :class="$store.state.appData.navbarTitle == item.name? 'active': ''">
@@ -35,10 +31,14 @@ export default {
   created() {
     // 创建添加新好友套接字连接
     let userId = storage.get('user')['id']
-    if(userId && window.newFriendSocket == undefined){
-      window.newFriendSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/'+userId);
+    if(userId && window.broadcastSocket == undefined){
+      //命名空间用于广播，房间用于单人，命名空间时广播无效
+      window.broadcastSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/broadcast');
+      window.broadcastSocket.emit('join',{       
+        user_id: userId 
+      })
       //监听好友请求
-      window.newFriendSocket.on('beg',(data, callback)=>{
+      window.broadcastSocket.on('beg',(data, callback)=>{
         console.log(data)
         if(data['action'] == 'beg_add'){
           // 复制原来的值
@@ -51,8 +51,9 @@ export default {
           addAddressBookBeg(data['data'])
           callback(data)
         }
-        if(data['action'] == 'beg_rev'){
-          this.$dialog.toast({mes: '发送成功'});
+        if(data['action'] == 'beg_success'){
+
+          this.$dialog.toast({mes: '发送成功，对方已收到申请'});
         }
       });
 

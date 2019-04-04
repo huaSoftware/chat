@@ -23,7 +23,7 @@
     import {search} from '@/api/search'
     import {addressBookBeg} from '@/api/addressBook'
     import storage from "@/utils/localstorage"
-    import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
+    import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
     export default {
         data() {
             return {
@@ -52,8 +52,10 @@
             },
             handleAddAddressBook(item){
                 //发送好友申请
+                Loading.open('发送中')
                 addressBookBeg({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
-
+                    //this.$dialog.toast({mes: '发送成功'});
+                    Loading.close()
                 })
             }
         },

@@ -56,12 +56,12 @@ export default {
             //失效token
             this.$store.commit('SET_TOKEN', '')
             //清除socketio监听
-            window.newFriendSocket.io.disconnect()
+            window.broadcastSocket.io.disconnect()
             window.roomSocket.io.disconnect()
             //删除所有监听
-            for(var listener in window.newFriendSocket.$events){
+            for(var listener in window.broadcastSocket.$events){
                 if(listener != undefined){
-                    window.newFriendSocket.removeAllListeners(listener);
+                    window.broadcastSocket.removeAllListeners(listener);
                 }
             }
             //删除所有监听
@@ -70,7 +70,7 @@ export default {
                     window.roomSocket.removeAllListeners(listener);
                 }
             }
-            window.newFriendSocket = undefined
+            window.broadcastSocket = undefined
             window.roomSocket = undefined
             setTimeout(() => {
                 this.$router.push({ name: "authLogin" });

@@ -191,7 +191,7 @@ dl {
     line-height: 1.1rem; */
     text-align: center;
     color: #576b95;
-    font-size:0.35rem;
+    font-size:0.3rem;
 }
 
 </style>

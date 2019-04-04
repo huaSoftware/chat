@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '../store'
 import router from '../router'
-import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
+import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 
 // 创建axios实例
 const service = axios.create({
@@ -50,6 +50,7 @@ service.interceptors.response.use(
     if (res.error_code === 300) {
       Toast({mes:'未绑定,请先绑定手机号'})
       router.push('/newRegister')
+      Loading.close()
       return Promise.reject('error')
     }
     if (res.error_code === 400) {
@@ -65,15 +66,18 @@ service.interceptors.response.use(
       }else{
         Toast({mes:res.msg})
       }
+      Loading.close()
       // Toast('网络错误')
       return Promise.reject('error')
     }
     if (res.error_code === 401) {
       // Toast(res.msg)
+      Loading.close()
       return Promise.reject('error')
     }
     if (res.error_code === 10001) {
       // Token expired
+      Loading.close()
       Toast({mes: res.msg})
       // 这里需要删除token，不然携带错误token无法去登陆
       window.localStorage.removeItem('token')
@@ -82,6 +86,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    Loading.close()
     // //console.log(error)// for debug
     /* 网络无响应处理 */
     // //console.log(error == 'Error: timeout of 15000ms exceeded')

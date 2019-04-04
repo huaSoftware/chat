@@ -1,5 +1,5 @@
 module.exports = {
-  baseUrl: process.env.NODE_ENV === "production" ? "/wep/" : "/",
+  baseUrl: process.env.NODE_ENV === "production" ? "./" : "/",
   // outputDir: 在npm run build时 生成文件的目录 type:string, default:'dist'
    outputDir: 'wep',
   // pages:{ type:Object,Default:undfind }

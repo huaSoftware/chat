@@ -17,7 +17,7 @@
 				</div>
 			</a>
 		</article>
-		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:fixed;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
+		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:absolute;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
 		<!-- 参数空时页面 -->
 		<div class="empty" v-if="roomList.length==0 && loading==false">
 			<span class="icon-custom-xiaoxi"></span>
@@ -70,10 +70,14 @@
 
 				// 创建添加新好友套接字连接
 				let userId = storage.get('user')['id']
-				if(userId && window.newFriendSocket == undefined){
-					window.newFriendSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/'+userId);
+				if(userId && window.broadcastSocket == undefined){
+					//命名空间用于广播，房间用于单人，命名空间时广播无效
+					window.broadcastSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/broadcast');
+					window.broadcastSocket.emit('join',{       
+						user_id: userId 
+					})
 					//监听好友请求
-					window.newFriendSocket.on('beg',(data, back)=>{
+					window.broadcastSocket.on('beg',(data, callback)=>{
 						console.log(data)
 						if(data['action'] == 'beg_add'){
 							// 复制原来的值
@@ -84,12 +88,14 @@
 							data['data']['status'] = 0
 							this.$dialog.toast({mes: `${data.data.nick_name}申请加你好友`});
 							addAddressBookBeg(data['data'])
-							back()
+							callback(data)
 						}
-						if(data['action'] == 'beg_rev'){
-						this.$dialog.toast({mes: '发送成功'});
+						if(data['action'] == 'beg_success'){
+
+							this.$dialog.toast({mes: '发送成功，对方已收到申请'});
 						}
 					});
+
 					//监听房间动态消息
 					window.newFriendSocket.on('room',(data)=>{
 						console.log(data)
