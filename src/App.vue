@@ -41,6 +41,7 @@ export default {
       window.broadcastSocket.on('beg',(data, callback)=>{
         console.log(data)
         if(data['action'] == 'beg_add'){
+          callback(data)
           // 复制原来的值
           data['data']['user_id'] = data['data']['id'];
           // 删除原来的键
@@ -49,7 +50,6 @@ export default {
           data['data']['status'] = 0
           this.$dialog.toast({mes: `${data.data.nick_name}申请加你好友`});
           addAddressBookBeg(data['data'])
-          callback(data)
         }
         if(data['action'] == 'beg_success'){
 

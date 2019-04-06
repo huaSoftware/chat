@@ -33,6 +33,7 @@
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
 	import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
+	import {addressBookCacheGet} from '@/api/addressBook'
 
 	export default {
 		components: {},
@@ -67,6 +68,20 @@
 					this.updateRoomList(res.data)
 					this.loading = false
 				})
+				addressBookCacheGet().then(res=>{
+					//console.log(res.data)
+					if(res.data.length > 0){
+						this.$dialog.toast({mes: `有新朋友加你好友，请去个人界面确认`});
+					}
+					res.data.forEach(element => {
+						element['user_id'] = element['id'];
+						// 删除原来的键
+						delete element['id'];
+						// 增加状态,0申请，1通过，2拒绝
+						element['status'] = 0
+						addAddressBookBeg(element)
+					});
+				})
 
 				// 创建添加新好友套接字连接
 				let userId = storage.get('user')['id']
@@ -80,6 +95,7 @@
 					window.broadcastSocket.on('beg',(data, callback)=>{
 						console.log(data)
 						if(data['action'] == 'beg_add'){
+							callback(data)
 							// 复制原来的值
 							data['data']['user_id'] = data['data']['id'];
 							// 删除原来的键
@@ -88,7 +104,6 @@
 							data['data']['status'] = 0
 							this.$dialog.toast({mes: `${data.data.nick_name}申请加你好友`});
 							addAddressBookBeg(data['data'])
-							callback(data)
 						}
 						if(data['action'] == 'beg_success'){
 

@@ -26,3 +26,11 @@ export function addressBookBeg(data){
         data
     })
 }
+
+//
+export function addressBookCacheGet(){
+    return request({
+        url: '/api/v2/addressBook/cache.get',
+        method: 'get'
+    })
+}
