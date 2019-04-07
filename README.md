@@ -7,6 +7,9 @@ http://www.zhuhui.store
 ### 安卓版下载地址
 http://www.zhuhui.store/download/chat.apk
 
+### 文档地址
+http://doc.zhuhui.store
+
 ### 项目架构
     前端vue+ydui+cli3，后端flask
 
