@@ -112,7 +112,7 @@
 					});
 
 					//监听房间动态消息
-					window.newFriendSocket.on('room',(data)=>{
+					window.broadcastSocket.on('room',(data)=>{
 						console.log(data)
 						this.updateRoomList(data)
 					});
