@@ -69,54 +69,54 @@
             <div class="def" style="padding-left:0px;" v-show="sendShow">
                 <yd-button @click.native="sendMsg()" type="disabled" size="small" bgcolor="#00C2E6" color="#fff">发送</yd-button>
             </div>
-            <!-- 表情 -->
-            <div class="icons_wapper" v-show="iconsShow">
-                <!--轮播-->
-                <div class="swiper-container swiper-cont">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img @click="insertIcon('static/icons/onion/zwj'+i+'.gif')" v-for="i in 28" :src="'static/icons/onion/zwj'+i+'.gif'" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img @click="insertIcon('static/icons/rabbits/tsj'+addPreZero(i)+'.gif')" v-for="i in 35"
-                                :src="'static/icons/rabbits/tsj'+addPreZero(i)+'.gif'" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img @click="insertIcon('static/icons/more/'+i+'.gif')" v-for="i in 35" :src="'static/icons/more/'+i+'.gif'" />
-                        </div>
-                    </div>
-                    <!-- 如果需要分页器 -->
-                    <div class="swiper-pagination"></div>
-                </div>
-            </div>
-            <!-- 功能栏 -->
-            <div class="defs_wapper" v-show="defsShow">
-                <!--轮播-->
-                <div class="swiper-container swiper-cont">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" style="padding:20px;padding-top:3px">
-                            <!-- <yd-grids-group :rows="4">
-                        <yd-grids-item v-for="(item, index) in footerMenu" :key='index'  @click.native="handleDef(item.router)">
-                            <yd-icon slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
-                            <span slot="text">{{item.name}}</span>
-                        </yd-grids-item>
-                      </yd-grids-group > -->
-                            <div class="yd-grids-raw">
-                                <a href="#" class="yd-grids-item-raw" v-for="(item, index) in footerMenu" :key='index'
-                                    @click="handleDef(item.router)">
-                                    <yd-icon class="yd-grids-icon" slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
-                                    <span class="yd-grids-text" slot="text">{{item.name}}</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 如果需要分页器 -->
-                    <div class="swiper-pagination"></div>
-                </div>
-            </div>
             <!-- 隐藏的输入框 -->
             <input name="img" style="display:none;" id="img" type="file" accept="image/*" @change="handleOnChange($event)" />
             <input name="file" style="display:none;" id="file" type="file" @change="handleFileOnChange($event)" />
+        </div>
+         <!-- 表情 -->
+         <div class="icons_wapper" v-show="iconsShow">
+            <!--轮播-->
+            <div class="swiper-container swiper-cont">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img @click="insertIcon('static/icons/onion/zwj'+i+'.gif')" v-for="i in 28" :src="'static/icons/onion/zwj'+i+'.gif'" />
+                    </div>
+                    <div class="swiper-slide">
+                        <img @click="insertIcon('static/icons/rabbits/tsj'+addPreZero(i)+'.gif')" v-for="i in 35"
+                            :src="'static/icons/rabbits/tsj'+addPreZero(i)+'.gif'" />
+                    </div>
+                    <div class="swiper-slide">
+                        <img @click="insertIcon('static/icons/more/'+i+'.gif')" v-for="i in 35" :src="'static/icons/more/'+i+'.gif'" />
+                    </div>
+                </div>
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <!-- 功能栏 -->
+        <div class="defs_wapper" v-show="defsShow">
+            <!--轮播-->
+            <div class="swiper-container swiper-cont">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" style="padding:20px;padding-top:3px">
+                        <!-- <yd-grids-group :rows="4">
+                    <yd-grids-item v-for="(item, index) in footerMenu" :key='index'  @click.native="handleDef(item.router)">
+                        <yd-icon slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
+                        <span slot="text">{{item.name}}</span>
+                    </yd-grids-item>
+                  </yd-grids-group > -->
+                        <div class="yd-grids-raw">
+                            <a href="#" class="yd-grids-item-raw" v-for="(item, index) in footerMenu" :key='index'
+                                @click="handleDef(item.router)">
+                                <yd-icon class="yd-grids-icon" slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
+                                <span class="yd-grids-text" slot="text">{{item.name}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
         <!-- 裁剪图 -->
         <!-- vueCropper 剪裁图片实现-->
@@ -486,19 +486,6 @@
                 console.log(this.content)
                 //this.insertHtmlAtCaret(img)
             },
-            uuid() {
-                var s = [];
-                var hexDigits = "0123456789ABCDEFG";
-                for (var i = 0; i < 36; i++) {
-                    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-                }
-                s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
-                s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
-                s[8] = s[13] = s[18] = s[23] = "-";
-
-                var uuid = s.join("");
-                return uuid;
-            },
             // 录音开始
             startRecord() {
                 let that = this
@@ -623,28 +610,26 @@
     /**css样式*/
     .input_wapper {
         width: 100%;
-        position: fixed;
+        display:flex;
         bottom: 0px;
-        z-index:2;
+        flex-wrap:row;
+        justify-content:space-between;
     }
 
     .voice {
-        width: 13%;
-        display: inline-block;
-        text-align: center;
+       /*  width: 13%; */
         padding: 5px 8px;
         vertical-align: middle;
     }
 
     .input {
-        width: 61%;
+       /*  width: 61%; */
         max-height: 100px;
         line-height: 24px;
         font-size: 20px;
         padding: 5px 8px;
         border-bottom: 1px solid #00C2E6;
         overflow-x: auto;
-        display: inline-block;
         margin-bottom: 5px;
         vertical-align: middle;
     }
@@ -653,20 +638,17 @@
         content: attr(placeholder);
     }
 
-    .record {
-        width: 61%;
-        max-height: 100px;
-        line-height: 35px;
-        font-size: 20px;
-        height: 35px;
-        border: 1px solid #999999;
-        border-radius: 5px;
-        /* overflow-x: auto; */
-        display: inline-block;
-        margin-bottom: 5px;
-        vertical-align: middle;
-        text-align: center;
-    }
+    .record[data-v-69d1d965] {
+    width: 100%;
+    max-height: 100px;
+    line-height: 35px;
+    font-size: 20px;
+    height: 35px;
+    border: 1px solid #999999;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 4px;
+}
 
     .touched {
         background: #999999;
@@ -674,7 +656,7 @@
     }
 
     .def {
-        width: 13%;
+       /*  width: 13%; */
         display: inline-block;
         text-align: center;
         padding: 5px 8px;
@@ -692,12 +674,13 @@
         text-align: center;
         overflow-x: auto;
         background: #fff;
+        flex-wrap: wrap;
     }
 
     .icons_wapper img {
         margin: 5px;
-        width: 40px;
-        height: 40px;
+        width: 25px;
+        height: 25px;
     }
 
     .swiper-pagination {

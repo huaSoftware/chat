@@ -70,9 +70,10 @@
 				})
 				addressBookCacheGet().then(res=>{
 					//console.log(res.data)
-					if(res.data.length > 0){
-						this.$dialog.toast({mes: `有新朋友加你好友，请去个人界面确认`});
+					if(res.data == null){
+						return
 					}
+					this.$dialog.toast({mes: `有新朋友加你好友，请去个人界面确认`});
 					res.data.forEach(element => {
 						element['user_id'] = element['id'];
 						// 删除原来的键

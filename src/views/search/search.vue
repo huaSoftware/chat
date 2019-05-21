@@ -1,6 +1,6 @@
 <template>
 <div class="search_content">
-    <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler"></yd-search>
+    <yd-search :result="result" fullpage v-model="value2"  :on-submit="submitHandler"></yd-search>
     <article class="yd-list yd-list-theme4">
         <a href="javascript:;" class="yd-list-item" v-for="(item, index) in userList" :key="index">
             <div class="yd-list-img"><img :src="item.head_img"></div>
@@ -33,28 +33,15 @@
             }
         },
         methods: {
-           /*  getResult(val) {
-                if (!val) return [];
-                return [
-                    'Apple', 'Banana', 'Orange', 'Durian', 'Lemon', 'Peach', 'Cherry', 'Berry',
-                    'Core', 'Fig', 'Haw', 'Melon', 'Plum', 'Pear', 'Peanut', 'Other'
-                ].filter(value => new RegExp(val, 'i').test(value));
-            }, */
-            itemClickHandler(item) {
-                alert(1)
-                //this.$dialog.toast({mes: `搜索：${item}`});
-            },
             submitHandler(value) {
                 search({keywords: value}).then(res=>{
                     this.userList = res.data.userList
                 })
-                //this.$dialog.toast({mes: `搜索：${value}`});
             },
             handleAddAddressBook(item){
                 //发送好友申请
                 Loading.open('发送中')
                 addressBookBeg({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
-                    //this.$dialog.toast({mes: '发送成功'});
                     Loading.close()
                 })
             }

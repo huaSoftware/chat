@@ -20,6 +20,11 @@
             </div>
         </a>
     </article>
+    <!-- 参数空时页面 -->
+    <div class="empty" v-if="newFriendList.length==0 && loading==false">
+        <span class="icon-custom-tongxunlu"></span>
+        <span class="empty_text">暂无好友邀请</span>
+    </div>
 </div>
 </template>
 
@@ -32,7 +37,8 @@ import {addressBookAdd} from "@/api/addressBook"
 export default {
     data() {
         return {
-            newFriendList:[]
+            newFriendList:[],
+            loading: false
         }
     },
     components: {vTitle},
@@ -90,5 +96,30 @@ export default {
 .title-left{
 	width:60%;
 	overflow: hidden;
+}
+/* 页面为空时 */
+.empty {
+    width: 100%;
+	height: 100%;
+	z-index:2;
+	position: relative;
+}
+.icon-custom-tongxunlu{
+	font-size: 2rem;
+	position: relative;
+	display: block;
+	text-align: center;
+	padding-top:30%;
+}
+.icon-custom-tongxunlu:before {
+	color:#aaaaaa;
+}
+.empty_text{
+	width:100%;
+	display: block;
+	text-align: center;
+	color:#aaaaaa;
+	font-size: 0.56rem;
+	margin-top:0.2rem;
 }
 </style>

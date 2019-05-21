@@ -23,7 +23,7 @@
         
         </div>
         <!-- 导航 -->
-        <div class="pop-address-book-letter clearfix">
+        <div id="pop-address-book-letter" class="clearfix">
             <ul>
                 <li v-for="num in 26" :key="num" @click="handleScrollToRef(String.fromCharCode(num+64))">
                     <a  class="activeName">{{String.fromCharCode(num+64)}}</a>
@@ -55,15 +55,14 @@ export default {
                 this.adderssBookList = res.data.addressBookList
             })
         },
+        handlePopAddressNookLetterResize(){
+            let screenWidth = document.body.clientWidth
+            document.getElementById('pop-address-book-letter').style.right = ((screenWidth-750)/2)+'px'
+        },
         handleScrollToRef(value){
-            //console.log(this.$refs[value][0].offsetTop)
-            document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop//this.$refs[value][0].offsetTop
-        
-        
+            document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop
         },
         handleScroll () {
-            //let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-            //console.log(document.getElementById('scrollView').scrollTop)
         },
         handleJoinRoom(item){
             console.log(item)
@@ -89,7 +88,11 @@ export default {
         this.init()
     },
     mounted() {
+        this.handlePopAddressNookLetterResize()
         document.getElementById('scrollView').addEventListener('scroll', this.handleScroll)
+        window.onresize = () => {
+            this.handlePopAddressNookLetterResize()
+        }
     }
 }
 </script>
@@ -173,7 +176,7 @@ dl {
 }
 
 /* 导航 */
-.pop-address-book-letter {
+#pop-address-book-letter {
     font-size: .6rem;
     position: fixed;
     right: 0;
@@ -182,10 +185,10 @@ dl {
     padding-top: 2.2rem;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
-    z-index: 1;
+    z-index: 10;
 }
 
-.pop-address-book-letter li a {
+#pop-address-book-letter li a {
     display: block;
     /* height:0.9rem;
     line-height: 1.1rem; */
