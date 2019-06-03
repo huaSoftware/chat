@@ -1,7 +1,13 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 17:12:59
+ * @LastEditors: hua
+ * @LastEditTime: 2019-06-03 14:31:51
+ -->
 
 <template>
     <div class="content">
-        <!-- 品牌列表 -->
+        <!-- 列表 -->
         <div class="address-book-list">
             
             <dl v-for = "num in 26" :key="num">
@@ -65,7 +71,6 @@ export default {
         handleScroll () {
         },
         handleJoinRoom(item){
-            console.log(item)
             window.roomSocket.emit('join',{
                 name: item.users.nick_name,
                 unread_number: 0,
@@ -79,7 +84,8 @@ export default {
             this.$router.push({
                 name: 'room',
                 query:{
-                    room_uuid: item.room_uuid
+                    room_uuid: item.room_uuid,
+                    name: item.users.nick_name
                 }
             })
         }

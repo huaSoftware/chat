@@ -1,19 +1,16 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-26 09:08:43
+ * @LastEditors: hua
+ * @LastEditTime: 2019-06-03 14:28:38
+ -->
 <template>
-    <div style="font-size: 0;height:100%">
+    <div style="font-size: 0;">
         <!-- 内容 -->
         <div class="content_wapper" ref="bscroll" @touchstart="closeDefIconsShow()">
             <div class="bscroll-container">
                 <ul>
-                    <li v-for="(key, index) in msgList">
-                        <!-- <div class="chat-item" v-if="key.data.uuid == ''">
-                            <div class="otherchat">
-                                <img class="img" src="static/img/head/ni4.jpg" />
-                                <div class="nt">
-                                    <span v-html="key.data.name"></span>
-                                </div>
-                                <div class="msg" v-html="key.data.msg"></div>
-                            </div>
-                        </div> -->
+                    <li v-for="(key, index) in msgList" :key="index">
                         <div class="chat-item" v-if="key.user_id == user.id">
                             <div class="mychat">
                                 <img :src="key.head_img" alt="" class="img">
@@ -25,7 +22,7 @@
                                         :alt="key.msg" v-show="key.status"/>
                                     <i class="vioce_stop_left" v-show="!key.status"></i><span class="vioce_second">{{key.duration}}s</span>
                                 </div>
-                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg"></div>
+                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                                 <div v-else class="msg" v-html="key.msg"></div>
                             </div>
                         </div>
@@ -39,7 +36,9 @@
                                     <img class="chat_right vioce_start" src="static/img/voice_right.gif" v-show="key.status">
                                     <i class="vioce_stop_right" v-show="!key.status"></i><span class="vioce_second">{{key.duration}}s</span>
                                 </div>
-                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg"></div>
+                                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg">
+                                    
+                                </div>
                                 <div v-else class="msg" v-html="key.msg"></div>
                             </div>
                         </div>
@@ -50,7 +49,7 @@
         <!-- 语音输入gif图 -->
         <img v-show="recordingShow" style="position:absolute; top:40%;width:50%;margin-left:25%;" src="static/img/recording.gif">
         <!-- 输入 -->
-        <div class="input_wapper">
+        <div class="input_wapper" :style="iconsShow || defsShow ?'bottom:200px':'bottom:0.2rem'">
             <div class="voice" @click="handleRecordShow">
                 <yd-icon slot="icon" name="uniE906" custom></yd-icon>
             </div>
@@ -78,15 +77,15 @@
             <!--轮播-->
             <div class="swiper-container swiper-cont">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img @click="insertIcon('static/icons/onion/zwj'+i+'.gif')" v-for="i in 28" :src="'static/icons/onion/zwj'+i+'.gif'" />
+                    <!-- <div class="swiper-slide">
+                        <img @click="insertIcon('static/icons/onion/zwj'+i+'.gif')" v-for="i in 28" :src="'static/icons/onion/zwj'+i+'.gif'" :key="i" />
                     </div>
                     <div class="swiper-slide">
-                        <img @click="insertIcon('static/icons/rabbits/tsj'+addPreZero(i)+'.gif')" v-for="i in 35"
+                        <img @click="insertIcon('static/icons/rabbits/tsj'+addPreZero(i)+'.gif')" v-for="i in 35" :key="i"
                             :src="'static/icons/rabbits/tsj'+addPreZero(i)+'.gif'" />
-                    </div>
+                    </div> -->
                     <div class="swiper-slide">
-                        <img @click="insertIcon('static/icons/more/'+i+'.gif')" v-for="i in 35" :src="'static/icons/more/'+i+'.gif'" />
+                        <img @click="insertIcon('static/icons/more/'+i+'.gif')" v-for="i in 32" :src="'static/icons/more/'+i+'.gif'" :key="i"/>
                     </div>
                 </div>
                 <!-- 如果需要分页器 -->
@@ -198,7 +197,7 @@
             }
         },
         created() {
-            //this.updateMsgList(getRoomMsg())
+            this.updateMsgList([])
             this.user = storage.get('user')
             if(typeof this.$route.query.room_uuid !== 'undefined'){
                 window.uuid = this.$route.query.room_uuid
@@ -220,27 +219,24 @@
         mounted() {
             let that = this
             this.$refs.bscroll.style.height = (document.body.clientHeight - 100) + 'px'
-            //document.getElementById('edit').focus();
             new Swiper('.swiper-cont', {
                 loop: false,
                 autoplay: false, //可选选项，自动滑动
-
                 // 如果需要分页器
                 pagination: {
                     el: '.swiper-pagination',
-                    clickable: true,
-                    //dynamicBullets: true
+                    clickable: true
                 },
                 observer: true,
                 observeParents: true
             })
-
             this.$nextTick(() => {
                 if (!this.scroll) {
                     this.scroll = new BScroll(this.$refs.bscroll, {
                         click: false,
                         scrollY: true,
-                        probeType: 3
+                        probeType: 3,
+                        preventDefault:false //重要，不然click事件冒泡将被阻止
                     });
                 }
             })
@@ -249,8 +245,11 @@
                 that.handleSendShow()
             }
         },
+        beforeRouteEnter (to, from, next) {
+            to.meta.title = to.query.name
+            next()
+        },
         destroyed() {
-
         },
         activated() {
             window.physicsBackRouter = '/home'
@@ -280,7 +279,7 @@
             handleOnChange(event) {
                 let that = this
                 let file = event.target.files[0];
-                console.log((file.type).indexOf("image/"))
+                //console.log((file.type).indexOf("image/"))
                 if((file.type).indexOf("image/")==-1){  
                     Alert({mes: "请上传图片!"})
                     return 
@@ -292,7 +291,7 @@
                 reader.onload = function (e) {
                     that.option.img = e.target.result;
                     that.cropperShow = true
-                    console.log(that.option.img)
+                    //console.log(that.option.img)
                 }
                 //正式读取文件
                 reader.readAsDataURL(file);
@@ -307,8 +306,7 @@
                     this.option.img = ''
                     //将剪裁后的图片执行上传
                     uploadBase64(this.reqImgData).then(res => {
-                        let img = '<img ontouchstart="magPic(event)" height="50" src="' + process.env.VUE_APP_CLIENT_API + res.data.path +
-                            '">'
+                        let img = '<img class="chat_img" preview="1" preview-text="" width="100" src="' + process.env.VUE_APP_CLIENT_API + res.data.path +'">'
                         window.roomSocket.emit('chat', {
                             data: {
                                 msg: img,
@@ -317,9 +315,7 @@
                                 type: 1
                             }
                         })
-
                     })
-
                 })
             },
             handleOnRawImg() {
@@ -328,8 +324,7 @@
                 //先将显示图片地址清空，防止重复显示
                 this.option.img = ''
                 uploadBase64(this.reqImgData).then(res => {
-                    let img = '<img ontouchstart="magPic(event)" height="50" src="' +process.env.VUE_APP_CLIENT_API+ res.data.path + '">'
-                    console.log(img)
+                    let img = '<img class="chat_img"  preview="1" preview-text="" width="100" src="' +process.env.VUE_APP_CLIENT_API+ res.data.path + '">'
                     window.roomSocket.emit('chat', {
                         data: {
                             msg: img,
@@ -417,7 +412,6 @@
                 this.defsShow = false
                 this.recordShow = false
                 this.$refs.bscroll.style.height = (document.body.clientHeight - 100) + 'px'
-                //document.getElementById('edit').focus();
             },
             handleSendShow() {
                 if (this.content.length >= 1) {
@@ -425,7 +419,6 @@
                 } else {
                     this.sendShow = false
                 }
-
             },
             handleMsgListToBottom(){
                 this.$nextTick(() => {
@@ -439,6 +432,10 @@
                         this.scroll.refresh();
                     }
                     this.scroll.scrollTo(0, this.scroll.maxScrollY)
+                    setTimeout(()=>{
+                        this.$previewRefresh()
+                        console.log(42342)
+                    },200)
                 })
             },
             handleDefsShow() {
@@ -481,9 +478,7 @@
                 }
             },
             insertIcon: function (src) {
-
                 this.content = this.content + '<img src="' + src + '">'
-                console.log(this.content)
                 //this.insertHtmlAtCaret(img)
             },
             // 录音开始
@@ -611,9 +606,10 @@
     .input_wapper {
         width: 100%;
         display:flex;
-        bottom: 0px;
+        bottom: 0.2rem;
         flex-wrap:row;
         justify-content:space-between;
+        position:fixed;
     }
 
     .voice {
@@ -638,17 +634,16 @@
         content: attr(placeholder);
     }
 
-    .record[data-v-69d1d965] {
-    width: 100%;
-    max-height: 100px;
-    line-height: 35px;
-    font-size: 20px;
-    height: 35px;
-    border: 1px solid #999999;
-    border-radius: 5px;
-    text-align: center;
-    margin-top: 4px;
-}
+    .record {
+        width: 100%;
+        max-height: 100px;
+        line-height: 35px;
+        font-size: 20px;
+        height: 35px;
+        border: 1px solid #999999;
+        border-radius: 5px;
+        text-align: center;
+    }
 
     .touched {
         background: #999999;
@@ -671,16 +666,17 @@
         height: 200px !important;
         width: 100%;
         border-top: 1px solid #e9e9e9;
-        text-align: center;
+        text-align: left;
         overflow-x: auto;
         background: #fff;
         flex-wrap: wrap;
+        position:fixed;
+        bottom:0rem;
     }
 
     .icons_wapper img {
-        margin: 5px;
-        width: 25px;
-        height: 25px;
+        margin: 2.25%;
+        width: 8%;
     }
 
     .swiper-pagination {
@@ -692,9 +688,13 @@
         height: 200px !important;
         width: 100%;
         border-top: 1px solid #e9e9e9;
-        text-align: center;
+        text-align: left;
         overflow-x: auto;
         background: #fff;
+        flex-wrap: wrap;
+        position:fixed;
+        bottom:0rem;
+        text-align: center;
     }
 
     .yd-grids-item:after {

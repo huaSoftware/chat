@@ -19,9 +19,6 @@ import YDUI from "vue-ydui"; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js'
 import "vue-ydui/dist/ydui.rem.css";
 Vue.use(YDUI);
 
-//清除不必要的样式
-import '@/assets/css/reset.css'
-
 // 定义全局加载组件
 /* import { Vwaiting, Cwaiting } from "@/assets/js/showWating.js";
 window.app = Object.assign({}, { Vwaiting, Cwaiting }); */
@@ -32,6 +29,14 @@ Vue.use(VueLazyload, {
   loading: require("@/assets/loading-bars.svg")
   // loading: require('@/assets/img/logo.png')
 });
+
+//图片点击全屏
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+let options = {
+  fullscreenEl: false
+};
+Vue.use(preview, options)
 
 new Vue({
   router,

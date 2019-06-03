@@ -1,8 +1,15 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 14:08:47
+ * @description: 首页
+ * @LastEditors: hua
+ * @LastEditTime: 2019-06-03 14:29:20
+ -->
 
 <template>
 	<div class="content">
 		<article class="yd-list yd-list-theme4">
-			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList">
+			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
 				<div class="yd-list-img"><img :src="item.users.head_img"></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
@@ -10,7 +17,7 @@
 						<span class="title-right">{{formatTime(item.room.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
-						<div><span class="demo-list-price" v-html="item.room.last_msg">{{item.room.last_msg}}</span></div>
+						<div><span class="demo-list-price" v-html="formatLastMsg(item.room.last_msg)"></span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
 						<div  v-if="alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
@@ -149,12 +156,22 @@
 				this.$router.push({
 					name: 'room',
 					query:{
-						room_uuid: item.room_uuid
+						room_uuid: item.room_uuid,
+						name: item.users.nick_name
 					}
 				})
 			},
 			formatTime(value){
 				return utils.time.formatDate(value, 'hh:mm:ss')
+			},
+			formatLastMsg(last_msg){
+				if(last_msg.indexOf("preview") != -1 ){
+					return '[图片]'
+				}
+				if(last_msg.indexOf("<img") != -1 ){
+					return '[图片]'
+				}
+				return last_msg
 			}
 		},
 		created() {
