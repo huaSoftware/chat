@@ -19,7 +19,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // 定义在store/user中，以后会添加权限等设置
   let token = store.getters.token
-  if (store.getters.token) {
+  if (token) {
     config.headers['Authorization'] = 'JWT '+token // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   config.headers['Content-Type'] = store.state.appData.headerContentType
@@ -75,7 +75,7 @@ service.interceptors.response.use(
     Loading.close()
     /* 网络无响应处理 */
     if (error == 'Error: timeout of 15000ms exceeded') {
-      //console.log('网络超时')
+      ////console.log('网络超时')
     }
     if (typeof (error.response) === 'undefined') {
       if (error === 'Error: Network Error') {

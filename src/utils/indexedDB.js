@@ -20,7 +20,7 @@ export function addAddressBookBeg(value) {
 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
     return true
@@ -45,7 +45,7 @@ export function getAddressBookBeg() {
 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
 }
@@ -72,7 +72,7 @@ export function updateAddressBookBeg(id, status) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
 }
@@ -96,7 +96,7 @@ export function addRoomMsg(value) {
 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
     return true
@@ -117,13 +117,13 @@ export function getRoomMsg(room_uuid) {
         // Make sure we have something in DB:
         //统计次数
         let count = await db.roomMsg.where({'room_uuid':room_uuid}).count()
-        console.log(count)
+        //console.log(count)
         let data =   await db.roomMsg.where({'room_uuid':room_uuid}).offset(count-5).limit(5).sortBy('created_at')
         return data   
 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
 }
@@ -150,7 +150,7 @@ export function updateMsg(id, status) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        console.log(e.stack || e);
+        //console.log(e.stack || e);
         return false
     });
 }

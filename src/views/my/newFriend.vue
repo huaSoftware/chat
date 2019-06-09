@@ -48,7 +48,7 @@ export default {
     methods: {
         init(){
             getAddressBookBeg().then(res=>{
-                console.log(res)
+                //console.log(res)
                 this.newFriendList = res
             })
         },
@@ -60,7 +60,7 @@ export default {
             addressBookAdd(reqData).then(res=>{
                 this.$dialog.toast({mes: res.msg});
                 updateAddressBookBeg(item.id, 1).then(res=>{
-                    console.log(res)
+                    //console.log(res)
                     this.newFriendList = res
                 })
             })

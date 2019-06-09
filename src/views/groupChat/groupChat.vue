@@ -4,7 +4,16 @@
  * @LastEditors: hua
  * @LastEditTime: 2019-06-03 14:31:51
  -->
-
+<style>
+.yd-checkbox-icon{
+    vertical-align: middle!important;
+    
+}
+.yd-checkbox-text{
+    float:left;
+    margin-right:0.2rem;
+}
+</style>
 <template>
     <div class="content">
         <!-- 头部开始 -->
@@ -12,49 +21,53 @@
 			<div class="yd-navbar-item"></div> 
 			<div class="yd-navbar-center-box" style="height: 1rem;">
 				<div class="yd-navbar-center">
-					<span class="yd-navbar-center-title" style="color: rgb(92, 92, 92); font-size: 0.3rem;">通讯录</span>
+					<span class="yd-navbar-center-title" style="color: rgb(92, 92, 92); font-size: 0.3rem;">发起群聊</span>
 				</div>
 			</div> 
-			<div class="yd-navbar-item">
-				<!-- <span class="icon-custom-8888 navbar_icon"></span> -->
-				<span class="icon-custom-jia2 navbar_icon" @click="defShow=!defShow"></span>
+            <div class="yd-navbar-item">
+				 <yd-button @click.native="handleSubmit" size="small" type="primary" shape="angle">发起</yd-button>
 			</div>
 		</header>
 		<!-- 头部结束 -->
-        <!-- 功能栏 -->
-		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
-        <!-- 群组 -->
-        <yd-accordion>
-            <yd-accordion-item title="群聊">
-                <div style="padding: .24rem;">
-                    <dl>
-                        <dt></dt>
-                        <dd @click="handleJoinGroupRoom(item)" v-for ="(item, index) in groupRoomList" :key="index"> 
-                            <a>
-                            <img src="@/assets/img/default.jpg"/>{{item.room.name}}
-                            </a>
-                        </dd>
-                    </dl >
-                </div>
-            </yd-accordion-item>
-        </yd-accordion>
-        <!-- 列表 -->
+        <!-- 搜索框开始 -->
+        <div class="yd-search">
+            <div class="yd-search-input">
+                <form action="#" class="search-input">
+                    <i class="search-icon"></i> 
+                    <div class="yd-input">
+                        <vEditDiv class='input' placeholder='搜 索' v-model="keywords"></vEditDiv>
+                        <a href="javascript:;" tabindex="-1" class="yd-input-clear" style="display: none;"></a> 
+                        <span class="yd-input-error" style="display: none;"></span> 
+                        <span class="yd-input-warn" style="display: none;"></span> 
+                        <span class="yd-input-success" style="display: none;"></span>
+                    </div>
+                </form> 
+                <a href="javascript:;" class="cancel-text" style="display: none;">取消</a>
+            </div>
+        </div>
+        <!-- 搜索框结束 -->
         <div class="address-book-list">  
             <dl v-for = "num in 26" :key="num">
                 <dt :ref="String.fromCharCode(64+num)">{{String.fromCharCode(64+num)}}</dt>
-                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="String.fromCharCode(64+num) == item.users.first_word"> <!-- 循环 -->
-                    <a>
-                    <img :src="item.users.head_img">{{item.users.nick_name}}
-                    </a>
-                </dd>
+                 <yd-checkbox-group v-model="checkedUsers"  color="#45BAF4">
+                    <dd v-for="(item, index) in adderssBookList" :key="index" v-if="String.fromCharCode(64+num) == item.users.first_word"> <!-- 循环 -->
+                        <a>
+                            <img :src="item.users.head_img">
+                            <yd-checkbox  :val="JSON.stringify(item.users)">{{item.users.nick_name}}</yd-checkbox>
+                        </a>
+                    </dd>
+                 </yd-checkbox-group>
             </dl >
             <dl>
                 <dt ref="#">#</dt>
-                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
-                    <a>
-                    <img :src="item.users.head_img">{{item.users.nick_name}}
-                    </a>
-                </dd>
+                <yd-checkbox-group v-model="checkedUsers"  color="#45BAF4">
+                    <dd  v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
+                        <a>
+                            <img :src="item.users.head_img">
+                            <yd-checkbox  :val="JSON.stringify(item.users)">{{item.users.nick_name}}</yd-checkbox>
+                        </a>
+                    </dd>
+                </yd-checkbox-group>
             </dl >
         
         </div>
@@ -72,14 +85,18 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters} from 'vuex'
+import storage from "@/utils/localstorage"
 import {addressBookGet} from '@/api/addressBook'
-import {userRoomRelationGet} from '@/api/userRoomRelation'
+import {groupChatCreate} from '@/api/groupChat'
+import vEditDiv from '@/components/v-edit-div/v-edit-div'
 import {send} from '@/utils/socketio'
 export default {
-    components: {},
+    components: {vEditDiv},
     data() {
         return {
+            keywords: '',
+            checkedUsers:[],
             reqData:{
                 page_no: 1,
                 per_page: 10000000
@@ -90,7 +107,7 @@ export default {
                 {
                     label: '发起群聊',
                     callback: () => {
-                        this.$router.push({name:'groupChat'})
+                        this.$dialog.toast({mes: '咔擦，此人太帅！'});
                     }
                 },
                 {
@@ -102,28 +119,15 @@ export default {
             ]
         }
     },
-    computed: {
-        ...mapGetters([
-            'groupRoomList'
-        ])
-    },
     methods: {
-        ...mapMutations({
-            updateGroupRoomList: 'updateGroupRoomList',
-        }),
         init(){
             addressBookGet(this.reqData).then(res=>{
                 this.adderssBookList = res.data.addressBookList
             })
-            userRoomRelationGet({page_no:1, per_page:100000000}).then(res=>{
-                this.updateGroupRoomList(res.data.list)
-                this.loading = false
-            })
         },
         handlePopAddressNookLetterResize(){
-            /* let screenWidth = document.body.clientWidth
-            console.log(screenWidth)
-            document.getElementById('pop-address-book-letter').style.right = ((screenWidth)/2)+'px' */
+            let screenWidth = document.body.clientWidth
+            document.getElementById('pop-address-book-letter').style.right = ((screenWidth-750)/2)+'px'
         },
         handleScrollToRef(value){
             document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop
@@ -131,10 +135,11 @@ export default {
         handleScroll () {
         },
         handleJoinRoom(item){
-            send('join', {
+            send('join',{
                 name: item.users.nick_name,
                 room_uuid:item.room_uuid,
-                type: item.room.type
+                type:item.room.type
+               
             })
             this.$router.push({
                 name: 'room',
@@ -144,18 +149,28 @@ export default {
                 }
             })
         },
-        handleJoinGroupRoom(item){
-            send('join', {
-                name: item.room.name,
-                room_uuid: item.room_uuid,
-                type: item.room.type
+        handleSubmit(){
+            let user = storage.get('user')
+            let ids = []
+            ids.push(user.id)
+            this.checkedUsers.forEach((key, index)=>{
+                console.log(JSON.parse(key))
+                ids.push(JSON.parse(key)['id'])
             })
-            this.$router.push({
-                name: 'room',
-                query:{
-                    room_uuid: item.room_uuid,
-                    name: item.room.name
-                }
+            groupChatCreate({ids:ids}).then(res=>{
+                
+                const room_uuid = res.data.room_uuid
+                send('join',{
+                    type: 1,
+                    room_uuid:room_uuid,
+                })
+                this.$router.push({
+                    name: 'room',
+                    query:{
+                        room_uuid: room_uuid,
+                        //name: item.users.nick_name
+                    }
+                })
             })
         }
     },
@@ -167,6 +182,28 @@ export default {
         document.getElementById('scrollView').addEventListener('scroll', this.handleScroll)
         window.onresize = () => {
             this.handlePopAddressNookLetterResize()
+        }
+    },
+    watch:{
+        'checkedUsers'(){
+            this.keywords = ''
+            //console.log(this.checkedUsers)
+            this.checkedUsers.forEach((key, index)=>{
+                this.keywords = this.keywords + '<img height="20" src="'+JSON.parse(key)['head_img']+'"/>'
+            })
+        },
+        keywords(newValue, preValue){
+            let rawArr = []
+            let imgArr = newValue.match(/<img.+?>/ig)?newValue.match(/<img.+?>/ig):[]
+            this.checkedUsers.forEach((key, index)=>{
+                imgArr.forEach((imgKey, imgIndex)=>{
+                    console.log(imgKey)
+                    if(imgKey.indexOf(JSON.parse(key)['head_img']) !== -1){
+                        rawArr.push(key)  
+                    }
+                })
+            })
+            this.checkedUsers = rawArr
         }
     }
 }
@@ -280,25 +317,12 @@ dl {
     font-size: 0.45rem;
 	margin-left:0.3rem;
 }
-
-
-dd{
-    margin-top: 10px;
-    padding-bottom: 10px;
-    margin-left: 10px;
+.yd-checkbox{
+    float:right;
 }
-dd a {
-    display: block;
-    height: 27.5px;
-    line-height: 2.75rem;
-    position: relative;
-    line-height: 27.5px;
-}
-dd a img {
-    float: left;
-
-    height: 27.5px;
-    width: 27.5px;
-    margin-right: 5%;
+.input{
+    height:100%;
+    line-height:100%;
+    padding:8px;
 }
 </style>

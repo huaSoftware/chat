@@ -118,6 +118,7 @@ import { setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
 import md5 from 'js-md5'
 import { VueCropper } from "vue-cropper"
+import {setup} from '@/utils/socketio'
 export default {
     components: {CrossLine, VueCropper},
     data() {
@@ -184,6 +185,7 @@ export default {
     },
     created() {
         window.physicsBackRouter = '/auth/login'
+        setup()
     },
     methods: {
         bindFile(name) {
@@ -203,7 +205,7 @@ export default {
         },
         confirmCropper() {
             this.$refs.cropper_header.getCropData(data => {
-                console.log( process.env)
+                //console.log( process.env)
                 this.option.img = data;
                 uploadBase64({ imgDatas: this.option.img})
                 .then(res => {

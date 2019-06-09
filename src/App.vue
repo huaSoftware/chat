@@ -24,13 +24,15 @@ import { mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
+import {setup} from '@/utils/socketio'
 
 export default {
   components: {},
   name: "app",
   created() {
+    setup()
     // 创建添加新好友套接字连接
-    let userId = storage.get('user')['id']
+    /* let userId = storage.get('user')['id']
     if(userId && window.broadcastSocket == undefined){
       //命名空间用于广播，房间用于单人，命名空间时广播无效
       window.broadcastSocket = io.connect(process.env.VUE_APP_CLIENT_API+'/broadcast');
@@ -39,7 +41,7 @@ export default {
       })
       //监听好友请求
       window.broadcastSocket.on('beg',(data, callback)=>{
-        console.log(data)
+        //console.log(data)
         if(data['action'] == 'beg_add'){
           callback(data)
           // 复制原来的值
@@ -59,7 +61,7 @@ export default {
 
       //监听房间动态消息
       window.broadcastSocket.on('room',(data)=>{
-        console.log(data)
+        //console.log(data)
         this.updateRoomList(data)
       });
     }
@@ -77,14 +79,14 @@ export default {
       window.roomSocket.on('chat',(data)=>{
         //逻辑处理,存放indexdDB,存放一份实时的在vuex
         let msgList = []
-        console.log(this.msgList)
+        //console.log(this.msgList)
         Object.assign(msgList, this.msgList)
         msgList = msgList.concat(data.data)
         this.updateMsgList(msgList)
         addRoomMsg(data.data)
-        //console.log(this.msgList)
+        ////console.log(this.msgList)
       });
-    }
+    } */
   },
   mounted() {
   },
@@ -131,8 +133,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-  @import '@/assets/scss/base.scss';
-  @import '@/assets/scss/public.scss';
+@import '@/assets/scss/base.scss';
+@import '@/assets/scss/public.scss';
 .yd-navbar {
 	height:1.4rem !important;
 	padding-top:0.4rem !important;

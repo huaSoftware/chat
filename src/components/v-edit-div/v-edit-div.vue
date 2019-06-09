@@ -31,14 +31,14 @@
         watch: {
             'value'(){
                 if ( !this.isLocked ) {
-                   //console.log(this.value)
+                   ////console.log(this.value)
                     this.innerText = this.value;
                 }
             }
         },
         methods: {
             addBr(event){
-                console.log(event)
+                //console.log(event)
                 this.innerText = this.innerText + '<br>'
                 //event.keyCode = 0;//屏蔽回车键
                 event.returnValue = false;

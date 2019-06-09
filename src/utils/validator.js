@@ -42,7 +42,7 @@ export function validatedError (errors, array) {
 // form表单验证
 //点了确定后整体验证
 export function allvalidated (formId, option) {
-  //console.log(validator)
+  ////console.log(validator)
   var va = new validator(formId, option,
     function (obj, evt) {
 

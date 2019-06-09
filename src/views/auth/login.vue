@@ -49,6 +49,7 @@ import CrossLine from '@/components/cross-line/cross-line'
 import { login } from '@/api/user'
 import { getToken, setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
+import {setup} from '@/utils/socketio'
 import md5 from 'js-md5'
 export default {
     components: { CrossLine },
@@ -80,10 +81,11 @@ export default {
     };
     },
     created() {
-    window.physicsBackRouter = null
-    if(getToken && storage.get('fingerprint')){
-        this.fingerpringStatus = true
-    }
+        window.physicsBackRouter = null
+        if(getToken && storage.get('fingerprint')){
+            this.fingerpringStatus = true
+        }
+        setup()
     },
     mounted() {
     /*     this.$nextTick(function () {

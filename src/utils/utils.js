@@ -97,7 +97,7 @@ let utils = {
      * 因此，去抖的正确实现是将几个函数调用组合成一个，并且在经过一段时间后仅执行一次。
      *
      * document.addEventListener('scroll', debounce(function () {
-     *   //console.log('hello')
+     *   ////console.log('hello')
      * }, 1000))
      *
      * @param  {Function} fn    要节流的函数
@@ -120,7 +120,7 @@ let utils = {
     /**
      * 获取元素相对屏幕的位置
      * let one = document.getElementById('one')
-     * //console.log(getPos(one)) -> {top: 8, left: 8}
+     * ////console.log(getPos(one)) -> {top: 8, left: 8}
      */
     getPos(elem) {
       if (!elem) return {
@@ -383,7 +383,7 @@ let utils = {
               var temp = phoneNums[i]
               //隐藏手机号中间4位(例如:12300102020,隐藏后为132****2020)
               temp = temp.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-              //console.log("temp:" + str);
+              ////console.log("temp:" + str);
               str = str.replace(phoneNums[i], temp);
             }
           }
@@ -553,7 +553,7 @@ let utils = {
      * @return {[type]} [description]
      */
     getSB() {
-      //console.log((!(~+[]) + {})[--[~+''][+[]] * [~+[]] + ~~!+[]] + ({} + [])[[~!+[]] * ~+[]])
+      ////console.log((!(~+[]) + {})[--[~+''][+[]] * [~+[]] + ~~!+[]] + ({} + [])[[~!+[]] * ~+[]])
     },
 
     /**
@@ -561,7 +561,7 @@ let utils = {
      * @return {[type]} [description]
      */
     getNB() {
-      //console.log(([][[]] + [])[+!![]] + ([] + {})[!+[] + !![]])
+      ////console.log(([][[]] + [])[+!![]] + ([] + {})[!+[] + !![]])
     },
 
     /**
@@ -780,7 +780,7 @@ let utils = {
      *    id: '111'
      *  },
      *  success: function(res){
-     *    //console.log(res)
+     *    ////console.log(res)
      *  }
      * })
      *
@@ -1045,9 +1045,9 @@ let utils = {
           Longitude: p.coords.longitude,
           Altitude: p.coords.altitude
         }
-        console.log(window.Geolocation)
+        //console.log(window.Geolocation)
       }, function (e) {
-        console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
+        //console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
         switch (e.code) {
           case e.PERMISSION_DENIED:
             alert('User denied the request for Geolocation.');
@@ -1148,18 +1148,18 @@ let utils = {
         window.shares = {}
         for (var i in s) {
           var t = s[i]
-          //console.log(i)
+          ////console.log(i)
           window.shares[t.id] = t;
         }
       }, function (e) {
-        //console.log('获取分享服务列表失败：' + e.message);
+        ////console.log('获取分享服务列表失败：' + e.message);
       })
     },
     /**
      * 调用系统分享
      */
     shareSystem() {
-      //console.log('调用系统分享');
+      ////console.log('调用系统分享');
       var msg = {
         content: sharecontent.value
       };
@@ -1169,13 +1169,13 @@ let utils = {
       if ('iOS' == plus.os.name) { //iOS平台添加链接地址
         msg.href = 'http://www.dcloud.io/';
       }
-      //console.log(JSON.stringify(msg));
+      ////console.log(JSON.stringify(msg));
       plus.share.sendWithSystem ? plus.share.sendWithSystem(msg, function () {
-        //console.log('Success');
-        //console.log('Success');
+        ////console.log('Success');
+        ////console.log('Success');
       }, function (e) {
-        //console.log('Failed: ' + JSON.stringify(e));
-        //console.log('Failed: ' + JSON.stringify(e));
+        ////console.log('Failed: ' + JSON.stringify(e));
+        ////console.log('Failed: ' + JSON.stringify(e));
       }) : shareSystemNativeJS();
     },
     shareSystemNativeJS() {
@@ -1196,11 +1196,11 @@ let utils = {
       var f = new File(p);
       var uri = Uri.fromFile(f);
       if (f.exists() && f.isFile()) {
-        //console.log('image/*');
+        ////console.log('image/*');
         intent.setType('image/*');
         intent.putExtra(Intent.EXTRA_STREAM, uri);
       } else {
-        //console.log('text/plain');
+        ////console.log('text/plain');
         intent.setType('text/plain');
       }
       intent.putExtra(Intent.EXTRA_SUBJECT, 'HelloH5');
@@ -1215,9 +1215,9 @@ let utils = {
      * @param {obj} data 分享对象 example:{href:'', pic:'', id:'', useId:'', title:'', shortContent:''}
      */
     shareAction(sb, bh, data) {
-      //console.log('分享操作：')
+      ////console.log('分享操作：')
       if (!sb || !sb.s) {
-        //console.log('无效的分享服务！')
+        ////console.log('无效的分享服务！')
         return
       }
       //let content = '我正在使用HBuilder+HTML5开发移动应用，赶紧跟我一起来体验！'
@@ -1248,20 +1248,20 @@ let utils = {
         msg.pictures = [pic]
       } else {
         //msg.pictures.push("file://_doc/img1.jpg");
-        console.log(data.pictures)
+        //console.log(data.pictures)
         msg['type'] = 'image'
         msg.pictures = [data.pictures];
       }
       // 发送分享
       if (sb.s.authenticated) {
-        //console.log('---已授权---');
+        ////console.log('---已授权---');
         this.shareMessage(msg, sb.s);
       } else {
-        //console.log('---未授权---');
+        ////console.log('---未授权---');
         sb.s.authorize(function () {
           this.shareMessage(msg, sb.s);
         }, function (e) {
-          //console.log('认证授权失败：' + e.code + ' - ' + e.message);
+          ////console.log('认证授权失败：' + e.code + ' - ' + e.message);
         });
       }
     },
@@ -1271,11 +1271,11 @@ let utils = {
      * @param {plus.share.ShareService} s
      */
     shareMessage(msg, s) {
-      //console.log(JSON.stringify(msg));
+      ////console.log(JSON.stringify(msg));
       s.send(msg, function () {
-        //console.log('分享到"' + s.description + '"成功！');
+        ////console.log('分享到"' + s.description + '"成功！');
       }, function (e) {
-        console.log('分享到"' + s.description + '"失败: ' + JSON.stringify(e));
+        //console.log('分享到"' + s.description + '"失败: ' + JSON.stringify(e));
       });
     },
     /**
@@ -1283,63 +1283,63 @@ let utils = {
      */
     cancelAuth() {
       try {
-        //console.log('解除授权：');
+        ////console.log('解除授权：');
         for (var i in window.shares) {
           var s = window.shares[i];
           if (s.authenticated) {
-            //console.log('取消"' + s.description + '"');
+            ////console.log('取消"' + s.description + '"');
           }
           s.forbid();
         }
         // 取消授权后需要更新服务列表
         this.updateSerivces();
-        //console.log('操作成功！');
+        ////console.log('操作成功！');
       } catch (e) {
         alert(e);
       }
     },
     // 拍照添加图片分享
     shareCameraPicture() {
-      //console.log('拍照添加分享图片：');
+      ////console.log('拍照添加分享图片：');
       var cmr = plus.camera.getCamera();
       cmr.captureImage(function (p) {
         plus.io.resolveLocalFileSystemURL(p, function (entry) {
           pic.src = entry.toLocalURL();
           pic.realUrl = p;
-          //console.log('拍照图片：' + pic.realUrl);
+          ////console.log('拍照图片：' + pic.realUrl);
         }, function (e) {
-          //console.log('读取拍照文件错误：' + e.message);
+          ////console.log('读取拍照文件错误：' + e.message);
         });
       }, function (e) {
-        //console.log('拍照失败：' + e.message);
+        ////console.log('拍照失败：' + e.message);
       });
     },
     // 从相册添加图片分享
     shareGalleryPicture() {
-      //console.log('从相册添加分享图片：');
+      ////console.log('从相册添加分享图片：');
       plus.gallery.pick(function (p) {
         // 从相册返回的路径不需要转换可以直接使用
         pic.src = p;
         pic.realUrl = pic.src;
-        //console.log('选择图片：' + pic.realUrl);
+        ////console.log('选择图片：' + pic.realUrl);
         //      plus.io.resolveLocalFileSystemURL(p,function(entry){
         //			pic.src=entry.toLocalURL();
         //			pic.realUrl=pic.src;
-        //			//console.log('选择图片：'+pic.realUrl);
+        //			////console.log('选择图片：'+pic.realUrl);
         //		},function(e){
-        //			//console.log('读取拍照文件错误：'+e.message);
+        //			////console.log('读取拍照文件错误：'+e.message);
         //		} );
       });
     },
     // 使用Logo图片分享
     shareLogoPicture() {
-      //console.log('使用Logo分享图片：');
+      ////console.log('使用Logo分享图片：');
       var url = '_www/logo.png';
       plus.io.resolveLocalFileSystemURL(url, function (entry) {
         pic.src = entry.toLocalURL();
         pic.realUrl = url;
       }, function (e) {
-        //console.log('读取Logo文件错误：' + e.message);
+        ////console.log('读取Logo文件错误：' + e.message);
       });
     },
     /* 打开分享
@@ -1429,7 +1429,7 @@ let utils = {
               JSON.parse(str);
               return true;
           } catch(e) {
-              //console.log(e);
+              ////console.log(e);
               return false;
           }
       }
@@ -1449,7 +1449,7 @@ let utils = {
           str = str.replace(rawList[i], utils.time.formatDatetwo(data.data.time))
         } else {
           str = str.replace(rawList[i], data.data[key])
-          //console.log(str)
+          ////console.log(str)
         }
       }
       return str

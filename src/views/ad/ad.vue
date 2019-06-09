@@ -55,11 +55,11 @@ export default {
         //设置裁剪框大小
        /*  var adImg = ["static/img/ad/ad1.png", "static/img/ad/ad2.png", "static/img/ad/ad3.png"]; 
         this.option.img = adImg[Math.floor(Math.random()*adImg.length)]
-        console.log(this.option.img)
+        //console.log(this.option.img)
         let clientWidth = document.body.clientWidth
         let clientHeight = document.body.style.height || document.body.clientHeight || document.documentElement.clientHeight
-        //console.log(clientHeight)
-        //console.log(clientWidth)
+        ////console.log(clientHeight)
+        ////console.log(clientWidth)
         let limitHeight = clientWidth * 1920/ 1080
         let limitWidth =  clientHeight * 1080/ 1920
         if(limitHeight< document.body.clientHeight){

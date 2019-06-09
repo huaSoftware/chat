@@ -146,6 +146,7 @@
     import storage from "@/utils/localstorage"
     import {getRoomMsg} from "@/utils/indexedDB"
     import { Confirm, Alert, Toast, Notify, Loading } from 'vue-ydui/dist/lib.rem/dialog'
+    import {send} from '@/utils/socketio'
     export default {
         components: {
             vEditDiv,
@@ -213,7 +214,7 @@
                     window.r = plus.audio.getRecorder()
                 }
             } catch (e) {
-                console.log('不是app内')
+                //console.log('不是app内')
             }
         },
         mounted() {
@@ -266,10 +267,9 @@
                     let file_path = process.env.BASE_API + res.data.path
                     let file =
                         `<a ontouchstart="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`
-                    window.roomSocket.emit('chat', {
+                    send('chat', {
                         data: {
                             msg: file,
-                            userId: this.user.id,
                             uuid: window.uuid,
                             type: 1
                         }
@@ -279,7 +279,7 @@
             handleOnChange(event) {
                 let that = this
                 let file = event.target.files[0];
-                //console.log((file.type).indexOf("image/"))
+                ////console.log((file.type).indexOf("image/"))
                 if((file.type).indexOf("image/")==-1){  
                     Alert({mes: "请上传图片!"})
                     return 
@@ -291,7 +291,7 @@
                 reader.onload = function (e) {
                     that.option.img = e.target.result;
                     that.cropperShow = true
-                    //console.log(that.option.img)
+                    ////console.log(that.option.img)
                 }
                 //正式读取文件
                 reader.readAsDataURL(file);
@@ -307,10 +307,9 @@
                     //将剪裁后的图片执行上传
                     uploadBase64(this.reqImgData).then(res => {
                         let img = '<img class="chat_img" preview="1" preview-text="" width="100" src="' + process.env.VUE_APP_CLIENT_API + res.data.path +'">'
-                        window.roomSocket.emit('chat', {
+                        send('chat', {
                             data: {
                                 msg: img,
-                                userId: this.user.id,
                                 uuid: window.uuid,
                                 type: 1
                             }
@@ -325,10 +324,9 @@
                 this.option.img = ''
                 uploadBase64(this.reqImgData).then(res => {
                     let img = '<img class="chat_img"  preview="1" preview-text="" width="100" src="' +process.env.VUE_APP_CLIENT_API+ res.data.path + '">'
-                    window.roomSocket.emit('chat', {
+                    send('chat', {
                         data: {
                             msg: img,
-                            userId: this.user.id,
                             uuid: window.uuid,
                             type: 1
                         }
@@ -361,17 +359,16 @@
             // 扩展API加载完毕，现在可以正常调用扩展API
             getCurrentPosition() {
                 plus.geolocation.getCurrentPosition(function (p) {
-                    console.log(p)
-                    window.roomSocket.emit('chat', {
+                    //console.log(p)
+                    send('chat', {
                         data: {
                             msg: p.addresses,
-                            userId: this.user.id,
                             uuid: window.uuid,
                             type: 1
                         }
                     })
                 }, function (e) {
-                    console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
+                    //console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
                     switch (e.code) {
                         case e.PERMISSION_DENIED:
                             alert('User denied the request for Geolocation.');
@@ -389,20 +386,17 @@
                 });
             },
             sendMsg() {
-                console.log(this.user)
-                window.roomSocket.emit('chat', {
+                //console.log(this.user)
+                send('chat', {
                     data: {
                         msg: this.content,
                         uuid: window.uuid,
-                        userId: this.user.id,
                         type: 1 //1是文字，0是语音
                     }
-                },  (e)=>{
-                    console.log('发送成功')
                 })
                 document.getElementById('edit').innerHTML = ''
                 this.content = ''
-                console.log(this.content)
+                //console.log(this.content)
             },
             handleRecordShow() {
                 this.recordShow = !this.recordShow
@@ -434,7 +428,7 @@
                     this.scroll.scrollTo(0, this.scroll.maxScrollY)
                     setTimeout(()=>{
                         this.$previewRefresh()
-                        console.log(42342)
+                        //console.log(42342)
                     },200)
                 })
             },
@@ -498,7 +492,7 @@
                     window.r.record({
                         filename: "_doc/audio/"
                     }, function (p) {
-                        console.log('录音完成:' + p)
+                        //console.log('录音完成:' + p)
                         //上传
                         var task = plus.uploader.createUpload('http://118.25.6.169:89/v2.api/upload', {
                             method: "post"
@@ -513,7 +507,7 @@
                                     //获取录音长度
                                     //amr.getDuration(); 
                         
-                                    window.roomSocket.emit('chat', {
+                                    send('chat', {
                                         data: {
                                             msg: url,
                                             duration: amr.getDuration(),
@@ -526,8 +520,8 @@
                                     })
                                 })
                             } else {
-                                console.log(t.responseText)
-                                console.log("上传失败：" + status);
+                                //console.log(t.responseText)
+                                //console.log("上传失败：" + status);
                             }
                         })
                         let fileName = p.replace("_doc/audio/", '')
@@ -541,17 +535,17 @@
                 //播放
                 let cp = plus.audio.createPlayer('http://118.25.6.169:1215/upload/test.amr');//'_doc/audio/'+entry.name);
                 cp.play(function(){
-                    console.log('播放完成！');
+                    //console.log('播放完成！');
                     // 操作播放对象
                     if(cp){
                     cp.stop();
                     cp=null;
                     }
                 }, function(e){
-                    console.log('播放音频文件"_doc/audio/'+entry+'"失败：'+e.message);
+                    //console.log('播放音频文件"_doc/audio/'+entry+'"失败：'+e.message);
                 });
                 }, function(e){
-                console.log('读取录音文件错误：'+e.message);
+                //console.log('读取录音文件错误：'+e.message);
                 });
             }, function (e) {
                 alert( "Audio record failed: " + e.message ); */
@@ -570,7 +564,7 @@
             amrPlay(url, index) {
                 let that = this
                 Vue.set(this.data[index].data, 'status', true)
-                console.log(this.data[index].data)
+                //console.log(this.data[index].data)
                 var BenzAMRRecorder = require('benz-amr-recorder');
                 var amr = new BenzAMRRecorder();
                 amr.initWithUrl(url).then(function () {
@@ -580,7 +574,7 @@
                 });
                 amr.onEnded(function () {
                     Vue.set(that.data[index].data, 'status', false)
-                    console.log('播放完毕');
+                    //console.log('播放完毕');
                 })
             },
             handleUploadBase64() {
@@ -588,7 +582,7 @@
                 this.$refs.cropper.getCropData((data) => {
                     that.reqImgData.imgDatas = data
                     uploadBase64(this.reqImgData).then(res => {
-                        console.log(res)
+                        //console.log(res)
                     })
                 })
             }

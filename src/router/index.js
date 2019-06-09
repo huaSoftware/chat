@@ -39,21 +39,28 @@ const router = new Router({
       path: '/home', // 路径
       name: 'home', // 给他个名字，后期路由传参用
       component: _import('home/home'), // 载入组件
-      meta: { title: '消息', isShowHead: true, isShowFoot: true, isShowBack: false, isShowDef:true, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
+      meta: { title: '消息', isShowHead: false, isShowFoot: true, isShowBack: false, isShowDef:true, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
     },
     // 通讯录
     {
       path: '/addressBook', // 路径
       name: 'addressBook', // 给他个名字，后期路由传参用
       component: _import('addressBook/addressBook'), // 载入组件
-      meta: { title: '通讯录', isShowHead: true, isShowFoot: true, isShowBack: false, isShowDef:true, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
+      meta: { title: '通讯录', isShowHead: false, isShowFoot: true, isShowBack: false, isShowDef:true, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
+    },
+    // 群聊
+    {
+      path: '/groupChat', // 路径
+      name: 'groupChat', // 给他个名字，后期路由传参用
+      component: _import('groupChat/groupChat'), // 载入组件
+      meta: { title: '发起群聊', isShowHead: false, isShowFoot: true, isShowBack: false, isShowDef:false, backPath: -1, defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
     },
     // 我的
     {
       path: '/my', // 路径
       name: 'my', // 给他个名字，后期路由传参用
       component: _import('my/my'), // 载入组件
-      meta: { title: '我的', isShowHead: true, isShowFoot: true, isShowBack: false, isShowDef:true, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
+      meta: { title: '我的', isShowHead: true, isShowFoot: true, isShowBack: false, isShowDef:false, backPath:'home', defName:'搜索', defPath:'search'} // 定义一些公共状态，你喜欢就好
     },
     // 我的/设置
     {
@@ -88,7 +95,7 @@ const router = new Router({
       path: '/search', // 路径
       name: 'search', // 给他个名字，后期路由传参用
       component: _import('search/search'), // 载入组件
-      meta: { title: '搜索', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home'} // 定义一些公共状态，你喜欢就好
+      meta: { title: '添加好友', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home'} // 定义一些公共状态，你喜欢就好
     },
     //房间
     {

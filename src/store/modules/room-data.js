@@ -6,7 +6,8 @@
 export default {
     state: {
         msgList: [],//聊天数据
-        roomList: []//房间数据 
+        roomList: [],//单聊房间数据 
+        groupRoomList: [] //群聊房间数据
 
     },
     getters:{
@@ -15,6 +16,9 @@ export default {
         },
         roomList(state){
             return state.roomList
+        },
+        groupRoomList(state){
+            return state.groupRoomList
         }
     },
 
@@ -25,6 +29,9 @@ export default {
         },
         updateRoomList({commit}, roomList) {
             commit("updateRoomList", roomList);
+        },
+        updateGroupRoomList({commit}, groupRoomList) {
+            commit("updateGroupRoomList", groupRoomList);
         }
     },
 
@@ -36,5 +43,8 @@ export default {
         updateRoomList(state, roomList){
             state.roomList = roomList
         },
+        updateGroupRoomList(state, groupRoomList){
+            state.groupRoomList = groupRoomList
+        }
     }
 }

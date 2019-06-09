@@ -27,7 +27,7 @@ export function addressBookBeg(data){
     })
 }
 
-//
+//离线
 export function addressBookCacheGet(){
     return request({
         url: '/api/v2/addressBook/cache.get',
