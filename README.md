@@ -8,7 +8,7 @@
     兼容web,android,ios的聊天室。一次开发多端使用。
 
 ### 体验地址
-http://www.zhuhui.store    
+http://im.zhuhui.store    
 
 ### 安卓版下载地址
 http://down.zhuhui.store/chat.apk
