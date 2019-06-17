@@ -1,0 +1,150 @@
+<template>
+  <yd-layout>
+    <!-- 公共头部导航 -->
+		<yd-navbar slot="navbar" :title="this.$route.meta.title" v-if="this.$route.meta.isShowHead">
+			<router-link :to="{name: this.$route.meta.backPath}" slot="left" v-if="this.$route.meta.isShowBack">
+				<yd-navbar-back-icon ></yd-navbar-back-icon>
+			</router-link>
+			<router-link :to="{name:this.$route.meta.defPath}" slot="right" v-if="this.$route.meta.isShowDef" style="color: rgb(92, 92, 92);">
+				{{this.$route.meta.defName}}
+			</router-link>
+    	</yd-navbar>
+		<router-view ></router-view>
+    <!--公共底部导航-->
+		<yd-tabbar slot="tabbar"  v-if="this.$route.meta.isShowFoot">
+			<yd-tabbar-item :title="item.name" type="link" :link="item.router" v-for="(item, index) in footerMenu" :key="index" :class="$store.state.appData.navbarTitle == item.name? 'active': ''">
+				<yd-icon :name="$store.state.appData.navbarTitle == item.name? item.iconActive: item.icon" custom slot="icon" size="0.54rem"></yd-icon>
+			</yd-tabbar-item>
+    	</yd-tabbar>
+    </yd-layout>
+</template>
+
+<script>
+import { mapState, mapGetters, mapMutations} from "vuex";
+import storage from "@/utils/localstorage"
+import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
+import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
+import {setup} from '@/utils/socketio'
+
+export default {
+  components: {},
+  name: "app",
+  created() {
+    if(this.user.token){
+      setup()
+    }
+  },
+  mounted() {
+  },
+  methods: {
+    ...mapMutations({
+      updateMsgList:'updateMsgList',
+      updateRoomList: 'updateRoomList'
+    })
+  },
+  watch: {},
+  computed: {
+    ...mapGetters(["msgList"]),
+    ...mapState([
+      'user'
+    ])
+  
+  },
+  data() {
+    return {
+      footerMenu: [
+        {
+          icon: "xiaoxi",
+          iconActive: "xiaoxi_active",
+          name: "消息",
+          router: "/home"
+        },
+        {
+          icon: "tongxunlu",
+          iconActive: "tongxunlu_active",
+          name: "通讯录",
+          router: "/addressBook"
+        },
+       /*  {
+          icon: "zixun",
+          iconActive: "zixun2",
+          name: "我的",
+          router: "/serverManager"
+        }, */
+        {
+          icon: "wode",
+          iconActive: "wode_active",
+          name: "我的",
+          router: "/my"
+        }
+      ]
+    };
+  }
+};
+</script>
+<style lang="scss" scoped>
+@import '@/assets/scss/base.scss';
+@import '@/assets/scss/public.scss';
+.yd-navbar {
+	height:1.4rem !important;
+	padding-top:0.4rem !important;
+}
+
+.yd-navbar + div{
+	padding-top: 1rem;
+}
+.fade-enter-active {
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear;
+    opacity: 1
+}
+
+.fade-enter, .fade-leave-active {
+    opacity: 0;
+}
+/*过渡动画*/
+/*下一页*/
+.next-enter-active {
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    opacity: 1;
+    position: fixed;
+    width:100vw;
+}
+
+.next-enter, .next-leave-active {
+    opacity: 0;
+    -webkit-transform: translate3d(50%, 0, 0);
+    transform: translate3d(50%, 0, 0);
+}
+
+.next-leave-active {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+/*上一页*/
+.prev-enter-active {
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    width:100vw;
+}
+
+.prev-enter, .prev-leave-active {
+    opacity: 0;
+    -webkit-transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
+}
+
+.prev-active {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+/* 底部选中 */
+.active{
+    color:$color-primary !important;
+}
+
+</style>

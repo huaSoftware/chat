@@ -1,0 +1,9 @@
+/app/__pycache__
+/app/Controllers/__pycache__
+/app/Models/__pycache__
+/app/Vendor/__pycache__
+/app/Middleware/__pycache__
+/.vscode
+/spam.log
+/uploads
+/app/env.py
