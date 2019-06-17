@@ -4,8 +4,8 @@
  * @LastEditors: hua
  * @LastEditTime: 2019-05-21 09:48:18
  -->
-### 聊天室
-    一个基于socketio开发的简易聊天室，功能精简，易扩展。
+### 工具鸡-聊天室
+    兼容web,android,ios的聊天室。一次开发多端使用。
 
 ### 体验地址
 http://www.zhuhui.store    
