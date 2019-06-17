@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-06-06 16:15:30
+ * @LastEditTime: 2019-06-17 15:09:12
  -->
 
 <template>
@@ -80,7 +80,6 @@
 		name: 'home',
 		data() {
 			return {
-				user:{},
 				alert: true,
 				loading: true,
 				defShow: false,
@@ -115,7 +114,7 @@
 				updateMsgList:'updateMsgList'
 			}),
 			init(){
-				this.user = storage.get('user')
+				window.physicsBackRouter = null
 				if(window.localStorage.getItem('alert') == undefined){
 					this.alert = true
 				}else{
@@ -254,5 +253,10 @@
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;
 	margin-left:0.3rem;
+}
+</style>
+<style>
+.yd-accordion-head:after{
+	background-image: none!important;
 }
 </style>

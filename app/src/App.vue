@@ -25,11 +25,13 @@ import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
 import {setup} from '@/utils/socketio'
+import utils from '@/utils/utils'
 
 export default {
   components: {},
   name: "app",
   created() {
+    utils.h5Plus.bindPhysicsBack(null)
     if(this.user.token){
       setup()
     }

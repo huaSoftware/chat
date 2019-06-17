@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-06-03 14:28:38
+ * @LastEditTime: 2019-06-17 15:25:23
  -->
 <template>
     <div style="font-size: 0;">
@@ -250,7 +250,10 @@
             to.meta.title = to.query.name
             next()
         },
-        destroyed() {
+        destroyed(){
+            if(Vue.prototype.$preview.self){
+                Vue.prototype.$preview.self.close()
+            }
         },
         activated() {
             window.physicsBackRouter = '/home'

@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 17:20:34
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-06-17 15:10:14
+ -->
 
 <template>
     <div class="content">
@@ -43,6 +50,7 @@ export default {
     },
     methods: {
         init(){
+            window.physicsBackRouter = null
             userInfo().then(res=>{
                 this.userInfo = res.data
             })

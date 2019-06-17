@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-06-03 14:31:51
+ * @LastEditTime: 2019-06-17 15:09:54
  -->
 
 <template>
@@ -112,6 +112,7 @@ export default {
             updateGroupRoomList: 'updateGroupRoomList',
         }),
         init(){
+            window.physicsBackRouter = null
             addressBookGet(this.reqData).then(res=>{
                 this.adderssBookList = res.data.addressBookList
             })
@@ -119,11 +120,6 @@ export default {
                 this.updateGroupRoomList(res.data.list)
                 this.loading = false
             })
-        },
-        handlePopAddressNookLetterResize(){
-            /* let screenWidth = document.body.clientWidth
-            console.log(screenWidth)
-            document.getElementById('pop-address-book-letter').style.right = ((screenWidth)/2)+'px' */
         },
         handleScrollToRef(value){
             document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop
@@ -163,11 +159,7 @@ export default {
         this.init()
     },
     mounted() {
-        this.handlePopAddressNookLetterResize()
         document.getElementById('scrollView').addEventListener('scroll', this.handleScroll)
-        window.onresize = () => {
-            this.handlePopAddressNookLetterResize()
-        }
     }
 }
 </script>

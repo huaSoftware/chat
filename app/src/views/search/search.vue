@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-13 16:35:24
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-06-17 15:08:06
+ -->
 <template>
 <div class="search_content">
     <yd-search :result="result" fullpage v-model="value2"  :on-submit="submitHandler"></yd-search>
@@ -47,9 +54,6 @@
             }
         },
         watch: {
-            value2(val) {
-                //this.result = this.getResult(val);
-            }
         }
     }
 </script>
