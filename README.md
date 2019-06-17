@@ -11,7 +11,7 @@
 http://www.zhuhui.store    
 
 ### 安卓版下载地址
-http://http://down.zhuhui.store/chat.apk
+http://down.zhuhui.store/chat.apk
 
 ### 文档地址（未完善）
 http://doc.zhuhui.store
