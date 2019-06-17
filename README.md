@@ -68,5 +68,6 @@ http://doc.zhuhui.store
 #### 捐助作者
 ![捐助作者](https://images.gitee.com/uploads/images/2019/0124/105407_661d1190_1588193.png "mm_facetoface_collect_qrcode_1548297043215.png")	
 
-### 后端有偿开源
-    有需要的可以扫描以上付款码，作者会在第一时间将后端源码发送给你，99元一套
+### 二次开发
+    如果你对此项目有什么好的想法，可以联系作者定制开发。
+   
