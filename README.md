@@ -17,7 +17,10 @@ http://down.zhuhui.store/chat.apk
 http://doc.zhuhui.store
 
 ### 项目架构
-    前端vue+ydui+cli3，后端flask
+    app是前端,基于vue开发，
+    chatAdmin是后台，基于vue开发，
+    chatApi是接口，基于flask开发，
+    前后端完全分离项目，适用于多端聊天应用。
 
 ### 前端项目功能
 - [x] 登录注册
