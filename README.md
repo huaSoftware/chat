@@ -13,19 +13,34 @@ http://www.zhuhui.store
 ### 安卓版下载地址
 http://www.zhuhui.store/download/chat.apk
 
-### 文档地址
+### 文档地址（未完善）
 http://doc.zhuhui.store
 
 ### 项目架构
     前端vue+ydui+cli3，后端flask
 
-### 项目功能
+### 前端项目功能
 - [x] 登录注册
 - [x] 用户界面
 - [x] 设置界面
 - [x] 聊天消息列表
 - [x] 联系人列表
 - [x] 聊天界面
+- [x] 群聊
+
+### 后台项目功能
+- [x] 登录
+- [x] 房间管理
+- [x] 通讯录管理
+- [x] 用户管理
+- [x] 管理员管理
+
+### 项目截图
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142434_ce5fed5e_1588193.png "8AO2N23X(AT%YCKU~)ZDICY.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142442_df240c6e_1588193.png "8XFNDJCM46U)VSCZNI~(MZW.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142449_b130cf60_1588193.png "153}QG8F60OV8HI27ZDMSN6.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142458_11de22a5_1588193.png "C}EI)WI9VH$GD~XK15IH}}5.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142505_7fc25269_1588193.png "K~2G@NU~8WZG7WR0`FGS2]H.png")
 
 ### 前端项目安装
     cnpm install
