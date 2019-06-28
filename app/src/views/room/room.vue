@@ -24,6 +24,9 @@
                                 </div>
                                 <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                                 <div v-else class="msg" v-html="key.msg"></div>
+                                <!-- 消息送达状态 -->
+                                <span v-if="key.send_status == 0 " class="send_status loading_color rotate_loading"><yd-icon name="refresh"></yd-icon> </span>
+                                <span  @click="reSendMsg(key.created_at)" v-if="key.send_status == 2" class="send_status color_danger"><yd-icon name="error"></yd-icon></span>
                             </div>
                         </div>
                         <div class="chat-item"  v-else>
@@ -201,8 +204,9 @@
             this.updateMsgList([])
             this.user = storage.get('user')
             if(typeof this.$route.query.room_uuid !== 'undefined'){
-                window.uuid = this.$route.query.room_uuid
-                getRoomMsg(window.uuid).then(res=>{
+                window.room_uuid = this.$route.query.room_uuid
+                getRoomMsg(window.room_uuid).then(res=>{
+                    console.log(res)
                     this.updateMsgList(res)
                 })
             }
@@ -254,6 +258,7 @@
             if(Vue.prototype.$preview.self){
                 Vue.prototype.$preview.self.close()
             }
+            send('leave', {room_uuid: window.room_uuid})
         },
         activated() {
             window.physicsBackRouter = '/home'
@@ -273,7 +278,7 @@
                     send('chat', {
                         data: {
                             msg: file,
-                            uuid: window.uuid,
+                            room_uuid: window.room_uuid,
                             type: 1
                         }
                     })
@@ -313,7 +318,7 @@
                         send('chat', {
                             data: {
                                 msg: img,
-                                uuid: window.uuid,
+                                room_uuid: window.room_uuid,
                                 type: 1
                             }
                         })
@@ -330,7 +335,7 @@
                     send('chat', {
                         data: {
                             msg: img,
-                            uuid: window.uuid,
+                            room_uuid: window.room_uuid,
                             type: 1
                         }
                     })
@@ -366,12 +371,11 @@
                     send('chat', {
                         data: {
                             msg: p.addresses,
-                            uuid: window.uuid,
+                            room_uuid: window.room_uuid,
                             type: 1
                         }
                     })
                 }, function (e) {
-                    //console.log('Gelocation Error: code - ' + e.code + '; message - ' + e.message);
                     switch (e.code) {
                         case e.PERMISSION_DENIED:
                             alert('User denied the request for Geolocation.');
@@ -389,17 +393,26 @@
                 });
             },
             sendMsg() {
-                //console.log(this.user)
+                this.created_at = parseInt(new Date().getTime()/1000)
                 send('chat', {
                     data: {
                         msg: this.content,
-                        uuid: window.uuid,
-                        type: 1 //1是文字，0是语音
+                        room_uuid: window.room_uuid,
+                        type: 1//1是文字，0是语音, 2是重发
                     }
                 })
                 document.getElementById('edit').innerHTML = ''
                 this.content = ''
                 //console.log(this.content)
+            },
+            reSendMsg(created_at){
+                send('chat', {
+                    data: {
+                        room_uuid: window.room_uuid,
+                        type: 2,//1是文字，0是语音, 2是重发
+                        created_at: created_at
+                    }
+                })
             },
             handleRecordShow() {
                 this.recordShow = !this.recordShow
@@ -431,7 +444,6 @@
                     this.scroll.scrollTo(0, this.scroll.maxScrollY)
                     setTimeout(()=>{
                         this.$previewRefresh()
-                        //console.log(42342)
                     },200)
                 })
             },
@@ -476,7 +488,6 @@
             },
             insertIcon: function (src) {
                 this.content = this.content + '<img src="' + src + '">'
-                //this.insertHtmlAtCaret(img)
             },
             // 录音开始
             startRecord() {
@@ -516,7 +527,7 @@
                                             duration: amr.getDuration(),
                                             status: false,
                                             name: window.name,
-                                            uuid: window.uuid,
+                                            room_uuid: window.room_uuid,
                                             type: 0
                                         },
                                         room: 'test'
@@ -567,7 +578,6 @@
             amrPlay(url, index) {
                 let that = this
                 Vue.set(this.data[index].data, 'status', true)
-                //console.log(this.data[index].data)
                 var BenzAMRRecorder = require('benz-amr-recorder');
                 var amr = new BenzAMRRecorder();
                 amr.initWithUrl(url).then(function () {
@@ -577,16 +587,6 @@
                 });
                 amr.onEnded(function () {
                     Vue.set(that.data[index].data, 'status', false)
-                    //console.log('播放完毕');
-                })
-            },
-            handleUploadBase64() {
-                let that = this
-                this.$refs.cropper.getCropData((data) => {
-                    that.reqImgData.imgDatas = data
-                    uploadBase64(this.reqImgData).then(res => {
-                        //console.log(res)
-                    })
                 })
             }
         },
@@ -598,397 +598,8 @@
         },
     }
 </script>
-<style scoped>
-    /**css样式*/
-    .input_wapper {
-        width: 100%;
-        display:flex;
-        bottom: 0.2rem;
-        flex-wrap:row;
-        justify-content:space-between;
-        position:fixed;
-    }
-
-    .voice {
-       /*  width: 13%; */
-        padding: 5px 8px;
-        vertical-align: middle;
-    }
-
-    .input {
-       /*  width: 61%; */
-        max-height: 100px;
-        line-height: 24px;
-        font-size: 20px;
-        padding: 5px 8px;
-        border-bottom: 1px solid #00C2E6;
-        overflow-x: auto;
-        margin-bottom: 5px;
-        vertical-align: middle;
-    }
-
-    .input:empty::before {
-        content: attr(placeholder);
-    }
-
-    .record {
-        width: 100%;
-        max-height: 100px;
-        line-height: 35px;
-        font-size: 20px;
-        height: 35px;
-        border: 1px solid #999999;
-        border-radius: 5px;
-        text-align: center;
-    }
-
-    .touched {
-        background: #999999;
-        color: #fff;
-    }
-
-    .def {
-       /*  width: 13%; */
-        display: inline-block;
-        text-align: center;
-        padding: 5px 8px;
-        vertical-align: middle;
-    }
-
-    .swiper-wrapper {
-        height: 200px !important;
-    }
-
-    .icons_wapper {
-        height: 200px !important;
-        width: 100%;
-        border-top: 1px solid #e9e9e9;
-        text-align: left;
-        overflow-x: auto;
-        background: #fff;
-        flex-wrap: wrap;
-        position:fixed;
-        bottom:0rem;
-    }
-
-    .icons_wapper img {
-        margin: 2.25%;
-        width: 8%;
-    }
-
-    .swiper-pagination {
-        height: 21px;
-        position: fixed;
-    }
-
-    .defs_wapper {
-        height: 200px !important;
-        width: 100%;
-        border-top: 1px solid #e9e9e9;
-        text-align: left;
-        overflow-x: auto;
-        background: #fff;
-        flex-wrap: wrap;
-        position:fixed;
-        bottom:0rem;
-        text-align: center;
-    }
-
-    .yd-grids-item:after {
-        border-bottom: 0px;
-    }
-
-    .yd-grids-4 .yd-grids-item:not(:nth-child(4n)):before {
-        border-right: 0px;
-    }
-
-    .content_wapper {
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .bscroll-container {
-        font-size: 0.5rem;
-        position: relative;
-    }
-
-    /* 聊天 */
-    ul {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        width: 100%;
-        padding-left: 12px;
-        padding-right: 12px;
-        padding-bottom: 74px;
-        padding-top: 20px;
-    }
-
-    .bscroll-container ul li {
-        padding: 0;
-        margin-top: 20px;
-    }
-
-    li {
-        display: list-item;
-        text-align: -webkit-match-parent;
-    }
-
-    .chat-item {
-        width: 100%;
-        margin: 14px 0;
-        height: 0px;
-    }
-
-    .chat-item .otherchat {
-        width: 100%;
-        position: relative;
-    }
-
-    .chat-item .otherchat .img {
-        width: 39px;
-        height: 39px;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 4px;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
-
-    .chat-item .otherchat .nt {
-        font-size: 12px;
-        left: 50px;
-        top: -26px;
-        position: absolute;
-        color: #686868;
-    }
-
-    .chat-item .otherchat .nt span {
-        padding-right: .3rem;
-    }
-
-    .chat-item .otherchat .nt span:nth-child(2) {
-        font-size: 12px;
-    }
-
-    .chat-item .otherchat .msg {
-        float: left;
-        min-height: 21px;
-        max-width: 60% !important;
-        margin-left: 50px;
-        padding: 6px;
-        border-radius: 8px;
-        font-size: 14px;
-        /* line-height: 2.34rem; */
-        background-color: #fff;
-    }
-
-    .chat-item .otherchat .rawMsg {
-        float: left;
-        min-height: 21px;
-        max-width: 60% !important;
-        margin-left: 45px;
-        padding: 6px;
-        border-radius: 8px;
-        font-size: 14px;
-        /* line-height: 2.34rem; */
-        background-color: rgb(238, 238, 238);
-        position: relative;
-        top: 5px;
-    }
-    .otherchat .rawMsg::before{
-        content: "";
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        font-size: 0;
-        line-height: 0;
-        border-width: 10px;
-        border-style: solid dashed dashed dashed;
-        border-color: transparent transparent rgb(238, 238, 238) transparent;
-        position: absolute;
-        top: -15px;
-        left: 0px;
-    }
-    /* my */
-    .chat-item .mychat {
-        width: 100%;
-        position: relative;
-    }
-
-    .chat-item .mychat .img {
-        width: 39px;
-        height: 39px;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        right: 4px;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-    }
-
-    .chat-item .mychat .nt {
-        font-size: 12px;
-        right: 50px;
-        top: -26px;
-        position: absolute;
-        color: #686868;
-    }
-
-    .chat-item .mychat .msg {
-        float: right;
-        max-width: 60%;
-        margin-right: 50px;
-        padding: 6px;
-        border-radius: 8px;
-        font-size: 14px;
-        background-color: #b2e281;
-        color: #fff;
-        word-wrap: break-word;
-    }
-
-    .chat-item .mychat .rawMsg {
-        float: right;
-        max-width: 60%;
-        margin-right: 50px;
-        padding: 6px;
-        border-radius: 8px;
-        font-size: 14px;
-         background-color: #b2e281;
-        color: #fff;
-        word-wrap: break-word;
-        position: relative;
-        top: 5px;
-    }
-
-    .mychat .rawMsg::before{
-        content: "";
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        font-size: 0;
-        line-height: 0;
-        border-width: 10px;
-        border-style: solid dashed dashed dashed;
-        border-color: transparent transparent #b2e281 transparent;
-        position: absolute;
-        top: -15px;
-        right: 0px;
-    }
-
-    /* 声音 */
-    .Rotate {
-        transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-        /* IE 9 */
-        -moz-transform: rotate(180deg);
-        /* Firefox */
-        -webkit-transform: rotate(180deg);
-        /* Safari 和 Chrome */
-        -o-transform: rotate(180deg);
-        /* Opera */
-    }
-
-    .vioce_second {
-        vertical-align: top;
-        line-height: 23px;
-        display: inline-block;
-        padding-left: 10px;
-    }
-
-    .chat_right {
-        height: 23px;
-        width: 23px;
-    }
-
-    .vioce_start {
-        height: 23px;
-        width: 23px;
-        vertical-align: top;
-    }
-
-    .vioce_stop_right {
-        /*  background: url('../../assets/img/spriteImg.png') no-repeat; */
-        background-position: -200px -433px;
-        -webkit-background-size: 487px 462px;
-        background-size: 487px 462px;
-        display: inline-block;
-        vertical-align: middle;
-        width: 23px;
-        height: 23px;
-        margin-right: 4px;
-    }
-
-    .vioce_stop_left {
-        /* background: url('../../assets/img/spriteImg.png') no-repeat; */
-        background-position: -465px -398px;
-        -webkit-background-size: 487px 462px;
-        background-size: 487px 462px;
-        display: inline-block;
-        vertical-align: middle;
-        width: 23px;
-        height: 23px;
-        margin-left: 1px;
-    }
-
-    .vue-cropper-box {
-        width: 100%;
-        height: 100%;
-
-    }
-
-    .vue-cropper-content {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0px;
-    }
-
-    .yd-grids-raw {
-        overflow: hidden;
-        position: relative;
-        background-color: #fff;
-    }
-
-    .yd-grids-raw .yd-grids-item {
-        width: 25%;
-    }
-
-    .yd-grids-item-raw {
-        width: 25%;
-        float: left;
-        position: relative;
-        z-index: 0;
-        padding: .35rem 0;
-        font-size: .28rem;
-    }
-
-    .yd-grids-icon {
-        height: .68rem;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-    }
-
-    .yd-grids-txt {
-        word-wrap: normal;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        text-align: center;
-        color: #333;
-        padding: 0 .2rem;
-    }
+<style lang="scss" scoped>
+@import '@/assets/scss/base.scss';
+@import '@/assets/scss/public.scss';
+@import './scss/room';   
 </style>

@@ -87,7 +87,7 @@ export function addRoomMsg(value) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
     //事务读写
     db.transaction('rw', db.roomMsg, async() => {
         //if (await db.roomMsg.where({'user_id': value.user_id}).count() === 0) {
@@ -103,14 +103,14 @@ export function addRoomMsg(value) {
 }
 
 /* 
- *读联系人
+ *读聊天记录
  *return bool
  */
 export function getRoomMsg(room_uuid) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
 
@@ -129,22 +129,22 @@ export function getRoomMsg(room_uuid) {
 }
 
 /* 
- *更新联系人
+ *更新聊天记录
  *return bool
  */
-export function updateMsg(id, status) {
+export function updateRoomMsg(created_at, send_status) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
     //事务读写
-    return db.transaction('rw', db.addressBookBeg, async() => {
+    return db.transaction('rw', db.roomMsg, async() => {
 
         // Make sure we have something in DB:
         //更新状态
-        let updated = db.addressBookBeg.where("id").equals(id).modify({status: status});
+        let updated = db.roomMsg.where({"created_at":created_at}).modify({send_status: send_status});
         if (updated){
-            let data =   await db.addressBookBeg.toArray()
+            let data =   await db.roomMsg.toArray()
             return data   
         }
         return Promise.reject('update error') 

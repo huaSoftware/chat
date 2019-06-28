@@ -241,6 +241,19 @@ let utils = {
     }
   },
   arr: {
+    /**
+     * 返回列表对应字段的索引号
+     * @param value
+     * @param {*} arr 
+     * @return int
+     */
+    getIndexByTime(value, arr) {
+      for(var i=0;i<arr.length;i++){
+        if(arr[i]['created_at']== value){
+          return i
+        }
+      }
+    },
     // 克隆数组
     cloneArr(arr) {
       // 从第一个字符就开始 copy

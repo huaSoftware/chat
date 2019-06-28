@@ -152,26 +152,12 @@
 					room_uuid: item.room_uuid,
 					type: item.room.type
 				})
-				this.$router.push({
-					name: 'room',
-					query:{
-						room_uuid: item.room_uuid,
-						name: item.users.nick_name
-					}
-				})
 			},
 			handleJoinGroupRoom(item){
 				send('join',{
 					name: item.room.name,
 					room_uuid: item.room_uuid,
 					type: item.room.type
-				})
-				this.$router.push({
-					name: 'room',
-					query:{
-						room_uuid: item.room_uuid,
-						name: item.room.name
-					}
 				})
 			},
 			formatTime(value){

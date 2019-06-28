@@ -75,7 +75,6 @@ service.interceptors.response.use(
     Loading.close()
     /* 网络无响应处理 */
     if (error == 'Error: timeout of 15000ms exceeded') {
-      ////console.log('网络超时')
     }
     if (typeof (error.response) === 'undefined') {
       if (error === 'Error: Network Error') {
@@ -83,7 +82,6 @@ service.interceptors.response.use(
       }
     }
     /* token未携带处理 */
-
     if (error.response.status === 401/*  && error.response.data.code === 401 */) {
       if (error.response.data.msg === 'The current Subject is not authenticated.  Access denied.') {
         router.push('/login')

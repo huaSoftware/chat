@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-17 10:48:31
+@LastEditTime: 2019-06-27 19:53:37
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -17,11 +17,17 @@ import time
 
 class ChatService():
     def chat(self, message, user_info):
+        """
+            @param  dict message
+            @param  dict user_info
+            @return dict 
+        """
         msg = message['data']['msg']
-        room_uuid = message['data']['uuid']
+        room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
         room_data = Room.get(room_uuid)
         room_type = room_data.type
+        created_at = message['data']['created_at']  
         user_data = Users().getOne({Users.id == user_info['data']['id']})
         if room_data != None and room_type == 0:
             address_book_data = AddressBook.get(room_uuid)
@@ -33,7 +39,7 @@ class ChatService():
                 'type': Type,
                 'head_img':user_data['head_img'],
                 'room_uuid': room_uuid,
-                'created_at': time.time()
+                'created_at': created_at
             }), room=room_uuid)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, msg)
@@ -43,19 +49,19 @@ class ChatService():
             #更新客户端房间信息
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
-                socketio.emit('room', Utils.formatBody(roomList), namespace='/room', room=item.be_focused_user_id)
+                socketio.emit('room', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item.be_focused_user_id))
         elif room_data != None and room_type == 1:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             #发送消息
             emit('chat', Utils.formatBody({
-                    'msg': msg, 
-                    'name': user_data['nick_name'], 
-                    'user_id': user_data['id'], 
-                    'type': Type,
-                    'head_img':user_data['head_img'],
-                    'room_uuid': room_uuid,
-                    'created_at': time.time()
-                }), room=room_uuid)
+                'msg': msg, 
+                'name': user_data['nick_name'], 
+                'user_id': user_data['id'], 
+                'type': Type,
+                'head_img':user_data['head_img'],
+                'room_uuid': room_uuid,
+                'created_at': created_at
+            }), room=room_uuid)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, msg)
             #更新聊天提示数字
@@ -65,8 +71,9 @@ class ChatService():
             for item in user_room_relation_data:
                 #if item.user_id != user_id:
                 roomList = UserRoomRelation.getRoomList(item.user_id)['data']
-                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room=item.user_id)
-                
+                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item.user_id))
+        return  Utils.formatBody({'action':"chat"})
+        
     def groupChatCreate(self, params):
         """ 
             创建聊天群组
@@ -97,4 +104,4 @@ class ChatService():
         }
         room = Room().addByClass(room_data)
         return {'room_uuid' : room_uuid}
-        
+    

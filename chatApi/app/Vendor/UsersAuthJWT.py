@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-06-11 16:28:38
+@LastEditTime: 2019-06-25 14:15:54
 '''
 from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
@@ -73,7 +73,7 @@ class UsersAuthJWT():
         :param password:
         :return: json
         """
-        userInfo = Users().getOne({Users.email==email}, 'id desc', ('email', 'password', 'id'))
+        userInfo = Users().getOne({Users.email==email}, 'id desc', ('email', 'password', 'id', 'nick_name', 'head_img'))
         if(userInfo is None):
             return Utils.formatError(Code.BAD_REQUEST,'找不到用户')
         else:

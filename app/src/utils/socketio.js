@@ -2,8 +2,9 @@
 import storage from "@/utils/localstorage"
 import store from '../store'
 import router from '../router'
+import utils from '@/utils/utils'
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import { addAddressBookBeg, addRoomMsg, updateMsg } from "@/utils/indexedDB"
+import { addAddressBookBeg, addRoomMsg, updateRoomMsg } from "@/utils/indexedDB"
 
 
 /* 解析返回消息 */
@@ -69,24 +70,22 @@ export function setup() {
 		window.roomSocket.on('chat', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				console.log(data)
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
-				let msgList = []
-				Object.assign(msgList, store.getters.msgList)
-				msgList = msgList.concat(data)
+				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
+				msgList[index]['send_status'] = 1
+				//console.log(data)
 				store.dispatch('updateMsgList', msgList)
-				addRoomMsg(data)
+				updateRoomMsg(data['created_at'], 1)
 			})
 		});
 
 		send('join', {}, 'broadcast')
 		//监听好友请求
-		window.roomSocket.on('beg', (data, callback) => {
+		window.roomSocket.on('beg', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				//console.log(data)
 				if (data['action'] == 'beg_add') {
-					callback(data)
 					// 复制原来的值
 					data['data']['user_id'] = data['data']['id'];
 					// 删除原来的键
@@ -97,7 +96,6 @@ export function setup() {
 					addAddressBookBeg(data['data'])
 				}
 				if (data['action'] == 'beg_success') {
-
 					Toast({ mes: '发送成功，对方已收到申请' });
 				}
 			})
@@ -107,7 +105,7 @@ export function setup() {
 		window.roomSocket.on('room', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				console.log(data)
+				//console.log(data)
 				store.dispatch('updateRoomList', data)
 			})
 		});
@@ -115,7 +113,7 @@ export function setup() {
 		window.roomSocket.on('groupRoom', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				console.log(data)
+				//console.log(data)
 				store.dispatch('updateGroupRoomList', data)
 			})
 		});
@@ -128,13 +126,84 @@ export function setup() {
  * @return void
  */
 export function send(method, data, type = 'room') {
+	//处理聊天
+	if(method == 'chat'){
+		let userInfo = storage.get('user')
+		//添加聊天
+		let msgInfo = data.data
+		if(msgInfo['type'] == 1){
+			msgInfo['send_status'] = 0
+			msgInfo['name'] = userInfo['nick_name']
+			msgInfo['user_id'] =  userInfo['id']
+			msgInfo['head_img'] = userInfo['head_img']
+			msgInfo['created_at'] = parseInt(new Date().getTime())
+			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+			msgList = msgList.concat(msgInfo)
+			//console.log(msgList)
+			store.dispatch('updateMsgList', msgList)
+			addRoomMsg(msgInfo)
+		}else if(msgInfo['type'] == 2){
+			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+			let index = utils.arr.getIndexByTime(msgInfo['created_at'], msgList)
+			msgList[index]['send_status'] = 0
+			store.dispatch('updateMsgList', msgList)
+			msgInfo['msg'] = msgList[index]['msg']
+		}	
+	}
 	let token = store.getters.token
 	data['Authorization'] = 'JWT '+token
 	if (type == 'room') {
-		window.roomSocket.emit(method, data)
+		//响应超时
+		window.sendTimeOut = setTimeout(()=>{
+			Toast({
+				mes: '响应超时',
+				timeout: 1500,
+				icon: 'error'
+			});
+			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+			let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+			msgList[index]['send_status'] = 2
+			store.dispatch('updateMsgList', msgList)
+		},5000)
+		window.roomSocket.emit(method, data, (recv)=>{
+			//console.log(recv)
+			clearTimeout(window.sendTimeOut)
+			response(recv).then(res=>{
+				if(res.data.action == 'chat'){
+
+				}
+				if(res.data.action == 'leave'){
+					
+				}
+				if(res.data.action == 'join'){
+					let queryData = {room_uuid: data.room_uuid}
+					if(data.name){
+						queryData.name = data.name
+					}
+					router.push({
+						name: 'room',
+						query: queryData
+					})
+				}
+			}).catch(e=>{
+				//服务器出错
+			})
+		})
 	}
 	if (type == 'broadcast') {
 		data['type'] = 2
-		window.roomSocket.emit(method, data)
+		window.roomSocket.emit(method, data, (recv)=>{
+			//console.log(recv)
+			response(recv).then(res=>{
+				if(res.data.action == 'leave'){
+					
+				}
+				if(res.data.action == 'join'){
+					
+				}
+			}).catch(e=>{
+				//服务器出错
+			})
+		})
 	}
 }

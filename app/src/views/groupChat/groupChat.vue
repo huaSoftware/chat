@@ -141,13 +141,6 @@ export default {
                 type:item.room.type
                
             })
-            this.$router.push({
-                name: 'room',
-                query:{
-                    room_uuid: item.room_uuid,
-                    name: item.users.nick_name
-                }
-            })
         },
         handleSubmit(){
             let user = storage.get('user')
@@ -157,19 +150,11 @@ export default {
                 console.log(JSON.parse(key))
                 ids.push(JSON.parse(key)['id'])
             })
-            groupChatCreate({ids:ids}).then(res=>{
-                
+            groupChatCreate({ids:ids}).then(res=>{      
                 const room_uuid = res.data.room_uuid
                 send('join',{
                     type: 1,
                     room_uuid:room_uuid,
-                })
-                this.$router.push({
-                    name: 'room',
-                    query:{
-                        room_uuid: room_uuid,
-                        //name: item.users.nick_name
-                    }
                 })
             })
         }

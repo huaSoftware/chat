@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:04:59
 @LastEditors: hua
-@LastEditTime: 2019-06-17 10:48:22
+@LastEditTime: 2019-06-24 20:08:23
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -30,7 +30,7 @@ def success(data):
     socketio.emit('beg', Utils.formatBody({
         'data':{}, 
         'action':'beg_success'})
-    , namespace='/room', room=data['data']['id'])
+    , namespace='/room', room='@broadcast.'+str(data['data']['id']))
 
 @app.route('/api/v2/addressBook/beg', methods=['POST'])
 @validator(name='focused_user_id', rules={'required': True, 'type': 'integer', 'minlength': 1, 'maxlength': 20})
@@ -48,7 +48,7 @@ def addressBookBeg(params):
         'action':'beg_add', 
         'msg_uuid': msg_uuid, 
         'be_focused_user_id': params['be_focused_user_id']
-    }), namespace='/room', room=params['be_focused_user_id'], callback=success)
+    }), namespace='/room', room='@broadcast.'+str(params['be_focused_user_id']), callback=success)
     beg_data = cache.get('beg'+str(params['be_focused_user_id']))
     if beg_data == None:
          cache.set('beg'+str(params['be_focused_user_id']), [userData])
