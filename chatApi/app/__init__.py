@@ -2,11 +2,9 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-06-12 15:32:42
+@LastEditTime: 2019-07-02 11:30:54
 '''
 from flask import Flask
-#权限模块 https://github.com/raddevon/flask-permissions
-#from flask_permissions.core import Permissions
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_socketio import SocketIO
@@ -14,10 +12,9 @@ from app.Vendor.Code import Code
 from app.Vendor.ExceptionApi import ExceptionApi
 
 from app.env import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH
-import pymysql,os,time
+import os,time
 from cacheout import Cache
 
-pymysql.install_as_MySQLdb()
 #普通json带error_code风格使用此app示例
 app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
@@ -49,6 +46,6 @@ from app.Controllers import  (UsersController, SocketController, AddressBookCont
                             RoomController, UploadController,UserRoomRelationController)
 #引入后台
 from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
-                                UserController, AdminController)
+                                UserController, AdminController, IndexController)
 
 

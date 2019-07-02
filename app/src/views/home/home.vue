@@ -73,7 +73,8 @@
 	import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
 	import {addressBookCacheGet} from '@/api/addressBook'
 	import {userRoomRelationGet} from '@/api/userRoomRelation'
-	import {setup, send} from '@/utils/socketio'
+	import {setup} from '@/utils/socketio'
+	import {joinChatSend} from '@/socketIoApi/chat'
 
 	export default {
 		components: {},
@@ -147,14 +148,14 @@
 				setup()
 			},
 			handleJoinRoom(item){
-				send('join',{
+				joinChatSend({
 					name: item.users.nick_name,
 					room_uuid: item.room_uuid,
 					type: item.room.type
 				})
 			},
 			handleJoinGroupRoom(item){
-				send('join',{
+				joinChatSend({
 					name: item.room.name,
 					room_uuid: item.room_uuid,
 					type: item.room.type

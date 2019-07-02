@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-06-12 19:44:15
+@LastEditTime: 2019-07-02 13:52:01
 '''
 import math
 from sqlalchemy_serializer import SerializerMixin
@@ -161,3 +161,8 @@ class Admin(Base, HtAdmin, SerializerMixin):
     @staticmethod
     def check_password(hash_password, password):
         return check_password_hash(hash_password, password)
+    
+    #获取一周数据
+    def getWeekData(self):
+        result = Utils.db_t_d(dBSession.execute('SELECT count(*) as n, (TO_DAYS( NOW( ) ) - TO_DAYS( from_unixtime(add_time))) as `d` FROM ht_admin group by TO_DAYS( from_unixtime(add_time)) having d <= :val', {'val': 6}).fetchall())   
+        return result

@@ -150,6 +150,7 @@
     import {getRoomMsg} from "@/utils/indexedDB"
     import { Confirm, Alert, Toast, Notify, Loading } from 'vue-ydui/dist/lib.rem/dialog'
     import {send} from '@/utils/socketio'
+    import {chatSend, reChatSend} from '@/socketIoApi/chat'
     export default {
         components: {
             vEditDiv,
@@ -246,8 +247,10 @@
                 }
             })
             window.onresize = function () {
-                that.$refs.bscroll.style.height = (document.body.clientHeight - 100) + 'px'
-                that.handleSendShow()
+                setTimeout(()=>{
+                    that.$refs.bscroll.style.height = (document.body.clientHeight - 100) + 'px'
+                    that.handleSendShow()
+                }, 300)
             }
         },
         beforeRouteEnter (to, from, next) {
@@ -275,7 +278,7 @@
                     let file_path = process.env.BASE_API + res.data.path
                     let file =
                         `<a ontouchstart="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`
-                    send('chat', {
+                    chatSend({
                         data: {
                             msg: file,
                             room_uuid: window.room_uuid,
@@ -315,7 +318,7 @@
                     //将剪裁后的图片执行上传
                     uploadBase64(this.reqImgData).then(res => {
                         let img = '<img class="chat_img" preview="1" preview-text="" width="100" src="' + process.env.VUE_APP_CLIENT_API + res.data.path +'">'
-                        send('chat', {
+                        chatSend({
                             data: {
                                 msg: img,
                                 room_uuid: window.room_uuid,
@@ -332,7 +335,7 @@
                 this.option.img = ''
                 uploadBase64(this.reqImgData).then(res => {
                     let img = '<img class="chat_img"  preview="1" preview-text="" width="100" src="' +process.env.VUE_APP_CLIENT_API+ res.data.path + '">'
-                    send('chat', {
+                    chatSend({
                         data: {
                             msg: img,
                             room_uuid: window.room_uuid,
@@ -368,7 +371,7 @@
             getCurrentPosition() {
                 plus.geolocation.getCurrentPosition(function (p) {
                     //console.log(p)
-                    send('chat', {
+                    chatSend({
                         data: {
                             msg: p.addresses,
                             room_uuid: window.room_uuid,
@@ -394,7 +397,7 @@
             },
             sendMsg() {
                 this.created_at = parseInt(new Date().getTime()/1000)
-                send('chat', {
+                chatSend({
                     data: {
                         msg: this.content,
                         room_uuid: window.room_uuid,
@@ -406,7 +409,7 @@
                 //console.log(this.content)
             },
             reSendMsg(created_at){
-                send('chat', {
+               reChatSend({
                     data: {
                         room_uuid: window.room_uuid,
                         type: 2,//1是文字，0是语音, 2是重发
@@ -520,8 +523,7 @@
                                 amr.initWithUrl(url).then(function () {
                                     //获取录音长度
                                     //amr.getDuration(); 
-                        
-                                    send('chat', {
+                                    chatSend({
                                         data: {
                                             msg: url,
                                             duration: amr.getDuration(),

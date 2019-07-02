@@ -62,3 +62,13 @@ export function userAdd(data) {
     data
   })
 }
+
+export function index() {
+  return request({
+    url: '/api/v2/admin/index',
+    method: 'get'
+  })
+}
+
+
+

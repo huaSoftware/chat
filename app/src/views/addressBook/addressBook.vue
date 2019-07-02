@@ -75,7 +75,7 @@
 import {mapGetters, mapMutations} from 'vuex'
 import {addressBookGet} from '@/api/addressBook'
 import {userRoomRelationGet} from '@/api/userRoomRelation'
-import {send} from '@/utils/socketio'
+import {joinChatSend} from '@/socketIoApi/chat'
 export default {
     components: {},
     data() {
@@ -127,14 +127,14 @@ export default {
         handleScroll () {
         },
         handleJoinRoom(item){
-            send('join', {
+            joinChatSend({
                 name: item.users.nick_name,
                 room_uuid:item.room_uuid,
                 type: item.room.type
             })
         },
         handleJoinGroupRoom(item){
-            send('join', {
+            joinChatSend({
                 name: item.room.name,
                 room_uuid: item.room_uuid,
                 type: item.room.type

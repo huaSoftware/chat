@@ -90,7 +90,7 @@ import storage from "@/utils/localstorage"
 import {addressBookGet} from '@/api/addressBook'
 import {groupChatCreate} from '@/api/groupChat'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
-import {send} from '@/utils/socketio'
+import {joinChatSend} from '@/socketIoApi/chat'
 export default {
     components: {vEditDiv},
     data() {
@@ -135,7 +135,7 @@ export default {
         handleScroll () {
         },
         handleJoinRoom(item){
-            send('join',{
+            joinChatSend({
                 name: item.users.nick_name,
                 room_uuid:item.room_uuid,
                 type:item.room.type
@@ -152,7 +152,7 @@ export default {
             })
             groupChatCreate({ids:ids}).then(res=>{      
                 const room_uuid = res.data.room_uuid
-                send('join',{
+                joinChatSend({
                     type: 1,
                     room_uuid:room_uuid,
                 })

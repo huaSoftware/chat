@@ -1,57 +1,9 @@
 
-import storage from "@/utils/localstorage"
 import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import { addAddressBookBeg, addRoomMsg, updateRoomMsg } from "@/utils/indexedDB"
-
-
-/* 解析返回消息 */
-export function response(res){
-	var res = new Promise((resolve, reject)=>{
-		/**
-		* error为true时 显示msg提示信息
-		*/
-		if (res.error_code === 200) {
-			resolve(res)
-		}
-		if (res.error_code === 400 || res.error_code === 500) {
-		if(res.show == true){
-			if(typeof res.msg == 'object'){
-				let msg = ''
-				Object.keys(res.msg).forEach(function(key){
-					res.msg[key].forEach(function(val, index) {
-					msg = msg + val + ',';
-					});
-
-				});
-				Toast({mes:msg.slice(0,msg.length-1)})
-			}else{
-				Toast({mes:res.msg})
-			}
-		}
-		Loading.close()
-		reject('error')
-		}
-		if (res.error_code === 401) {
-			Loading.close()
-			reject('error')
-		}
-		if (res.error_code === 10001) {
-			Loading.close()
-			Toast({mes: res.msg})
-			// 这里需要删除token，不然携带错误token无法去登陆
-			window.localStorage.removeItem('token')
-			store.commit('SET_TOKEN', null)
-			router.push({name: 'authLogin'})
-			reject('error')
-		}
-		reject('error')
-	})
-	return res
-}
-
+import { addAddressBookBeg, updateRoomMsg } from "@/utils/indexedDB"
 
 /* 注册socketio */
 export function setup() {
@@ -126,30 +78,6 @@ export function setup() {
  * @return void
  */
 export function send(method, data, type = 'room') {
-	//处理聊天
-	if(method == 'chat'){
-		let userInfo = storage.get('user')
-		//添加聊天
-		let msgInfo = data.data
-		if(msgInfo['type'] == 1){
-			msgInfo['send_status'] = 0
-			msgInfo['name'] = userInfo['nick_name']
-			msgInfo['user_id'] =  userInfo['id']
-			msgInfo['head_img'] = userInfo['head_img']
-			msgInfo['created_at'] = parseInt(new Date().getTime())
-			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-			msgList = msgList.concat(msgInfo)
-			//console.log(msgList)
-			store.dispatch('updateMsgList', msgList)
-			addRoomMsg(msgInfo)
-		}else if(msgInfo['type'] == 2){
-			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-			let index = utils.arr.getIndexByTime(msgInfo['created_at'], msgList)
-			msgList[index]['send_status'] = 0
-			store.dispatch('updateMsgList', msgList)
-			msgInfo['msg'] = msgList[index]['msg']
-		}	
-	}
 	let token = store.getters.token
 	data['Authorization'] = 'JWT '+token
 	if (type == 'room') {
@@ -166,7 +94,6 @@ export function send(method, data, type = 'room') {
 			store.dispatch('updateMsgList', msgList)
 		},5000)
 		window.roomSocket.emit(method, data, (recv)=>{
-			//console.log(recv)
 			clearTimeout(window.sendTimeOut)
 			response(recv).then(res=>{
 				if(res.data.action == 'chat'){
@@ -193,17 +120,60 @@ export function send(method, data, type = 'room') {
 	if (type == 'broadcast') {
 		data['type'] = 2
 		window.roomSocket.emit(method, data, (recv)=>{
-			//console.log(recv)
 			response(recv).then(res=>{
-				if(res.data.action == 'leave'){
-					
+				if(res.data.action == 'leave'){	
 				}
-				if(res.data.action == 'join'){
-					
+				if(res.data.action == 'join'){				
 				}
 			}).catch(e=>{
 				//服务器出错
 			})
 		})
 	}
+}
+
+
+/* 解析返回消息 */
+export function response(res){
+	var res = new Promise((resolve, reject)=>{
+		/**
+		* error为true时 显示msg提示信息
+		*/
+		if (res.error_code === 200) {
+			resolve(res)
+		}
+		if (res.error_code === 400 || res.error_code === 500) {
+		if(res.show == true){
+			if(typeof res.msg == 'object'){
+				let msg = ''
+				Object.keys(res.msg).forEach(function(key){
+					res.msg[key].forEach(function(val, index) {
+					msg = msg + val + ',';
+					});
+
+				});
+				Toast({mes:msg.slice(0,msg.length-1)})
+			}else{
+				Toast({mes:res.msg})
+			}
+		}
+		Loading.close()
+		reject('error')
+		}
+		if (res.error_code === 401) {
+			Loading.close()
+			reject('error')
+		}
+		if (res.error_code === 10001) {
+			Loading.close()
+			Toast({mes: res.msg})
+			// 这里需要删除token，不然携带错误token无法去登陆
+			window.localStorage.removeItem('token')
+			store.commit('SET_TOKEN', null)
+			router.push({name: 'authLogin'})
+			reject('error')
+		}
+		reject('error')
+	})
+	return res
 }

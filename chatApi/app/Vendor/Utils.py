@@ -3,7 +3,7 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-06-11 16:11:44
+@LastEditTime: 2019-07-02 13:59:02
 '''
 
 from app.env import ALLOWED_EXTENSIONS
@@ -12,6 +12,42 @@ from app.Vendor.Code import Code
 import time
 
 class Utils:
+    """ 
+        获取指定键的值 
+        @param string name
+        @param list|dict data
+        !return list|dict|bool
+    """
+    @staticmethod
+    def getColumn(name, data):
+        if isinstance(data, list):
+            data_list = []
+            for data_dict in data:
+                for key, val in data_dict.items():
+                    if key == name:
+                        data_list.append(val)
+            return data_list
+        if isinstance(data, dict):
+            if name in data.keys():
+                return data[name]
+            return False
+        return False  
+    
+    """ 
+        格式化原生查询结果tuple转dict
+        @param list data
+        @return list
+    """
+    @staticmethod
+    def db_t_d(data):
+        data_list = []
+        for val in data:
+            val_dict = dict(zip(val.keys(), val.values()))
+            data_list.append(val_dict)
+        data = {}
+        data = data_list
+        return data
+    
     ''' 
     * 用于sql结果列表对象类型转字典
     * @param list data

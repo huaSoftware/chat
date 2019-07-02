@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-06-11 20:45:17
+@LastEditTime: 2019-07-02 13:28:12
 '''
 import time, math
 
@@ -173,10 +173,6 @@ class Room(Base, HtRoom, SerializerMixin):
         return  dBSession.query(Room).filter(*filter).first()
 
     @staticmethod
-    def getCount(room_uuid):
-        return  dBSession.query(Room).filter(Room.room_uuid == room_uuid).count()
-
-    @staticmethod
     def getAll():
         return  dBSession.query(Room).order_by(Room.created_at.desc()).all()
 
@@ -208,3 +204,9 @@ class Room(Base, HtRoom, SerializerMixin):
             'updated_at': time.time()
         })
         return True
+    
+    #获取一周数据
+    def getWeekData(self):
+        result = Utils.db_t_d(dBSession.execute('SELECT count(*) as n, (TO_DAYS( NOW( ) ) - TO_DAYS( from_unixtime(created_at))) as `d` FROM ht_room group by TO_DAYS( from_unixtime(created_at)) having d <= :val', {'val': 6}).fetchall())    
+        
+        return result
