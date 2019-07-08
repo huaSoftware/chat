@@ -69,6 +69,7 @@ service.interceptors.response.use(
       window.localStorage.removeItem('token')
       store.commit('SET_TOKEN', null)
       router.push({name: 'authLogin'})
+      return Promise.reject('error')
     }
   },
   error => {

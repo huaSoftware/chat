@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:04:59
 @LastEditors: hua
-@LastEditTime: 2019-06-24 20:08:23
+@LastEditTime: 2019-07-08 13:48:51
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -75,6 +75,12 @@ def addressBookAdd(params):
             room_uuid, params['focused_user_id'], params['be_focused_user_id'])
         if status == False:
             return BaseController().error(msg='添加失败')
+        #删除缓存
+        cache.delete('beg'+str(params['be_focused_user_id']))
+        #回复被添加用户
+        socketio.emit('beg', Utils.formatBody({
+            'action':'beg_add_success'
+        }), namespace='/room', room='@broadcast.'+str(params['focused_user_id']))
         return BaseController().successData(msg='添加成功')
     return BaseController().error(msg='已添加')
 
@@ -93,7 +99,9 @@ def addressBookGet(params, user_info):
 
 
 
-""" 获取添加好友离线记录 """
+
+
+"""获取添加好友离线记录 """
 @app.route('/api/v2/addressBook/cache.get', methods=['GET'])
 @UsersAuthJWT.apiAuth
 def addressBookCacheGet(user_info):

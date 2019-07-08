@@ -2,9 +2,10 @@
 @Author: hua
 @Date: 2019-05-30 10:41:29
 @LastEditors: hua
-@LastEditTime: 2019-06-11 16:28:29
+@LastEditTime: 2019-07-08 10:44:40
 '''
 from flask import jsonify, make_response
+from app.env import DEBUG_LOG
 from app.Vendor.Log import log
 from app.Vendor.Utils import Utils
 import traceback,sys
@@ -12,7 +13,8 @@ import traceback,sys
 def ExceptionApi(code, e):
     """ 接口异常处理 """
     exc_type, exc_value, exc_traceback = sys.exc_info()
-    log().exception(e)
+    if(DEBUG_LOG):
+        log().exception(e)
     body = {}
     body['error_code'] = code
     body['error'] = True

@@ -17,8 +17,10 @@
         }
     },
     watch:{
-        'listening'(){
-            storage.set('alert', this.alert)
+        alert:{
+            handler(){
+                storage.set('alert', this.alert)
+            }
         }
     },
     methods: {

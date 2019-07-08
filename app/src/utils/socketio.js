@@ -50,6 +50,9 @@ export function setup() {
 				if (data['action'] == 'beg_success') {
 					Toast({ mes: '发送成功，对方已收到申请' });
 				}
+				if(data['action'] == 'beg_add_success' ){
+					Toast({ mes: '对方已同意添加好友' });
+				}
 			})
 		});
 
