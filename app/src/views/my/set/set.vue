@@ -7,7 +7,7 @@
         <CrossLine ></CrossLine>
         <CrossItem name="新消息提醒" :borderBot="true" :isIcon="false" @click.native="$router.push({name: 'mySetAlert'})">  
         </CrossItem>
-        <CrossItem name="清空添加记录" :borderBot="true" :isIcon="false" @click.native="handleClean('addressBookBeg')">  
+        <CrossItem name="清空添加好友记录" :borderBot="true" :isIcon="false" @click.native="handleClean('addressBookBeg')">  
         </CrossItem>
         <CrossItem name="清空聊天记录" :borderBot="true" :isIcon="false" @click.native="handleClean('msg')">  
         </CrossItem>
@@ -16,8 +16,6 @@
         <!-- <CrossItem name="帮助和反馈" :borderBot="true" :isIcon="false">  
         </CrossItem> -->
         <CrossLine ></CrossLine>
-        <CrossItem  @click.native="handleExit" name="切换账号" :borderBot="true" :isIcon="false">  
-        </CrossItem>
         <CrossItem @click.native="handleExit" name="退出" :borderBot="true" :isIcon="false">  
         </CrossItem>
     </div>

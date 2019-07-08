@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:04:59
 @LastEditors: hua
-@LastEditTime: 2019-07-08 13:48:51
+@LastEditTime: 2019-07-08 15:09:10
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -16,17 +16,12 @@ from flask import request
 from app import socketio
 from flask_socketio import emit, join_room
 from app.Vendor.Code import Code
-from app import cache
 import time
 
 
 
 """ 发送添加好友请求 """
 def success(data):
-    beg_data = cache.get('beg'+str(data['be_focused_user_id']))
-    if beg_data != None:
-        beg_data = beg_data.remove(data['data'])
-        cache.set('beg'+str(data['be_focused_user_id']), beg_data)
     socketio.emit('beg', Utils.formatBody({
         'data':{}, 
         'action':'beg_success'})
@@ -49,9 +44,6 @@ def addressBookBeg(params):
         'msg_uuid': msg_uuid, 
         'be_focused_user_id': params['be_focused_user_id']
     }), namespace='/room', room='@broadcast.'+str(params['be_focused_user_id']), callback=success)
-    beg_data = cache.get('beg'+str(params['be_focused_user_id']))
-    if beg_data == None:
-         cache.set('beg'+str(params['be_focused_user_id']), [userData])
     return BaseController().successData(msg='发送成功')
 
 
@@ -75,8 +67,7 @@ def addressBookAdd(params):
             room_uuid, params['focused_user_id'], params['be_focused_user_id'])
         if status == False:
             return BaseController().error(msg='添加失败')
-        #删除缓存
-        cache.delete('beg'+str(params['be_focused_user_id']))
+      
         #回复被添加用户
         socketio.emit('beg', Utils.formatBody({
             'action':'beg_add_success'
@@ -97,13 +88,3 @@ def addressBookGet(params, user_info):
     data = AddressBook.rawGetList(params['page_no'], params['per_page'], filters)
     return BaseController().json(data)
 
-
-
-
-
-"""获取添加好友离线记录 """
-@app.route('/api/v2/addressBook/cache.get', methods=['GET'])
-@UsersAuthJWT.apiAuth
-def addressBookCacheGet(user_info):
-    beg_data = cache.get('beg'+str(user_info['data']['id']))
-    return BaseController().successData(beg_data)

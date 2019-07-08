@@ -71,7 +71,6 @@
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
 	import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
-	import {addressBookCacheGet} from '@/api/addressBook'
 	import {userRoomRelationGet} from '@/api/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'
@@ -130,20 +129,6 @@
 				userRoomRelationGet({page_no:1, per_page:100000000}).then(res=>{
 					this.updateGroupRoomList(res.data.list)
 					this.loading = false
-				})
-				addressBookCacheGet().then(res=>{
-					if(res.data == null){
-						return
-					}
-					this.$dialog.toast({mes: `有新朋友加你好友，请去个人界面确认`});
-					res.data.forEach(element => {
-						element['user_id'] = element['id'];
-						// 删除原来的键
-						delete element['id'];
-						// 增加状态,0申请，1通过，2拒绝
-						element['status'] = 0
-						addAddressBookBeg(element)
-					});
 				})
 				setup()
 			},

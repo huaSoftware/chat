@@ -20,7 +20,7 @@
         </div>
         <CrossLine ></CrossLine>
         <!-- 功能区 -->
-        <CrossItem name="新的朋友"  @click.native="$router.push({name: 'newFriend'})">
+        <CrossItem name="添加好友记录"  @click.native="$router.push({name: 'newFriend'})">
             <span class="icon-custom-jia font18 icon_style"></span>
         </CrossItem>
         <!-- <CrossItem name="收藏" :borderBot="false">
