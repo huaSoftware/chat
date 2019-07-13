@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-08 21:42:04
+@LastEditTime: 2019-07-10 11:29:44
 '''
 from app import app
 from flask import request
@@ -12,6 +12,8 @@ from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.AddressBook import AddressBook
+from app.Vendor.Decorator import validator
+from app.Models.UserRoomRelation import UserRoomRelation
 from app.Models.Users import Users
 from flask_socketio import emit, join_room
 from app.Vendor.Code import Code
@@ -23,3 +25,14 @@ import time
 def roomGet(user_info):
     data = AddressBook.getRoomList(user_info['data']['id'])
     return BaseController().json(data)
+
+@app.route('/api/v2/room/details', methods=['GET'])
+@validator(name='room_uuid', rules={'required': True, 'type': 'string'})
+@UsersAuthJWT.apiAuth
+def roomDetails(user_info, params):
+    """ 获取群聊用户信息 """
+    filters = {
+        UserRoomRelation.room_uuid == params['room_uuid']
+    }
+    data = UserRoomRelation().getAll(filters, UserRoomRelation.created_at.desc)
+    return data

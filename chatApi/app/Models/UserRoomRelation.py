@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-06-06 16:47:10
+@LastEditTime: 2019-07-12 20:37:26
 '''
 import time, math
 
@@ -18,7 +18,7 @@ from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 
 class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
-    #users = relationship('Users', uselist=True, primaryjoin=foreign(HtUserRoomRelation.user_id) == remote(Users.id))
+    users = relationship('Users', uselist=False, primaryjoin=foreign(HtUserRoomRelation.user_id) == remote(Users.id))
     room = relationship('Room', uselist=False, primaryjoin=foreign(HtUserRoomRelation.room_uuid) == remote(Room.room_uuid))
     """ 
         列表

@@ -5,6 +5,7 @@
  */
 export default {
     state: {
+        currentRoomUuid: '',//当前房间号
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
         groupRoomList: [] //群聊房间数据
@@ -19,7 +20,10 @@ export default {
         },
         groupRoomList(state){
             return state.groupRoomList
-        }
+        },
+        currentRoomUuid(state){
+            return state.currentRoomUuid
+        },
     },
 
     actions: {
@@ -32,6 +36,9 @@ export default {
         },
         updateGroupRoomList({commit}, groupRoomList) {
             commit("updateGroupRoomList", groupRoomList);
+        },
+        updateCurrentRoomUuid({commit}, currentRoomUuid){
+            commit("updateCurrentRoomUuid", currentRoomUuid);
         }
     },
 
@@ -45,6 +52,9 @@ export default {
         },
         updateGroupRoomList(state, groupRoomList){
             state.groupRoomList = groupRoomList
+        },
+        updateCurrentRoomUuid(state, currentRoomUuid){
+            state.currentRoomUuid = currentRoomUuid
         }
     }
 }

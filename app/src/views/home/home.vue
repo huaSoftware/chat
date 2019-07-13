@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-06-17 15:09:12
+ * @LastEditTime: 2019-07-13 20:38:59
  -->
 
 <template>
@@ -36,7 +36,7 @@
 					<div class="yd-list-other">
 						<div><span class="demo-list-price" v-html="formatLastMsg(item.room.last_msg)"></span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
-						<div  v-if="alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
+						<div  v-if="alert && item.is_alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
 				</div>
 			</a>
@@ -52,12 +52,12 @@
 					</div>
 					<div class="yd-list-other">
 						<div><span class="demo-list-price" v-html="formatLastMsg(item.room.last_msg)"></span></div>
-						<div  v-if="alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
+						<div  v-if="alert && item.is_alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
 				</div>
 			</a>
 		</article>
-		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:absolute;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
+		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:fixed;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
 		<!-- 参数空时页面 -->
 		<div class="empty" v-if="roomList.length==0 && loading==false">
 			<span class="icon-custom-xiaoxi"></span>

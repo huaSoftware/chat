@@ -205,7 +205,9 @@
             this.updateMsgList([])
             this.user = storage.get('user')
             if(typeof this.$route.query.room_uuid !== 'undefined'){
+                //后期将window的去除改为vuex内
                 window.room_uuid = this.$route.query.room_uuid
+                this.$store.commit('updateCurrentRoomUuid', window.room_uuid)
                 getRoomMsg(window.room_uuid).then(res=>{
                     console.log(res)
                     this.updateMsgList(res)

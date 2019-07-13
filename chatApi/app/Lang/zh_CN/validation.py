@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-28 20:11:04
 @LastEditors: hua
-@LastEditTime: 2019-06-11 20:40:59
+@LastEditTime: 2019-07-12 21:02:59
 '''
 
 validation = {
@@ -34,5 +34,6 @@ validation = {
     'uuid': '唯一编号',
     'keyword': '关键字',
     'id':'编号',
-    'room_uuid':'房间编号'
+    'room_uuid':'房间编号',
+    'is_alert': '是否提醒'
 }

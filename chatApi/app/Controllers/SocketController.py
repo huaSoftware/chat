@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-06-24 20:19:08
+@LastEditTime: 2019-07-10 10:22:27
 '''
 from flask_socketio import emit, join_room, leave_room
 from app import socketio
@@ -16,6 +16,12 @@ from app.Models.Users import Users
 from app.Vendor.Code import Code
 from app.Service.ChatService import ChatService
 import time
+
+#在线人数
+count =  0 
+#房间在线人数
+room_user_count = 0
+
 
 ''' 聊天室模式，进入，离开，聊天
 '''
