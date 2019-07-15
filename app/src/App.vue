@@ -2,9 +2,9 @@
   <yd-layout>
     <!-- 公共头部导航 -->
 		<yd-navbar slot="navbar" :title="this.$route.meta.title" v-if="this.$route.meta.isShowHead">
-			<router-link :to="{name: this.$route.meta.backPath}" slot="left" v-if="this.$route.meta.isShowBack">
-				<yd-navbar-back-icon ></yd-navbar-back-icon>
-			</router-link>
+			<a  href="javascript:;" @click="goHref" slot="left" v-if="this.$route.meta.isShowBack">
+				<yd-navbar-back-icon ></yd-navbar-back-icon>	
+			</a>
 			<a href="javascript:;" @click="goHrefByDefPath" slot="right" v-if="this.$route.meta.isShowDef" style="color: rgb(153, 153, 153);">
 				<span v-if="this.$route.meta.defIconName" :class="this.$route.meta.defIconName" style="font-size: 0.46rem;"></span>
 				<span v-if="this.$route.meta.defTextName" style="font-size: 0.3rem;">{{this.$route.meta.defTextName}}</span>
@@ -45,6 +45,14 @@ export default {
       updateMsgList:'updateMsgList',
       updateRoomList: 'updateRoomList'
     }),
+    goHref(){
+      let path = router.currentRoute.meta.backPath
+      if(path === -1){
+        history.go(-1)
+      }else{
+        this.$router.push({name: path})
+      }
+    },
     goHrefByDefPath(){
       let path = router.currentRoute.meta.defPath
       if(path === -1){

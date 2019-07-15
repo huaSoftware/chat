@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-13 20:38:03
+@LastEditTime: 2019-07-14 10:17:53
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -58,7 +58,7 @@ def UserRoomRelationGetByRoomUuid(params, user_info):
         filters.add(
             AddressBook.be_focused_user_id == user_info['data']['id']
         )
-        data['is_alert'] = AddressBook().getOne( filters)['is_alert']
+        data['room'] = AddressBook().getOne( filters)
     else:
         filters = {
             UserRoomRelation.room_uuid == params['room_uuid']
@@ -67,7 +67,7 @@ def UserRoomRelationGetByRoomUuid(params, user_info):
         filters.add(
             UserRoomRelation.user_id == user_info['data']['id']
         )
-        data['is_alert'] = UserRoomRelation().getOne( filters)['is_alert']
+        data['room'] = UserRoomRelation().getOne( filters)
     return BaseController().successData(data)
 
 

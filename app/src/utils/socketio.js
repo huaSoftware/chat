@@ -106,7 +106,10 @@ export function send(method, data, type = 'room') {
 					
 				}
 				if(res.data.action == 'join'){
-					let queryData = {room_uuid: data.room_uuid}
+					let queryData = {}
+					store.commit('updateCurrentRoomUuid', data.room_uuid)
+					store.commit('updateCurrentRoomName', data.name)
+					store.commit('updateCurrentRoomType', data.type)
 					if(data.name){
 						queryData.name = data.name
 					}

@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-06-17 15:25:23
+ * @LastEditTime: 2019-07-15 09:42:26
  -->
 <template>
     <div style="font-size: 0;">
@@ -151,13 +151,18 @@
     import { Confirm, Alert, Toast, Notify, Loading } from 'vue-ydui/dist/lib.rem/dialog'
     import {send} from '@/utils/socketio'
     import {chatSend, reChatSend} from '@/socketIoApi/chat'
+    import store from '../../store'
     export default {
         components: {
             vEditDiv,
             VueCropper
         },
         computed: {
-            ...mapGetters(["msgList"])
+            ...mapGetters([
+                "msgList",
+                "currentRoomUuid",
+                "currentRoomName"
+            ])
         },
         data() {
             return {
@@ -171,6 +176,8 @@
                 recordingShow: false,
                 touched: false,
                 cropperShow: false,
+                lockDown:false,
+                lockEnd:false,
                 footerMenu: [{
                     icon: 'uniE903',
                     name: '图片',
@@ -185,6 +192,10 @@
                     router: 'position'
                 }],
                 data: [],
+                msgReq:{
+                    page:1,
+                    per_page: 10
+                },
                 reqImgData: {
                     url: process.env.BASE_API,
                     imgDatas: ''
@@ -204,13 +215,12 @@
         created() {
             this.updateMsgList([])
             this.user = storage.get('user')
-            if(typeof this.$route.query.room_uuid !== 'undefined'){
+            //路由传参
+           if(this.currentRoomUuid){
                 //后期将window的去除改为vuex内
-                window.room_uuid = this.$route.query.room_uuid
-                this.$store.commit('updateCurrentRoomUuid', window.room_uuid)
-                getRoomMsg(window.room_uuid).then(res=>{
-                    console.log(res)
-                    this.updateMsgList(res)
+                window.room_uuid = this.currentRoomUuid
+                getRoomMsg(this.currentRoomUuid, this.msgReq.page, this.msgReq.per_page).then(res=>{
+                    this.updateMsgList(res.list)
                 })
             }
             try {
@@ -243,9 +253,35 @@
                     this.scroll = new BScroll(this.$refs.bscroll, {
                         click: false,
                         scrollY: true,
-                        probeType: 3,
-                        preventDefault:false //重要，不然click事件冒泡将被阻止
+                        probeType: 3
                     });
+                    this.scroll.on('touchEnd', (pos) => {
+                        // 下拉动作
+                        if (pos.y > 50) {
+                            if(!this.lockEnd){
+                                Notify({
+                                    mes: '正在加载中',
+                                    timeout: 2000
+                                })
+                                this.lockDown = true
+                                this.msgReq.page++
+                                getRoomMsg(this.currentRoomUuid, this.msgReq.page, this.msgReq.per_page).then(res=>{
+                                    if(res.list.length == 0){
+                                        this.lockEnd = true
+                                    }else{
+                                        let msgList = JSON.parse(JSON.stringify(this.msgList))
+                                        msgList = res.list.concat(msgList)
+                                        this.updateMsgList(msgList)
+                                    }
+                                })
+                            }else{
+                                Notify({
+                                    mes: '没有更多内容了',
+                                    timeout: 2000
+                                })
+                            }
+                        }
+                    })
                 }
             })
             window.onresize = function () {
@@ -256,7 +292,9 @@
             }
         },
         beforeRouteEnter (to, from, next) {
+            
             to.meta.title = to.query.name
+
             next()
         },
         destroyed(){
@@ -408,6 +446,7 @@
                 })
                 document.getElementById('edit').innerHTML = ''
                 this.content = ''
+                this.closeDefIconsShow()
                 //console.log(this.content)
             },
             reSendMsg(created_at){
@@ -446,10 +485,13 @@
                     } else {
                         this.scroll.refresh();
                     }
-                    this.scroll.scrollTo(0, this.scroll.maxScrollY)
-                    setTimeout(()=>{
-                        this.$previewRefresh()
-                    },200)
+                    if(!this.lockDown){
+                        this.scroll.scrollTo(0, this.scroll.maxScrollY)
+                        setTimeout(()=>{
+                            this.$previewRefresh()
+                        },200)
+                    }
+                    this.lockDown = false
                 })
             },
             handleDefsShow() {

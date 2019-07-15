@@ -13,7 +13,7 @@ export function addAddressBookBeg(value) {
     //定义字段
     db.version(1).stores({ addressBookBeg: "++id, email, head_img, user_id, nick_name, status, created_at, updated_at" });
     //事务读写
-    db.transaction('rw', db.addressBookBeg, async() => {
+    db.transaction('rw', db.addressBookBeg, async ()=>{
         if (await db.addressBookBeg.where({'user_id': value.user_id}).count() === 0) {
             await db.addressBookBeg.add(value);
         }
@@ -106,22 +106,28 @@ export function addRoomMsg(value) {
  *读聊天记录
  *return bool
  */
-export function getRoomMsg(room_uuid) {
+export function getRoomMsg(room_uuid, page, per_page) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
     db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
-
+        let data = {}
         // Make sure we have something in DB:
         //统计次数
         let count = await db.roomMsg.where({'room_uuid':room_uuid}).count()
         //console.log(count)
-        let data =   await db.roomMsg.where({'room_uuid':room_uuid}).offset(count-5).limit(5).sortBy('created_at')
+        let offset = (page-1)*per_page
+        console.log(offset)
+        if(offset < -per_page){
+            data['list'] = []
+        }else{
+            data['list'] =  await db.roomMsg.where({'room_uuid':room_uuid}).offset(offset).limit(per_page).reverse().sortBy('created_at')
+        }
+        data['list'].reverse()
+        data['total'] = count
         return data   
-
-
     }).catch(e => {
         //console.log(e.stack || e);
         return false
@@ -147,6 +153,32 @@ export function updateRoomMsg(created_at, send_status) {
             let data =   await db.roomMsg.toArray()
             return data   
         }
+        return Promise.reject('update error') 
+
+    }).catch(e => {
+        //console.log(e.stack || e);
+        return false
+    });
+}
+
+/** 
+ *删除聊天记录
+ *
+ */
+export function delRoomMsg(room_uuid) {
+    //申明数据库
+    const db = new Dexie("msg");
+    //定义字段
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
+    //事务读写
+    return db.transaction('rw', db.roomMsg, async() => {
+        // Make sure we have something in DB:
+        //更新状态
+        let del = db.roomMsg.where({"room_uuid":room_uuid}).delete();
+        if (del){
+            return true   
+        }
+
         return Promise.reject('update error') 
 
     }).catch(e => {

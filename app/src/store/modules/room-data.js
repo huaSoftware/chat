@@ -6,6 +6,8 @@
 export default {
     state: {
         currentRoomUuid: '',//当前房间号
+        currentRoomName: '',//房间名
+        currentRoomType:0,//房间类型
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
         groupRoomList: [] //群聊房间数据
@@ -24,6 +26,12 @@ export default {
         currentRoomUuid(state){
             return state.currentRoomUuid
         },
+        currentRoomName(state){
+            return state.currentRoomName
+        },
+        currentRoomType(state){
+            return state.currentRoomType
+        }
     },
 
     actions: {
@@ -39,6 +47,12 @@ export default {
         },
         updateCurrentRoomUuid({commit}, currentRoomUuid){
             commit("updateCurrentRoomUuid", currentRoomUuid);
+        },
+        updateCurrentRoomName({commit}, currentRoomName){
+            commit("updateCurrentRoomName", currentRoomName);
+        },
+        updateCurrentRoomType({commit}, currentRoomType){
+            commit("updateCurrentRoomType", currentRoomType);
         }
     },
 
@@ -55,6 +69,12 @@ export default {
         },
         updateCurrentRoomUuid(state, currentRoomUuid){
             state.currentRoomUuid = currentRoomUuid
+        },
+        updateCurrentRoomName(state, currentRoomName){
+            state.currentRoomName = currentRoomName
+        },
+        updateCurrentRoomType(state, currentRoomType){
+            state.currentRoomType = currentRoomType
         }
     }
 }

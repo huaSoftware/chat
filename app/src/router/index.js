@@ -109,7 +109,14 @@ const router = new Router({
       path: '/room/details',
       name: 'roomDetails',
       component: _import('room/details'),
-      meta: { title: '房间详情', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home'} // 定义一些公共状态，你喜欢就好
+      meta: { title: '房间详情', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:-1} // 定义一些公共状态，你喜欢就好
+    },
+    //聊天信息
+    {
+      path: '/room/msgList',
+      name: 'roomMsgList',
+      component: _import('room/msgList'),
+      meta: { title: '聊天信息', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:-1} // 定义一些公共状态，你喜欢就好
     }
   ]
 })
