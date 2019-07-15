@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-14 10:17:53
+@LastEditTime: 2019-07-15 16:53:16
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -28,16 +28,14 @@ def groupChatCreate(params):
     return BaseController().error(msg='创建失败')
     
     
-@app.route('/api/v2/userRoomRelation/get', methods=['POST'])
-@validator(name='page_no', rules={'required': True,'type': 'integer'})
-@validator(name='per_page', rules={'required': True, 'type': 'integer'})
+@app.route('/api/v2/userRoomRelation/get', methods=['GET'])
 @UsersAuthJWT.apiAuth
-def UserRoomRelationGet(params, user_info):
+def UserRoomRelationGet(user_info):
     """ 获取通讯录列表 """
     filters = {
         UserRoomRelation.user_id == user_info['data']['id']
     }
-    data = UserRoomRelation().getList( filters, UserRoomRelation.updated_at.desc())
+    data = UserRoomRelation().getAll(filters, 'updated_at desc')
     return BaseController().successData(data)
 
 

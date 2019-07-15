@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-10 11:29:44
+@LastEditTime: 2019-07-15 16:40:32
 '''
 from app import app
 from flask import request
@@ -20,7 +20,7 @@ from app.Vendor.Code import Code
 import time
 
 """ 获取房间列表 """
-@app.route('/api/v2/room/get', methods=['POST'])
+@app.route('/api/v2/room/get', methods=['GET'])
 @UsersAuthJWT.apiAuth
 def roomGet(user_info):
     data = AddressBook.getRoomList(user_info['data']['id'])

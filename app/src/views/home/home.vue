@@ -120,14 +120,14 @@
 				}else{
 					this.alert = storage.get('alert')
 				}
-				roomGet({page_no:1, per_page:100000000}).then(res=>{
+				roomGet().then(res=>{
 					if(res.data != null){
 						this.updateRoomList(res.data)
 						this.loading = false
 					}
 				})
-				userRoomRelationGet({page_no:1, per_page:100000000}).then(res=>{
-					this.updateGroupRoomList(res.data.list)
+				userRoomRelationGet().then(res=>{
+					this.updateGroupRoomList(res.data)
 					this.loading = false
 				})
 				setup()

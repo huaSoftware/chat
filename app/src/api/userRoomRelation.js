@@ -1,11 +1,10 @@
 import request from '@/utils/request'
 
 // 获取通讯录列表（群聊）
-export function userRoomRelationGet (data) {
+export function userRoomRelationGet () {
     return request({
         url: '/api/v2/userRoomRelation/get',
-        method: 'post',
-        data
+        method: 'get'
     })
 }
 

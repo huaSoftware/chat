@@ -116,8 +116,8 @@ export default {
             addressBookGet(this.reqData).then(res=>{
                 this.adderssBookList = res.data.addressBookList
             })
-            userRoomRelationGet({page_no:1, per_page:100000000}).then(res=>{
-                this.updateGroupRoomList(res.data.list)
+            userRoomRelationGet().then(res=>{
+                this.updateGroupRoomList(res.data)
                 this.loading = false
             })
         },
