@@ -1,8 +1,15 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-16 19:35:43
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-07-15 17:24:02
+ -->
 <template>
 <div class="newFriend_content">
     <vTitle name="新的朋友"></vTitle>
     <article class="yd-list yd-list-theme4">
-        <a href="javascript:;" class="yd-list-item" v-for="(item, index) in newFriendList">
+        <a href="javascript:;" class="yd-list-item" v-for="(item, index) in newFriendList" :key="index">
             <div class="yd-list-img"><img :src="item.head_img"></div>
             <div class="yd-list-mes">
                 <div class="yd-list-title">

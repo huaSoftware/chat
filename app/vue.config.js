@@ -2,7 +2,7 @@ module.exports = {
   baseUrl: process.env.NODE_ENV === "production" ? "./" : "/",
   // outputDir: 在npm run build时 生成文件的目录 type:string, default:'dist'
   outputDir: 'wep',
-  
+  lintOnSave: false,
   // pages:{ type:Object,Default:undfind }
   devServer: {
     port: 8888, // 端口号

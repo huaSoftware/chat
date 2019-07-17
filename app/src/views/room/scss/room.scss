@@ -1,5 +1,5 @@
  /**css样式*/
- .input_wapper {
+ .input_wrapper {
     width: 100%;
     display:flex;
     bottom: 0.2rem;
@@ -9,7 +9,8 @@
 }
 
 .voice {
-   /*  width: 13%; */
+    display: flex;
+    flex-direction: column-reverse;
     padding: 5px 8px;
     vertical-align: middle;
 }
@@ -30,6 +31,12 @@
     content: attr(placeholder);
 }
 
+.recording{
+    position:absolute; 
+    top:40%;
+    width:50%;
+    margin-left:25%;
+}
 .record {
     width: 100%;
     max-height: 100px;
@@ -47,8 +54,8 @@
 }
 
 .def {
-   /*  width: 13%; */
-    display: inline-block;
+    display: flex;
+    flex-direction: column-reverse;
     text-align: center;
     padding: 5px 8px;
     vertical-align: middle;
@@ -57,30 +64,7 @@
 .swiper-wrapper {
     height: 200px !important;
 }
-
-.icons_wapper {
-    height: 200px !important;
-    width: 100%;
-    border-top: 1px solid #e9e9e9;
-    text-align: left;
-    overflow-x: auto;
-    background: #fff;
-    flex-wrap: wrap;
-    position:fixed;
-    bottom:0rem;
-}
-
-.icons_wapper img {
-    margin: 2.25%;
-    width: 8%;
-}
-
-.swiper-pagination {
-    height: 21px;
-    position: fixed;
-}
-
-.defs_wapper {
+.defs_wrapper {
     height: 200px !important;
     width: 100%;
     border-top: 1px solid #e9e9e9;
@@ -101,7 +85,7 @@
     border-right: 0px;
 }
 
-.content_wapper {
+.content_wrapper {
     width: 100%;
     overflow: hidden;
 }

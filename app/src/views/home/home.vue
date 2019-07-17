@@ -34,7 +34,7 @@
 						<span class="title-right">{{formatTime(item.room.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
-						<div><span class="demo-list-price" v-html="formatLastMsg(item.room.last_msg)"></span></div>
+						<div><span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span></div>
 						<!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
 						<div  v-if="alert && item.is_alert"><yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge></div>
 					</div>
@@ -225,6 +225,13 @@
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;
 	margin-left:0.3rem;
+}
+.last_msg{
+	overflow: hidden;
+    width: 2rem;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
 <style>

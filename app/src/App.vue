@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 13:57:47
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-07-17 16:57:44
+ -->
 <template>
   <yd-layout>
     <!-- 公共头部导航 -->
@@ -39,6 +46,8 @@ export default {
     }
   },
   mounted() {
+    //刷新回首页
+    this.$router.push('/');
   },
   methods: {
     ...mapMutations({
@@ -88,12 +97,6 @@ export default {
           name: "通讯录",
           router: "/addressBook"
         },
-       /*  {
-          icon: "zixun",
-          iconActive: "zixun2",
-          name: "我的",
-          router: "/serverManager"
-        }, */
         {
           icon: "wode",
           iconActive: "wode_active",
@@ -169,5 +172,4 @@ export default {
 .active{
     color:$color-primary !important;
 }
-
 </style>

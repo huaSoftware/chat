@@ -1,1 +1,10 @@
-null
+{
+  "index.html": {
+    "resources": [
+      "css/app.62d8fcd9.css",
+      "js/app.2e4e5a2b.js",
+      "css/chunk-vendors.99537f1c.css",
+      "js/chunk-vendors.59537ee8.js"
+    ]
+  }
+}

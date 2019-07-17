@@ -71,7 +71,7 @@
                 <span class="icon-custom-you icon-right"></span>
             </span>
         </yd-cell-item>
-        <CrossLine></CrossLine>
+        <!-- <CrossLine></CrossLine> -->
         <!--清空聊天历史记录-->
         <yd-button size="large" type="hollow" @click.native="handleDelRoomMsg">清空聊天历史记录</yd-button>
     </div>

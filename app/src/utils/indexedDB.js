@@ -13,11 +13,11 @@ export function addAddressBookBeg(value) {
     //定义字段
     db.version(1).stores({ addressBookBeg: "++id, email, head_img, user_id, nick_name, status, created_at, updated_at" });
     //事务读写
-    db.transaction('rw', db.addressBookBeg, async ()=>{
+    db.transaction('rw', db.addressBookBeg, async () => {
         if (await db.addressBookBeg.where({'user_id': value.user_id}).count() === 0) {
             await db.addressBookBeg.add(value);
         }
-
+        
 
     }).catch(e => {
         //console.log(e.stack || e);
@@ -89,7 +89,7 @@ export function addRoomMsg(value) {
     //定义字段
     db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status" });
     //事务读写
-    db.transaction('rw', db.roomMsg, async() => {
+    db.transaction('rw', db.roomMsg,  async() => {
         //if (await db.roomMsg.where({'user_id': value.user_id}).count() === 0) {
         await db.roomMsg.add(value);
         //}

@@ -8,6 +8,9 @@ Vue.config.productionTip = false;
 /*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
 import "babel-polyfill";
 
+//重置css
+import "@/assets/scss/reset.scss"
+
 //svg图标
 import "@/assets/style.css";
 
@@ -19,9 +22,6 @@ import YDUI from "vue-ydui"; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js'
 import "vue-ydui/dist/ydui.rem.css";
 Vue.use(YDUI);
 
-// 定义全局加载组件
-/* import { Vwaiting, Cwaiting } from "@/assets/js/showWating.js";
-window.app = Object.assign({}, { Vwaiting, Cwaiting }); */
 
 // 图片懒加载
 import VueLazyload from "vue-lazyload";
