@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-07-15 09:42:26
+ * @LastEditTime: 2019-07-18 10:02:26
  -->
 <template>
   <div style="font-size: 0;">
@@ -132,36 +132,7 @@
     <!-- 功能栏 -->
     <def v-show="defsShow"/>
     <!-- 裁剪图 -->
-    <!-- vueCropper 剪裁图片实现-->
-    <div class="vue-cropper-box" v-if="cropperShow">
-      <div class="vue-cropper-content">
-        <vueCropper
-          style="height:100%;position:absoloute;width:100%;z-index:9999"
-          ref="cropper"
-          :img="option.img"
-          :outputSize="option.size"
-          :outputType="option.outputType"
-          :canMoveBox="option.canMoveBox"
-          :canMove="option.canMove"
-          :autoCrop="true"
-          :autoCropWidth="option.autoCropWidth"
-          :autoCropHeight="option.autoCropHeight"
-        ></vueCropper>
-      </div>
-      <!-- 截图功能键 -->
-      <div style="position:fixed;width:100%;height:40px; bottom: 10px;z-index: 99999;">
-        <yd-button
-          @click.native="handleOnRawImg"
-          type="primary"
-          style="float:right;line-height:40px;height:40px;margin-left:20px;margin-right:10px;"
-        >原图</yd-button>
-        <yd-button
-          @click.native="handleOnCubeImg"
-          type="warning"
-          style="float:right;line-height:40px;height:40px;"
-        >裁剪</yd-button>
-      </div>
-    </div>
+    <cropperBox v-if="cropperShow" :reqImgData="reqImgData" @recReqImgData="recReqImgData"  @recCropperShow="recCropperShow"/>   
   </div>
 </template>
 <script>
@@ -170,21 +141,19 @@ import { mapGetters, mapMutations } from "vuex";
 import vEditDiv from "@/components/v-edit-div/v-edit-div";
 import vImg from '@/components/v-img/v-img'
 import icons from './components/icons/icons'
-import def from './components/defs/defs'
+import def from './components/def/def'
+import cropperBox from './components/cropperBox/cropperBox'
 import BScroll from "better-scroll";
-import VConsole from "vconsole/dist/vconsole.min.js";
-import { uploadBase64, uploadFile } from "@/api/common";
-import { VueCropper } from "vue-cropper";
+import { uploadFile } from "@/api/common";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
 import { getRoomMsg } from "@/utils/indexedDB";
 import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
-import store from "../../store";
 export default {
   components: {
-    vEditDiv,VueCropper,vImg, icons, def
+    vEditDiv,vImg, icons, def, cropperBox
   },
   computed: {
     ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName"])
@@ -203,40 +172,14 @@ export default {
       cropperShow: false,
       lockDown: false,
       lockEnd: false,
-      footerMenu: [
-        {
-          icon: "uniE903",
-          name: "图片",
-          router: "img"
-        },
-        {
-          icon: "uniE904",
-          name: "文件",
-          router: "file"
-        },
-        {
-          icon: "dingw",
-          name: "位置",
-          router: "position"
-        }
-      ],
       data: [],
       msgReq: {
         page: 1,
         per_page: 10
       },
       reqImgData: {
-        url: process.env.BASE_API,
+        url: process.env.VUE_APP_CLIENT_API,
         imgDatas: ""
-      },
-      option: {
-        img: "",
-        size: 1,
-        outputType: "png",
-        canMove: false,
-        canMoveBox: false,
-        autoCropHeight: 100,
-        autoCropWidth: 100
       },
       user: {}
     };
@@ -268,8 +211,7 @@ export default {
     }
   },
   mounted() {
-    let that = this;
-    this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
+    //this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
     new Swiper(".swiper-cont", {
       loop: false,
       autoplay: false, //可选选项，自动滑动
@@ -281,7 +223,7 @@ export default {
       observer: true,
       observeParents: true
     });
-    this.$nextTick(() => {
+    /* this.$nextTick(() => {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.bscroll, {
           click: false,
@@ -321,13 +263,13 @@ export default {
         });
       }
     });
-    window.onresize = function() {
+    window.onresize = () =>{
       setTimeout(() => {
-        that.$refs.bscroll.style.height =
+        this.$refs.bscroll.style.height =
           document.body.clientHeight - 100 + "px";
-        that.handleSendShow();
+        this.handleSendShow();
       }, 300);
-    };
+    }; */
   },
   beforeRouteEnter(to, from, next) {
     to.meta.title = to.query.name;
@@ -352,7 +294,8 @@ export default {
       let data = new FormData(); //重点在这里 如果使用 var data = {}; data.inputfile=... 这样的方式不能正常上传
       data.append("file", file);
       uploadFile(data).then(res => {
-        let file_path = process.env.BASE_API + res.data.path;
+        let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
+        console.log(process.env)
         let file = `<a ontouchstart="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`;
         chatSend({
           data: {
@@ -373,81 +316,13 @@ export default {
       }
       //创建读取文件的对象
       let reader = new FileReader();
-
       //为文件读取成功设置事件
       reader.onload = function(e) {
-        that.option.img = e.target.result;
+        that.reqImgData.imgDatas = e.target.result;
         that.cropperShow = true;
-        ////console.log(that.option.img)
       };
       //正式读取文件
       reader.readAsDataURL(file);
-    },
-    // 确定裁剪图片
-    handleOnCubeImg() {
-      // 获取cropper的截图的base64 数据
-      this.$refs.cropper.getCropData(data => {
-        this.reqImgData.imgDatas = data;
-        this.cropperShow = false;
-        //先将显示图片地址清空，防止重复显示
-        this.option.img = "";
-        //将剪裁后的图片执行上传
-        uploadBase64(this.reqImgData).then(res => {
-          let img =
-            '<img class="chat_img" preview="1" preview-text="" width="100" src="' +
-            process.env.VUE_APP_CLIENT_API +
-            res.data.path +
-            '">';
-          chatSend({
-            data: {
-              msg: img,
-              room_uuid: window.room_uuid,
-              type: 1
-            }
-          });
-        });
-      });
-    },
-    handleOnRawImg() {
-      this.reqImgData.imgDatas = this.option.img;
-      this.cropperShow = false;
-      //先将显示图片地址清空，防止重复显示
-      this.option.img = "";
-      uploadBase64(this.reqImgData).then(res => {
-        let img =
-          '<img class="chat_img"  preview="1" preview-text="" width="100" src="' +
-          process.env.VUE_APP_CLIENT_API +
-          res.data.path +
-          '">';
-        chatSend({
-          data: {
-            msg: img,
-            room_uuid: window.room_uuid,
-            type: 1
-          }
-        });
-      });
-    },
-    handleDef(value) {
-      let that = this;
-      if (value == "img") {
-        document.getElementById("img").click();
-      }
-      if (value == "fav") {
-        this.$router.push("/person/favHistory");
-      }
-      if (value == "position") {
-        if (window.plus) {
-          this.getCurrentPosition();
-        } else {
-          setTimeout(() => {
-            Alert({ mes: "该定位只能在app内使用" });
-          }, 300);
-        }
-      }
-      if (value == "file") {
-        document.getElementById("file").click();
-      }
     },
     // 扩展API加载完毕，现在可以正常调用扩展API
     getCurrentPosition() {
@@ -510,7 +385,7 @@ export default {
       this.iconsShow = false;
       this.defsShow = false;
       this.recordShow = false;
-      this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
+      //this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
     },
     handleSendShow() {
       if (this.content.length >= 1) {
@@ -521,7 +396,10 @@ export default {
     },
     handleMsgListToBottom() {
       this.$nextTick(() => {
-        if (!this.scroll) {
+        setTimeout(() => {
+          this.$previewRefresh();
+        }, 500);
+        /* if (!this.scroll) {
           this.scroll = new BScroll(this.$refs.bscroll, {
             click: false,
             scrollY: true,
@@ -532,15 +410,12 @@ export default {
         }
         if (!this.lockDown) {
           this.scroll.scrollTo(0, this.scroll.maxScrollY);
-          setTimeout(() => {
-            this.$previewRefresh();
-          }, 200);
-        }
+        } */
         this.lockDown = false;
       });
     },
     handleDefsShow() {
-      if (this.defsShow) {
+      /* if (this.defsShow) {
         this.$refs.bscroll.style.height =
           document.body.offsetHeight - 100 + "px";
       } else {
@@ -554,10 +429,10 @@ export default {
       if (this.iconsShow == false && this.defsShow == false) {
         this.$refs.bscroll.style.height =
           document.body.clientHeight - 100 + "px";
-      }
+      } */
     },
     handleIconsShow() {
-      if (this.iconsShow) {
+      /* if (this.iconsShow) {
         this.$refs.bscroll.style.height =
           document.body.offsetHeight - 100 + "px";
       } else {
@@ -571,21 +446,10 @@ export default {
       if (this.iconsShow == false && this.defsShow == false) {
         this.$refs.bscroll.style.height =
           document.body.clientHeight - 100 + "px";
-      }
+      } */
     },
-    addPreZero(num) {
-      if (num < 10) {
-        return "00" + num;
-      } else if (num < 100) {
-        return "0" + num;
-      } else if (num < 1000) {
-        return num;
-      } else {
-        return num;
-      }
-    },
-    insertIcon: function(src) {
-      this.content = this.content + '<img src="' + src + '">';
+    insertIcon(src) {
+      this.content = `${this.content}<img src="${src}">`
     },
     // 录音开始
     startRecord() {
@@ -690,6 +554,12 @@ export default {
       amr.onEnded(function() {
         Vue.set(that.data[index].data, "status", false);
       });
+    },
+    recReqImgData(value){
+      this.reqImgData.imgDatas = value;
+    },
+    recCropperShow(value){
+      this.cropperShow = value;
     }
   },
   watch: {
