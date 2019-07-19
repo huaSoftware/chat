@@ -227,6 +227,7 @@ export default {
                     this.$store.commit('SET_TOKEN', res.data.token)
                     setToken('token',res.data.token)
                     storage.set('user',res.data.user)
+                    this.$store.commit('updateUserInfo', res.data.user)
                     setup()
                     this.$router.push('/home')
                 })

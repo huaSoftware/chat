@@ -1,14 +1,18 @@
 import { getToken } from '@/utils/auth'
-
+import storage from "@/utils/localstorage";
 
 export default {
     state: {
         token: getToken('token'),
-        homePageMsg:{}
+        homePageMsg:{},
+        userInfo:{}
     },
     getters:{
       homePageMsg(state){
-          return state.homePageMsg
+        return state.homePageMsg
+      },
+      userInfo(state){
+        return state.userInfo
       }
     },
     actions: {
@@ -18,6 +22,9 @@ export default {
       // 这边设置下token，参看login.vue
       SET_TOKEN: (state, token) => {
         state.token = token
+      },
+      updateUserInfo(state, userInfo){
+        state.userInfo = userInfo
       }
     }
 }

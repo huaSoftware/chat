@@ -86,15 +86,32 @@ export function send(method, data, type = 'room') {
 	if (type == 'room') {
 		//响应超时
 		window.sendTimeOut = setTimeout(()=>{
-			Toast({
-				mes: '响应超时',
-				timeout: 1500,
-				icon: 'error'
-			});
-			let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-			let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
-			msgList[index]['send_status'] = 2
-			store.dispatch('updateMsgList', msgList)
+			if(method == 'join'){
+				Toast({
+					mes: '加入超时',
+					timeout: 1500,
+					icon: 'error'
+				});
+			}
+			if(method == 'leave'){
+				Toast({
+					mes: '退出超时',
+					timeout: 1500,
+					icon: 'error'
+				});
+			}
+			if(method == 'chat'){
+				Toast({
+					mes: '响应超时',
+					timeout: 1500,
+					icon: 'error'
+				});
+				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+				console.log(method)
+				let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+				msgList[index]['send_status'] = 2
+				store.dispatch('updateMsgList', msgList)
+			}
 		},5000)
 		window.roomSocket.emit(method, data, (recv)=>{
 			clearTimeout(window.sendTimeOut)
@@ -156,7 +173,6 @@ export function response(res){
 					res.msg[key].forEach(function(val, index) {
 					msg = msg + val + ',';
 					});
-
 				});
 				Toast({mes:msg.slice(0,msg.length-1)})
 			}else{

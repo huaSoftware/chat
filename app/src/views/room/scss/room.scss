@@ -1,5 +1,19 @@
  /**css样式*/
- .input_wrapper {
+ /*通过fixed固定mescroll的高度*/
+.mescroll {
+    position: fixed;
+    padding:0.24rem;
+    top: 1.5rem;
+    bottom: 0;
+    height: auto;
+    width:100%;
+}
+.more_info{
+    width: 100%;
+    text-align: center;
+    font-size: 0.24rem;
+}
+.input_wrapper {
     width: 100%;
     display:flex;
     bottom: 0.2rem;
@@ -85,12 +99,7 @@
     border-right: 0px;
 }
 
-.content_wrapper {
-    width: 100%;
-    overflow: hidden;
-}
-
-.bscroll-container {
+.mscroll-container {
     font-size: 0.5rem;
     position: relative;
 }
@@ -105,33 +114,24 @@ ul {
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%;
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-bottom: 74px;
-    padding-top: 20px;
 }
-
-.bscroll-container ul li {
+.mscroll-container ul li {
     padding: 0;
     margin-top: 20px;
 }
-
 li {
     display: list-item;
     text-align: -webkit-match-parent;
 }
-
 .chat-item {
     width: 100%;
     margin: 14px 0;
     height: 0px;
 }
-
 .chat-item .otherchat {
     width: 100%;
     position: relative;
 }
-
 .chat-item .otherchat .img {
     width: 39px;
     height: 39px;
@@ -143,7 +143,6 @@ li {
     transform: translateY(-50%);
     cursor: pointer;
 }
-
 .chat-item .otherchat .nt {
     font-size: 12px;
     left: 50px;
@@ -151,15 +150,12 @@ li {
     position: absolute;
     color: #686868;
 }
-
 .chat-item .otherchat .nt span {
     padding-right: .3rem;
 }
-
 .chat-item .otherchat .nt span:nth-child(2) {
     font-size: 12px;
 }
-
 .chat-item .otherchat .msg {
     float: left;
     min-height: 21px;
@@ -171,7 +167,6 @@ li {
     /* line-height: 2.34rem; */
     background-color: #fff;
 }
-
 .chat-item .otherchat .rawMsg {
     float: left;
     min-height: 21px;
@@ -204,7 +199,6 @@ li {
     width: 100%;
     position: relative;
 }
-
 .chat-item .mychat .img {
     width: 39px;
     height: 39px;
@@ -215,7 +209,6 @@ li {
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
 }
-
 .chat-item .mychat .nt {
     font-size: 12px;
     right: 50px;
@@ -223,7 +216,6 @@ li {
     position: absolute;
     color: #686868;
 }
-
 .chat-item .mychat .msg {
     float: right;
     max-width: 60%;
@@ -235,7 +227,6 @@ li {
     color: #fff;
     word-wrap: break-word;
 }
-
 .chat-item .mychat .rawMsg {
     float: right;
     max-width: 60%;
@@ -249,7 +240,6 @@ li {
     position: relative;
     top: 5px;
 }
-
 .mychat .rawMsg::before{
     content: "";
     width: 0;
@@ -264,7 +254,6 @@ li {
     top: -15px;
     right: 0px;
 }
-
 /* 声音 */
 .Rotate {
     transform: rotate(180deg);
@@ -277,25 +266,21 @@ li {
     -o-transform: rotate(180deg);
     /* Opera */
 }
-
 .vioce_second {
     vertical-align: top;
     line-height: 23px;
     display: inline-block;
     padding-left: 10px;
 }
-
 .chat_right {
     height: 23px;
     width: 23px;
 }
-
 .vioce_start {
     height: 23px;
     width: 23px;
     vertical-align: top;
 }
-
 .vioce_stop_right {
     /*  background: url('../../assets/img/spriteImg.png') no-repeat; */
     background-position: -200px -433px;

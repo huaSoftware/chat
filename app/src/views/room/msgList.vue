@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-15 13:54:34
+ * @LastEditTime: 2019-07-19 10:43:25
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -27,6 +27,7 @@ import { mapGetters, mapMutations} from "vuex"
 import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
 import {getRoomMsg} from "@/utils/indexedDB"
+import {joinChatSend} from '@/socketIoApi/chat'
 export default {
   components: {
     MescrollVue
@@ -35,7 +36,8 @@ export default {
         ...mapGetters([
             "msgList",
             "currentRoomUuid",
-            "currentRoomName"
+            "currentRoomName",
+            "currentRoomType"
         ])
     },
   data() {
@@ -92,7 +94,6 @@ export default {
     upCallback(page, mescroll) {
         getRoomMsg(this.currentRoomUuid,page.num, page.size)
             .then(res => {
-            console.log(res)
             // 请求的列表数据
             // 如果是第一页需手动制空列表
             if (page.num === 1) this.list = [];
@@ -100,8 +101,7 @@ export default {
             this.list = this.list.concat(res.list);
             // 数据渲染成功后,隐藏下拉刷新的状态
             this.$nextTick(() => {
-                mescroll.endBySize(res.list.length, res.total);
-                this.$previewRefresh();
+              mescroll.endBySize(res.list.length, res.total);
             });
         })
         .catch(e => {
@@ -121,6 +121,13 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
+    if(to.name == 'room'){
+      joinChatSend({
+        name: this.currentRoomName,
+        room_uuid: this.currentRoomUuid,
+        type: this.currentRoomType
+      })
+    }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
     // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
     this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
@@ -148,7 +155,6 @@ export default {
 .msg{
     font-weight: bold;
     line-height: 0.6rem;
-    height:0.6rem;
     border-bottom:  1px solid #e9e9e9;
 }
 </style>

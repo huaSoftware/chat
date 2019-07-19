@@ -119,7 +119,6 @@ export function getRoomMsg(room_uuid, page, per_page) {
         let count = await db.roomMsg.where({'room_uuid':room_uuid}).count()
         //console.log(count)
         let offset = (page-1)*per_page
-        console.log(offset)
         if(offset < -per_page){
             data['list'] = []
         }else{

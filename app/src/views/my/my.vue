@@ -53,6 +53,7 @@ export default {
             window.physicsBackRouter = null
             userInfo().then(res=>{
                 this.userInfo = res.data
+                this.$store.commit('updateUserInfo', res.data)
             })
         }
     },

@@ -2,16 +2,19 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-07-18 10:02:26
+ * @LastEditTime: 2019-07-19 10:38:42
  -->
 <template>
-  <div style="font-size: 0;">
+  <div style="font-size: 0;" id="msg_empty">
     <!-- 内容 -->
-    <div class="content_wrapper" ref="bscroll" @touchstart="closeDefIconsShow()">
-      <div class="bscroll-container">
+    <mescroll-vue  :down="mescrollDown"  @init="mescrollInit"   @touchstart="closeDefIconsShow()">
+      <div class="mscroll-container">
+        <div v-show="moreInfoShow" class="more_info" @click="$router.push({name: 'roomMsgList'})">
+          更多消息，请<span class="primary_color">打开消息记录</span>
+        </div>
         <ul>
           <li v-for="(key, index) in msgList" :key="index">
-            <div class="chat-item" v-if="key.user_id == user.id">
+            <div class="chat-item" v-if="key.user_id == userInfo.id">
               <div class="mychat">
                 <vImg :imgUrl="key.head_img"  class="img" />
                 <div class="nt">
@@ -64,7 +67,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </mescroll-vue>
     <!-- 语音输入gif图 -->
     <vImg
       v-show="recordingShow"
@@ -143,7 +146,7 @@ import vImg from '@/components/v-img/v-img'
 import icons from './components/icons/icons'
 import def from './components/def/def'
 import cropperBox from './components/cropperBox/cropperBox'
-import BScroll from "better-scroll";
+import MescrollVue from "mescroll.js/mescroll.vue"
 import { uploadFile } from "@/api/common";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
@@ -153,10 +156,10 @@ import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 export default {
   components: {
-    vEditDiv,vImg, icons, def, cropperBox
+    MescrollVue, vEditDiv,vImg, icons, def, cropperBox
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo"])
   },
   data() {
     return {
@@ -171,34 +174,27 @@ export default {
       touched: false,
       cropperShow: false,
       lockDown: false,
-      lockEnd: false,
+      moreInfoShow: false,
       data: [],
-      msgReq: {
-        page: 1,
-        per_page: 10
-      },
       reqImgData: {
         url: process.env.VUE_APP_CLIENT_API,
         imgDatas: ""
       },
-      user: {}
+      mescroll: null, // mescroll实例对象
+      mescrollDown: {
+        callback: this.downCallback,
+        page: {
+          num: 1, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+          size: 10 //每页数据条数,默认10
+        },
+        textInOffset: '下拉加载', // 下拉初始文案
+        textOutOffset: '释放下拉加载', // 下拉刷新完成文案
+        textLoading: '下拉加载中...'// 下拉加载中文案
+      }
     };
   },
   created() {
     this.updateMsgList([]);
-    this.user = storage.get("user");
-    //路由传参
-    if (this.currentRoomUuid) {
-      //后期将window的去除改为vuex内
-      window.room_uuid = this.currentRoomUuid;
-      getRoomMsg(
-        this.currentRoomUuid,
-        this.msgReq.page,
-        this.msgReq.per_page
-      ).then(res => {
-        this.updateMsgList(res.list);
-      });
-    }
     try {
       // 扩展API加载完毕后调用onPlusReady回调函数
       document.addEventListener("plusready", onPlusReady(), false);
@@ -211,7 +207,7 @@ export default {
     }
   },
   mounted() {
-    //this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
+    document.getElementsByClassName('mescroll')[0].style.height = document.body.clientHeight - 110 + "px";
     new Swiper(".swiper-cont", {
       loop: false,
       autoplay: false, //可选选项，自动滑动
@@ -223,64 +219,32 @@ export default {
       observer: true,
       observeParents: true
     });
-    /* this.$nextTick(() => {
-      if (!this.scroll) {
-        this.scroll = new BScroll(this.$refs.bscroll, {
-          click: false,
-          scrollY: true,
-          probeType: 3
-        });
-        this.scroll.on("touchEnd", pos => {
-          // 下拉动作
-          if (pos.y > 50) {
-            if (!this.lockEnd) {
-              Notify({
-                mes: "正在加载中",
-                timeout: 2000
-              });
-              this.lockDown = true;
-              this.msgReq.page++;
-              getRoomMsg(
-                this.currentRoomUuid,
-                this.msgReq.page,
-                this.msgReq.per_page
-              ).then(res => {
-                if (res.list.length == 0) {
-                  this.lockEnd = true;
-                } else {
-                  let msgList = JSON.parse(JSON.stringify(this.msgList));
-                  msgList = res.list.concat(msgList);
-                  this.updateMsgList(msgList);
-                }
-              });
-            } else {
-              Notify({
-                mes: "没有更多内容了",
-                timeout: 2000
-              });
-            }
-          }
-        });
-      }
-    });
     window.onresize = () =>{
       setTimeout(() => {
-        this.$refs.bscroll.style.height =
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.clientHeight - 100 + "px";
         this.handleSendShow();
       }, 300);
-    }; */
+    }; 
   },
   beforeRouteEnter(to, from, next) {
     to.meta.title = to.query.name;
-
+    next(vm => {
+      // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
+      vm.$refs.mescroll && vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+    // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
+    this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
     next();
   },
   destroyed() {
     if (Vue.prototype.$preview.self) {
       Vue.prototype.$preview.self.close();
     }
-    send("leave", { room_uuid: window.room_uuid });
+    send("leave", { room_uuid: this.currentRoomUuid });
   },
   activated() {
     window.physicsBackRouter = "/home";
@@ -289,18 +253,41 @@ export default {
     ...mapMutations({
       updateMsgList: "updateMsgList"
     }),
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+    },
+    downCallback(mescroll) {
+      this.lockDown = true;
+      getRoomMsg(
+        this.currentRoomUuid,
+        this.mescrollDown.page.num,
+        this.mescrollDown.page.size
+      ).then(res => {
+        let msgList = JSON.parse(JSON.stringify(this.msgList))
+        msgList = res.list.concat(msgList)
+        this.updateMsgList(msgList);
+        this.$nextTick(() => {
+          if((msgList.length> 10 && msgList.length == res.total) || this.mescrollDown.page.num>3){
+            this.moreInfoShow = true
+            mescroll.lockDownScroll(true)
+          }
+          mescroll.endSuccess()// 结束下拉刷新,无参
+          this.$previewRefresh();
+          this.mescrollDown.page.num++
+        });
+      });
+    },
     handleFileOnChange(event) {
       let file = event.target.files[0];
-      let data = new FormData(); //重点在这里 如果使用 var data = {}; data.inputfile=... 这样的方式不能正常上传
+      let data = new FormData(); 
       data.append("file", file);
       uploadFile(data).then(res => {
         let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
-        console.log(process.env)
-        let file = `<a ontouchstart="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`;
+        let file = `<a onclick="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`;
         chatSend({
           data: {
             msg: file,
-            room_uuid: window.room_uuid,
+            room_uuid: this.currentRoomUuid,
             type: 1
           }
         });
@@ -309,7 +296,6 @@ export default {
     handleOnChange(event) {
       let that = this;
       let file = event.target.files[0];
-      ////console.log((file.type).indexOf("image/"))
       if (file.type.indexOf("image/") == -1) {
         Alert({ mes: "请上传图片!" });
         return;
@@ -328,11 +314,10 @@ export default {
     getCurrentPosition() {
       plus.geolocation.getCurrentPosition(
         function(p) {
-          //console.log(p)
           chatSend({
             data: {
               msg: p.addresses,
-              room_uuid: window.room_uuid,
+              room_uuid: this.currentRoomUuid,
               type: 1
             }
           });
@@ -360,19 +345,18 @@ export default {
       chatSend({
         data: {
           msg: this.content,
-          room_uuid: window.room_uuid,
+          room_uuid: this.currentRoomUuid,
           type: 1 //1是文字，0是语音, 2是重发
         }
       });
       document.getElementById("edit").innerHTML = "";
       this.content = "";
       this.closeDefIconsShow();
-      //console.log(this.content)
     },
     reSendMsg(created_at) {
       reChatSend({
         data: {
-          room_uuid: window.room_uuid,
+          room_uuid: this.currentRoomUuid,
           type: 2, //1是文字，0是语音, 2是重发
           created_at: created_at
         }
@@ -385,7 +369,7 @@ export default {
       this.iconsShow = false;
       this.defsShow = false;
       this.recordShow = false;
-      //this.$refs.bscroll.style.height = document.body.clientHeight - 100 + "px";
+      document.getElementsByClassName('mescroll')[0].style.height = document.body.clientHeight - 100 + "px";
     },
     handleSendShow() {
       if (this.content.length >= 1) {
@@ -398,28 +382,21 @@ export default {
       this.$nextTick(() => {
         setTimeout(() => {
           this.$previewRefresh();
-        }, 500);
-        /* if (!this.scroll) {
-          this.scroll = new BScroll(this.$refs.bscroll, {
-            click: false,
-            scrollY: true,
-            probeType: 3
-          });
-        } else {
-          this.scroll.refresh();
-        }
-        if (!this.lockDown) {
-          this.scroll.scrollTo(0, this.scroll.maxScrollY);
-        } */
-        this.lockDown = false;
+          if(!this.lockDown){
+            let ele = document.getElementsByClassName('mscroll-container')[0]
+            let tarEle = document.getElementsByClassName('mescroll')[0]
+            tarEle.scrollTop = ele.scrollHeight;
+          }
+          this.lockDown = false;
+        }, 200);
       });
     },
     handleDefsShow() {
-      /* if (this.defsShow) {
-        this.$refs.bscroll.style.height =
+      if (this.defsShow) {
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.offsetHeight - 100 + "px";
       } else {
-        this.$refs.bscroll.style.height =
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.offsetHeight - 300 + "px";
       }
       this.defsShow = !this.defsShow;
@@ -427,16 +404,16 @@ export default {
       this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) {
-        this.$refs.bscroll.style.height =
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.clientHeight - 100 + "px";
-      } */
+      }
     },
     handleIconsShow() {
-      /* if (this.iconsShow) {
-        this.$refs.bscroll.style.height =
+      if (this.iconsShow) {
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.offsetHeight - 100 + "px";
       } else {
-        this.$refs.bscroll.style.height =
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.offsetHeight - 300 + "px";
       }
       this.iconsShow = !this.iconsShow;
@@ -444,95 +421,16 @@ export default {
       this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) {
-        this.$refs.bscroll.style.height =
+        document.getElementsByClassName('mescroll')[0].style.height =
           document.body.clientHeight - 100 + "px";
-      } */
+      }
     },
     insertIcon(src) {
       this.content = `${this.content}<img src="${src}">`
     },
     // 录音开始
     startRecord() {
-      let that = this;
-      this.touched = true;
-      if (window.plus) {
-        this.defsShow = false;
-        this.iconsShow = false;
-        this.recordingShow = true;
-        if (typeof window.r == "undefined") {
-          this.recordingShow = false;
-          this.touched = false;
-          alert("Device not ready!");
-          return;
-        }
-        window.r.record(
-          {
-            filename: "_doc/audio/"
-          },
-          function(p) {
-            //上传
-            var task = plus.uploader.createUpload(
-              "http://118.25.6.169:89/v2.api/upload",
-              {
-                method: "post"
-              },
-              function(t, status) {
-                if (status == 200) {
-                  let data = JSON.parse(t.responseText);
-                  that.recordingShow = false;
-                  var BenzAMRRecorder = require("benz-amr-recorder");
-                  var amr = new BenzAMRRecorder();
-                  let url = "http://118.25.6.169:89" + data.data.path;
-                  amr.initWithUrl(url).then(function() {
-                    //获取录音长度
-                    //amr.getDuration();
-                    chatSend({
-                      data: {
-                        msg: url,
-                        duration: amr.getDuration(),
-                        status: false,
-                        name: window.name,
-                        room_uuid: window.room_uuid,
-                        type: 0
-                      },
-                      room: "test"
-                    });
-                  });
-                } else {
-                  //console.log(t.responseText)
-                  //console.log("上传失败：" + status);
-                }
-              }
-            );
-            let fileName = p.replace("_doc/audio/", "");
-            task.addFile(p, {
-              key: "test",
-              name: fileName
-            });
-            task.start();
-            /* plus.io.resolveLocalFileSystemURL(p, function(entry){
-                //播放
-                let cp = plus.audio.createPlayer('http://118.25.6.169:1215/upload/test.amr');//'_doc/audio/'+entry.name);
-                cp.play(function(){
-                    //console.log('播放完成！');
-                    // 操作播放对象
-                    if(cp){
-                    cp.stop();
-                    cp=null;
-                    }
-                }, function(e){
-                    //console.log('播放音频文件"_doc/audio/'+entry+'"失败：'+e.message);
-                });
-                }, function(e){
-                //console.log('读取录音文件错误：'+e.message);
-                });
-            }, function (e) {
-                alert( "Audio record failed: " + e.message ); */
-          }
-        );
-      } else {
-        Alert({ mes: "录音只能在app内使用" });
-      }
+      //to do
     },
     // 录音结束
     stopRecord() {
@@ -547,8 +445,6 @@ export default {
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(url).then(function() {
-        //获取录音长度
-        //amr.getDuration();
         amr.play();
       });
       amr.onEnded(function() {
