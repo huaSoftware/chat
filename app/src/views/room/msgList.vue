@@ -33,12 +33,12 @@ export default {
     MescrollVue
   },
     computed: {
-        ...mapGetters([
-            "msgList",
-            "currentRoomUuid",
-            "currentRoomName",
-            "currentRoomType"
-        ])
+      ...mapGetters([
+          "msgList",
+          "currentRoomUuid",
+          "currentRoomName",
+          "currentRoomType"
+      ])
     },
   data() {
     return {

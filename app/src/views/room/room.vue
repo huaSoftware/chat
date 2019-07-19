@@ -159,7 +159,7 @@ export default {
     MescrollVue, vEditDiv,vImg, icons, def, cropperBox
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize"])
   },
   data() {
     return {
@@ -181,6 +181,7 @@ export default {
         imgDatas: ""
       },
       mescroll: null, // mescroll实例对象
+      mescrollDom: null,
       mescrollDown: {
         callback: this.downCallback,
         page: {
@@ -207,7 +208,8 @@ export default {
     }
   },
   mounted() {
-    document.getElementsByClassName('mescroll')[0].style.height = document.body.clientHeight - 110 + "px";
+    this.mescrollDom = document.getElementsByClassName('mescroll')[0]
+    this.handleHeightToBottom(this.htmlFontSize*3)
     new Swiper(".swiper-cont", {
       loop: false,
       autoplay: false, //可选选项，自动滑动
@@ -221,8 +223,7 @@ export default {
     });
     window.onresize = () =>{
       setTimeout(() => {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.clientHeight - 100 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*3)
         this.handleSendShow();
       }, 300);
     }; 
@@ -253,6 +254,9 @@ export default {
     ...mapMutations({
       updateMsgList: "updateMsgList"
     }),
+    handleHeightToBottom(value){
+      this.mescrollDom.style.height = document.body.clientHeight - value + "px";
+    },
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
     },
@@ -369,7 +373,7 @@ export default {
       this.iconsShow = false;
       this.defsShow = false;
       this.recordShow = false;
-      document.getElementsByClassName('mescroll')[0].style.height = document.body.clientHeight - 100 + "px";
+      this.handleHeightToBottom(this.htmlFontSize*3)
     },
     handleSendShow() {
       if (this.content.length >= 1) {
@@ -384,8 +388,7 @@ export default {
           this.$previewRefresh();
           if(!this.lockDown){
             let ele = document.getElementsByClassName('mscroll-container')[0]
-            let tarEle = document.getElementsByClassName('mescroll')[0]
-            tarEle.scrollTop = ele.scrollHeight;
+            this.mescrollDom.scrollTop = ele.scrollHeight;
           }
           this.lockDown = false;
         }, 200);
@@ -393,37 +396,33 @@ export default {
     },
     handleDefsShow() {
       if (this.defsShow) {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.offsetHeight - 100 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*3)
       } else {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.offsetHeight - 300 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*9)
       }
       this.defsShow = !this.defsShow;
       this.iconsShow = false;
       this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.clientHeight - 100 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*3)
       }
+      this.handleMsgListToBottom()
     },
     handleIconsShow() {
       if (this.iconsShow) {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.offsetHeight - 100 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*3)
       } else {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.offsetHeight - 300 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*9)
       }
       this.iconsShow = !this.iconsShow;
       this.defsShow = false;
       this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) {
-        document.getElementsByClassName('mescroll')[0].style.height =
-          document.body.clientHeight - 100 + "px";
+        this.handleHeightToBottom(this.htmlFontSize*3)
       }
+      this.handleMsgListToBottom()
     },
     insertIcon(src) {
       this.content = `${this.content}<img src="${src}">`

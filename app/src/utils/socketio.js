@@ -107,22 +107,22 @@ export function send(method, data, type = 'room') {
 					icon: 'error'
 				});
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-				console.log(method)
 				let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
 				msgList[index]['send_status'] = 2
 				store.dispatch('updateMsgList', msgList)
 			}
 		},5000)
 		window.roomSocket.emit(method, data, (recv)=>{
-			clearTimeout(window.sendTimeOut)
+			//未加入房间的时候对方收不到消息
 			response(recv).then(res=>{
 				if(res.data.action == 'chat'){
-
+					clearTimeout(window.sendTimeOut)
 				}
 				if(res.data.action == 'leave'){
-					
+					clearTimeout(window.sendTimeOut)
 				}
 				if(res.data.action == 'join'){
+					clearTimeout(window.sendTimeOut)
 					let queryData = {}
 					store.commit('updateCurrentRoomUuid', data.room_uuid)
 					store.commit('updateCurrentRoomName', data.name)

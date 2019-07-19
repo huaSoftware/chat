@@ -8,17 +8,20 @@ export default {
     navbarTitle: '首页', // app的导航页标题
     imgUrl: process.env.PATH_INDEX_PIC,//图片前缀路径
     headerContentType:'application/json;charset=UTF-8',//规定类型
+    htmlFontSize: 0
 
   },
   getters:{
     //判断吧标题是否和导航的一样 一样就有背景样式
     navbarTitle(state){
       return state.navbarTitle
+    },
+    htmlFontSize(state){
+      return state.htmlFontSize
     }
   },
 
   actions: {
-  
     //提交穿过来的参数 以及突变给mutations
     updateNavbarTitle({commit}, navbarTitle) {
       commit("updateNavbarTitle",navbarTitle);
@@ -31,6 +34,9 @@ export default {
     updateNavbarTitle(state, navbarTitle){
       state.navbarTitle = navbarTitle
     },
+    updateHtmlFontSize(state, htmlFontSize){
+      state.htmlFontSize =  htmlFontSize
+    }
 
   }
 }

@@ -29,10 +29,11 @@ export function chatSend(data){
  */
 export function reChatSend(data){
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-    let index = utils.arr.getIndexByTime(msgInfo['created_at'], msgList)
+    //console.log(msgList,data)
+    let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+    //console.log(index)
     msgList[index]['send_status'] = 0
     store.dispatch('updateMsgList', msgList)
-    msgInfo['msg'] = msgList[index]['msg']
     return send('chat', data)
 }
 

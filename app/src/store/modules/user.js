@@ -5,7 +5,7 @@ export default {
     state: {
         token: getToken('token'),
         homePageMsg:{},
-        userInfo:{}
+        userInfo:storage.get('user')
     },
     getters:{
       homePageMsg(state){

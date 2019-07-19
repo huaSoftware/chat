@@ -40,19 +40,22 @@ export default {
   components: {},
   name: "app",
   created() {
+    //刷新回首页
+    this.$router.push('/');
     utils.h5Plus.bindPhysicsBack(null)
+    //获取html节点的字体大小
+    this.setHtmlFontSizeToVuex()
     if(this.user.token){
       setup()
     }
   },
   mounted() {
-    //刷新回首页
-    this.$router.push('/');
   },
   methods: {
     ...mapMutations({
       updateMsgList:'updateMsgList',
-      updateRoomList: 'updateRoomList'
+      updateRoomList: 'updateRoomList',
+      updateHtmlFontSize: 'updateHtmlFontSize'
     }),
     goHref(){
       let path = router.currentRoute.meta.backPath
@@ -72,6 +75,10 @@ export default {
       else{
         this.$router.push({name: path})
       }
+    },
+    setHtmlFontSizeToVuex(){
+      let fontSize = document.getElementsByTagName('html')[0].style.fontSize
+      this.updateHtmlFontSize(fontSize.slice(0, fontSize.length-2))
     }
   },
   watch: {},
