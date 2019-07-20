@@ -33,6 +33,14 @@ export function setup() {
 		});
 
 		send('join', {}, 'broadcast')
+		//如果当前存在房间则进入
+		if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){
+		  send('join', {
+			name: store.getters.currentRoomName,
+			room_uuid: store.getters.currentRoomUuid,
+			type: store.getters.currentRoomType
+		  })
+		}
 		//监听好友请求
 		window.roomSocket.on('beg', (data) => {
 			response(data).then(res=>{
@@ -87,18 +95,18 @@ export function send(method, data, type = 'room') {
 		//响应超时
 		window.sendTimeOut = setTimeout(()=>{
 			if(method == 'join'){
-				Toast({
-					mes: '加入超时',
-					timeout: 1500,
-					icon: 'error'
-				});
+				Loading.open('加入超时,重新加入中...')
+				send('join', {
+					name: store.getters.currentRoomName,
+					room_uuid: store.getters.currentRoomUuid,
+					type: store.getters.currentRoomType
+				})
 			}
 			if(method == 'leave'){
-				Toast({
-					mes: '退出超时',
-					timeout: 1500,
-					icon: 'error'
-				});
+				Loading.open('退出超时,重新推出中...')
+				send('leave', {
+					room_uuid: store.getters.currentRoomUuid
+				})
 			}
 			if(method == 'chat'){
 				Toast({
@@ -111,7 +119,7 @@ export function send(method, data, type = 'room') {
 				msgList[index]['send_status'] = 2
 				store.dispatch('updateMsgList', msgList)
 			}
-		},5000)
+		},1500)
 		window.roomSocket.emit(method, data, (recv)=>{
 			//未加入房间的时候对方收不到消息
 			response(recv).then(res=>{
@@ -120,9 +128,17 @@ export function send(method, data, type = 'room') {
 				}
 				if(res.data.action == 'leave'){
 					clearTimeout(window.sendTimeOut)
+					Loading.close()
+					//如果不在room路由下
+					if(router.history.current.fullPath.indexOf('room') == -1){
+						store.commit('updateCurrentRoomUuid', '')
+						store.commit('updateCurrentRoomName', '')
+						store.commit('updateCurrentRoomType', 0)
+					}
 				}
 				if(res.data.action == 'join'){
 					clearTimeout(window.sendTimeOut)
+					Loading.close()
 					let queryData = {}
 					store.commit('updateCurrentRoomUuid', data.room_uuid)
 					store.commit('updateCurrentRoomName', data.name)

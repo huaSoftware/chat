@@ -32,6 +32,7 @@ import { mapState, mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
+import {joinChatSend} from '@/socketIoApi/chat'
 import {setup} from '@/utils/socketio'
 import utils from '@/utils/utils'
 import router from './router'
@@ -47,6 +48,31 @@ export default {
     this.setHtmlFontSizeToVuex()
     if(this.user.token){
       setup()
+      /* 断线重连 */
+			document.addEventListener('visibilitychange',()=> {
+				if(document.visibilityState=='hidden') {
+				  this.hiddenTime = new Date().getTime()	//记录页面隐藏时间
+				}else{
+          let visibleTime = new Date().getTime();
+          if((visibleTime-this.hiddenTime)/1000>10){	//页面再次可见的时间-隐藏时间>10S,重连
+            //typeof window.roomSocket == 'undefined' && 
+            window.roomSocket.io.disconnect();    //先主动关闭连接
+            //删除所有监听
+            for(var listener in window.roomSocket.$events){
+                if(listener != undefined){
+                    window.roomSocket.removeAllListeners(listener);
+                }
+            }
+            window.roomSocket = undefined
+            console.log('主动关闭连接后重连');
+            setTimeout(()=> {
+              setup()    //打开连接，使用的vuejs，这是socketio的连接方法
+            },1500);    //1.5S后重连
+          }else{
+            console.log('还没有到断开的时间')
+          }
+				}
+			});
     }
   },
   mounted() {
@@ -83,7 +109,12 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapGetters(["msgList"]),
+    ...mapGetters([
+      "msgList",
+      "currentRoomUuid", 
+      "currentRoomName",
+      "currentRoomType"
+    ]),
     ...mapState([
       'user'
     ])
@@ -91,6 +122,7 @@ export default {
   },
   data() {
     return {
+      hiddenTime: 0,
       footerMenu: [
         {
           icon: "xiaoxi",

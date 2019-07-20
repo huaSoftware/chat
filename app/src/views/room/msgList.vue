@@ -34,10 +34,10 @@ export default {
   },
     computed: {
       ...mapGetters([
-          "msgList",
-          "currentRoomUuid",
-          "currentRoomName",
-          "currentRoomType"
+        "msgList",
+        "currentRoomUuid",
+        "currentRoomName",
+        "currentRoomType"
       ])
     },
   data() {

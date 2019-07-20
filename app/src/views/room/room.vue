@@ -261,7 +261,9 @@ export default {
       this.mescroll = mescroll;
     },
     downCallback(mescroll) {
-      this.lockDown = true;
+      if(this.mescrollDown.page.num>1){
+        this.lockDown = true;
+      }
       getRoomMsg(
         this.currentRoomUuid,
         this.mescrollDown.page.num,
@@ -384,21 +386,20 @@ export default {
     },
     handleMsgListToBottom() {
       this.$nextTick(() => {
+        if(!this.lockDown){
+          this.mescrollDom.scrollTop = document.getElementsByClassName('mscroll-container')[0].scrollHeight;
+        }
         setTimeout(() => {
           this.$previewRefresh();
-          if(!this.lockDown){
-            let ele = document.getElementsByClassName('mscroll-container')[0]
-            this.mescrollDom.scrollTop = ele.scrollHeight;
-          }
           this.lockDown = false;
-        }, 200);
+        }, 100);
       });
     },
     handleDefsShow() {
       if (this.defsShow) {
         this.handleHeightToBottom(this.htmlFontSize*3)
       } else {
-        this.handleHeightToBottom(this.htmlFontSize*9)
+        this.handleHeightToBottom(this.htmlFontSize*7.5)
       }
       this.defsShow = !this.defsShow;
       this.iconsShow = false;
@@ -413,7 +414,7 @@ export default {
       if (this.iconsShow) {
         this.handleHeightToBottom(this.htmlFontSize*3)
       } else {
-        this.handleHeightToBottom(this.htmlFontSize*9)
+        this.handleHeightToBottom(this.htmlFontSize*7.5)
       }
       this.iconsShow = !this.iconsShow;
       this.defsShow = false;
