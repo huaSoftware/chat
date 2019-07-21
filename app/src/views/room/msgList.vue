@@ -75,7 +75,6 @@ export default {
     };
   },
   created() {
-    window.physicsBackRouter = null;
     this.init();
   },
   mounted() {},

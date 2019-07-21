@@ -11,7 +11,7 @@
                 </div> 
                 <div class="yd-cell-right">
                 <div class="yd-input" style="flex-direction: row-reverse;">
-                        <img  class="head_default" :src="headImg" v-if="headImg" @click="bindFile('header_img_file')"/>
+                    <vImg class="head_default" :imgUrl="headImg" v-if="headImg" @click="bindFile('header_img_file')"/>
                     <div class="head_default" @click="bindFile('header_img_file')" v-else>上传</div>
                 </div>
                 <input type="file" id="header_img_file" @change="bindHeaderImg" style="display:none;">
@@ -112,6 +112,7 @@
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import { allvalidated, validatedError } from "@/utils/validator"
 import CrossLine from '@/components/cross-line/cross-line'
+import vImg from '@/components/v-img/v-img'
 import { register } from '@/api/user'
 import {uploadBase64} from '@/api/common'
 import { setToken } from '@/utils/auth'
@@ -120,7 +121,7 @@ import md5 from 'js-md5'
 import { VueCropper } from "vue-cropper"
 import {setup} from '@/utils/socketio'
 export default {
-    components: {CrossLine, VueCropper},
+    components: {CrossLine, VueCropper, vImg},
     data() {
     return {
         option: {

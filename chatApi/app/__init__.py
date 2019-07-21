@@ -2,14 +2,13 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-08 15:07:46
+@LastEditTime: 2019-07-20 16:39:05
 '''
 from flask import Flask
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_socketio import SocketIO
 from app.Vendor.Code import Code
-from app.Vendor.ExceptionApi import ExceptionApi
 
 from app.env import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH
 import os,time
@@ -32,13 +31,16 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 dBSession = DBSession()
+
+from app.Vendor.ExceptionApi import ExceptionApi
+
 #挂载500异常处理,并记录日志
 @app.errorhandler(Exception)
 def error_handler(e):
     return ExceptionApi(Code.ERROR, e)
 
 @socketio.on_error_default       # Handles the default namespace
-def error_handler(e):
+def socketio_error_handler(e):
     return ExceptionApi(Code.ERROR, e)
   
 #引入使用的控制器

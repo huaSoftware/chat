@@ -10,7 +10,7 @@
     <vTitle name="新的朋友"></vTitle>
     <article class="yd-list yd-list-theme4">
         <a href="javascript:;" class="yd-list-item" v-for="(item, index) in newFriendList" :key="index">
-            <div class="yd-list-img"><img :src="item.head_img"></div>
+            <div class="yd-list-img"><vImg :imgUrl="item.head_img"/></div>
             <div class="yd-list-mes">
                 <div class="yd-list-title">
                     <span class="title-left">{{item.nick_name}}</span>
@@ -37,6 +37,7 @@
 
 <script type="text/babel">
 import vTitle from '@/components/v-title/v-title'
+import vImg from '@/components/v-img/v-img'
 import {getAddressBookBeg, updateAddressBookBeg} from "@/utils/indexedDB"
 import utils from '@/utils/utils'
 import storage from "@/utils/localstorage"
@@ -48,7 +49,7 @@ export default {
             loading: false
         }
     },
-    components: {vTitle},
+    components: {vTitle, vImg},
     created(){
         this.init()
     },

@@ -14,10 +14,12 @@ import "@/assets/scss/reset.scss"
 //svg图标
 import "@/assets/style.css";
 
+
 //引入animate.css动画
 import animate from "animate.css";
 Vue.use(animate);
 
+//图标问题直接修改源码rem.css ttf
 import YDUI from "vue-ydui"; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js' */
 import "vue-ydui/dist/ydui.rem.css";
 Vue.use(YDUI);

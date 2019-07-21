@@ -10,7 +10,7 @@
     <yd-search :result="result" fullpage v-model="value2"  :on-submit="submitHandler"></yd-search>
     <article class="yd-list yd-list-theme4">
         <a href="javascript:;" class="yd-list-item" v-for="(item, index) in userList" :key="index">
-            <div class="yd-list-img"><img :src="item.head_img"></div>
+            <div class="yd-list-img"><vImg :src="item.head_img"/></div>
             <div class="yd-list-mes">
                 <div class="yd-list-title">
                     <span class="title-left">{{item.email}}</span>
@@ -30,6 +30,7 @@
     import {search} from '@/api/search'
     import {addressBookBeg} from '@/api/addressBook'
     import storage from "@/utils/localstorage"
+    import vImg from '@/components/v-img/v-img'
     import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
     export default {
         data() {
@@ -39,6 +40,7 @@
                 userList: []
             }
         },
+        components: {vImg},
         methods: {
             submitHandler(value) {
                 search({keywords: value}).then(res=>{

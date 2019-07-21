@@ -8,7 +8,7 @@
 <template>
     <div class="content">
         <!-- 头部开始 -->
-		<header  class="yd-navbar" style="background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
+		<header  class="yd-navbar header">
 			<div class="yd-navbar-item"></div> 
 			<div class="yd-navbar-center-box" style="height: 1rem;">
 				<div class="yd-navbar-center">
@@ -24,7 +24,7 @@
         <!-- 功能栏 -->
 		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
         <!-- 群组 -->
-        <yd-accordion>
+        <yd-accordion style="padding-top:1.8rem"> 
             <yd-accordion-item title="群聊">
                 <div style="padding: .24rem;">
                     <dl>
@@ -44,7 +44,7 @@
                 <dt :ref="String.fromCharCode(64+num)">{{String.fromCharCode(64+num)}}</dt>
                 <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="String.fromCharCode(64+num) == item.users.first_word"> <!-- 循环 -->
                     <a>
-                    <img :src="item.users.head_img">{{item.users.nick_name}}
+                    <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
                     </a>
                 </dd>
             </dl >
@@ -52,7 +52,7 @@
                 <dt ref="#">#</dt>
                 <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
                     <a>
-                    <img :src="item.users.head_img">{{item.users.nick_name}}
+                    <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
                     </a>
                 </dd>
             </dl >
@@ -76,8 +76,9 @@ import {mapGetters, mapMutations} from 'vuex'
 import {addressBookGet} from '@/api/addressBook'
 import {userRoomRelationGet} from '@/api/userRoomRelation'
 import {joinChatSend} from '@/socketIoApi/chat'
+import vImg from '@/components/v-img/v-img'
 export default {
-    components: {},
+    components: {vImg},
     data() {
         return {
             reqData:{
@@ -152,6 +153,13 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/base.scss';
 @import '@/assets/scss/public.scss';
+.header{
+	background-color: rgb(255, 255, 255); 
+	height: 1rem; 
+	color: rgb(228, 228, 228);
+	position:fixed;
+	width:100%;
+}
 .activeaddress-book {
     color:red!important;
 }

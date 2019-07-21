@@ -1,7 +1,7 @@
 {
     "@platforms": ["android", "iPhone", "iPad"],
     "id": "H5988C23D",/*应用的标识，创建应用时自动生成，勿手动修改*/
-    "name": "聊天宝",/*应用名称，程序桌面图标名称*/
+    "name": "工具鸡-聊天室",/*应用名称，程序桌面图标名称*/
     "version": {
         "name": "1.0",/*应用版本名称*/
         "code": ""
@@ -132,9 +132,9 @@
                 "android": {
                     "mdpi": "", /*普通屏启动图片，分辨率：240x282*/
                     "ldpi": "", /*大屏启动图片，分辨率：320x442*/
-                    "hdpi": "C:/Users/hua/Desktop/项目/工具鸡资料/auto/480b.png", /*高分屏启动图片，分辨率：480x762*/
-                    "xhdpi": "C:/Users/hua/Desktop/项目/工具鸡资料/auto/720b.png", /*720P高分屏启动图片，分辨率：720x1242*/
-                    "xxhdpi": "C:/Users/hua/Desktop/项目/工具鸡资料/auto/1080b.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "hdpi": "D:/360MoveData/Users/hua/Desktop/项目/工具鸡资料/auto/480b.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi": "D:/360MoveData/Users/hua/Desktop/项目/工具鸡资料/auto/720b.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi": "D:/360MoveData/Users/hua/Desktop/项目/工具鸡资料/auto/1080b.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             }
         }

@@ -52,7 +52,7 @@
                  <yd-checkbox-group v-model="checkedUsers"  color="#45BAF4">
                     <dd v-for="(item, index) in adderssBookList" :key="index" v-if="String.fromCharCode(64+num) == item.users.first_word"> <!-- 循环 -->
                         <a>
-                            <img :src="item.users.head_img">
+                            <vImg :imgUrl="item.users.head_img"/>
                             <yd-checkbox  :val="JSON.stringify(item.users)">{{item.users.nick_name}}</yd-checkbox>
                         </a>
                     </dd>
@@ -63,7 +63,7 @@
                 <yd-checkbox-group v-model="checkedUsers"  color="#45BAF4">
                     <dd  v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
                         <a>
-                            <img :src="item.users.head_img">
+                            <vImg :imgUrl="item.users.head_img"/>
                             <yd-checkbox  :val="JSON.stringify(item.users)">{{item.users.nick_name}}</yd-checkbox>
                         </a>
                     </dd>
@@ -91,8 +91,9 @@ import {addressBookGet} from '@/api/addressBook'
 import {groupChatCreate} from '@/api/groupChat'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
 import {joinChatSend} from '@/socketIoApi/chat'
+import vImg from '@/components/v-img/v-img'
 export default {
-    components: {vEditDiv},
+    components: {vEditDiv, vImg},
     data() {
         return {
             keywords: '',

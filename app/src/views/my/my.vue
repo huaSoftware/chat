@@ -9,7 +9,7 @@
 <template>
     <div class="content">
         <div class="header_wrapper">
-            <img class="header_img" :src="userInfo.head_img">
+            <vImg class="header_img" :imgUrl="userInfo.head_img" />
             <div class="header_name">
                 {{userInfo.nick_name}}
             </div>
@@ -36,11 +36,12 @@
 <script>
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
+import vImg from '@/components/v-img/v-img'
 import { mapGetters} from 'vuex'
 import { userInfo } from '@/api/user'
 
 export default {
-    components: {CrossLine, CrossItem},
+    components: {CrossLine, CrossItem, vImg},
     data() {
         return {
             userInfo:{

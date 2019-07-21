@@ -9,7 +9,7 @@
 <template>
 	<div class="content">
 		<!-- 头部开始 -->
-		<header  class="yd-navbar" style="background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
+		<header  class="yd-navbar header">
 			<div class="yd-navbar-item"></div> 
 			<div class="yd-navbar-center-box" style="height: 1rem;">
 				<div class="yd-navbar-center">
@@ -17,7 +17,6 @@
 				</div>
 			</div> 
 			<div class="yd-navbar-item"  @click="defShow=!defShow">
-				<!-- <span class="icon-custom-8888 navbar_icon"></span> -->
 				<span class="icon-custom-jia2 navbar_icon"></span>
 			</div>
 		</header>
@@ -25,9 +24,9 @@
 		<!-- 功能栏 -->
 		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
 		<!-- 单聊 -->
-		<article class="yd-list yd-list-theme4">
+		<article class="yd-list yd-list-theme4" style="padding-top:1.8rem">
 			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
-				<div class="yd-list-img"><img :src="item.users.head_img"></div>
+				<div class="yd-list-img"><vImg :imgUrl="item.users.head_img"/></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
 						<span class="title-left">{{item.users.nick_name}}</span>
@@ -67,6 +66,7 @@
 </template>
 <script>
 	import {mapGetters, mapMutations} from 'vuex'
+	import vImg from '@/components/v-img/v-img'
 	import utils from '@/utils/utils'
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
@@ -76,7 +76,7 @@
 	import {joinChatSend} from '@/socketIoApi/chat'
 
 	export default {
-		components: {},
+		components: {vImg},
 		name: 'home',
 		data() {
 			return {
@@ -168,6 +168,13 @@
 <style lang="scss" scoped>
 @import '@/assets/scss/base.scss';
 @import '@/assets/scss/public.scss';
+.header{
+	background-color: rgb(255, 255, 255); 
+	height: 1rem; 
+	color: rgb(228, 228, 228);
+	position:fixed;
+	width:100%;
+}
 .yd-list-theme4 .yd-list-item .yd-list-img {
 	width: 1.2rem;
 	padding: 0.6rem 0;
