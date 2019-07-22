@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-06-11 20:59:18
+@LastEditTime: 2019-07-22 20:48:36
 '''
 from app import dBSession
 from functools import wraps
@@ -27,6 +27,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         error['msg'] = '不能使用error关键字作用请求参数'
         error['error_code'] = Code.ERROR
         error['error'] = True
+        error['show'] = True
         return error
     v = cerberus.Validator(
         rules, error_handler=CustomErrorHandler(custom_messages=error_msg))
@@ -47,6 +48,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
     error['msg'] = v.errors
     error['error_code'] = Code.ERROR
     error['error'] = True
+    error['show'] = True
     return error
 
 

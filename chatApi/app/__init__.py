@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-20 16:39:05
+@LastEditTime: 2019-07-22 20:42:55
 '''
 from flask import Flask
 from sqlalchemy import create_engine
@@ -27,13 +27,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #上传目录 
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH #上传大小
 #创建数据库及连接
-engine = create_engine(SQLALCHEMY_DATABASE_URI)
+engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_recycle=7200,pool_size=5,max_overflow=10)
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 dBSession = DBSession()
 
 from app.Vendor.ExceptionApi import ExceptionApi
 
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    dBSession.close()
+    
 #挂载500异常处理,并记录日志
 @app.errorhandler(Exception)
 def error_handler(e):
