@@ -69,6 +69,9 @@ http://doc.zhuhui.store
 3. <a href="https://gitee.com/huashiyuting/status_bar_monitor" target="_blank">状态栏监听安卓客户端 </a>
 4. <a href="https://gitee.com/huashiyuting/plainCms" target="_blank">plainCms</a>
 
+#### 群内交流
+![群内交流](https://images.gitee.com/uploads/images/2019/0724/121735_03ee3000_1588193.png "temp_qrcode_share_566438779.png")
+
 #### 捐助作者
 ![捐助作者](https://images.gitee.com/uploads/images/2019/0124/105407_661d1190_1588193.png "mm_facetoface_collect_qrcode_1548297043215.png")	
 
