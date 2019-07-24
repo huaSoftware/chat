@@ -5,7 +5,7 @@
       <div class="swiper-container swiper-cont">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
-            <vImg
+            <vImg 
               @click.native="emitInsertIcon('static/icons/more/'+i+'.gif')"
               v-for="i in 32"
               :imgUrl="'static/icons/more/'+i+'.gif'"

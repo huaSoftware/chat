@@ -28,8 +28,10 @@ Vue.use(YDUI);
 // 图片懒加载
 import VueLazyload from "vue-lazyload";
 Vue.use(VueLazyload, {
-  loading: require("@/assets/loading-bars.svg")
-  // loading: require('@/assets/img/logo.png')
+  preLoad: 1.3,   //预加载的宽高比
+  loading: require("@/assets/loading-bars.svg"),
+  error: require('@/assets/default.jpg'),
+  attempt: 1//尝试加载次数
 });
 
 //图片点击全屏

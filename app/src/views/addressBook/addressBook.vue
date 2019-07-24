@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-06-17 15:09:54
+ * @LastEditTime: 2019-07-24 20:02:36
  -->
 
 <template>
@@ -159,6 +159,8 @@ export default {
 	color: rgb(228, 228, 228);
 	position:fixed;
 	width:100%;
+    max-width: 750px;
+    min-width: 300px;
 }
 .activeaddress-book {
     color:red!important;

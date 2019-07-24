@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-07-13 20:38:59
+ * @LastEditTime: 2019-07-24 20:03:12
  -->
 
 <template>
@@ -56,7 +56,7 @@
 				</div>
 			</a>
 		</article>
-		<img style="width:100%;height:100%;padding:0 70px 70px 70px;position:fixed;z-index:100;top: 0rem;background:#fff;" src="@/assets/loading-bars.svg" v-if="loading" />
+		<vImg class="loading" :imgUrl="'@/assets/loading-bars.svg'" v-if="loading" />
 		<!-- 参数空时页面 -->
 		<div class="empty" v-if="roomList.length==0 && loading==false">
 			<span class="icon-custom-xiaoxi"></span>
@@ -174,6 +174,8 @@
 	color: rgb(228, 228, 228);
 	position:fixed;
 	width:100%;
+	max-width: 750px;
+    min-width: 300px;
 }
 .yd-list-theme4 .yd-list-item .yd-list-img {
 	width: 1.2rem;
@@ -239,6 +241,15 @@
     display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.loading{
+	width:100%;
+	height:100%;
+	padding:0 70px 70px 70px;
+	position:fixed;
+	z-index:100;
+	top: 0rem;
+	background:#fff;
 }
 </style>
 <style>

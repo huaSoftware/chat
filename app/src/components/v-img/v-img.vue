@@ -1,5 +1,12 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-07-10 13:10:40
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-07-24 20:07:59
+ -->
 <template>
-    <img :src="imgUrl" :onerror="defaultImgUrl"/>
+    <img  v-lazy="imgUrl" :key="imgUrl" />
 </template>
 <script>
 export default {
@@ -7,13 +14,12 @@ export default {
     },
     data() {
         return {
-            defaultImgUrl: 'this.src="' + require('./img/default.jpg') + '"'
         };
     },
     props:{
         imgUrl: {
             type: String,
-            default: './img/default.jpg'
+            default: '@/assets//default.jpg'
         }
     },
     created() {

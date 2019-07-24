@@ -131,7 +131,7 @@
       />
     </div>
     <!-- 表情 -->
-    <icons @recInsertIcon="insertIcon" v-show="iconsShow"/>
+    <icons @recInsertIcon="insertIcon" v-if="iconsShow"/>
     <!-- 功能栏 -->
     <def v-show="defsShow"/>
     <!-- 裁剪图 -->

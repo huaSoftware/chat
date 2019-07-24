@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-22 20:42:55
+@LastEditTime: 2019-07-23 16:31:50
 '''
 from flask import Flask
 from sqlalchemy import create_engine
@@ -33,7 +33,6 @@ DBSession = sessionmaker(bind=engine)
 dBSession = DBSession()
 
 from app.Vendor.ExceptionApi import ExceptionApi
-
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     dBSession.close()
