@@ -1,9 +1,17 @@
+'''
+@Author: hua
+@Date: 2019-06-17 14:14:28
+@description: 
+@LastEditors: hua
+@LastEditTime: 2019-07-25 08:44:31
+'''
 ''' author:hua
     date:2018.2.6
     基础控制器，封装一些基础方法 
     验证库https://cerberus.readthedocs.io/en/stable/index.html
 '''
-from app.env import DEBUG_LOG, MAX_CONTENT_LENGTH, ALLOWED_EXTENSIONS
+from app.env import DEBUG_LOG, SAVE_LOG, MAX_CONTENT_LENGTH, ALLOWED_EXTENSIONS
+from app.Service.LogService import LogService
 from app.Vendor.Code import Code
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
 from app.Vendor.Log import log
@@ -72,15 +80,18 @@ class BaseController:
     def json(self, body={}):
         if (DEBUG_LOG):
             debug_id = Utils.unique_id()
-            log().debug(
-                json.dumps({
-                    'LOG_ID': debug_id,
-                    'IP_ADDRESS': request.remote_addr,
-                    'REQUEST_URL': request.url,
-                    'REQUEST_METHOD': request.method,
-                    'PARAMETERS': request.args,
-                    'RESPONSES': body
-                }))
+            data = {
+                'LOG_ID': debug_id,
+                'IP_ADDRESS': request.remote_addr,
+                'REQUEST_URL': request.url,
+                'REQUEST_METHOD': request.method,
+                'PARAMETERS': request.args,
+                'RESPONSES': body
+            }
+            if SAVE_LOG == 1:
+                log().debug(data)
+            elif SAVE_LOG == 2:
+                LogService().add(json.dumps(data), 1, 2)
         body['debug_id'] = debug_id
         return jsonify(body)
 

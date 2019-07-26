@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-19 10:43:25
+ * @LastEditTime: 2019-07-26 08:50:34
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -27,6 +27,7 @@ import { mapGetters, mapMutations} from "vuex"
 import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
 import {getRoomMsg} from "@/utils/indexedDB"
+import {roomMsgGet} from '@/api/room'
 import {joinChatSend} from '@/socketIoApi/chat'
 export default {
   components: {
@@ -37,7 +38,8 @@ export default {
         "msgList",
         "currentRoomUuid",
         "currentRoomName",
-        "currentRoomType"
+        "currentRoomType",
+        "currentRoomSaveAction"
       ])
     },
   data() {
@@ -91,22 +93,41 @@ export default {
     },
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
-        getRoomMsg(this.currentRoomUuid,page.num, page.size)
-            .then(res => {
-            // 请求的列表数据
-            // 如果是第一页需手动制空列表
-            if (page.num === 1) this.list = [];
-            // 把请求到的数据添加到列表
-            this.list = this.list.concat(res.list);
-            // 数据渲染成功后,隐藏下拉刷新的状态
-            this.$nextTick(() => {
-              mescroll.endBySize(res.list.length, res.total);
-            });
-        })
-        .catch(e => {
-        // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
-        mescroll.endErr();
-        });
+        if(this.currentRoomSaveAction == 0){
+          getRoomMsg(this.currentRoomUuid,page.num, page.size)
+              .then(res => {
+              // 请求的列表数据
+              // 如果是第一页需手动制空列表
+              if (page.num === 1) this.list = [];
+              // 把请求到的数据添加到列表
+              this.list = this.list.concat(res.list);
+              // 数据渲染成功后,隐藏下拉刷新的状态
+              this.$nextTick(() => {
+                mescroll.endBySize(res.list.length, res.total);
+              });
+          })
+          .catch(e => {
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr();
+          });
+        }else if(this.currentRoomSaveAction == 1){
+          roomMsgGet({room_uuid:this.currentRoomUuid,page_no:page.num, per_page:page.size})
+              .then(res => {
+              // 请求的列表数据
+              // 如果是第一页需手动制空列表
+              if (page.num === 1) this.list = [];
+              // 把请求到的数据添加到列表
+              this.list = this.list.concat(res.data.list);
+              // 数据渲染成功后,隐藏下拉刷新的状态
+              this.$nextTick(() => {
+                mescroll.endBySize(res.data.list.length, res.data.page.count);
+              });
+          })
+          .catch(e => {
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr();
+          });
+        }
     },
     formatTime(value){
         return utils.time.formatDate(value, 'hh:mm:ss')
@@ -124,7 +145,8 @@ export default {
       joinChatSend({
         name: this.currentRoomName,
         room_uuid: this.currentRoomUuid,
-        type: this.currentRoomType
+        type: this.currentRoomType,
+        save_action:this.currentRoomSaveAction
       })
     }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写

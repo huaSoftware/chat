@@ -57,9 +57,17 @@
         </yd-cell-item>
         <!--新消息提醒-->
         <yd-cell-item style="background: #fff;">
-            <span slot="left" style="font-weight: bold">新消息提醒</span>
+            <span slot="left" style="font-weight: bold">新的消息提醒</span>
             <span slot="right">
                 <yd-switch v-model="alert">
+                </yd-switch>
+            </span>
+        </yd-cell-item>
+        <!-- 聊天数据离线保存 -->
+        <yd-cell-item style="background: #fff;">
+            <span slot="left" style="font-weight: bold">聊天云端保存</span>
+            <span slot="right">
+                <yd-switch v-model="save_action">
                 </yd-switch>
             </span>
         </yd-cell-item>
@@ -84,13 +92,15 @@ import {joinChatSend} from '@/socketIoApi/chat'
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import {delRoomMsg} from '@/utils/indexedDB'
+import {roomMsgDel} from '@/api/room'
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert} from '@/api/userRoomRelation'
+import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert, userRoomRelationUpdateSaveAction} from '@/api/userRoomRelation'
 export default {
     data() {
         return {
             isHide: true, //初始值为true，显示为折叠画面
             alert: true,
+            save_action:false,
             list:[],
             room:{
             }
@@ -101,7 +111,8 @@ export default {
         ...mapGetters([
             "currentRoomUuid",
             "currentRoomName",
-            "currentRoomType"
+            "currentRoomType",
+            "currentRoomSaveAction"
             ])
     },
     created() {
@@ -119,6 +130,11 @@ export default {
                 }else{
                     this.alert = false
                 }
+                if(res.data.room.save_action){
+                    this.save_action = true
+                }else{
+                    this.save_action = false
+                }
             })
         },
         onShow: function() {
@@ -128,9 +144,15 @@ export default {
             this.isHide = true; //点击onHide切换为true，显示为折叠画面
         },
         handleDelRoomMsg(){
-            delRoomMsg(this.currentRoomUuid).then(res=>{
-                Toast({'mes':'删除成功'})
-            })
+            if(this.currentRoomSaveAction == 0){
+                delRoomMsg(this.currentRoomUuid).then(res=>{
+                    Toast({'mes':'删除成功'})
+                })
+            }else if(this.currentRoomSaveAction == 1){
+                roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                    Toast({'mes':'删除成功'})
+                })
+            }
         }
     },
     destroyed(){
@@ -140,7 +162,8 @@ export default {
             joinChatSend({
                 name: this.currentRoomName,
                 room_uuid: this.currentRoomUuid,
-                type: this.currentRoomType
+                type: this.currentRoomType,
+                save_action:this.currentRoomSaveAction
             })
         }
         next()
@@ -149,7 +172,11 @@ export default {
         alert:{
             handler(){
                 userRoomRelationUpdateAlert({is_alert: this.alert, room_uuid: this.currentRoomUuid})
-                
+            }
+        },
+        save_action:{
+            handler(){
+                userRoomRelationUpdateSaveAction({save_action: this.save_action, room_uuid: this.currentRoomUuid})
             }
         }
     }

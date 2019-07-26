@@ -3,6 +3,7 @@ import storage from "@/utils/localstorage"
 import store from '../store'
 import utils from '@/utils/utils'
 import { addRoomMsg } from "@/utils/indexedDB"
+import {roomMsgAdd } from "@/api/room"
 
 /**
  * 发送聊天信息
@@ -19,7 +20,12 @@ export function chatSend(data){
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
     msgList = msgList.concat(msgInfo)
     store.dispatch('updateMsgList', msgList)
-    addRoomMsg(msgInfo)
+    if(data['data']['save_action'] == 0){
+        addRoomMsg(msgInfo)
+    }else if(data['data']['save_action'] == 1){
+        delete data.data.save_action;
+        roomMsgAdd(msgInfo)
+    }
     return send('chat', data)
 }
 

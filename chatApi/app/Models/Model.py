@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import BigInteger, Column, Integer, String, Text
 from sqlalchemy.schema import FetchedValue
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -17,6 +17,7 @@ class HtAddressBook(Base):
     created_at = Column(Integer, nullable=False)
     updated_at = Column(Integer, nullable=False)
     room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
+    save_action = Column(Integer, nullable=False, server_default=FetchedValue())
     is_alert = Column(Integer, nullable=False)
     unread_number = Column(Integer, nullable=False)
 
@@ -38,6 +39,30 @@ class HtAdmin(Base):
     delete_time = Column(Integer, nullable=False, server_default=FetchedValue())
 
 
+class HtLog(Base):
+    __tablename__ = 'ht_logs'
+
+    id = Column(Integer, primary_key=True)
+    type = Column(Integer, nullable=False, server_default=FetchedValue())
+    level = Column(Integer, nullable=False, server_default=FetchedValue())
+    data = Column(Text, nullable=False)
+    create_time = Column(Integer, nullable=False)
+
+
+class HtMsg(Base):
+    __tablename__ = 'ht_msg'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False, server_default=FetchedValue())
+    msg = Column(Text, nullable=False)
+    room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
+    user_id = Column(Integer, nullable=False)
+    type = Column(Integer, nullable=False)
+    head_img = Column(String(255), nullable=False, server_default=FetchedValue())
+    created_at = Column(BigInteger, nullable=False)
+    send_status = Column(Integer, nullable=False)
+
+
 class HtRoom(Base):
     __tablename__ = 'ht_room'
 
@@ -56,6 +81,7 @@ class HtUserRoomRelation(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False)
     room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
+    save_action = Column(Integer, nullable=False, server_default=FetchedValue())
     is_alert = Column(Integer, nullable=False)
     unread_number = Column(Integer, nullable=False)
     created_at = Column(Integer, nullable=False)

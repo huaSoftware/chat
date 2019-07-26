@@ -139,7 +139,8 @@ export default {
             joinChatSend({
                 name: item.users.nick_name,
                 room_uuid:item.room_uuid,
-                type:item.room.type
+                type:item.room.type,
+                save_action:item.save_action
                
             })
         },
@@ -156,6 +157,7 @@ export default {
                 joinChatSend({
                     type: 1,
                     room_uuid:room_uuid,
+                    save_action:item.save_action
                 })
             })
         }

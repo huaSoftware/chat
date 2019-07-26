@@ -8,6 +8,7 @@ export default {
         currentRoomUuid: '',//当前房间号
         currentRoomName: '',//房间名
         currentRoomType:0,//房间类型
+        currentRoomSaveAction: 0, //聊天记录保存方式               
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
         groupRoomList: [] //群聊房间数据
@@ -31,6 +32,9 @@ export default {
         },
         currentRoomType(state){
             return state.currentRoomType
+        },
+        currentRoomSaveAction(state){
+            return state.currentRoomSaveAction
         }
     },
 
@@ -53,6 +57,9 @@ export default {
         },
         updateCurrentRoomType({commit}, currentRoomType){
             commit("updateCurrentRoomType", currentRoomType);
+        },
+        updateCurrentRoomSaveAction({commit}, currentRoomSaveAction){
+            commit("updateCurrentRoomType", currentRoomSaveAction);
         }
     },
 
@@ -75,6 +82,9 @@ export default {
         },
         updateCurrentRoomType(state, currentRoomType){
             state.currentRoomType = currentRoomType
+        },
+        updateCurrentRoomSaveAction(state, currentRoomSaveAction){
+            state.currentRoomSaveAction = currentRoomSaveAction
         }
     }
 }

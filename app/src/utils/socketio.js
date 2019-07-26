@@ -4,6 +4,7 @@ import router from '../router'
 import utils from '@/utils/utils'
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import { addAddressBookBeg, updateRoomMsg } from "@/utils/indexedDB"
+import {roomMsgUpdate} from "@/api/room"
 
 /* 注册socketio */
 export function setup() {
@@ -28,7 +29,16 @@ export function setup() {
 				msgList[index]['send_status'] = 1
 				//console.log(data)
 				store.dispatch('updateMsgList', msgList)
-				updateRoomMsg(data['created_at'], 1)
+				let reqData = {
+					room_uuid :data['room_uuid'],
+					created_at :data['created_at'],
+					send_status: 1
+				}
+				if(store.getters.currentRoomSaveAction == 0){
+					updateRoomMsg(reqData)
+				}else if(store.getters.currentRoomSaveAction == 1){
+					roomMsgUpdate(reqData)
+				}
 			})
 		});
 
@@ -38,7 +48,8 @@ export function setup() {
 		  send('join', {
 			name: store.getters.currentRoomName,
 			room_uuid: store.getters.currentRoomUuid,
-			type: store.getters.currentRoomType
+			type: store.getters.currentRoomType,
+			save_action: store.getters.currentRoomSaveAction
 		  })
 		}
 		//监听好友请求
@@ -134,6 +145,7 @@ export function send(method, data, type = 'room') {
 						store.commit('updateCurrentRoomUuid', '')
 						store.commit('updateCurrentRoomName', '')
 						store.commit('updateCurrentRoomType', 0)
+						store.commit('updateCurrentRoomSaveAction', 0)
 					}
 				}
 				if(res.data.action == 'join'){
@@ -143,6 +155,7 @@ export function send(method, data, type = 'room') {
 					store.commit('updateCurrentRoomUuid', data.room_uuid)
 					store.commit('updateCurrentRoomName', data.name)
 					store.commit('updateCurrentRoomType', data.type)
+					store.commit('updateCurrentRoomSaveAction', data.save_action)
 					if(data.name){
 						queryData.name = data.name
 					}

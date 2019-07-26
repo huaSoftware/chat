@@ -131,14 +131,16 @@ export default {
             joinChatSend({
                 name: item.users.nick_name,
                 room_uuid:item.room_uuid,
-                type: item.room.type
+                type: item.room.type,
+                save_action:item.save_action
             })
         },
         handleJoinGroupRoom(item){
             joinChatSend({
                 name: item.room.name,
                 room_uuid: item.room_uuid,
-                type: item.room.type
+                type: item.room.type,
+                save_action:item.save_action
             })
         }
     },

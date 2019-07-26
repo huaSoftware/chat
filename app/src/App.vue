@@ -38,8 +38,7 @@
 import { mapState, mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {addAddressBookBeg, addRoomMsg, updateMsg} from "@/utils/indexedDB"
-import {joinChatSend} from '@/socketIoApi/chat'
+import {addAddressBookBeg, updateMsg} from "@/utils/indexedDB"
 import {setup} from '@/utils/socketio'
 import utils from '@/utils/utils'
 import router from './router'
@@ -62,7 +61,7 @@ export default {
 				}else{
           let visibleTime = new Date().getTime();
           if((visibleTime-this.hiddenTime)/1000>10){	//页面再次可见的时间-隐藏时间>10S,重连
-            if(typeof window.roomSocket.io == 'undefined'){
+            if(typeof window.roomSocket == 'undefined'){
               window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
             }
             window.roomSocket.io.disconnect();    //先主动关闭连接
@@ -122,7 +121,8 @@ export default {
       "msgList",
       "currentRoomUuid", 
       "currentRoomName",
-      "currentRoomType"
+      "currentRoomType",
+      "currentRoomSaveAction"
     ]),
     ...mapState([
       'user'

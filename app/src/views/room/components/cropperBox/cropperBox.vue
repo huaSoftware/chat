@@ -39,6 +39,7 @@
     </div> 
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import { uploadBase64 } from "@/api/common";
 import { VueCropper } from "vue-cropper";
 import { chatSend } from "@/socketIoApi/chat";
@@ -57,6 +58,9 @@ export default {
         }
     },
     components: {VueCropper},
+    computed: {
+        ...mapGetters(["currentRoomUuid", "currentRoomName", "currentRoomSaveAction"])
+    },
     props:{
         reqImgData: {
             type: Object,
@@ -81,8 +85,9 @@ export default {
                     chatSend({
                         data: {
                         msg: img,
-                        room_uuid: window.room_uuid,
-                        type: 1
+                        room_uuid: this.currentRoomUuid,
+                        type: 1,
+                        save_action:this.currentRoomSaveAction
                         }
                     });
                     this.$emit('recReqImgData', '')

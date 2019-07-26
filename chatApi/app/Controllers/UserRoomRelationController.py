@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-15 16:53:16
+@LastEditTime: 2019-07-25 16:37:18
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -30,7 +30,7 @@ def groupChatCreate(params):
     
 @app.route('/api/v2/userRoomRelation/get', methods=['GET'])
 @UsersAuthJWT.apiAuth
-def UserRoomRelationGet(user_info):
+def userRoomRelationGet(user_info):
     """ 获取通讯录列表 """
     filters = {
         UserRoomRelation.user_id == user_info['data']['id']
@@ -42,7 +42,7 @@ def UserRoomRelationGet(user_info):
 @app.route('/api/v2/userRoomRelation/getByRoomUuid', methods=['POST'])
 @validator(name='room_uuid', rules={'required': True, 'type': 'string'})
 @UsersAuthJWT.apiAuth
-def UserRoomRelationGetByRoomUuid(params, user_info):
+def userRoomRelationGetByRoomUuid(params, user_info):
     """ 获取群组或单聊信息 """
     filters = {
         Room.room_uuid == params['room_uuid']
@@ -72,7 +72,7 @@ def UserRoomRelationGetByRoomUuid(params, user_info):
 @app.route('/api/v2/userRoomRelation/updateAlert', methods=['POST'])
 @validator(name='is_alert', rules={'required': True, 'type': 'integer'})
 @UsersAuthJWT.apiAuth
-def UserRoomRelationUpdateAlert(params, user_info):
+def userRoomRelationUpdateAlert(params, user_info):
     """ 更新对否提醒 """
     filters = {
         Room.room_uuid == params['room_uuid']
@@ -94,6 +94,36 @@ def UserRoomRelationUpdateAlert(params, user_info):
         }
         data = {
             'is_alert': params['is_alert']
+        }
+        status = UserRoomRelation().edit(data, filters)
+    if status:
+        return BaseController().successData()
+    
+@app.route('/api/v2/userRoomRelation/updateSaveAction', methods=['POST'])
+@validator(name='save_action', rules={'required': True, 'type': 'integer'})
+@UsersAuthJWT.apiAuth
+def userRoomRelationUpdateSaveAction(params, user_info):
+    """ 更新是否云端保存 """
+    filters = {
+        Room.room_uuid == params['room_uuid']
+    }
+    roomData = Room().getOne(filters)
+    if roomData['type'] == 0:
+        filters = {
+            AddressBook.room_uuid == params['room_uuid'],
+            AddressBook.be_focused_user_id == user_info['data']['id']
+        }
+        data = {
+            'save_action': params['save_action']
+        }
+        status = AddressBook().edit(data, filters)
+    else:
+        filters = {
+            UserRoomRelation.room_uuid == params['room_uuid'],
+            UserRoomRelation.user_id == user_info['data']['id']
+        }
+        data = {
+            'save_action': params['save_action']
         }
         status = UserRoomRelation().edit(data, filters)
     if status:

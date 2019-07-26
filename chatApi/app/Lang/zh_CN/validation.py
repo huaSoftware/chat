@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-28 20:11:04
 @LastEditors: hua
-@LastEditTime: 2019-07-12 21:02:59
+@LastEditTime: 2019-07-25 20:58:43
 '''
 
 validation = {
@@ -35,5 +35,11 @@ validation = {
     'keyword': '关键字',
     'id':'编号',
     'room_uuid':'房间编号',
-    'is_alert': '是否提醒'
+    'is_alert': '是否提醒',
+    'save_action':'保存方式',
+    'created_at': '创建时间',
+    'head_img':'头像',
+    'msg':'聊天内容',
+    'send_status':'发送状态',
+    'user_id':'用户编号'
 }

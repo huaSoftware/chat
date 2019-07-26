@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-07-19 10:38:42
+ * @LastEditTime: 2019-07-26 08:49:14
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -151,6 +151,7 @@ import { uploadFile } from "@/api/common";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
 import { getRoomMsg } from "@/utils/indexedDB";
+import {roomMsgGet} from '@/api/room'
 import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
@@ -159,7 +160,7 @@ export default {
     MescrollVue, vEditDiv,vImg, icons, def, cropperBox
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction"])
   },
   data() {
     return {
@@ -264,24 +265,45 @@ export default {
       if(this.mescrollDown.page.num>1){
         this.lockDown = true;
       }
-      getRoomMsg(
-        this.currentRoomUuid,
-        this.mescrollDown.page.num,
-        this.mescrollDown.page.size
-      ).then(res => {
-        let msgList = JSON.parse(JSON.stringify(this.msgList))
-        msgList = res.list.concat(msgList)
-        this.updateMsgList(msgList);
-        this.$nextTick(() => {
-          if((msgList.length> 10 && msgList.length == res.total) || this.mescrollDown.page.num>3){
-            this.moreInfoShow = true
-            mescroll.lockDownScroll(true)
-          }
-          mescroll.endSuccess()// 结束下拉刷新,无参
-          this.$previewRefresh();
-          this.mescrollDown.page.num++
+      if(this.currentRoomSaveAction == 0){
+        getRoomMsg(
+          this.currentRoomUuid,
+          this.mescrollDown.page.num,
+          this.mescrollDown.page.size
+        ).then(res => {
+          let msgList = JSON.parse(JSON.stringify(this.msgList))
+          msgList = res.list.concat(msgList)
+          this.updateMsgList(msgList);
+          this.$nextTick(() => {
+            if((msgList.length> 10 && msgList.length == res.total) || this.mescrollDown.page.num>3){
+              this.moreInfoShow = true
+              mescroll.lockDownScroll(true)
+            }
+            mescroll.endSuccess()// 结束下拉刷新,无参
+            this.$previewRefresh();
+            this.mescrollDown.page.num++
+          });
         });
-      });
+      }else if(this.currentRoomSaveAction == 1){
+        roomMsgGet(
+          {room_uuid:this.currentRoomUuid,
+          page_no:this.mescrollDown.page.num,
+          per_page:this.mescrollDown.page.size}
+        ).then(res => {
+          let msgList = JSON.parse(JSON.stringify(this.msgList))
+          msgList = res.data.list.concat(msgList)
+          this.updateMsgList(msgList);
+          this.$nextTick(() => {
+            if((msgList.length> 10 && msgList.length == res.data.page.count) || this.mescrollDown.page.num>3){
+              this.moreInfoShow = true
+              mescroll.lockDownScroll(true)
+            }
+            mescroll.endSuccess()// 结束下拉刷新,无参
+            this.$previewRefresh();
+            this.mescrollDown.page.num++
+          });
+        });
+      }
     },
     handleFileOnChange(event) {
       let file = event.target.files[0];
@@ -294,7 +316,8 @@ export default {
           data: {
             msg: file,
             room_uuid: this.currentRoomUuid,
-            type: 1
+            type: 1,
+            save_action:this.currentRoomSaveAction
           }
         });
       });
@@ -324,7 +347,8 @@ export default {
             data: {
               msg: p.addresses,
               room_uuid: this.currentRoomUuid,
-              type: 1
+              type: 1,
+              save_action:this.currentRoomSaveAction
             }
           });
         },
@@ -352,7 +376,8 @@ export default {
         data: {
           msg: this.content,
           room_uuid: this.currentRoomUuid,
-          type: 1 //1是文字，0是语音, 2是重发
+          type: 1, //1是文字，0是语音, 2是重发
+          save_action: this.currentRoomSaveAction
         }
       });
       document.getElementById("edit").innerHTML = "";
@@ -364,7 +389,8 @@ export default {
         data: {
           room_uuid: this.currentRoomUuid,
           type: 2, //1是文字，0是语音, 2是重发
-          created_at: created_at
+          created_at: created_at,
+          save_action: this.currentRoomSaveAction
         }
       });
     },

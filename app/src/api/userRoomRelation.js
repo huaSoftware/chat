@@ -25,3 +25,12 @@ export function userRoomRelationUpdateAlert(data){
         data
     })
 }
+
+//更新是否云端保存
+export function userRoomRelationUpdateSaveAction(data){
+    return request({
+        url:'/api/v2/userRoomRelation/updateSaveAction',
+        method: 'post',
+        data
+    })
+}
