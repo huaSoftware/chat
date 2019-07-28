@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-26 09:58:49
+@LastEditTime: 2019-07-28 12:03:28
 '''
 from app import app
 from flask import request
@@ -16,6 +16,7 @@ from app.Vendor.Decorator import validator
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Models.Users import Users
 from app.Models.Msg import Msg
+from app.Models.Room import Room
 from flask_socketio import emit, join_room
 from app.Vendor.Code import Code
 import time
@@ -26,6 +27,37 @@ import time
 def roomGet(user_info):
     data = AddressBook.getRoomList(user_info['data']['id'])
     return BaseController().json(data)
+
+@app.route('/api/v2/room/del', methods=['POST'])
+@validator(name='room_uuid', rules={'required': True, 'type': 'string'})
+@UsersAuthJWT.apiAuth
+def roomDel(user_info, params):
+    filters = {
+        Room.room_uuid == params['room_uuid']
+    }
+    roomData = Room().getOne(filters)
+    if roomData['type'] == 0:
+        filters = {
+            AddressBook.room_uuid == params['room_uuid']
+        }
+        AddressBook().delete(filters)
+        filters = {
+            Room.room_uuid == params['room_uuid']
+        }
+        Room().delete(filters)
+    else:
+        filters = {
+            UserRoomRelation.room_uuid == params['room_uuid'],
+            UserRoomRelation.user_id == params['user_id']
+        }
+        data = UserRoomRelation().delete(filters)
+        filters = {
+            Room.room_uuid == params['room_uuid'],
+            Room.user_id == params['user_id']
+        }
+        Room().delete(filters)
+
+    return BaseController().successData()
 
 @app.route('/api/v2/room/details', methods=['GET'])
 @validator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -67,11 +99,11 @@ def delRoomMsg(user_info, params):
         :param dict params
         :return dict
     """
-    filter = {
+    filters = {
         Msg.room_uuid == params['room_uuid'],
         Msg.user_id == user_info['data']['id']
     }
-    Msg().delete(filter)
+    Msg().delete(filters)
     return BaseController().successData()
 
 @app.route('/api/v2/room/msg/update', methods=['POST'])
@@ -86,12 +118,12 @@ def updateRoomMsg(user_info, params):
         :param dict params
         :return dict
     """
-    filter = {
+    filters = {
         Msg.room_uuid == params['room_uuid'],
         Msg.created_at == params['created_at'],
         Msg.user_id == user_info['data']['id']
     }
-    Msg().edit({'send_status': params['send_status']}, filter)
+    Msg().edit({'send_status': params['send_status']}, filters)
     return BaseController().successData()
 
 @app.route('/api/v2/room/msg/get', methods=['POST'])
@@ -100,16 +132,15 @@ def updateRoomMsg(user_info, params):
 @validator(name='per_page', rules={'required': True, 'type': 'integer'})
 @UsersAuthJWT.apiAuth
 def getRoomMsg(user_info, params):
-    """ todo
+    """
     查询聊天数据
     :param dict user_info
     :param dict params
     :return dict
     """
-    filter = {
+    filters = {
         Msg.room_uuid == params['room_uuid']
     }
-    offset = (params['page_no']-1)*params['per_page']
-    data = Msg().getList(filter, Msg.created_at, (), offset, params['per_page'])
+    data = Msg().getList(filters, Msg.created_at.desc(), (), params['page_no'], params['per_page'])
     return BaseController().successData(data)
     

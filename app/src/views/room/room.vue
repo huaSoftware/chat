@@ -291,7 +291,7 @@ export default {
           per_page:this.mescrollDown.page.size}
         ).then(res => {
           let msgList = JSON.parse(JSON.stringify(this.msgList))
-          msgList = res.data.list.concat(msgList)
+          msgList = res.data.list.reverse().concat(msgList)
           this.updateMsgList(msgList);
           this.$nextTick(() => {
             if((msgList.length> 10 && msgList.length == res.data.page.count) || this.mescrollDown.page.num>3){
@@ -457,6 +457,7 @@ export default {
     // 录音开始
     startRecord() {
       //to do
+      Alert({'mes':'todo'})
     },
     // 录音结束
     stopRecord() {

@@ -56,9 +56,9 @@
 				</div>
 			</a>
 		</article>
-		<vImg class="loading" :imgUrl="'@/assets/loading-bars.svg'" v-if="loading" />
+		<vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />
 		<!-- 参数空时页面 -->
-		<div class="empty" v-if="roomList.length==0 && loading==false">
+		<div class="empty" v-if="roomList.length==0 && loading==false && groupRoomList.length==0">
 			<span class="icon-custom-xiaoxi"></span>
 			<span class="empty_text">暂无消息</span>
 		</div>
@@ -252,6 +252,8 @@
 	z-index:100;
 	top: 0rem;
 	background:#fff;
+	max-width: 750px;
+    min-width: 300px;
 }
 </style>
 <style>

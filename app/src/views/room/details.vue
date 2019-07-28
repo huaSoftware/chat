@@ -79,9 +79,15 @@
                 <span class="icon-custom-you icon-right"></span>
             </span>
         </yd-cell-item>
-        <!-- <CrossLine></CrossLine> -->
+        <CrossLine></CrossLine>
         <!--清空聊天历史记录-->
-        <yd-button size="large" type="hollow" @click.native="handleDelRoomMsg">清空聊天历史记录</yd-button>
+        <yd-cell-item style="background: #fff;" @click.native="handleDelRoomMsg">
+            <span slot="left" style="font-weight: bold">清空聊天历史记录</span>
+            <span slot="right">
+            </span>
+        </yd-cell-item>
+        <!--删除并退出-->
+        <yd-button size="large" type="hollow" @click.native="handleDelRoom">删除并退出</yd-button>
     </div>
 </template>
 <script>
@@ -92,8 +98,8 @@ import {joinChatSend} from '@/socketIoApi/chat'
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import {delRoomMsg} from '@/utils/indexedDB'
-import {roomMsgDel} from '@/api/room'
-import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
+import {roomMsgDel, roomDel} from '@/api/room'
+import {Alert, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert, userRoomRelationUpdateSaveAction} from '@/api/userRoomRelation'
 export default {
     data() {
@@ -142,6 +148,16 @@ export default {
         },
         onHide: function() {
             this.isHide = true; //点击onHide切换为true，显示为折叠画面
+        },
+        handleDelRoom(){
+            roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                Alert({
+                    'mes':'删除并退出成功',
+                    callback:()=>{
+                        this.$router.push({name:'home'})
+                    }
+                })
+            })
         },
         handleDelRoomMsg(){
             if(this.currentRoomSaveAction == 0){

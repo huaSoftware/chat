@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-07-02 13:28:12
+@LastEditTime: 2019-07-28 12:24:31
 '''
 import time, math
 
@@ -186,8 +186,9 @@ class Room(Base, HtRoom, SerializerMixin):
             last_msg           = message['last_msg'],
             type               = 0,
             name               = '',
-            updated_at         = time.time(),
-            created_at         = time.time()
+            user_id            = message['user_id'],
+            updated_at         = int(time.time()),
+            created_at         = int(time.time())
         )
         #实例化后orm添加
         status = room_data.add(room_data)

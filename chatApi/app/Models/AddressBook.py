@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-06-11 21:19:43
+@LastEditTime: 2019-07-28 10:48:50
 '''
 import time, math
 
@@ -171,7 +171,8 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     def addRoomAndAddressBook(room_uuid, focused_user_id, be_focused_user_id):
         roomData = {
             'room_uuid': room_uuid,
-            'last_msg': ''
+            'last_msg': '',
+            'user_id': focused_user_id
         }
         room = Room.insertRoomData(roomData)
         addressBook = AddressBook(

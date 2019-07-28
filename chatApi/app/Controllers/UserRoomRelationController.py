@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-25 16:37:18
+@LastEditTime: 2019-07-28 10:08:37
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -20,9 +20,10 @@ from flask import request
 
 @app.route('/api/v2/groupChat/create', methods=['POST'])
 @validator(name='ids', rules={'required': True, 'type': 'list', 'minlength': 1, 'maxlength': 20})
-def groupChatCreate(params):
+@UsersAuthJWT.apiAuth
+def groupChatCreate(user_info, params):
     # 加入房间号
-    data = ChatService().groupChatCreate(params)
+    data = ChatService().groupChatCreate(user_info, params)
     if data:
         return BaseController().successData(data, msg='创建成功')
     return BaseController().error(msg='创建失败')

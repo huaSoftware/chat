@@ -3,7 +3,7 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-07-02 13:59:02
+@LastEditTime: 2019-07-26 13:44:07
 '''
 
 from app.env import ALLOWED_EXTENSIONS
@@ -156,7 +156,10 @@ class Utils:
                 else:
                     ruleMsg = validation[key]
                     actionMsg = validation[rules[key]]
-                msgFormat[key] = "{} {} {}".format(validation[name], ruleMsg, actionMsg)
+                if name in validation.keys():
+                    msgFormat[key] = "{} {} {}".format(validation[name], ruleMsg, actionMsg)
+                else:
+                    return msg
             return msgFormat
         return msg
     

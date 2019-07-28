@@ -73,6 +73,7 @@ class HtRoom(Base):
     created_at = Column(Integer, nullable=False)
     type = Column(Integer, nullable=False)
     name = Column(String(255), nullable=False, server_default=FetchedValue())
+    user_id = Column(Integer, nullable=False)
 
 
 class HtUserRoomRelation(Base):

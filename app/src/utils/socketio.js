@@ -11,7 +11,7 @@ export function setup() {
 	// 创建添加新好友套接字连接
 	if (window.roomSocket == undefined) {
 		// 创建聊天室套接字监听
-		window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
+		window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_SOCKET + '/room');
 		window.roomSocket.on('join', (data) => {
 			//逻辑处理
 		});
@@ -100,87 +100,89 @@ export function setup() {
  * @return void
  */
 export function send(method, data, type = 'room') {
-	let token = store.getters.token
-	data['Authorization'] = 'JWT '+token
-	if (type == 'room') {
-		//响应超时
-		window.sendTimeOut = setTimeout(()=>{
-			if(method == 'join'){
-				Loading.open('加入超时,重新加入中...')
-				send('join', {
-					name: store.getters.currentRoomName,
-					room_uuid: store.getters.currentRoomUuid,
-					type: store.getters.currentRoomType
-				})
-			}
-			if(method == 'leave'){
-				Loading.open('退出超时,重新推出中...')
-				send('leave', {
-					room_uuid: store.getters.currentRoomUuid
-				})
-			}
-			if(method == 'chat'){
-				Toast({
-					mes: '响应超时',
-					timeout: 1500,
-					icon: 'error'
-				});
-				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-				let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
-				msgList[index]['send_status'] = 2
-				store.dispatch('updateMsgList', msgList)
-			}
-		},1500)
-		window.roomSocket.emit(method, data, (recv)=>{
-			//未加入房间的时候对方收不到消息
-			response(recv).then(res=>{
-				if(res.data.action == 'chat'){
-					clearTimeout(window.sendTimeOut)
-				}
-				if(res.data.action == 'leave'){
-					clearTimeout(window.sendTimeOut)
-					Loading.close()
-					//如果不在room路由下
-					if(router.history.current.fullPath.indexOf('room') == -1){
-						store.commit('updateCurrentRoomUuid', '')
-						store.commit('updateCurrentRoomName', '')
-						store.commit('updateCurrentRoomType', 0)
-						store.commit('updateCurrentRoomSaveAction', 0)
-					}
-				}
-				if(res.data.action == 'join'){
-					clearTimeout(window.sendTimeOut)
-					Loading.close()
-					let queryData = {}
-					store.commit('updateCurrentRoomUuid', data.room_uuid)
-					store.commit('updateCurrentRoomName', data.name)
-					store.commit('updateCurrentRoomType', data.type)
-					store.commit('updateCurrentRoomSaveAction', data.save_action)
-					if(data.name){
-						queryData.name = data.name
-					}
-					router.push({
-						name: 'room',
-						query: queryData
+	if(typeof window.roomSocket !== 'undefined'){
+		let token = store.getters.token
+		data['Authorization'] = 'JWT '+token
+		if (type == 'room') {
+			//响应超时
+			window.sendTimeOut = setTimeout(()=>{
+				if(method == 'join'){
+					Loading.open('加入超时,重新加入中...')
+					send('join', {
+						name: store.getters.currentRoomName,
+						room_uuid: store.getters.currentRoomUuid,
+						type: store.getters.currentRoomType
 					})
 				}
-			}).catch(e=>{
-				//服务器出错
-			})
-		})
-	}
-	if (type == 'broadcast') {
-		data['type'] = 2
-		window.roomSocket.emit(method, data, (recv)=>{
-			response(recv).then(res=>{
-				if(res.data.action == 'leave'){	
+				if(method == 'leave'){
+					Loading.open('退出超时,重新推出中...')
+					send('leave', {
+						room_uuid: store.getters.currentRoomUuid
+					})
 				}
-				if(res.data.action == 'join'){				
+				if(method == 'chat'){
+					Toast({
+						mes: '响应超时',
+						timeout: 1500,
+						icon: 'error'
+					});
+					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+					let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+					msgList[index]['send_status'] = 2
+					store.dispatch('updateMsgList', msgList)
 				}
-			}).catch(e=>{
-				//服务器出错
+			},1500)
+			window.roomSocket.emit(method, data, (recv)=>{
+				//未加入房间的时候对方收不到消息
+				response(recv).then(res=>{
+					if(res.data.action == 'chat'){
+						clearTimeout(window.sendTimeOut)
+					}
+					if(res.data.action == 'leave'){
+						clearTimeout(window.sendTimeOut)
+						Loading.close()
+						//如果不在room路由下
+						if(router.history.current.fullPath.indexOf('room') == -1){
+							store.commit('updateCurrentRoomUuid', '')
+							store.commit('updateCurrentRoomName', '')
+							store.commit('updateCurrentRoomType', 0)
+							store.commit('updateCurrentRoomSaveAction', 0)
+						}
+					}
+					if(res.data.action == 'join'){
+						clearTimeout(window.sendTimeOut)
+						Loading.close()
+						let queryData = {}
+						store.commit('updateCurrentRoomUuid', data.room_uuid)
+						store.commit('updateCurrentRoomName', data.name)
+						store.commit('updateCurrentRoomType', data.type)
+						store.commit('updateCurrentRoomSaveAction', data.save_action)
+						if(data.name){
+							queryData.name = data.name
+						}
+						router.push({
+							name: 'room',
+							query: queryData
+						})
+					}
+				}).catch(e=>{
+					//服务器出错
+				})
 			})
-		})
+		}
+		if (type == 'broadcast') {
+			data['type'] = 2
+			window.roomSocket.emit(method, data, (recv)=>{
+				response(recv).then(res=>{
+					if(res.data.action == 'leave'){	
+					}
+					if(res.data.action == 'join'){				
+					}
+				}).catch(e=>{
+					//服务器出错
+				})
+			})
+		}
 	}
 }
 

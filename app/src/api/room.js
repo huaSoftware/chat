@@ -8,6 +8,15 @@ export function roomGet(){
     })
 }
 
+// 删除房间
+export function roomDel(data){
+    return request({
+        url: '/api/v2/room/del',
+        method: 'post',
+        data
+    })
+}
+
 //获取房间聊天记录
 export function roomMsgGet(data){
     return request({

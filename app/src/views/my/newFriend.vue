@@ -66,10 +66,14 @@ export default {
                 be_focused_user_id: storage.get('user')['id']
             }
             addressBookAdd(reqData).then(res=>{
-                this.$dialog.toast({mes: res.msg});
                 updateAddressBookBeg(item.id, 1).then(res=>{
-                    //console.log(res)
                     this.newFriendList = res
+                    Alert({
+                        'mes': res.msg,
+                        callback:()=>{
+                            this.$router.push({name:'home'})
+                        }
+                    })
                 })
             })
         },

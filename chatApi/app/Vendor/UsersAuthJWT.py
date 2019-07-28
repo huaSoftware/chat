@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-06-25 14:15:54
+@LastEditTime: 2019-07-27 13:41:50
 '''
 from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
@@ -154,7 +154,7 @@ class UsersAuthJWT():
             result = UsersAuthJWT().identify(request.headers.get('Authorization'))
             kwargs['user_info'] = result
             if isinstance(result, str):
-                return make_response(jsonify(Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, result)))
+                return make_response(jsonify(Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL)))
             res = func(*args, **kwargs)
             return res
         return inner_wrappar 
@@ -172,7 +172,7 @@ class UsersAuthJWT():
                 result = UsersAuthJWT().identify(args[0]['Authorization'])
                 kwargs['user_info'] = result
                 if isinstance(result, str):
-                    return emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, result))
+                    return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')#emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, result))
                 res = func(*args, **kwargs)
                 return res
             return inner_wrappar 

@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-27 19:53:37
+@LastEditTime: 2019-07-28 10:21:29
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -74,14 +74,16 @@ class ChatService():
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat"})
         
-    def groupChatCreate(self, params):
+    def groupChatCreate(self,user_info, params):
         """ 
             创建聊天群组
-            @param dict
+            @Param dict userInfo
+            @param dict params
             @return bool
         """
         room_uuid = Utils.unique_id()
         name = ''
+        now_item = int(time.time())
         for id in params['ids']:
             user_data = Users().getOne({Users.id == id})
             name = name + ',' + user_data['nick_name']
@@ -90,17 +92,18 @@ class ChatService():
                 'room_uuid'    : room_uuid,
                 'is_alert'     : 0,
                 'unread_number': 0,
-                'updated_at':time.time(),
-                'created_at':time.time()
+                'updated_at': now_item,
+                'created_at': now_item
             }
             UserRoomRelation().add(userRoomRelationData)
         room_data = {
             'room_uuid' : room_uuid,
             'last_msg'  : '',
             'type'      : 1,
-            'updated_at':time.time(),
-            'created_at':time.time(),
-            'name': name.strip(',')
+            'updated_at': now_item,
+            'created_at': now_item,
+            'name': name.strip(','),
+            'user_id': user_info['data']['id']
         }
         room = Room().addByClass(room_data)
         return {'room_uuid' : room_uuid}

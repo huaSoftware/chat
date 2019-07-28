@@ -19,7 +19,7 @@ export default {
     props:{
         imgUrl: {
             type: String,
-            default: '@/assets//default.jpg'
+            default: require('@/assets//default.jpg')
         }
     },
     created() {
