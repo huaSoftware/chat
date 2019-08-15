@@ -21,12 +21,18 @@ export function setup() {
 		});
 		///监听回复的消息
 		window.roomSocket.on('chat', (data) => {
+			// 回复根据标志分类todo
 			response(data).then(res=>{
 				let data = res.data
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
-				msgList[index]['send_status'] = 1
+				//console.log(index);//未找到索引说明是他人发送的消息
+				if(typeof index !== 'undefined'){
+					msgList[index]['send_status'] = 1
+				}else{
+					msgList = msgList.concat(data)
+				}
 				//console.log(data)
 				store.dispatch('updateMsgList', msgList)
 				let reqData = {
@@ -34,11 +40,13 @@ export function setup() {
 					created_at :data['created_at'],
 					send_status: 1
 				}
+				console.log(store.getters.currentRoomSaveAction)
 				if(store.getters.currentRoomSaveAction == 0){
 					updateRoomMsg(reqData)
 				}else if(store.getters.currentRoomSaveAction == 1){
 					roomMsgUpdate(reqData)
 				}
+	
 			})
 		});
 
@@ -223,6 +231,17 @@ export function response(res){
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
+			if(typeof window.roomSocket == 'undefined'){
+			window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
+			}
+			window.roomSocket.io.disconnect();    //先主动关闭连接
+			//删除所有监听
+			for(var listener in window.roomSocket.$events){
+				if(listener != undefined){
+					window.roomSocket.removeAllListeners(listener);
+				}
+			}
+			window.roomSocket = undefined
 			router.push({name: 'authLogin'})
 			reject('error')
 		}
