@@ -2,8 +2,8 @@
  * author hua
  * 2018,3,29
  */
+import store from '../store'
 
-import router from '../router/index'
 /* 获取token
  * params:tokenName;令牌名
  * return bool or token
@@ -36,5 +36,18 @@ export function setToken (tokenName, tokenVal) {
 export function removeToken (tokenName) {
   window.localStorage.removeItem(tokenName)
   return true
+}
+
+/**
+ * 注销账户时清理数据
+ */
+export function clearData(){
+  //清除localstorage数据
+  window.localStorage.clear();
+  //清除indexdb数据
+  window.indexedDB.deleteDatabase('addressBookBeg')
+  window.indexedDB.deleteDatabase('msg')
+  //失效token
+  store.commit('SET_TOKEN', '')
 }
 

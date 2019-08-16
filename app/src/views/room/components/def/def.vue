@@ -86,6 +86,8 @@ export default {
 .defs_wrapper {
     height: 200px !important;
     width: 100%;
+    max-width: 750px;
+    min-width: 300px;
     border-top: 1px solid #e9e9e9;
     text-align: left;
     overflow-x: auto;

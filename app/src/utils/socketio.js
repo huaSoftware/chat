@@ -102,6 +102,20 @@ export function setup() {
 	}
 }
 
+/* 注销socketio */
+export function setDown(){
+	if(typeof window.roomSocket == 'undefined'){
+	window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
+	}
+	window.roomSocket.io.disconnect();    //先主动关闭连接
+	//删除所有监听
+	for(var listener in window.roomSocket.$events){
+		if(listener != undefined){
+			window.roomSocket.removeAllListeners(listener);
+		}
+	}
+	window.roomSocket = undefined
+}
 /* 发送消息 
  * @param string data
  * @param object data
@@ -231,17 +245,7 @@ export function response(res){
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
-			if(typeof window.roomSocket == 'undefined'){
-			window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
-			}
-			window.roomSocket.io.disconnect();    //先主动关闭连接
-			//删除所有监听
-			for(var listener in window.roomSocket.$events){
-				if(listener != undefined){
-					window.roomSocket.removeAllListeners(listener);
-				}
-			}
-			window.roomSocket = undefined
+			setDown()
 			router.push({name: 'authLogin'})
 			reject('error')
 		}

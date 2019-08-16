@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-07-24 20:03:12
+ * @LastEditTime: 2019-08-15 20:30:43
  -->
 <template>
 	<div class="content">
@@ -57,16 +57,14 @@
 		</article>
 		<vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />
 		<!-- 参数空时页面 -->
-		<div class="empty" v-if="roomList.length==0 && loading==false && groupRoomList.length==0">
-			<span class="icon-custom-xiaoxi"></span>
-			<span class="empty_text">暂无消息</span>
-		</div>
+		<vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty>
 	</div>
 </template>
 <script>
 	import {mapGetters, mapMutations} from 'vuex'
 	import vImg from '@/components/v-img/v-img'
 	import utils from '@/utils/utils'
+	import vEmpty from '@/components/v-empty/v-empty'
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
 	import {addAddressBookBeg, updateMsg} from "@/utils/indexedDB"
@@ -75,7 +73,7 @@
 	import {joinChatSend} from '@/socketIoApi/chat'
 
 	export default {
-		components: {vImg},
+		components: {vImg, vEmpty},
 		name: 'home',
 		data() {
 			return {
@@ -201,31 +199,6 @@
 }
 .yd-list-title{
     line-height: 0.4rem!important;
-}
-/* 页面为空时 */
-.empty {
-    width: 100%;
-	height: 100%;
-	z-index:2;
-	position: relative;
-}
-.icon-custom-xiaoxi{
-	font-size: 2rem;
-	position: relative;
-	display: block;
-	text-align: center;
-	padding-top:50%;
-}
-.icon-custom-xiaoxi:before {
-	color:#aaaaaa;
-}
-.empty_text{
-	width:100%;
-	display: block;
-	text-align: center;
-	color:#aaaaaa;
-	font-size: 0.56rem;
-	margin-top:0.2rem;
 }
 .yd-navbar {
 	height:1.4rem !important;

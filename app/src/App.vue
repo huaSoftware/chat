@@ -39,7 +39,7 @@ import { mapState, mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addAddressBookBeg, updateMsg} from "@/utils/indexedDB"
-import {setup} from '@/utils/socketio'
+import {setDown, setup} from '@/utils/socketio'
 import utils from '@/utils/utils'
 import router from './router'
 
@@ -61,17 +61,7 @@ export default {
 				}else{
           let visibleTime = new Date().getTime();
           if((visibleTime-this.hiddenTime)/1000>10){	//页面再次可见的时间-隐藏时间>10S,重连
-            if(typeof window.roomSocket == 'undefined'){
-              window.roomSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/room');
-            }
-            window.roomSocket.io.disconnect();    //先主动关闭连接
-            //删除所有监听
-            for(var listener in window.roomSocket.$events){
-                if(listener != undefined){
-                    window.roomSocket.removeAllListeners(listener);
-                }
-            }
-            window.roomSocket = undefined
+            setDown()
             console.log('主动关闭连接后重连');
             setTimeout(()=> {
               setup()    //打开连接，使用的vuejs，这是socketio的连接方法

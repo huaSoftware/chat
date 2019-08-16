@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 13:57:47
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-02-01 13:57:47
+ -->
 <!-- 横线分隔条 组件 -->
 
 <template>

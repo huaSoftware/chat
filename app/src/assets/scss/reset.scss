@@ -217,45 +217,6 @@ textarea {
   text-align-last: justify;
   -moz-text-align-last: justify;
 }
-/* 商品空时 */
-.empty {
-  position: relative;
-  z-index:1;
-  display: block;
-  width: 100%;
-  position: absolute;
-  top: 43px;
-  bottom: 0px;
-  overflow: hidden;
-}
-
-.empty .empty-item {
-  position: absolute;
-  left: 0;
-  top: 35%;
-  display: block;
-  width: 100%;
-}
-
-.empty .empty-item .item-logo {
-  display: block;
-  margin: 0 auto;
-  width: 80px;
-  height: 80px;
-}
-
-.empty .empty-item .item-text {
-  display: block;
-  height: 32px;
-  line-height: 32px;
-  color: #aaaaaa;
-  ;
-  font-size: 14px;
-  font-weight: normal;
-  overflow: hidden;
-  text-align: center;
-}
-
 
 .yd-scrollview:after {
   content: "";

@@ -87,10 +87,11 @@ export function addRoomMsg(value) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
     db.transaction('rw', db.roomMsg,  async() => {
         //if (await db.roomMsg.where({'user_id': value.user_id}).count() === 0) {
+        value['uuid']= value['room_uuid'] + value['created_at']
         await db.roomMsg.add(value);
         //}
 
@@ -110,7 +111,7 @@ export function getRoomMsg(room_uuid, page, per_page) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
         let data = {}
@@ -142,13 +143,13 @@ export function updateRoomMsg(data) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
 
         // Make sure we have something in DB:
         //更新状态
-        let updated = db.roomMsg.where({"created_at":data['created_at'], "room_uuid":data['room_uuid']}).modify({send_status: data['send_status']});
+        let updated = db.roomMsg.where({ "uuid":data['room_uuid']+data['created_at']}).modify({send_status: data['send_status']});
         if (updated){
             let data =   await db.roomMsg.toArray()
             return data   
@@ -169,7 +170,7 @@ export function delRoomMsg(room_uuid) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
         // Make sure we have something in DB:

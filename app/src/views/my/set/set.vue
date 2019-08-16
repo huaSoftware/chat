@@ -24,6 +24,8 @@
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import { mapGetters} from 'vuex'
+import {setDown} from '@/utils/socketio'
+import {clearData} from '@/utils/auth'
 
 export default {
     components: {CrossLine, CrossItem},
@@ -46,22 +48,8 @@ export default {
             });
         },
         handleExit(){
-            //清除localstorage数据
-            window.localStorage.clear();
-            //清除indexdb数据
-            window.indexedDB.deleteDatabase('addressBookBeg')
-            window.indexedDB.deleteDatabase('msg')
-            //失效token
-            this.$store.commit('SET_TOKEN', '')
-            //清除socketio监听
-            window.roomSocket.io.disconnect()
-            //删除所有监听
-            for(var listener in window.roomSocket.$events){
-                if(listener != undefined){
-                    window.roomSocket.removeAllListeners(listener);
-                }
-            }
-            window.roomSocket = undefined
+            clearData()
+            setDown()
             setTimeout(() => {
                 this.$router.push({ name: "authLogin" });
             }, 100);
