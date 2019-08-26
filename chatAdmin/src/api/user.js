@@ -31,6 +31,7 @@ export function getCaptcha() {
   })
 }
 
+/* 获取用户列表  */
 export function userList(data) {
   return request({
     url: '/api/v2/admin/user/list',
@@ -38,7 +39,7 @@ export function userList(data) {
     data
   })
 }
-
+/* 删除用户 */
 export function userDelete(data) {
   return request({
     url: '/api/v2/admin/user/delete',

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-28 11:28:57
+@LastEditTime: 2019-08-02 09:38:16
 '''
 from flask import Flask
 from sqlalchemy import create_engine
@@ -29,7 +29,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER #上传目录 
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH #上传大小
 #创建数据库及连接
-engine = create_engine(SQLALCHEMY_DATABASE_URI)#, pool_recycle=7200,pool_size=5,max_overflow=10)
+engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_recycle=7200,pool_size=5,max_overflow=10)
 # 创建DBSession类型:
 DBSession = scoped_session(sessionmaker(bind=engine))
 dBSession = DBSession()

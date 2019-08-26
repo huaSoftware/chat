@@ -40,7 +40,6 @@ export function setup() {
 					created_at :data['created_at'],
 					send_status: 1
 				}
-				console.log(store.getters.currentRoomSaveAction)
 				if(store.getters.currentRoomSaveAction == 0){
 					updateRoomMsg(reqData)
 				}else if(store.getters.currentRoomSaveAction == 1){

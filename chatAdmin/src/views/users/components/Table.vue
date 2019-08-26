@@ -24,9 +24,9 @@
           <span>{{scope.row.nick_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" width="110px" align="center">
+      <el-table-column label="头像" width="50px" height="50px" align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.head_img"/></span>
+          <span><img style="width:100%;height:100%" :src="scope.row.head_img"/></span>
         </template>
       </el-table-column>
       <el-table-column label="首字母" width="110px" align="center">

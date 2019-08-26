@@ -67,7 +67,6 @@
 	import vEmpty from '@/components/v-empty/v-empty'
 	import {roomGet} from '@/api/room'
 	import storage from "@/utils/localstorage"
-	import {addAddressBookBeg, updateMsg} from "@/utils/indexedDB"
 	import {userRoomRelationGet} from '@/api/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'

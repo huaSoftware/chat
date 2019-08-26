@@ -3,7 +3,7 @@
  * @Date: 2019-06-05 17:03:40
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-27 09:08:21
+ * @LastEditTime: 2019-07-30 10:25:36
  -->
 ## 房间类型
 ```
@@ -59,6 +59,7 @@ uwsgi --reload /tmp/ocean_monitor_master.pid
 uwsgi --stop /tmp/ocean_monitor_master.pid
 
 /usr/local/python3/bin/uwsgi 
+async 映射队列数量
 ```
 
 ### 分布式部署
