@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-08-28 13:15:51
+@LastEditTime: 2019-08-28 14:06:33
 '''
 from flask import Flask
 from flask import make_response
@@ -21,7 +21,7 @@ app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
 async_mode = 'gevent'
-socketio = SocketIO(app,async_mode=async_mode, logger=True, engineio_logger=True)#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True)
+socketio = SocketIO(app,async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origin="*")#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True)
 # 配置 sqlalchemy  数据库驱动://数据库用户名:密码@主机地址:端口/数据库?编码
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS

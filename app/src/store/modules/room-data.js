@@ -70,6 +70,7 @@ export default {
         },
         updateRoomList(state, roomList){
             state.roomList = roomList
+            //非云端状态下把最后一条聊天记录保存到本地
         },
         updateGroupRoomList(state, groupRoomList){
             state.groupRoomList = groupRoomList
