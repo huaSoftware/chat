@@ -2,14 +2,14 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-08-02 09:38:16
+@LastEditTime: 2019-08-28 13:15:51
 '''
 from flask import Flask
+from flask import make_response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_socketio import SocketIO
 from app.Vendor.Code import Code
-
 from app.env import (SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS,
                     UPLOAD_FOLDER, MAX_CONTENT_LENGTH,
                     REDIS_PAS, REDIS_IP, REDIS_PORT, REDIS_DB)
@@ -21,7 +21,7 @@ app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
 async_mode = 'gevent'
-socketio = SocketIO(app, message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True)
+socketio = SocketIO(app,async_mode=async_mode, logger=True, engineio_logger=True)#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True)
 # 配置 sqlalchemy  数据库驱动://数据库用户名:密码@主机地址:端口/数据库?编码
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
@@ -47,7 +47,7 @@ def error_handler(e):
 @socketio.on_error_default       # Handles the default namespace
 def socketio_error_handler(e):
     return ExceptionApi(Code.ERROR, e)
-  
+
 #引入使用的控制器
 from app.Controllers import  (UsersController, SocketController, AddressBookController, 
                             RoomController, UploadController,UserRoomRelationController)
