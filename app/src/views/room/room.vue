@@ -20,12 +20,12 @@
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
-                <div v-if="key.type == 0" class="msg" @touchstart="amrPlay(key.msg, index)">
+                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
                   <vImg class="vioce_start" style="margin-right:-3px" :imgUrl="'static/img/voice_left.gif'" v-show="key.status"/>
                   <i class="vioce_stop_left" v-show="!key.status"></i>
                   <span class="vioce_second">{{key.duration}}s</span>
                 </div>
-                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
                 <!-- 消息送达状态 -->
                 <span v-if="key.send_status == 0 " class="send_status loading_color rotate_loading">
@@ -46,7 +46,7 @@
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
-                <div v-if="key.type == 0" class="msg" @touchstart="amrPlay(key.msg, index)">
+                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
                   <vImg
                     class="chat_right vioce_start"
                     :imgUrl="'static/img/voice_right.gif'"
@@ -55,7 +55,7 @@
                   <i class="vioce_stop_right" v-show="!key.status"></i>
                   <span class="vioce_second">{{key.duration}}s</span>
                 </div>
-                <div v-else-if="key.type == 1" class="rawMsg" v-html="key.msg"></div>
+                <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg"></div>
                 <div v-else class="msg" v-html="key.msg"></div>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction","RECORD","TEXT","RESEND"])
   },
   data() {
     return {
@@ -271,7 +271,7 @@ export default {
           data: {
             msg: file,
             room_uuid: this.currentRoomUuid,
-            type: 1,
+            type: this.TEXT,
             save_action:this.currentRoomSaveAction
           }
         });
@@ -302,7 +302,7 @@ export default {
             data: {
               msg: p.addresses,
               room_uuid: this.currentRoomUuid,
-              type: 1,
+              type: this.TEXT,
               save_action:this.currentRoomSaveAction
             }
           });
@@ -331,7 +331,7 @@ export default {
         data: {
           msg: this.content,
           room_uuid: this.currentRoomUuid,
-          type: 1, //1是文字，0是语音, 2是重发
+          type: this.TEXT, //1是文字，0是语音, 2是重发
           save_action: this.currentRoomSaveAction
         }
       });
@@ -343,7 +343,7 @@ export default {
       reChatSend({
         data: {
           room_uuid: this.currentRoomUuid,
-          type: 2, //1是文字，0是语音, 2是重发
+          type: this.RESEND, //1是文字，0是语音, 2是重发
           created_at: created_at,
           save_action: this.currentRoomSaveAction
         }

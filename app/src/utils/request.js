@@ -50,9 +50,9 @@ service.interceptors.response.use(
             });
 
           });
-          Toast({mes:msg.slice(0,msg.length-1)})
+          Toast({mes:msg.slice(0,msg.length-1),icon:"error"})
         }else{
-          Toast({mes:res.msg})
+          Toast({mes:res.msg,icon:"error"})
         }
       }
       Loading.close()
@@ -64,7 +64,7 @@ service.interceptors.response.use(
     }
     if (res.error_code === 10001) {
       Loading.close()
-      Toast({mes: res.msg})
+      Toast({mes: res.msg,icon:"error"})
       // 这里需要删除token，不然携带错误token无法去登陆
       window.localStorage.removeItem('token')
       store.commit('SET_TOKEN', null)
@@ -86,9 +86,9 @@ service.interceptors.response.use(
     if (error.response.status === 401/*  && error.response.data.code === 401 */) {
       if (error.response.data.msg === 'The current Subject is not authenticated.  Access denied.') {
         router.push('/login')
-        Toast({mes:'未登录，请先登录'})
+        Toast({mes:'未登录，请先登录',icon:"error"})
       } else {
-        Toast({mes:error.response.data.msg})
+        Toast({mes:error.response.data.msg,icon:"error"})
       }
     }
     if (error.response.status === 400 /* && error.response.data.code === 500 */) {

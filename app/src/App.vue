@@ -28,8 +28,9 @@
     <!--公共底部导航-->
 		<yd-tabbar slot="tabbar"  v-if="this.$route.meta.isShowFoot">
 			<yd-tabbar-item :title="item.name" type="link" :link="item.router" v-for="(item, index) in footerMenu" :key="index" :class="$store.state.appData.navbarTitle == item.name? 'active': ''">
-				<yd-icon :name="$store.state.appData.navbarTitle == item.name? item.iconActive: item.icon" custom slot="icon" size="0.54rem"></yd-icon>
-			</yd-tabbar-item>
+        <yd-icon :name="$store.state.appData.navbarTitle == item.name? item.iconActive: item.icon" custom slot="icon" size="0.54rem"></yd-icon>
+        <yd-badge  slot="badge" type="danger" v-if="item.name=='消息' && (msgAlertNumber+groupMsgAlertNumber) > 0">{{msgAlertNumber+groupMsgAlertNumber}}</yd-badge>
+      </yd-tabbar-item>
     	</yd-tabbar>
     </yd-layout>
 </template>
@@ -112,7 +113,9 @@ export default {
       "currentRoomUuid", 
       "currentRoomName",
       "currentRoomType",
-      "currentRoomSaveAction"
+      "currentRoomSaveAction",
+      "msgAlertNumber",
+      "groupMsgAlertNumber"
     ]),
     ...mapState([
       'user'

@@ -1,5 +1,6 @@
 import appData from "./modules/app-data";
 import roomData from "./modules/room-data";
+import codeData from './modules/code-data';
 import routerStatus from './modules/router-status'
 import user from "./modules/user";
 import getters from "./getters";
@@ -15,6 +16,7 @@ const store = new Vuex.Store({
   modules: {
     appData,
     roomData,
+    codeData,
     user,
     routerStatus
   },

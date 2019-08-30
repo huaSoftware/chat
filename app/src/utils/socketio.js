@@ -29,7 +29,7 @@ export function setup() {
 				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
 				//console.log(index);//未找到索引说明是他人发送的消息
 				if(typeof index !== 'undefined'){
-					msgList[index]['send_status'] = 1
+					msgList[index]['send_status'] = store.getters.SUCCESS
 				}else{
 					msgList = msgList.concat(data)
 				}
@@ -38,11 +38,12 @@ export function setup() {
 				let reqData = {
 					room_uuid :data['room_uuid'],
 					created_at :data['created_at'],
-					send_status: 1
+					send_status: store.getters.SUCCESS
 				}
-				if(store.getters.currentRoomSaveAction == 0){
+				if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+
 					updateRoomMsg(reqData)
-				}else if(store.getters.currentRoomSaveAction == 1){
+				}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
 					roomMsgUpdate(reqData)
 				}
 	
@@ -115,6 +116,7 @@ export function setDown(){
 	}
 	window.roomSocket = undefined
 }
+
 /* 发送消息 
  * @param string data
  * @param object data
@@ -166,8 +168,8 @@ export function send(method, data, type = 'room') {
 						if(router.history.current.fullPath.indexOf('room') == -1){
 							store.commit('updateCurrentRoomUuid', '')
 							store.commit('updateCurrentRoomName', '')
-							store.commit('updateCurrentRoomType', 0)
-							store.commit('updateCurrentRoomSaveAction', 0)
+							store.commit('updateCurrentRoomType', store.getters.ALONECHAT)
+							store.commit('updateCurrentRoomSaveAction', store.getters.LOCALSAVE)
 						}
 					}
 					if(res.data.action == 'join'){
@@ -192,7 +194,7 @@ export function send(method, data, type = 'room') {
 			})
 		}
 		if (type == 'broadcast') {
-			data['type'] = 2
+			data['type'] = store.getters.NOTIFICATION
 			window.roomSocket.emit(method, data, (recv)=>{
 				response(recv).then(res=>{
 					if(res.data.action == 'leave'){	
