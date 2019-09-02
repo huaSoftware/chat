@@ -4,10 +4,12 @@ import router from "./router/index";
 import store from "./store/index";
 
 Vue.config.productionTip = false;
-
+import '@babel/polyfill';
+import Es6Promise from 'es6-promise'
+Es6Promise.polyfill()
 /*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
-import "babel-polyfill";
-
+/* import "babel-polyfill"
+require('es6-promise').polyfill(); */
 //重置css
 import "@/assets/scss/reset.scss"
 
@@ -30,7 +32,7 @@ import VueLazyload from "vue-lazyload";
 Vue.use(VueLazyload, {
   preLoad: 1.3,   //预加载的宽高比
   loading: require("@/assets/loading-bars.svg"),
-  error: require('@/assets/default.jpg'),
+  error: require('@/assets/img/default.jpg'),
   attempt: 1//尝试加载次数
 });
 

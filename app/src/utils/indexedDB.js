@@ -1,6 +1,11 @@
 import Dexie from 'dexie';
 
 // Declare Database 本地数据库，这是简单使用增删改查例子，并不能直接引入使用
+
+export function deleteTables() {
+    Dexie.delete('msg');
+    Dexie.delete('addressBookBeg');
+}
 /* 
  *增加联系人
  *params: obj value
@@ -83,7 +88,7 @@ export function updateAddressBookBeg(id, status) {
  *params: obj value
  *return bool
  */
-export function addRoomMsg(value) {
+export function addLocalRoomMsg(value) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
@@ -139,7 +144,7 @@ export function getRoomMsg(room_uuid, page, per_page) {
  *@param data
  *return bool
  */
-export function updateRoomMsg(data) {
+export function updateLocalRoomMsg(data) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段

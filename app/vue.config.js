@@ -1,5 +1,5 @@
 module.exports = {
-  baseUrl: process.env.NODE_ENV === "production" ? "./" : "/",
+  baseUrl: process.env.NODE_ENV === "production" ? "./" : "./",
   // outputDir: 在npm run build时 生成文件的目录 type:string, default:'dist'
   outputDir: 'wep',
   lintOnSave: false,
@@ -20,5 +20,9 @@ module.exports = {
         target: "<other_url>"
       }
     } // 配置多个代理
+  },
+  transpileDependencies: ['webpack-dev-server/client'],
+  chainWebpack: config => {
+    config.entry.app = ['babel-polyfill', './src/main.js'];
   }
 };

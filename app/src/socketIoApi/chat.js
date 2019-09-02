@@ -2,8 +2,8 @@ import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
 import store from '../store'
 import utils from '@/utils/utils'
-import { addRoomMsg } from "@/utils/indexedDB"
-import {roomMsgAdd } from "@/api/room"
+import { addLocalRoomMsg } from "@/utils/indexedDB"
+import {addCloudRoomMsg } from "@/api/room"
 
 /**
  * 发送聊天信息
@@ -21,10 +21,10 @@ export function chatSend(data){
     msgList = msgList.concat(msgInfo)
     store.dispatch('updateMsgList', msgList)
     if(data['data']['save_action'] == 0){
-        addRoomMsg(msgInfo)
+        addLocalRoomMsg(msgInfo)
     }else if(data['data']['save_action'] == 1){
         delete data.data.save_action;
-        roomMsgAdd(msgInfo)
+        addCloudRoomMsg(msgInfo)
     }
     return send('chat', data)
 }

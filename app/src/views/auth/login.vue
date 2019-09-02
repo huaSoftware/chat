@@ -50,7 +50,8 @@ import { login } from '@/api/user'
 import { getToken, setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
 import {setup} from '@/utils/socketio'
-import md5 from 'js-md5'
+import {deleteTables} from '@/utils/indexedDB'
+//import md5 from 'js-md5'
 export default {
     components: { CrossLine },
     data() {
@@ -105,17 +106,18 @@ export default {
         //根据错误生成input状态
         validatedError(errors, this.validated_status);
         if (errors.length == 0) {
-        login(this.email, md5(this.password)).then(res=>{
-            this.password = ''
-            Toast({mes:'登录成功'})
-            //存token
-            this.$store.commit('SET_TOKEN', res.data.token)
-            setToken('token',res.data.token)
-            storage.set('user',res.data.user)
-            this.$store.commit('updateUserInfo', res.data.user)
-            setup()
-            this.$router.push({name:'home'})
-        })
+        /*     login(this.email, md5(this.password)).then(res=>{
+                deleteTables()
+                this.password = ''
+                Toast({mes:'登录成功'})
+                //存token
+                this.$store.commit('SET_TOKEN', res.data.token)
+                setToken('token',res.data.token)
+                storage.set('user',res.data.user)
+                this.$store.commit('updateUserInfo', res.data.user)
+                setup()
+                this.$router.push({name:'home'})
+            }) */
         }
     },
     handlePasswordShow(dom) {

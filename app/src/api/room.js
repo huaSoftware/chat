@@ -27,7 +27,7 @@ export function roomMsgGet(data){
 }
 
 //添加房间聊天记录
-export function roomMsgAdd(data){
+export function addCloudRoomMsg(data){
     return request({
         url: '/api/v2/room/msg/add',
         method: 'post',
@@ -45,7 +45,7 @@ export function roomMsgDel(data){
 }
 
 //更新房间聊天记录
-export function roomMsgUpdate(data){
+export function updateCloudRoomMsg(data){
     return request({
         url: '/api/v2/room/msg/update',
         method: 'post',

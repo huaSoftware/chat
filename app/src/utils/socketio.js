@@ -3,8 +3,8 @@ import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import { addAddressBookBeg, updateRoomMsg } from "@/utils/indexedDB"
-import {roomMsgUpdate} from "@/api/room"
+import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg } from "@/utils/indexedDB"
+import {addCloudRoomMsg, updateCloudRoomMsg} from "@/api/room"
 
 /* 注册socketio */
 export function setup() {
@@ -30,10 +30,15 @@ export function setup() {
 				//console.log(index);//未找到索引说明是他人发送的消息
 				if(typeof index !== 'undefined'){
 					msgList[index]['send_status'] = store.getters.SUCCESS
+					//他人发送的需要根据设置的房间状态去同步聊天数据
+					if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+						addLocalRoomMsg(msgList[index])
+					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
+						addCloudRoomMsg(msgList[index])
+					}
 				}else{
 					msgList = msgList.concat(data)
 				}
-				//console.log(data)
 				store.dispatch('updateMsgList', msgList)
 				let reqData = {
 					room_uuid :data['room_uuid'],
@@ -41,10 +46,9 @@ export function setup() {
 					send_status: store.getters.SUCCESS
 				}
 				if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
-
-					updateRoomMsg(reqData)
+					updateLocalRoomMsg(reqData)
 				}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
-					roomMsgUpdate(reqData)
+					updateCloudRoomMsg(reqData)
 				}
 	
 			})

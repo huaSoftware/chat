@@ -23,6 +23,7 @@
 <script>
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
+import {deleteTables} from '@/utils/indexedDB'
 import { mapGetters} from 'vuex'
 import {setDown} from '@/utils/socketio'
 import {clearData} from '@/utils/auth'
@@ -50,6 +51,7 @@ export default {
         handleExit(){
             clearData()
             setDown()
+            deleteTables()
             setTimeout(() => {
                 this.$router.push({ name: "authLogin" });
             }, 100);

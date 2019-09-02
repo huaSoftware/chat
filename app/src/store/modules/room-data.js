@@ -3,7 +3,7 @@
  * 时间：2019-03-15
  * 聊天数据临时管理
  */
-import { getRoomMsg, addRoomMsg } from "@/utils/indexedDB"
+import { getRoomMsg, addLocalRoomMsg } from "@/utils/indexedDB"
 import utils from '@/utils/utils'
 export default {
     state: {
@@ -100,7 +100,7 @@ export default {
                                 user_id:item.users.id,
                                 room_uuid:item.room_uuid
                             }
-                            addRoomMsg(msgData)
+                            addLocalRoomMsg(msgData)
                         }
                     })
                 }
@@ -130,7 +130,7 @@ export default {
                                 user_id:item.users.id,
                                 room_uuid:item.room_uuid
                             }
-                            addRoomMsg(msgData)
+                            addLocalRoomMsg(msgData)
                             unread_number = unread_number+item.unread_number
                         }
                     })
