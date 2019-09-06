@@ -1,15 +1,16 @@
+/*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
+import 'babel-polyfill'
+import promise from 'es6-promise'
+promise.polyfill()
+ 
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router/index";
 import store from "./store/index";
 
 Vue.config.productionTip = false;
-import '@babel/polyfill';
-import Es6Promise from 'es6-promise'
-Es6Promise.polyfill()
-/*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
-/* import "babel-polyfill"
-require('es6-promise').polyfill(); */
+Vue.config.devtools = process.env.NODE_ENV !== "production";
+
 //重置css
 import "@/assets/scss/reset.scss"
 
@@ -22,7 +23,7 @@ import animate from "animate.css";
 Vue.use(animate);
 
 //图标问题直接修改源码rem.css ttf
-import YDUI from "vue-ydui"; /* 相当于import YDUI from 'vue-ydui/ydui.rem.js' */
+import YDUI from "vue-ydui";
 import "vue-ydui/dist/ydui.rem.css";
 Vue.use(YDUI);
 

@@ -49,7 +49,7 @@ export default {
   name: "app",
   created() {
     //刷新回首页
-    /* this.$router.push('/');
+    this.$router.push('/');
     utils.h5Plus.bindPhysicsBack(null)
     //获取html节点的字体大小
     this.setHtmlFontSizeToVuex()
@@ -71,7 +71,7 @@ export default {
           }
 				}
 			});
-    } */
+    }
   },
   mounted() {
   },

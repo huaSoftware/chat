@@ -117,7 +117,7 @@ import { register } from '@/api/user'
 import {uploadBase64} from '@/api/common'
 import { setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
-//import md5 from 'js-md5'
+import md5 from 'js-md5'
 import { VueCropper } from "vue-cropper"
 import {deleteTables} from '@/utils/indexedDB'
 import {setup} from '@/utils/socketio'
@@ -221,7 +221,7 @@ export default {
             //根据错误生成input状态
             validatedError(errors, this.validated_status);
             if (errors.length == 0) {
-                /* let reqData = {nickName: this.nickName, email: this.email, password: md5(this.password), headImg: this.headImg}
+                let reqData = {nickName: this.nickName, email: this.email, password: md5(this.password), headImg: this.headImg}
                 register(reqData).then(res=>{
                     deleteTables()
                     this.password = ''
@@ -233,7 +233,7 @@ export default {
                     this.$store.commit('updateUserInfo', res.data.user)
                     setup()
                     this.$router.push('/home')
-                }) */
+                })
             }
         },
         handlePasswordShow(dom) {

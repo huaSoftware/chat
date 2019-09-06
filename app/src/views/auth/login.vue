@@ -36,9 +36,6 @@
         </form>
         <yd-button class="primary_bk" size="large"  color="#FFF" @click.native="handleLogin">一键登录</yd-button>
         <router-link :to="{name: 'authRegister'}" class="right">快速注册</router-link>
-        <div id="bottom_login" style="width:100%;height:50px;">
-            <span v-if="fingerpringStatus == '1'" @tap="handleFingerpring" style="margin-right:15px;color: #666666;font-size: 12px;margin-bottom: 10px;float: right;">指纹登录</span>
-        </div>
     </div>
 </template>
 <script>
@@ -47,16 +44,15 @@ import utils from '@/utils/utils'
 import { allvalidated, validatedError } from "@/utils/validator"
 import CrossLine from '@/components/cross-line/cross-line'
 import { login } from '@/api/user'
-import { getToken, setToken } from '@/utils/auth'
+import { setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
 import {setup} from '@/utils/socketio'
 import {deleteTables} from '@/utils/indexedDB'
-//import md5 from 'js-md5'
+import md5 from 'js-md5'
 export default {
     components: { CrossLine },
     data() {
     return {
-        fingerpringStatus: false,
         email: "",
         password: "",
         confirm_password: "",
@@ -83,9 +79,6 @@ export default {
     },
     created() {
         window.physicsBackRouter = null
-        if(getToken && storage.get('fingerprint')){
-            this.fingerpringStatus = true
-        }
     },
     mounted() {
     /*     this.$nextTick(function () {
@@ -106,7 +99,7 @@ export default {
         //根据错误生成input状态
         validatedError(errors, this.validated_status);
         if (errors.length == 0) {
-        /*     login(this.email, md5(this.password)).then(res=>{
+            login(this.email, md5(this.password)).then(res=>{
                 deleteTables()
                 this.password = ''
                 Toast({mes:'登录成功'})
@@ -117,7 +110,7 @@ export default {
                 this.$store.commit('updateUserInfo', res.data.user)
                 setup()
                 this.$router.push({name:'home'})
-            }) */
+            })
         }
     },
     handlePasswordShow(dom) {

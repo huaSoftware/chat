@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-08-16 14:37:37
+ * @LastEditTime: 2019-09-03 17:11:42
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -409,7 +409,7 @@ export default {
       this.content = `${this.content}<img src="${src}">`
     },
     amrPlay(url, index) {
-      let that = this;
+      /* let that = this;
       Vue.set(this.data[index].data, "status", true);
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
@@ -418,7 +418,7 @@ export default {
       });
       amr.onEnded(function() {
         Vue.set(that.data[index].data, "status", false);
-      });
+      }); */
     },
     recReqImgData(value){
       this.reqImgData.imgDatas = value;
