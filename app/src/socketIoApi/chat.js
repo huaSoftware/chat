@@ -16,7 +16,7 @@ export function chatSend(data){
     msgInfo['name'] = userInfo['nick_name']
     msgInfo['user_id'] =  userInfo['id']
     msgInfo['head_img'] = userInfo['head_img']
-    msgInfo['created_at'] = parseInt(new Date().getTime())
+    msgInfo['created_at'] = parseInt(new Date().getTime()/1000)
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
     msgList = msgList.concat(msgInfo)
     store.dispatch('updateMsgList', msgList)

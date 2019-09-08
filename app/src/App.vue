@@ -86,7 +86,7 @@ export default {
       if(path === -1){
         history.go(-1)
       }else{
-        this.$router.push({name: path})
+        this.$router.push({name: path}).catch(err => { console.log(err) })
       }
     },
     goHrefByDefPath(){
@@ -97,7 +97,7 @@ export default {
         return 
       }
       else{
-        this.$router.push({name: path})
+        this.$router.push({name: path}).catch(err => { console.log(err) })
       }
     },
     setHtmlFontSizeToVuex(){

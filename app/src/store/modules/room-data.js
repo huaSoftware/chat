@@ -3,8 +3,8 @@
  * 时间：2019-03-15
  * 聊天数据临时管理
  */
-import { getRoomMsg, addLocalRoomMsg } from "@/utils/indexedDB"
-import utils from '@/utils/utils'
+import { addLocalRoomMsg } from "@/utils/indexedDB"
+import {addCloudRoomMsg } from "@/api/room"
 export default {
     state: {
         currentRoomUuid: '',//当前房间号
@@ -82,29 +82,47 @@ export default {
             state.roomList = roomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
+            let type = 1
+            console.log(roomList)
             roomList.forEach((item)=>{
+                if(item.room.last_msg.indexOf("preview") != -1 ){
+					type = 1
+				}
+				if(item.room.last_msg.indexOf("<img") != -1 ){
+					type = 1
+				}
                 if(item.save_action == 0){
-                    //读取最近10条进行对比,不存在则添加
-                    getRoomMsg(item.room_uuid,1, 10).then(res => {
-                        let index = utils.arr.getIndexByTime(item['created_at'], res)
-                        if(typeof index == 'undefined' && item.room.last_msg !== ''){
-                            let msgData = {
-                                msg:item.room.last_msg,
-                                created_at:item.created_at,
-                                head_img:item.users.head_img,
-                                name:item.users.nick_name,
-                                id:item.id,
-                                save_action:item.save_action,
-                                send_status:1,
-                                type:item.users.nick_name,
-                                user_id:item.users.id,
-                                room_uuid:item.room_uuid
-                            }
-                            addLocalRoomMsg(msgData)
-                        }
-                    })
+                    let msgData = {
+                        msg:item.room.last_msg,
+                        created_at:item.room.updated_at,
+                        head_img:item.users.head_img,
+                        name:item.users.nick_name,
+                        //id:item.id,
+                        //save_action:item.save_action,
+                        send_status:1,
+                        type:type,
+                        user_id:item.users.id,
+                        room_uuid:item.room_uuid
+                    }
+                    addLocalRoomMsg(msgData)
+                }else if(item.save_action == 1){
+                    let msgData = {
+                        msg:item.room.last_msg,
+                        created_at:item.room.updated_at,
+                        head_img:item.users.head_img,
+                        name:item.users.nick_name,
+                        //id:item.id,
+                        //save_action:item.save_action,
+                        send_status:1,
+                        type:type,
+                        user_id:item.users.id,
+                        room_uuid:item.room_uuid
+                    }
+                    addCloudRoomMsg(msgData)
                 }
-                unread_number = unread_number+item.unread_number
+                if(item.is_alert){
+                    unread_number = unread_number+item.unread_number
+                }
             })
             state.msgAlertNumber = unread_number
         },
@@ -112,28 +130,45 @@ export default {
             state.groupRoomList = groupRoomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
+            let type = 1
             groupRoomList.forEach((item)=>{
+                if(item.room.last_msg.indexOf("preview") != -1 ){
+					type = 1
+				}
+				if(item.room.last_msg.indexOf("<img") != -1 ){
+					type = 1
+				}
                 if(item.save_action == 0){
-                    //读取最近10条进行对比,不存在则添加
-                    getRoomMsg(item.room_uuid,1, 10).then(res => {
-                        let index = utils.arr.getIndexByTime(item['created_at'], res)
-                        if(typeof index == 'undefined' && item.room.last_msg !== ''){
-                            let msgData = {
-                                msg:item.room.last_msg,
-                                created_at:item.created_at,
-                                head_img:item.users.head_img,
-                                name:item.users.nick_name,
-                                id:item.id,
-                                save_action:item.save_action,
-                                send_status:1,
-                                type:item.users.nick_name,
-                                user_id:item.users.id,
-                                room_uuid:item.room_uuid
-                            }
-                            addLocalRoomMsg(msgData)
-                            unread_number = unread_number+item.unread_number
-                        }
-                    })
+                    let msgData = {
+                        msg:item.room.last_msg,
+                        created_at:item.created_at,
+                        head_img:item.users.head_img,
+                        name:item.users.nick_name,
+                        //id:item.id,
+                        //save_action:item.save_action,
+                        send_status:1,
+                        type:type,
+                        user_id:item.users.id,
+                        room_uuid:item.room_uuid
+                    }
+                    addLocalRoomMsg(msgData)      
+                }else if(item.save_action == 1){
+                    let msgData = {
+                        msg:item.room.last_msg,
+                        created_at:item.created_at,
+                        head_img:item.users.head_img,
+                        name:item.users.nick_name,
+                        //id:item.id,
+                        //save_action:item.save_action,
+                        send_status:1,
+                        type:type,
+                        user_id:item.users.id,
+                        room_uuid:item.room_uuid
+                    }
+                    addCloudRoomMsg(msgData)
+                }
+                if(item.is_alert){
+                    unread_number = unread_number+item.unread_number
                 }
             })
             state.groupMsgAlertNumber = unread_number

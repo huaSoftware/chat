@@ -2,79 +2,80 @@
 <div>
     <CrossLine></CrossLine>
     <form id="register_form">
-    <div class="yd-cell-box">
-        <div class="yd-cell">
-            <div class="yd-cell-item">
-                <div class="yd-cell-left">
-                <span class="yd-cell-icon"></span> 
-                <span>头像：</span>
+        <div class="yd-cell-box">
+            <div class="yd-cell">
+                <div class="yd-cell-item">
+                    <div class="yd-cell-left">
+                    <span class="yd-cell-icon"></span> 
+                    <span>头像：</span>
+                    </div> 
+                    <div class="yd-cell-right">
+                    <div class="yd-input" style="flex-direction: row-reverse;">
+                        <vImg class="head_default" :imgUrl="headImg" v-if="headImg" @click="bindFile('header_img_file')"/>
+                        <div class="head_default" @click="bindFile('header_img_file')" v-else>上传</div>
+                    </div>
+                    <input type="file" id="header_img_file" @change="bindHeaderImg" style="display:none;">
+                    </div>
                 </div> 
-                <div class="yd-cell-right">
-                <div class="yd-input" style="flex-direction: row-reverse;">
-                    <vImg class="head_default" :imgUrl="headImg" v-if="headImg" @click="bindFile('header_img_file')"/>
-                    <div class="head_default" @click="bindFile('header_img_file')" v-else>上传</div>
-                </div>
-                <input type="file" id="header_img_file" @change="bindHeaderImg" style="display:none;">
+                <div class="yd-cell-item">
+                    <div class="yd-cell-left">
+                    <span class="yd-cell-icon"></span> 
+                    <span>昵称：</span>
+                    </div> 
+                    <div class="yd-cell-right">
+                    <div class="yd-input">
+                        <input type="text" name="nickName" v-model="nickName" placeholder="请输入昵称" autocomplete="off">
+                        <span class="yd-input-error" v-show="validated_status.nickName"></span> 
+                        <span class="yd-input-success" style="display: none;"></span> 
+                    </div>
+                    </div>
+                </div> 
+                <div class="yd-cell-item">
+                    <div class="yd-cell-left">
+                    <span class="yd-cell-icon"></span> 
+                    <span>邮箱：</span>
+                    </div> 
+                    <div class="yd-cell-right">
+                    <div class="yd-input">
+                        <input type="email" name="email" v-model="email" placeholder="请输入邮箱" autocomplete="off">
+                        <span class="yd-input-error" v-show="validated_status.email"></span> 
+                        <span class="yd-input-success" style="display: none;"></span> 
+                    </div>
+                    </div>
+                </div> 
+                <div class="yd-cell-item">
+                    <div class="yd-cell-left">
+                    <span class="yd-cell-icon"></span> 
+                    <span>密码：</span>
+                    </div> 
+                    <div class="yd-cell-right">
+                    <div class="yd-input">
+                        <input type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
+                        <span class="yd-input-error" v-show="validated_status.password"></span>  
+                        <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handlePasswordShow($event.target, passwordShow)" v-show="!passwordShow"></a>
+                        <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handlePasswordShow($event.target, passwordShow)" v-show="passwordShow"></a>
+                    </div>
+                    </div>
+                </div> 
+                <div class="yd-cell-item">
+                    <div class="yd-cell-left">
+                    <span class="yd-cell-icon"></span> 
+                    <span>确认密码：</span>
+                    </div> 
+                    <div class="yd-cell-right">
+                    <div class="yd-input">
+                        <input type="password" name="confirm_password"  v-model="confirm_password" placeholder="请重复密码" autocomplete="off"> 
+                        <span class="yd-input-error" v-show="validated_status.confirm_password"></span> 
+                        <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handleConfirmPasswordShow($event.target)" v-show="!confirmPasswordShow"></a>
+                        <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handleConfirmPasswordShow($event.target)" v-show="confirmPasswordShow"></a>
+                    </div>
+                    </div>
                 </div>
             </div> 
-            <div class="yd-cell-item">
-                <div class="yd-cell-left">
-                <span class="yd-cell-icon"></span> 
-                <span>昵称：</span>
-                </div> 
-                <div class="yd-cell-right">
-                <div class="yd-input">
-                    <input type="text" name="nickName" v-model="nickName" placeholder="请输入昵称" autocomplete="off">
-                    <span class="yd-input-error" v-show="validated_status.nickName"></span> 
-                    <span class="yd-input-success" style="display: none;"></span> 
-                </div>
-                </div>
-            </div> 
-            <div class="yd-cell-item">
-                <div class="yd-cell-left">
-                <span class="yd-cell-icon"></span> 
-                <span>邮箱：</span>
-                </div> 
-                <div class="yd-cell-right">
-                <div class="yd-input">
-                    <input type="email" name="email" v-model="email" placeholder="请输入邮箱" autocomplete="off">
-                    <span class="yd-input-error" v-show="validated_status.email"></span> 
-                    <span class="yd-input-success" style="display: none;"></span> 
-                </div>
-                </div>
-            </div> 
-            <div class="yd-cell-item">
-                <div class="yd-cell-left">
-                <span class="yd-cell-icon"></span> 
-                <span>密码：</span>
-                </div> 
-                <div class="yd-cell-right">
-                <div class="yd-input">
-                    <input type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
-                    <span class="yd-input-error" v-show="validated_status.password"></span>  
-                    <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handlePasswordShow($event.target, passwordShow)" v-show="!passwordShow"></a>
-                    <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handlePasswordShow($event.target, passwordShow)" v-show="passwordShow"></a>
-                </div>
-                </div>
-            </div> 
-            <div class="yd-cell-item">
-                <div class="yd-cell-left">
-                <span class="yd-cell-icon"></span> 
-                <span>确认密码：</span>
-                </div> 
-                <div class="yd-cell-right">
-                <div class="yd-input">
-                    <input type="password" name="confirm_password"  v-model="confirm_password" placeholder="请重复密码" autocomplete="off"> 
-                    <span class="yd-input-error" v-show="validated_status.confirm_password"></span> 
-                    <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handleConfirmPasswordShow($event.target)" v-show="!confirmPasswordShow"></a>
-                    <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handleConfirmPasswordShow($event.target)" v-show="confirmPasswordShow"></a>
-                </div>
-                </div>
-            </div>
-        </div> 
-    </div>
+        </div>
     </form>
     <yd-button class="primary_bk" size="large"  color="#FFF" @click.native="handleRegister">一键注册</yd-button>
+    <router-link :to="{name: 'authLogin'}" class="right">用户登录</router-link>
     <!-- 头像裁剪图 -->
     <header v-if="cropperShow" style="    background-color: rgb(255, 255, 255);
     color: rgb(228, 228, 228);
@@ -260,18 +261,25 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    @import '@/assets/scss/base.scss';
-    @import '@/assets/scss/public.scss';
-    .head_default{
-        width:50px;
-        height:50px;
-        border-radius: 25px;
-        background:$color-primary;
-        line-height: 50px;
-        text-align:center;
-        color:#fff;
-        margin-top:10px;
-        margin-bottom:10px;
-    }
+@import '@/assets/scss/base.scss';
+@import '@/assets/scss/public.scss';
+.head_default{
+    width:50px;
+    height:50px;
+    border-radius: 25px;
+    background:$color-primary;
+    line-height: 50px;
+    text-align:center;
+    color:#fff;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.right{
+    width:100%;
+    text-align: right;
+    padding-right: 0.3rem;
+    margin-top: 0.2rem;
+    display: inline-block;
+}
 </style>
         

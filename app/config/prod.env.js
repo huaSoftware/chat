@@ -6,7 +6,6 @@
  */
 module.exports = {
   NODE_ENV: '"production"',
-  BASE_API: '"http://212.64.83.121:500"',
   VUE_APP_CLIENT_API: '"http://212.64.83.121:500"',
   VUE_APP_CLIENT_SOCKET:'"http://212.64.83.121:501"'
 }

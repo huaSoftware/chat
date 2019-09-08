@@ -102,8 +102,8 @@ import MescrollVue from "mescroll.js/mescroll.vue"
 import { uploadFile } from "@/api/common";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
-import { getRoomMsg } from "@/utils/indexedDB";
-import {roomMsgGet} from '@/api/room'
+import { getLocalRoomMsg } from "@/utils/indexedDB";
+import {getCloudRoomMsg} from '@/api/room'
 import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
@@ -221,7 +221,7 @@ export default {
         this.lockDown = true;
       }
       if(this.currentRoomSaveAction == 0){
-        getRoomMsg(
+        getLocalRoomMsg(
           this.currentRoomUuid,
           this.mescrollDown.page.num,
           this.mescrollDown.page.size
@@ -240,7 +240,7 @@ export default {
           });
         });
       }else if(this.currentRoomSaveAction == 1){
-        roomMsgGet(
+        getCloudRoomMsg(
           {room_uuid:this.currentRoomUuid,
           page_no:this.mescrollDown.page.num,
           per_page:this.mescrollDown.page.size}

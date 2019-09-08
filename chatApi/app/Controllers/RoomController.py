@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-28 12:03:28
+@LastEditTime: 2019-09-08 14:13:38
 '''
 from app import app
 from flask import request
@@ -87,7 +87,9 @@ def addRoomMsg(user_info, params):
         :param dict params
         :return dict 
     """
-    Msg().add(params)
+    res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at']})
+    if res == None:
+        Msg().add(params)
     return BaseController().successData()
 
 @app.route('/api/v2/room/msg/del', methods=['POST'])

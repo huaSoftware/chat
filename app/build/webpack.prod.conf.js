@@ -141,5 +141,12 @@ if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
-
+new webpack.optimize.UglifyJsPlugin({
+  compress: {
+    warnings: false,
+    drop_debugger: true,
+    drop_console: true
+  },
+  sourceMap: true
+}),
 module.exports = webpackConfig

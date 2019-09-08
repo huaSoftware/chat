@@ -95,14 +95,14 @@ export function addLocalRoomMsg(value) {
     db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
     db.transaction('rw', db.roomMsg,  async() => {
-        //if (await db.roomMsg.where({'user_id': value.user_id}).count() === 0) {
         value['uuid']= value['room_uuid'] + value['created_at']
-        await db.roomMsg.add(value);
-        //}
+        if (await db.roomMsg.where({'uuid': value['uuid']}).count() === 0) {
+            await db.roomMsg.add(value);
+        }
 
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
     return true
@@ -112,7 +112,7 @@ export function addLocalRoomMsg(value) {
  *读聊天记录
  *return bool
  */
-export function getRoomMsg(room_uuid, page, per_page) {
+export function getLocalRoomMsg(room_uuid, page, per_page) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段

@@ -26,8 +26,8 @@
 import { mapGetters, mapMutations} from "vuex"
 import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
-import {getRoomMsg} from "@/utils/indexedDB"
-import {roomMsgGet} from '@/api/room'
+import {getLocalRoomMsg} from "@/utils/indexedDB"
+import {getCloudRoomMsg} from '@/api/room'
 import {joinChatSend} from '@/socketIoApi/chat'
 export default {
   components: {
@@ -94,7 +94,7 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
         if(this.currentRoomSaveAction == 0){
-          getRoomMsg(this.currentRoomUuid,page.num, page.size)
+          getLocalRoomMsg(this.currentRoomUuid,page.num, page.size)
               .then(res => {
               // 请求的列表数据
               // 如果是第一页需手动制空列表
@@ -111,7 +111,7 @@ export default {
           mescroll.endErr();
           });
         }else if(this.currentRoomSaveAction == 1){
-          roomMsgGet({room_uuid:this.currentRoomUuid,page_no:page.num, per_page:page.size})
+          getCloudRoomMsg({room_uuid:this.currentRoomUuid,page_no:page.num, per_page:page.size})
               .then(res => {
               // 请求的列表数据
               // 如果是第一页需手动制空列表

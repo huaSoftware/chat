@@ -28,8 +28,7 @@
 				<div class="yd-list-img"><vImg :imgUrl="item.users.head_img"/></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
-						<span class="title-left">{{item.users.nick_name}}</span>
-						<span class="title-right">{{formatTime(item.room.updated_at)}}</span>
+						<span class="title-left">{{item.users.nick_name}}</span><span class="title-right">{{formatTime(item.room.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
 						<div><span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span></div>
@@ -45,8 +44,7 @@
 				<div class="yd-list-img"><img src="@/assets/img/default.jpg"/></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
-						<span class="title-left">{{item.room.name}}</span>
-						<span class="title-right">{{formatTime(item.room.updated_at)}}</span>
+						<span class="title-left">{{item.room.name}}</span><span class="title-right">{{formatTime(item.room.updated_at)}}</span>
 					</div>
 					<div class="yd-list-other">
 						<div><span class="demo-list-price" v-html="formatLastMsg(item.room.last_msg)"></span></div>

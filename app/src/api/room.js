@@ -18,7 +18,7 @@ export function roomDel(data){
 }
 
 //获取房间聊天记录
-export function roomMsgGet(data){
+export function getCloudRoomMsg(data){
     return request({
         url: '/api/v2/room/msg/get',
         method: 'post',

@@ -31,6 +31,8 @@ export function setup() {
 				if(typeof index !== 'undefined'){
 					msgList[index]['send_status'] = store.getters.SUCCESS
 					//他人发送的需要根据设置的房间状态去同步聊天数据
+					delete msgList[index]['id']
+					console.log(msgList[index])
 					if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
 						addLocalRoomMsg(msgList[index])
 					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
