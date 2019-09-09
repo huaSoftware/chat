@@ -26,6 +26,7 @@
 </template>
 <script>
 import vImg from '@/components/v-img/v-img'
+import {Alert} from "vue-ydui/dist/lib.rem/dialog"
 export default {
     components: {
         vImg
@@ -68,7 +69,7 @@ export default {
                 this.getCurrentPosition();
                 } else {
                 setTimeout(() => {
-                    Alert({ mes: "该定位只能在app内使用" });
+                    Alert({ mes: "该功能只能在app内使用" });
                 }, 300);
                 }
             }

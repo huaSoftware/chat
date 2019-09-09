@@ -192,7 +192,7 @@ export function send(method, data, type = 'room') {
 						router.push({
 							name: 'room',
 							query: queryData
-						})
+						}).catch(()=>{})
 					}
 				}).catch(e=>{
 					//服务器出错

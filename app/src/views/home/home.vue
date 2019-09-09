@@ -152,6 +152,9 @@
 				if(last_msg.indexOf("<img") != -1 ){
 					return '[图片]'
 				}
+				if(last_msg.indexOf("download") != -1 ){
+					return '[文件]'
+				}
 				return last_msg
 			}
 		},

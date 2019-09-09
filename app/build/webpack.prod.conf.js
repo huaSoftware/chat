@@ -148,5 +148,5 @@ new webpack.optimize.UglifyJsPlugin({
     drop_console: true
   },
   sourceMap: true
-}),
+})
 module.exports = webpackConfig

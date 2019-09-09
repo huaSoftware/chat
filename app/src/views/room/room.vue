@@ -266,7 +266,7 @@ export default {
       data.append("file", file);
       uploadFile(data).then(res => {
         let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
-        let file = `<a onclick="downLoad('${file_path}','${res.data.name}')">${res.data.name}</a>`;
+        let file = `<a href="${file_path}" download="${res.data.name.split('.')[0]}">${res.data.name.split('.')[0]}[文件]</a>`;
         chatSend({
           data: {
             msg: file,

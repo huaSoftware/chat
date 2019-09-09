@@ -84,20 +84,22 @@ export default {
     goHref(){
       let path = router.currentRoute.meta.backPath
       if(path === -1){
-        history.go(-1)
+        this.$router.back()
+        return
       }else{
-        this.$router.push({name: path}).catch(err => { console.log(err) })
+        this.$router.push({name: path})
       }
     },
     goHrefByDefPath(){
       let path = router.currentRoute.meta.defPath
       if(path === -1){
-        history.go(-1)
+        this.$router.go(-1)
       }else if(path === null){
         return 
       }
       else{
-        this.$router.push({name: path}).catch(err => { console.log(err) })
+        console.log(path)
+        this.$router.push({name: path})
       }
     },
     setHtmlFontSizeToVuex(){

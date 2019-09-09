@@ -1,5 +1,6 @@
 //下载文件
 function downLoad(url, saveName) {
+    alert(1);
     if (typeof url == 'object' && url instanceof Blob) {
         url = URL.createObjectURL(url); // 创建blob地址
     }
