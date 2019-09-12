@@ -21,7 +21,8 @@
         <CrossLine ></CrossLine>
         <!-- 功能区 -->
         <CrossItem name="添加好友记录"  @click.native="$router.push({name: 'newFriend'})">
-            <span class="icon-custom-jia font18 icon_style"></span>
+            <yd-badge   type="danger" v-if="newFriendAlertNumber > 0">{{newFriendAlertNumber}}</yd-badge>
+            <span class="icon-custom-jia font18 icon_style" v-else></span>
         </CrossItem>
         <!-- <CrossItem name="收藏" :borderBot="false">
             <span class="icon-custom-guanzhu2 font18 icon_style"></span>
@@ -48,6 +49,11 @@ export default {
 
             }
         }
+    },
+    computed: {
+        ...mapGetters([
+        "newFriendAlertNumber"
+        ])
     },
     methods: {
         init(){

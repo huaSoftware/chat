@@ -1,11 +1,10 @@
 <template>
     <div class="edit-div"
-         v-html="innerText"
-         :contenteditable="canEdit"
-         @focus="isLocked = true"
-         @blur="isLocked = false"
-         @input="changeText"
-        
+        v-html="innerText"
+        :contenteditable="canEdit"
+        @focus="isLocked = true"
+        @blur="isLocked = false"
+        @input="changeText"
         >
     </div>
 </template>
@@ -21,6 +20,7 @@
                 type: Boolean,
                 default: true
             }
+
         },
         data(){
             return {

@@ -5,6 +5,7 @@
     <!-- 实心图标 -->
     <span class="ico" v-if="isIcon"><slot></slot></span>
     <span class="name">{{name}}</span><span class="icon-custom-you icon-right"></span>
+    <span><slot name="badge"></slot> </span>
   </div>
 </template>
 

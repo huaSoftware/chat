@@ -94,6 +94,9 @@ export function addLocalRoomMsg(value) {
     //定义字段
     db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
     //事务读写
+    if(value['msg'] == ''){
+        return true
+    }
     db.transaction('rw', db.roomMsg,  async() => {
         value['uuid']= value['room_uuid'] + value['created_at']
         if (await db.roomMsg.where({'uuid': value['uuid']}).count() === 0) {

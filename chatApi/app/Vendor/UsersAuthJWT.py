@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-27 13:41:50
+@LastEditTime: 2019-09-11 15:07:54
 '''
 from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
@@ -64,6 +64,8 @@ class UsersAuthJWT():
         except jwt.ExpiredSignatureError:
             return 'Token过期'
         except jwt.InvalidTokenError:
+            return '无效Token'
+        except Exception:
             return '无效Token'
 
     @staticmethod

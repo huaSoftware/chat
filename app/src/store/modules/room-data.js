@@ -12,7 +12,8 @@ export default {
         currentRoomType:0,//房间类型
         currentRoomSaveAction: 0, //聊天记录保存方式   
         msgAlertNumber:0,//单聊消息总提醒       
-        groupMsgAlertNumber:0,//群聊天消息总提醒            
+        groupMsgAlertNumber:0,//群聊天消息总提醒 
+        newFriendAlertNumber:0,//新好友提醒           
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
         groupRoomList: [] //群聊房间数据
@@ -46,6 +47,9 @@ export default {
         groupMsgAlertNumber(state){
             return state.groupMsgAlertNumber
         },
+        newFriendAlertNumber(state){
+            return state.newFriendAlertNumber
+        },
     },
 
     actions: {
@@ -70,6 +74,9 @@ export default {
         },
         updateCurrentRoomSaveAction({commit}, currentRoomSaveAction){
             commit("updateCurrentRoomType", currentRoomSaveAction);
+        },
+        updateNewFriendAlertNumber({commit}, newFriendAlertNumber){
+            commit("updateNewFriendAlertNumber", newFriendAlertNumber);
         }
     },
 
@@ -187,6 +194,9 @@ export default {
         },
         updateMsgAlertNumber(state, msgAlertNumber){
             state.msgAlertNumber = msgAlertNumber
+        },
+        updateNewFriendAlertNumber(state, newFriendAlertNumber){
+            state.newFriendAlertNumber = newFriendAlertNumber
         }
     }
 }

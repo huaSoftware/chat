@@ -13,15 +13,12 @@
             <div class="yd-list-img"><vImg :imgUrl="item.head_img"/></div>
             <div class="yd-list-mes">
                 <div class="yd-list-title">
-                    <span class="title-left">{{item.nick_name}}</span>
-                    <span class="title-right">{{formatDate(item.updated_at)}}</span>
-                </div>
+                    <span class="title-left">{{item.nick_name}}</span><span class="title-right">{{formatDate(item.updated_at)}}</span></div>
                 <div class="yd-list-other">
                     <div><span class="demo-list-price"></span></div>
                     <div> 
                         <yd-button v-if="item.status==0" size="small" type="primary" shape="circle" @click.native="newFriendAdd(item)">接受</yd-button>
-                        <span v-else-if="item.status==1">已通过</span>
-                        <span v-else-if="item.status==2">拒绝</span>
+                        <span v-else-if="item.status==1">已通过</span><span v-else-if="item.status==2">拒绝</span>
                     </div>
                 </div>
             </div>
@@ -56,8 +53,14 @@ export default {
     methods: {
         init(){
             getAddressBookBeg().then(res=>{
-                //console.log(res)
+                let newFriendAlertNumber = 0
                 this.newFriendList = res
+                this.newFriendList.forEach((item)=>{
+                    if(item.status==0){
+                        newFriendAlertNumber++
+                    }
+                })
+                this.$store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
             })
         },
         newFriendAdd(item){
@@ -67,7 +70,14 @@ export default {
             }
             addressBookAdd(reqData).then(res=>{
                 updateAddressBookBeg(item.id, 1).then(res=>{
+                    let newFriendAlertNumber = 0
                     this.newFriendList = res
+                    this.newFriendList.forEach((item)=>{
+                    if(item.status==0){
+                            newFriendAlertNumber++
+                        }
+                    })
+                    this.$store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
                     Alert({
                         'mes': res.msg,
                         callback:()=>{

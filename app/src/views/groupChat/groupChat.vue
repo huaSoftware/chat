@@ -30,12 +30,12 @@
 		</header>
 		<!-- 头部结束 -->
         <!-- 搜索框开始 -->
-        <div class="yd-search">
+        <!-- <div class="yd-search">
             <div class="yd-search-input">
                 <form action="#" class="search-input">
                     <i class="search-icon"></i> 
                     <div class="yd-input">
-                        <vEditDiv class='input' placeholder='搜 索' v-model="keywords"></vEditDiv>
+                        <vEditDiv class='input' placeholder='搜 索' v-model="keywords" :isReadonly="true" ></vEditDiv>
                         <a href="javascript:;" tabindex="-1" class="yd-input-clear" style="display: none;"></a> 
                         <span class="yd-input-error" style="display: none;"></span> 
                         <span class="yd-input-warn" style="display: none;"></span> 
@@ -44,7 +44,7 @@
                 </form> 
                 <a href="javascript:;" class="cancel-text" style="display: none;">取消</a>
             </div>
-        </div>
+        </div> -->
         <!-- 搜索框结束 -->
         <div class="address-book-list">  
             <dl v-for = "num in 26" :key="num">
@@ -120,6 +120,12 @@ export default {
             ]
         }
     },
+    computed: {
+        ...mapGetters([
+            "LOCALSAVE",
+            "GROUPCHAT"
+        ])
+    },
     methods: {
         init(){
             addressBookGet(this.reqData).then(res=>{
@@ -133,17 +139,6 @@ export default {
         handleScrollToRef(value){
             document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop
         },
-        handleScroll () {
-        },
-        handleJoinRoom(item){
-            joinChatSend({
-                name: item.users.nick_name,
-                room_uuid:item.room_uuid,
-                type:item.room.type,
-                save_action:item.save_action
-               
-            })
-        },
         handleSubmit(){
             let user = storage.get('user')
             let ids = []
@@ -154,10 +149,12 @@ export default {
             })
             groupChatCreate({ids:ids}).then(res=>{      
                 const room_uuid = res.data.room_uuid
+                const name = res.data.name
                 joinChatSend({
-                    type: 1,
+                    name: name,
+                    type: this.GROUPCHAT,
                     room_uuid:room_uuid,
-                    save_action:item.save_action
+                    save_action:this.LOCALSAVE
                 })
             })
         }
@@ -173,14 +170,14 @@ export default {
         }
     },
     watch:{
-        'checkedUsers'(){
+       /*  'checkedUsers'(){
             this.keywords = ''
             //console.log(this.checkedUsers)
             this.checkedUsers.forEach((key, index)=>{
                 this.keywords = this.keywords + '<img height="20" src="'+JSON.parse(key)['head_img']+'"/>'
             })
-        },
-        keywords(newValue, preValue){
+        }, */
+        /* keywords(newValue, preValue){
             let rawArr = []
             let imgArr = newValue.match(/<img.+?>/ig)?newValue.match(/<img.+?>/ig):[]
             this.checkedUsers.forEach((key, index)=>{
@@ -192,13 +189,16 @@ export default {
                 })
             })
             this.checkedUsers = rawArr
-        }
+        } */
     }
 }
 </script>
 <style lang="scss" scoped>
 @import '@/assets/scss/base.scss';
 @import '@/assets/scss/public.scss';
+.content{
+    margin-top:1.4rem;
+}
 .activeaddress-book {
     color:red!important;
 }
@@ -312,5 +312,10 @@ dl {
     height:100%;
     line-height:100%;
     padding:8px;
+}
+.yd-navbar{
+    position:fixed;
+    top:0px;
+    width:100%;
 }
 </style>

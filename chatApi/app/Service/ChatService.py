@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-08 08:54:43
+@LastEditTime: 2019-09-11 19:05:21
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -106,5 +106,5 @@ class ChatService():
             'user_id': user_info['data']['id']
         }
         room = Room().addByClass(room_data)
-        return {'room_uuid' : room_uuid}
+        return {'room_uuid' : room_uuid,'name':name.strip(',')}
     

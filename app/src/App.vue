@@ -30,6 +30,7 @@
 			<yd-tabbar-item :title="item.name" type="link" :link="item.router" v-for="(item, index) in footerMenu" :key="index" :class="$store.state.appData.navbarTitle == item.name? 'active': ''">
         <yd-icon :name="$store.state.appData.navbarTitle == item.name? item.iconActive: item.icon" custom slot="icon" size="0.54rem"></yd-icon>
         <yd-badge  slot="badge" type="danger" v-if="item.name=='消息' && (msgAlertNumber+groupMsgAlertNumber) > 0">{{msgAlertNumber+groupMsgAlertNumber}}</yd-badge>
+        <yd-badge  slot="badge" type="danger" v-if="item.name=='我的' && newFriendAlertNumber > 0">{{newFriendAlertNumber}}</yd-badge>
       </yd-tabbar-item>
     	</yd-tabbar>
     </yd-layout>
@@ -116,7 +117,8 @@ export default {
       "currentRoomType",
       "currentRoomSaveAction",
       "msgAlertNumber",
-      "groupMsgAlertNumber"
+      "groupMsgAlertNumber",
+      "newFriendAlertNumber"
     ]),
     ...mapState([
       'user'
