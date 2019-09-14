@@ -3,8 +3,9 @@ import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg } from "@/utils/indexedDB"
+import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg } from "@/utils/indexedDB"
 import {addCloudRoomMsg, updateCloudRoomMsg} from "@/api/room"
+import {addressBookBegCacheDel} from '@/api/addressBook'
 
 /* 注册socketio */
 export function setup() {
@@ -78,16 +79,18 @@ export function setup() {
 					// 增加状态,0申请，1通过，2拒绝
 					data['data']['status'] = 0
 					Toast({ mes: `${data.data.nick_name}申请加你好友` });
-					addAddressBookBeg(data['data']).then(res=>{
-						getAddressBookBeg().then(res=>{
-							let newFriendAlertNumber = 0
-							res.forEach((item)=>{
-								if(item.status==0){
-									newFriendAlertNumber++
-								}
-							})
-							store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+					//接收到后删除缓存
+					addressBookBegCacheDel()
+					addAddressBookBeg(data['data'])
+					getAddressBookBeg().then(res=>{
+						console.log(res)
+						let newFriendAlertNumber = 0
+						res.forEach((item)=>{
+							if(item.status==0){
+								newFriendAlertNumber++
+							}
 						})
+						store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
 					})
 					
 				}
@@ -96,6 +99,8 @@ export function setup() {
 				}
 				if(data['action'] == 'beg_add_success' ){
 					Toast({ mes: '对方已同意添加好友' });
+					console.log(data['focused_user_id'])
+					updateAddressBookBeg(data['focused_user_id'], 1)
 				}
 			})
 		});

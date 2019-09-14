@@ -36,6 +36,7 @@
 import vTitle from '@/components/v-title/v-title'
 import vImg from '@/components/v-img/v-img'
 import {getAddressBookBeg, updateAddressBookBeg} from "@/utils/indexedDB"
+import { Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import utils from '@/utils/utils'
 import storage from "@/utils/localstorage"
 import {addressBookAdd} from "@/api/addressBook"
@@ -65,11 +66,10 @@ export default {
         },
         newFriendAdd(item){
             let reqData = {
-                focused_user_id:item.user_id, 
-                be_focused_user_id: storage.get('user')['id']
+                focused_user_id:item.user_id
             }
-            addressBookAdd(reqData).then(res=>{
-                updateAddressBookBeg(item.id, 1).then(res=>{
+            addressBookAdd(reqData).then(response=>{
+                updateAddressBookBeg(item.user_id, 1).then(res=>{
                     let newFriendAlertNumber = 0
                     this.newFriendList = res
                     this.newFriendList.forEach((item)=>{
@@ -79,7 +79,7 @@ export default {
                     })
                     this.$store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
                     Alert({
-                        'mes': res.msg,
+                        'mes': response.msg,
                         callback:()=>{
                             this.$router.push({name:'home'})
                         }

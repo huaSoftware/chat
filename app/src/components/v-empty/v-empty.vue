@@ -28,7 +28,7 @@ export default {
   destroyed () {}
 }
 </script>
-<style>
+<style scoped>
 
 /* 页面为空时 */
 .empty {

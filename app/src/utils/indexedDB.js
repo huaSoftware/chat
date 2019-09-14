@@ -59,7 +59,7 @@ export function getAddressBookBeg() {
  *更新联系人
  *return bool
  */
-export function updateAddressBookBeg(id, status) {
+export function updateAddressBookBeg(user_id, status) {
     //申明数据库
     const db = new Dexie("addressBookBeg");
     //定义字段
@@ -69,7 +69,7 @@ export function updateAddressBookBeg(id, status) {
 
         // Make sure we have something in DB:
         //更新状态
-        let updated = db.addressBookBeg.where("id").equals(id).modify({status: status});
+        let updated = db.addressBookBeg.where("user_id").equals(user_id).modify({status: status});
         if (updated){
             let data =   await db.addressBookBeg.toArray()
             return data   

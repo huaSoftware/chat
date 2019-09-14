@@ -40,7 +40,8 @@
 import { mapState, mapGetters, mapMutations} from "vuex";
 import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {addAddressBookBeg, updateMsg} from "@/utils/indexedDB"
+import {addressBookBegCache} from '@/api/addressBook'
+import {addAddressBookBeg, getAddressBookBeg,updateMsg} from "@/utils/indexedDB"
 import {setDown, setup} from '@/utils/socketio'
 import utils from '@/utils/utils'
 import router from './router'
@@ -71,7 +72,30 @@ export default {
             console.log('还没有到断开的时间')
           }
 				}
-			});
+      });
+      addressBookBegCache().then(res=>{
+        let data = res.data
+        if(res.data){
+          // 复制原来的值
+          data['data']['user_id'] = data['data']['id'];
+          // 删除原来的键
+          delete data['data']['id'];
+          // 增加状态,0申请，1通过，2拒绝
+          data['data']['status'] = 0
+          Toast({ mes: `${data.data.nick_name}申请加你好友` });
+          addAddressBookBeg(data['data']).then(res=>{
+            getAddressBookBeg().then(res=>{
+              let newFriendAlertNumber = 0
+              res.forEach((item)=>{
+                if(item.status==0){
+                  newFriendAlertNumber++
+                }
+              })
+              store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+            })
+          })
+        }
+      })
     }
   },
   mounted() {

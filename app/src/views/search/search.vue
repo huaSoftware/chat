@@ -50,7 +50,7 @@
             handleAddAddressBook(item){
                 //发送好友申请
                 Loading.open('发送中')
-                addressBookBeg({be_focused_user_id: item.id, focused_user_id: storage.get('user')['id']}).then(res=>{
+                addressBookBeg({be_focused_user_id: item.id}).then(res=>{
                     setTimeout(()=>{
                         Loading.close()
                         Toast({mes:res.msg, timeout: 3000,icon:"success"})

@@ -3,7 +3,7 @@
 @Date: 2019-07-23 15:36:31
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-24 10:00:28
+@LastEditTime: 2019-09-14 12:32:01
 '''
 from app.Models.Model import HtLog
 from app import dBSession
@@ -30,9 +30,9 @@ class LogService:
         try:
             log = HtLog(**data)
             dBSession.add(log)
-            dBSession.flush()
-            id = log.id
+            #dBSession.flush()
             dBSession.commit()
+            id = log.id
             return id
         except  Exception as e:
             dBSession.rollback()  

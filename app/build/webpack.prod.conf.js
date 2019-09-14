@@ -118,7 +118,16 @@ const webpackConfig = merge(baseWebpackConfig, {
     ])
   ]
 })
-
+webpackConfig.plugins.push(
+  //去除console
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false,
+      drop_debugger: true,
+      drop_console: true
+    }
+  })
+)
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
@@ -141,12 +150,4 @@ if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
-new webpack.optimize.UglifyJsPlugin({
-  compress: {
-    warnings: false,
-    drop_debugger: true,
-    drop_console: true
-  },
-  sourceMap: true
-})
 module.exports = webpackConfig

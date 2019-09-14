@@ -26,3 +26,19 @@ export function addressBookBeg(data){
         data
     })
 }
+
+//获取请求好友离线缓存
+export function addressBookBegCache(){
+    return request({
+        url: '/api/v2/addressBook/beg/cache',
+        method: 'get'
+    })
+}
+
+//删除请求好友离线缓存
+export function addressBookBegCacheDel(){
+    return request({
+        url: '/api/v2/addressBoos/beg/del',
+        method: 'get'
+    })
+}
