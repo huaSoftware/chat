@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-14 18:54:46
+@LastEditTime: 2019-09-15 20:27:05
 '''
 from app import app
 from flask import request
@@ -37,6 +37,7 @@ def roomDel(user_info, params):
     }
     roomData = Room().getOne(filters)
     if roomData['type'] == 0:
+        address_book_data = Utils.db_l_to_d(AddressBook.get(params['room_uuid']))
         filters = {
             AddressBook.room_uuid == params['room_uuid']
         }
@@ -45,18 +46,31 @@ def roomDel(user_info, params):
             Room.room_uuid == params['room_uuid']
         }
         Room().delete(filters)
+        for item in address_book_data:
+            print('用户编号：'+str(item['be_focused_user_id']))
+            print('用户编号：'+str(item['focused_user_id']))
+            roomList = AddressBook.getRoomList(item['be_focused_user_id'])['data']
+            socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item['be_focused_user_id']))
+            roomList = AddressBook.getRoomList(item['focused_user_id'])['data']
+            socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item['focused_user_id']))
     else:
+        user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(params['room_uuid']))
         filters = {
             UserRoomRelation.room_uuid == params['room_uuid'],
-            UserRoomRelation.user_id == params['user_id']
+            UserRoomRelation.user_id == user_info['data']['id']
         }
         data = UserRoomRelation().delete(filters)
         filters = {
-            Room.room_uuid == params['room_uuid'],
-            Room.user_id == params['user_id']
+            Room.room_uuid == params['room_uuid']
         }
         Room().delete(filters)
-
+        filters = {
+            UserRoomRelation.room_uuid == params['room_uuid']
+        }
+        UserRoomRelation().delete(filters)
+        for item in user_room_relation_data:
+            roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
+            socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item['user_id']))
     return BaseController().successData()
 
 @app.route('/api/v2/room/details', methods=['GET'])

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:04:59
 @LastEditors: hua
-@LastEditTime: 2019-09-14 21:03:03
+@LastEditTime: 2019-09-15 16:29:25
 '''
 from app import app
 from app import cache
@@ -77,6 +77,11 @@ def addressBookAdd(params,user_info):
             'action':'beg_add_success',
             'focused_user_id' : user_info['data']['id']
         }), namespace='/room', room='@broadcast.'+str(params['focused_user_id']))
+        #添加后同步房间
+        addressBookData = AddressBook.get(room_uuid)
+        for item in addressBookData:
+            roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
+            socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item.be_focused_user_id))   
         return BaseController().successData(msg='添加成功')
     return BaseController().error(msg='已添加')
 

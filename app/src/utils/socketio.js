@@ -99,7 +99,6 @@ export function setup() {
 				}
 				if(data['action'] == 'beg_add_success' ){
 					Toast({ mes: '对方已同意添加好友' });
-					console.log(data['focused_user_id'])
 					updateAddressBookBeg(data['focused_user_id'], 1)
 				}
 			})
@@ -117,7 +116,7 @@ export function setup() {
 		window.roomSocket.on('groupRoom', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				//console.log(data)
+				console.log(data)
 				store.dispatch('updateGroupRoomList', data)
 			})
 		});

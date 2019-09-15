@@ -35,7 +35,7 @@
 <script type="text/babel">
 import vTitle from '@/components/v-title/v-title'
 import vImg from '@/components/v-img/v-img'
-import {getAddressBookBeg, updateAddressBookBeg} from "@/utils/indexedDB"
+import {getAddressBookBeg, delAddressBookBeg} from "@/utils/indexedDB"
 import { Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import utils from '@/utils/utils'
 import storage from "@/utils/localstorage"
@@ -69,7 +69,7 @@ export default {
                 focused_user_id:item.user_id
             }
             addressBookAdd(reqData).then(response=>{
-                updateAddressBookBeg(item.user_id, 1).then(res=>{
+                delAddressBookBeg(item.user_id).then(res=>{
                     let newFriendAlertNumber = 0
                     this.newFriendList = res
                     this.newFriendList.forEach((item)=>{

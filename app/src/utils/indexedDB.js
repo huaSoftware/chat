@@ -55,6 +55,33 @@ export function getAddressBookBeg() {
     });
 }
 
+/** 
+ *删除聊天记录
+ *
+ */
+export function delAddressBookBeg(user_id) {
+    //申明数据库
+    const db = new Dexie("addressBookBeg");
+    //定义字段
+    db.version(1).stores({ addressBookBeg: "++id, email, head_img, user_id, nick_name, status, created_at, updated_at" });
+    //事务读写
+    return db.transaction('rw', db.addressBookBeg, async() => {
+        // Make sure we have something in DB:
+        //更新状态
+        let del = db.addressBookBeg.where({"user_id":user_id}).delete();
+        if (del){
+            let data =   await db.addressBookBeg.toArray()
+            return data   
+        }
+
+        return Promise.reject('update error') 
+
+    }).catch(e => {
+        //console.log(e.stack || e);
+        return false
+    });
+}
+
 /* 
  *更新联系人
  *return bool
