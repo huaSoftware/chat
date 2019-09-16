@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-09-14 10:12:06
+@LastEditTime: 2019-09-16 09:02:43
 '''
 #mysql
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:1993524@localhost:3306/chat?charset=utf8'
@@ -19,7 +19,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])  # 允许�
 SECRET_KEY = '7PXsHcHGfa4e3kEs8Rvcv8ymjI0UeauX'
 JWT_LEEWAY = 604800
 #redis
-REDIS_PAS = 'asila19990'
-REDIS_IP  = '118.25.6.169'
-REDIS_PORT = '56379'
-REDIS_DB = '0'
+REDIS_PAS = ''
+REDIS_IP  = ''
+REDIS_PORT = ''
+REDIS_DB = ''
