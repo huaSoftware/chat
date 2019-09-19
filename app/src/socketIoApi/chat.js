@@ -24,6 +24,7 @@ export function chatSend(data){
         addLocalRoomMsg(msgInfo)
     }else if(data['data']['save_action'] == 1){
         delete data.data.save_action;
+        console.log(msgInfo)
         addCloudRoomMsg(msgInfo)
     }
     return send('chat', data)

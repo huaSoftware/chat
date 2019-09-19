@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-15 20:27:05
+@LastEditTime: 2019-09-19 10:35:10
 '''
 from app import app
 from flask import request
@@ -19,7 +19,7 @@ from app.Models.Msg import Msg
 from app.Models.Room import Room
 from flask_socketio import emit, join_room
 from app.Vendor.Code import Code
-import time
+import time,json
 
 """ 获取房间列表 """
 @app.route('/api/v2/room/get', methods=['GET'])
@@ -87,12 +87,11 @@ def roomDetails(user_info, params):
 @app.route('/api/v2/room/msg/add', methods=['POST'])
 @validator(name='created_at', rules={'required': True, 'type': 'integer'})
 @validator(name='head_img', rules={'required': True, 'type': 'string'})
-@validator(name='msg', rules={'required': True, 'type': 'string'})
+@validator(name='msg', rules={'required': True})
 @validator(name='name', rules={'required': True, 'type': 'string'})
 @validator(name='room_uuid', rules={'required': True, 'type': 'string'})
 @validator(name='send_status', rules={'required': True, 'type': 'integer'})
 @validator(name='type', rules={'required': True, 'type': 'integer'})
-@validator(name='user_id', rules={'required': True, 'type': 'integer'})
 @UsersAuthJWT.apiAuth
 def addRoomMsg(user_info, params):
     """ 
@@ -101,8 +100,10 @@ def addRoomMsg(user_info, params):
         :param dict params
         :return dict 
     """
-    res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at']})
+    res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at'],Msg.user_id==user_info['data']['id']})
     if res == None:
+        params['user_id'] = user_info['data']['id']
+        params['msg'] = json.dumps( params['msg'])
         Msg().add(params)
     return BaseController().successData()
 

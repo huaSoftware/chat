@@ -26,6 +26,7 @@ export function setup() {
 			response(data).then(res=>{
 				let data = res.data
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
+				console.log(data)
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
 				//console.log(index);//未找到索引说明是他人发送的消息
@@ -169,7 +170,7 @@ export function send(method, data, type = 'room') {
 					})
 				}
 				if(method == 'leave'){
-					Loading.open('退出超时,重新推出中...')
+					Loading.open('退出超时,重新退出中...')
 					send('leave', {
 						room_uuid: store.getters.currentRoomUuid
 					})

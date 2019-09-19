@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-11 19:05:21
+@LastEditTime: 2019-09-19 11:42:09
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -29,20 +29,21 @@ class ChatService():
         room_type = room_data.type
         created_at = message['data']['created_at']  
         user_data = Users().getOne({Users.id == user_info['data']['id']})
+        data = {
+            'msg': msg, 
+            'name': user_data['nick_name'], 
+            'user_id': user_data['id'], 
+            'type':  Type,
+            'head_img':user_data['head_img'],
+            'room_uuid': room_uuid,
+            'created_at': created_at
+        }
         if room_data != None and room_type == 0:
             address_book_data = AddressBook.get(room_uuid)
             #发送消息
-            emit('chat',  Utils.formatBody({
-                'msg': msg, 
-                'name': user_data['nick_name'], 
-                'user_id': user_data['id'], 
-                'type': Type,
-                'head_img':user_data['head_img'],
-                'room_uuid': room_uuid,
-                'created_at': created_at
-            }), room=room_uuid)
+            emit('chat',  Utils.formatBody(data), room=room_uuid)
             #聊天时同步房间信息
-            Room.updateLastMsgRoom(room_uuid, msg, created_at)
+            Room.updateLastMsgRoom(room_uuid, data, created_at,user_data['id'])
             #更新聊天提示数字
             AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
             AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
@@ -53,17 +54,9 @@ class ChatService():
         elif room_data != None and room_type == 1:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             #发送消息
-            emit('chat', Utils.formatBody({
-                'msg': msg, 
-                'name': user_data['nick_name'], 
-                'user_id': user_data['id'], 
-                'type': Type,
-                'head_img':user_data['head_img'],
-                'room_uuid': room_uuid,
-                'created_at': created_at
-            }), room=room_uuid)
+            emit('chat', Utils.formatBody(data), room=room_uuid)
             #聊天时同步房间信息
-            Room.updateLastMsgRoom(room_uuid, msg, created_at)
+            Room.updateLastMsgRoom(room_uuid, data, created_at,user_data['id'])
             #更新聊天提示数字
             UserRoomRelation.updateUnreadNumber(room_uuid, user_data['id'])
             UserRoomRelation.cleanUnreadNumber(room_uuid, user_data['id'])

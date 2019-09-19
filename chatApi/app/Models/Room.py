@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-09-08 08:54:33
+@LastEditTime: 2019-09-19 09:11:09
 '''
 import time, math
 
@@ -15,7 +15,7 @@ from app.Models.Users import Users
 from app.Models.Model import HtRoom
 from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
-
+import json
 
 class Room(Base, HtRoom, SerializerMixin):
     """ 
@@ -199,10 +199,11 @@ class Room(Base, HtRoom, SerializerMixin):
     #更新房间记录
     @staticmethod
     @classTransaction
-    def updateLastMsgRoom(room_uuid, msg, created_at):
+    def updateLastMsgRoom(room_uuid, data, created_at,user_id):
         dBSession.query(Room).filter(Room.room_uuid == room_uuid).update({
-            'last_msg':    msg,
-            'updated_at': created_at
+            'last_msg': json.dumps(data),
+            'updated_at': created_at,
+            'user_id': user_id
         })
         return True
     

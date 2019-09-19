@@ -6,8 +6,10 @@ export default {
         NOTIFICATION:2,//通知
         // 聊天类型
         RECORD:0,//录音
-        TEXT:1,//文字图片文件
+        TEXT:1,//文字
         RESEND:2,//重发
+        IMG:3,//图片
+        FILE:4,//文件
         // 发送状态
         LOADING: 0,//发送中
         SUCCESS:1, //成功
@@ -35,6 +37,12 @@ export default {
       },
       RESEND(state){
         return state.RESEND
+      },
+      IMG(state){
+        return state.IMG
+      },
+      FILE(state){
+        return state.FILE
       },
       LOADING(state){
         return state.LOADING

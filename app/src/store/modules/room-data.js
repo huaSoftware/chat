@@ -89,46 +89,45 @@ export default {
             state.roomList = roomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
-            let type = 1
             console.log(roomList)
             roomList.forEach((item)=>{
-                if(item.room.last_msg.indexOf("preview") != -1 ){
-					type = 1
-				}
-				if(item.room.last_msg.indexOf("<img") != -1 ){
-					type = 1
-				}
-                if(item.save_action == 0){
-                    let msgData = {
-                        msg:item.room.last_msg,
-                        created_at:item.room.updated_at,
-                        head_img:item.users.head_img,
-                        name:item.users.nick_name,
-                        //id:item.id,
-                        //save_action:item.save_action,
-                        send_status:1,
-                        type:type,
-                        user_id:item.users.id,
-                        room_uuid:item.room_uuid
+                console.log(item)
+                if(item.room.last_msg !=''){
+                    console.log(item.room.last_msg)
+                    let data = JSON.parse(item.room.last_msg)
+                    if(item.save_action == 0){
+                        let msgData = {
+                            msg:data['msg'],
+                            created_at:item.room.updated_at,
+                            head_img:item.users.head_img,
+                            name:item.users.nick_name,
+                            //id:item.id,
+                            //save_action:item.save_action,
+                            send_status:1,
+                            type:data['type'],
+                            user_id:item.users.id,
+                            room_uuid:item.room_uuid
+                        }
+                        addLocalRoomMsg(msgData)
+                    }else if(item.save_action == 1){
+                        let msgData = {
+                            msg:data['msg'],
+                            created_at:item.room.updated_at,
+                            head_img:item.users.head_img,
+                            name:item.users.nick_name,
+                            //id:item.id,
+                            //save_action:item.save_action,
+                            send_status:1,
+                            type:data['type'],
+                            user_id:item.users.id,
+                            room_uuid:item.room_uuid
+                        }
+                        console.log(msgData)
+                        addCloudRoomMsg(msgData)
                     }
-                    addLocalRoomMsg(msgData)
-                }else if(item.save_action == 1){
-                    let msgData = {
-                        msg:item.room.last_msg,
-                        created_at:item.room.updated_at,
-                        head_img:item.users.head_img,
-                        name:item.users.nick_name,
-                        //id:item.id,
-                        //save_action:item.save_action,
-                        send_status:1,
-                        type:type,
-                        user_id:item.users.id,
-                        room_uuid:item.room_uuid
+                    if(item.is_alert){
+                        unread_number = unread_number+item.unread_number
                     }
-                    addCloudRoomMsg(msgData)
-                }
-                if(item.is_alert){
-                    unread_number = unread_number+item.unread_number
                 }
             })
             state.msgAlertNumber = unread_number
@@ -137,45 +136,42 @@ export default {
             state.groupRoomList = groupRoomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
-            let type = 1
             groupRoomList.forEach((item)=>{
-                if(item.room.last_msg.indexOf("preview") != -1 ){
-					type = 1
-				}
-				if(item.room.last_msg.indexOf("<img") != -1 ){
-					type = 1
-				}
-                if(item.save_action == 0){
-                    let msgData = {
-                        msg:item.room.last_msg,
-                        created_at:item.created_at,
-                        head_img:item.users.head_img,
-                        name:item.users.nick_name,
-                        //id:item.id,
-                        //save_action:item.save_action,
-                        send_status:1,
-                        type:type,
-                        user_id:item.users.id,
-                        room_uuid:item.room_uuid
+                if(item.room.last_msg !=''){
+                    console.log(item.room.last_msg)
+                    let data = JSON.parse(item.room.last_msg)
+                    if(item.save_action == 0){
+                        let msgData = {
+                            msg:data['msg'],
+                            created_at:item.created_at,
+                            head_img:item.users.head_img,
+                            name:item.users.nick_name,
+                            //id:item.id,
+                            //save_action:item.save_action,
+                            send_status:1,
+                            type:data['type'],
+                            user_id:item.users.id,
+                            room_uuid:item.room_uuid
+                        }
+                        addLocalRoomMsg(msgData)      
+                    }else if(item.save_action == 1){
+                        let msgData = {
+                            msg:data['msg'],
+                            created_at:item.created_at,
+                            head_img:item.users.head_img,
+                            name:item.users.nick_name,
+                            //id:item.id,
+                            //save_action:item.save_action,
+                            send_status:1,
+                            type:data['type'],
+                            user_id:item.users.id,
+                            room_uuid:item.room_uuid
+                        }
+                        addCloudRoomMsg(msgData)
                     }
-                    addLocalRoomMsg(msgData)      
-                }else if(item.save_action == 1){
-                    let msgData = {
-                        msg:item.room.last_msg,
-                        created_at:item.created_at,
-                        head_img:item.users.head_img,
-                        name:item.users.nick_name,
-                        //id:item.id,
-                        //save_action:item.save_action,
-                        send_status:1,
-                        type:type,
-                        user_id:item.users.id,
-                        room_uuid:item.room_uuid
+                    if(item.is_alert){
+                        unread_number = unread_number+item.unread_number
                     }
-                    addCloudRoomMsg(msgData)
-                }
-                if(item.is_alert){
-                    unread_number = unread_number+item.unread_number
                 }
             })
             state.groupMsgAlertNumber = unread_number

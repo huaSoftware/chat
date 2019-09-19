@@ -59,7 +59,7 @@ export default {
     },
     components: {VueCropper},
     computed: {
-        ...mapGetters(["currentRoomUuid", "currentRoomName", "currentRoomSaveAction"])
+        ...mapGetters(["currentRoomUuid", "currentRoomName", "currentRoomSaveAction","IMG"])
     },
     props:{
         reqImgData: {
@@ -86,7 +86,7 @@ export default {
                         data: {
                         msg: img,
                         room_uuid: this.currentRoomUuid,
-                        type: 1,
+                        type: this.IMG,
                         save_action:this.currentRoomSaveAction
                         }
                     });

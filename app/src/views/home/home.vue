@@ -98,7 +98,11 @@
 				'navbarTitle',
 				'roomList',
 				'msgList',
-				'groupRoomList'
+				'groupRoomList',
+				"RECORD",
+				"TEXT",
+				"IMG",
+				"FILE",
 			])
 		},
 		methods: {
@@ -146,16 +150,24 @@
 				return utils.time.formatDate(value, 'hh:mm:ss')
 			},
 			formatLastMsg(last_msg){
-				if(last_msg.indexOf("preview") != -1 ){
-					return '[图片]'
+				try{
+					let data = JSON.parse(last_msg)
+					if(data['type'] == this.IMG ){
+						return '[图片]'
+					}
+					if(data['type'] == this.FILE ){
+						return '[文件]'
+					}
+					if(data['type'] == this.RECORD ){
+						return '[语音]'
+					}
+					if(data['type'] == this.TEXT ){
+						return data['msg']
+					}
+					return data['msg']
+				}catch(e){
+					return last_msg
 				}
-				if(last_msg.indexOf("<img") != -1 ){
-					return '[图片]'
-				}
-				if(last_msg.indexOf("download") != -1 ){
-					return '[文件]'
-				}
-				return last_msg
 			}
 		},
 		created() {

@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-09-03 17:11:42
+ * @LastEditTime: 2019-09-19 13:25:35
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -21,19 +21,21 @@
                   <span v-html="key.name"></span>
                 </div>
                 <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
-                  <vImg class="vioce_start" style="margin-right:-3px" :imgUrl="'static/img/voice_left.gif'" v-show="key.status"/>
-                  <i class="vioce_stop_left" v-show="!key.status"></i>
-                  <span class="vioce_second">{{key.duration}}s</span>
+                  <img class="vioce_start" style="margin-right:-3px" :src="'static/img/voice_left.gif'" v-show="key.msg.status"/>
+                  <i class="vioce_stop_left" v-show="!key.msg.status"></i>
+                  <span class="vioce_second">{{key.msg.duration}}s</span>
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div v-else-if="key.type == FILE" class="rawMsg"  @click="handleDefMsg(key.msg)">[文件]{{formartFileName(key.msg)}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
                 <!-- 消息送达状态 -->
-                <span v-if="key.send_status == 0 " class="send_status loading_color rotate_loading">
+                <span v-if="key.send_status == LOADING " class="send_status loading_color rotate_loading">
                   <yd-icon name="refresh"></yd-icon>
                 </span>
                 <span
                   @click="reSendMsg(key.created_at)"
-                  v-if="key.send_status == 2"
+                  v-if="key.send_status == FAIL"
                   class="send_status color_danger"
                 >
                   <yd-icon name="error"></yd-icon>
@@ -47,15 +49,17 @@
                   <span v-html="key.name"></span>
                 </div>
                 <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
-                  <vImg
+                  <img
                     class="chat_right vioce_start"
-                    :imgUrl="'static/img/voice_right.gif'"
-                    v-show="key.status"
+                    :src="'static/img/voice_right.gif'"
+                    v-show="key.msg.status"
                   />
-                  <i class="vioce_stop_right" v-show="!key.status"></i>
-                  <span class="vioce_second">{{key.duration}}s</span>
+                  <i class="vioce_stop_right" v-show="!key.msg.status"></i>
+                  <span class="vioce_second">{{key.msg.duration}}s</span>
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg"></div>
+                <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div v-else-if="key.type == FILE" class="rawMsg" @click="handleDefMsg(key.msg)">[文件]{{formartFileName(key.msg)}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
               </div>
             </div>
@@ -66,7 +70,7 @@
       </div>
     </mescroll-vue>
     <!-- 语音输入gif图 -->
-    <vImg v-show="recordingShow" class="recording" :imgUrl="'static/img/recording.gif'"/>
+    <img v-show="recordingShow" class="recording" :src="'static/img/recording.png'"/>
     <!-- 输入 -->
     <inputWrapper :style="iconsShow || defsShow ?'bottom:200px':'bottom:0.2rem'"
       @handleRecordShow="handleRecordShow"
@@ -77,6 +81,7 @@
       @handleImgOnChange="handleImgOnChange"
       @handleFileOnChange="handleFileOnChange"
       @handleContent="handleContent"
+      @handleStartRecord="handleStartRecord"
       :recordShow="recordShow"
       :content="content"
       :touched="touched"
@@ -107,12 +112,13 @@ import {getCloudRoomMsg} from '@/api/room'
 import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
+import axios from 'axios'
 export default {
   components: {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction","RECORD","TEXT","RESEND"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction","RECORD","TEXT","RESEND","IMG","FILE","LOADING","SUCCESS","FAIL"])
   },
   data() {
     return {
@@ -271,7 +277,7 @@ export default {
           data: {
             msg: file,
             room_uuid: this.currentRoomUuid,
-            type: this.TEXT,
+            type: this.FILE,
             save_action:this.currentRoomSaveAction
           }
         });
@@ -326,12 +332,11 @@ export default {
       );
     },
     sendMsg() {
-      this.created_at = parseInt(new Date().getTime() / 1000);
       chatSend({
         data: {
           msg: this.content,
           room_uuid: this.currentRoomUuid,
-          type: this.TEXT, //1是文字，0是语音, 2是重发
+          type: this.TEXT,
           save_action: this.currentRoomSaveAction
         }
       });
@@ -343,7 +348,7 @@ export default {
       reChatSend({
         data: {
           room_uuid: this.currentRoomUuid,
-          type: this.RESEND, //1是文字，0是语音, 2是重发
+          type: this.RESEND, 
           created_at: created_at,
           save_action: this.currentRoomSaveAction
         }
@@ -402,30 +407,121 @@ export default {
       this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) this.handleHeightToBottom(this.htmlFontSize*3)
-      
       this.handleMsgListToBottom()
     },
     insertIcon(src) {
       this.content = `${this.content}<img src="${src}">`
     },
-    amrPlay(url, index) {
-      /* let that = this;
-      Vue.set(this.data[index].data, "status", true);
+    handleStartRecord(){
+      let that = this
+      this.defsShow = false
+      this.iconsShow = false
+      this.recordingShow = true
+      this.touched = true
+      if ( typeof window.r == 'undefined' ) {
+          this.recordingShow = false
+          this.touched = false
+          alert( "Device not ready!" );
+          return; 
+      } 
+      window.r.record( {filename:"_doc/audio/"}, function (p) {
+        console.log('录音完成:' + p)
+        //上传
+        var task = plus.uploader.createUpload(process.env.VUE_APP_CLIENT_API+'/v2/api/upload', {  
+        method: "post"
+        },function(t, status) {
+        if(status == 200) { 
+            let data = JSON.parse(t.responseText)
+            console.log(data)
+            that.recordingShow = false
+            var BenzAMRRecorder = require('benz-amr-recorder');
+            var amr = new BenzAMRRecorder();
+            let url = process.env.VUE_APP_CLIENT_API+ data.data.path
+            amr.initWithUrl(url).then(function() {
+            //获取录音长度
+            //amr.getDuration(); 
+            chatSend({
+              data: {
+                msg:{url:url,duration: amr.getDuration(),status:false},
+                room_uuid: that.currentRoomUuid,
+                type: that.RECORD, 
+                save_action: that.currentRoomSaveAction
+            }});
+            console.log('录音路径'+url)
+          })
+        }else{
+            console.log(t.responseText)
+            console.log("上传失败："+status);
+        }
+        })
+        let fileName = p.replace("_doc/audio/", '')
+        task.addFile(p, {"key":"file",
+                "name": fileName});  
+        task.start();  
+      })
+    },
+    amrPlay(rawData, index) {
+      let that = this;
+      let data = JSON.parse(JSON.stringify(rawData))
+      let msgList = JSON.parse(JSON.stringify(this.msgList))
+       console.log(data)
+      data['status']=true
+      msgList[index]['msg'] = data
+      this.$store.dispatch('updateMsgList', msgList)
+      //Vue.set(this.data[index].data, "status", true);
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
-      amr.initWithUrl(url).then(function() {
+      amr.initWithUrl(data.url).then(function() {
         amr.play();
       });
-      amr.onEnded(function() {
-        Vue.set(that.data[index].data, "status", false);
-      }); */
+      amr.onEnded(()=> {
+        let data = JSON.parse(JSON.stringify(rawData))
+        let msgList = JSON.parse(JSON.stringify(this.msgList))
+        data['status']=false
+        msgList[index]['msg'] = data
+        this.$store.dispatch('updateMsgList', msgList)
+        //Vue.set(that.data[index].data, "status", false);
+      });
     },
     recReqImgData(value){
       this.reqImgData.imgDatas = value;
     },
     recCropperShow(value){
       this.cropperShow = value;
-    }
+    },
+    formartFileName(msg){
+      if(msg){
+        var pat=/href="(.+?)"/;
+        let url = pat.exec(msg)[1]
+        return url.split('uploads/')[1]
+      }
+    },
+    handleDefMsg(msg){
+      if(msg.indexOf("download") != -1 ){
+        var pat=/href="(.+?)"/;
+        let url = pat.exec(msg)[1]
+        axios({
+          method: 'get',
+          url: url,
+          timeout: 3000,
+          headers: {},
+          responseType: 'blob'
+        }).then(res => {
+          const blob = new Blob([res.data]);//处理文档流
+          const fileName = url.split('uploads/')[1];
+          const elink = document.createElement('a');
+          elink.download = fileName;
+          elink.style.display = 'none';
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          document.body.removeChild(elink);
+        }).catch(res => {
+          console.log(res)
+        })
+      }
+    },
   },
   watch: {
     //监听聊天数据变动

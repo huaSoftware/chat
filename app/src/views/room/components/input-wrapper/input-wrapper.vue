@@ -77,8 +77,8 @@ export default {
         },
         // 录音开始
         startRecord() {
-            //to do
-            Alert({'mes':'该功能只能在app内使用'})
+          this.$emit('handleStartRecord','')
+
         },
         // 录音结束
         stopRecord() {

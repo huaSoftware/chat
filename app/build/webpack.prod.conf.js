@@ -35,7 +35,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {
-          warnings: false
+          warnings: false,
+          //drop_console: true
         }
       },
       sourceMap: config.build.productionSourceMap,
@@ -118,16 +119,14 @@ const webpackConfig = merge(baseWebpackConfig, {
     ])
   ]
 })
-webpackConfig.plugins.push(
+/* webpackConfig.plugins.push(
   //去除console
   new webpack.optimize.UglifyJsPlugin({
     compress: {
-      warnings: false,
-      drop_debugger: true,
       drop_console: true
     }
   })
-)
+) */
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
