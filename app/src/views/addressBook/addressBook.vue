@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-07-24 20:02:36
+ * @LastEditTime: 2019-09-20 16:04:25
  -->
 
 <template>
@@ -260,10 +260,7 @@ dl {
     color: #576b95;
     font-size:0.3rem;
 }
-.yd-navbar {
-	height:1.4rem !important;
-	padding-top:0.4rem !important;
-}
+
 .navbar_icon{
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;

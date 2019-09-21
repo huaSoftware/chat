@@ -296,10 +296,7 @@ dl {
     color: #576b95;
     font-size:0.3rem;
 }
-.yd-navbar {
-	height:1.4rem !important;
-	padding-top:0.4rem !important;
-}
+
 .navbar_icon{
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;

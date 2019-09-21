@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-17 16:57:44
+ * @LastEditTime: 2019-09-20 15:35:27
  -->
 <template>
   <yd-layout>
@@ -180,8 +180,8 @@ export default {
 @import '@/assets/scss/base.scss';
 @import '@/assets/scss/public.scss';
 .yd-navbar {
-	height:1.4rem !important;
-	padding-top:0.4rem !important;
+/* 	height:1.4rem !important;
+	padding-top:0.4rem !important; */
 }
 
 .yd-navbar + div{

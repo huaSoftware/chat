@@ -212,10 +212,7 @@
 .yd-list-title{
     line-height: 0.4rem!important;
 }
-.yd-navbar {
-	height:1.4rem !important;
-	padding-top:0.4rem !important;
-}
+
 .navbar_icon{
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;

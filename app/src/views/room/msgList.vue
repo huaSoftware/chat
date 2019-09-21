@@ -117,7 +117,13 @@ export default {
               // 如果是第一页需手动制空列表
               if (page.num === 1) this.list = [];
               // 把请求到的数据添加到列表
-              this.list = this.list.concat(res.data.list);
+              let rawList = res.data.list
+              rawList.map(item => {
+                item['msg'] =  item['formatMsg']
+                delete item['formatMsg']
+                return item
+              })
+              this.list = this.list.concat(rawList);
               // 数据渲染成功后,隐藏下拉刷新的状态
               this.$nextTick(() => {
                 mescroll.endBySize(res.data.list.length, res.data.page.count);

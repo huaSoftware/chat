@@ -3,18 +3,23 @@
 @Date: 2019-07-25 14:22:49
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-25 14:53:33
+@LastEditTime: 2019-09-21 10:05:54
 '''
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import desc, asc
 from app.Models.Base import Base
 from app.Models.Model import HtMsg
 from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 from app import dBSession
-import math
+import math,json
 
 class Msg(Base, HtMsg, SerializerMixin):
+    serialize_rules =('msg', 'formatMsg')    
+
+    def formatMsg(self):
+        return json.loads(super().msg)
     """ 
         列表
         @param set filters 查询条件

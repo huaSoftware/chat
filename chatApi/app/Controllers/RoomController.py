@@ -3,7 +3,7 @@
 @Date: 2019-02-26 15:40:50
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-19 10:35:10
+@LastEditTime: 2019-09-21 09:15:27
 '''
 from app import app
 from flask import request
@@ -92,18 +92,18 @@ def roomDetails(user_info, params):
 @validator(name='room_uuid', rules={'required': True, 'type': 'string'})
 @validator(name='send_status', rules={'required': True, 'type': 'integer'})
 @validator(name='type', rules={'required': True, 'type': 'integer'})
+@validator(name='user_id', rules={'required': True, 'type': 'integer'})
 @UsersAuthJWT.apiAuth
 def addRoomMsg(user_info, params):
-    """ 
+    """ bug
         添加聊天数据
         :param dict user_info
         :param dict params
         :return dict 
     """
-    res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at'],Msg.user_id==user_info['data']['id']})
+    res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at'],Msg.user_id==params['user_id']})
     if res == None:
-        params['user_id'] = user_info['data']['id']
-        params['msg'] = json.dumps( params['msg'])
+        params['msg'] = json.dumps(params['msg'])
         Msg().add(params)
     return BaseController().successData()
 
@@ -159,5 +159,8 @@ def getRoomMsg(user_info, params):
         Msg.room_uuid == params['room_uuid']
     }
     data = Msg().getList(filters, Msg.created_at.desc(), (), params['page_no'], params['per_page'])
+    """ def format(x):
+        x['msg'] = json.loads(x['msg'])
+        return x
+    data['list'] = list(map(format, data['list'])) """
     return BaseController().successData(data)
-    
