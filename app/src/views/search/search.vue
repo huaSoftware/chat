@@ -27,8 +27,8 @@
 </template>
 
 <script type="text/babel">
-    import {search} from '@/api/search'
-    import {addressBookBeg} from '@/api/addressBook'
+    import {search} from '@/socketioApi/search'
+    import {addressBookBeg} from '@/socketioApi/addressBook'
     import storage from "@/utils/localstorage"
     import vImg from '@/components/v-img/v-img'
     import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'

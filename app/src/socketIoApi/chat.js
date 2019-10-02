@@ -3,7 +3,7 @@ import storage from "@/utils/localstorage"
 import store from '../store'
 import utils from '@/utils/utils'
 import { addLocalRoomMsg } from "@/utils/indexedDB"
-import {addCloudRoomMsg } from "@/api/room"
+import {addCloudRoomMsg } from "@/socketioApi/room"
 
 /**
  * 发送聊天信息

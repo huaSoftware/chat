@@ -27,7 +27,7 @@ import { mapGetters, mapMutations} from "vuex"
 import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
 import {getLocalRoomMsg} from "@/utils/indexedDB"
-import {getCloudRoomMsg} from '@/api/room'
+import {getCloudRoomMsg} from '@/socketioApi/room'
 import {joinChatSend} from '@/socketIoApi/chat'
 export default {
   components: {

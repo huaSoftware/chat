@@ -39,7 +39,7 @@ import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import vImg from '@/components/v-img/v-img'
 import { mapGetters} from 'vuex'
-import { userInfo } from '@/api/user'
+import { userInfo } from '@/socketioApi/user'
 
 export default {
     components: {CrossLine, CrossItem, vImg},
@@ -59,6 +59,7 @@ export default {
         init(){
             window.physicsBackRouter = null
             userInfo().then(res=>{
+                console.log(res)
                 this.userInfo = res.data
                 this.$store.commit('updateUserInfo', res.data)
             })

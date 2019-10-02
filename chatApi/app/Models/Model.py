@@ -1,8 +1,14 @@
+'''
+@Author: hua
+@Date: 2019-10-02 20:12:40
+@description: 
+@LastEditors: hua
+@LastEditTime: 2019-10-02 20:12:40
+'''
 # coding: utf-8
-from sqlalchemy import BigInteger, Column, Integer, String, Text
-from sqlalchemy.schema import FetchedValue
+from sqlalchemy import CHAR, Column, String, text
+from sqlalchemy.dialects.mysql import BIGINT, INTEGER, TEXT, TINYINT, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -11,92 +17,92 @@ metadata = Base.metadata
 class HtAddressBook(Base):
     __tablename__ = 'ht_address_book'
 
-    id = Column(Integer, primary_key=True)
-    be_focused_user_id = Column(Integer, nullable=False)
-    focused_user_id = Column(Integer, nullable=False, index=True)
-    created_at = Column(Integer, nullable=False)
-    updated_at = Column(Integer, nullable=False)
-    room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
-    save_action = Column(Integer, nullable=False, server_default=FetchedValue())
-    is_alert = Column(Integer, nullable=False)
-    unread_number = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    be_focused_user_id = Column(INTEGER(11), nullable=False, comment='被关注者用户编号')
+    focused_user_id = Column(INTEGER(11), nullable=False, index=True, comment='关注者用户编号')
+    created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
+    updated_at = Column(INTEGER(11), nullable=False, comment='更新时间')
+    room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间唯一编号')
+    save_action = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='保存方式')
+    is_alert = Column(TINYINT(1), nullable=False, comment='是否提醒')
+    unread_number = Column(INTEGER(11), nullable=False, comment='未读取信息次数')
 
 
 class HtAdmin(Base):
     __tablename__ = 'ht_admin'
 
-    id = Column(Integer, primary_key=True)
-    role_id = Column(Integer, nullable=False, server_default=FetchedValue())
-    name = Column(String(30), nullable=False, server_default=FetchedValue())
-    pwd = Column(String(32), nullable=False, server_default=FetchedValue())
-    mobile = Column(String(20), nullable=False, server_default=FetchedValue())
-    email = Column(String(30), nullable=False, server_default=FetchedValue())
-    avatar = Column(String(150), nullable=False, server_default=FetchedValue())
-    status = Column(Integer, nullable=False, server_default=FetchedValue())
-    login_time = Column(Integer, nullable=False, server_default=FetchedValue())
-    add_time = Column(Integer, nullable=False, server_default=FetchedValue())
-    update_time = Column(Integer, nullable=False, server_default=FetchedValue())
-    delete_time = Column(Integer, nullable=False, server_default=FetchedValue())
+    id = Column(INTEGER(11), primary_key=True)
+    role_id = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='角色ID')
+    name = Column(String(30), nullable=False, server_default=text("''"), comment='admin888')
+    pwd = Column(CHAR(32), nullable=False, server_default=text("''"), comment='admin')
+    mobile = Column(String(20), nullable=False, server_default=text("''"), comment='手机号')
+    email = Column(String(30), nullable=False, server_default=text("''"), comment='邮箱')
+    avatar = Column(String(150), nullable=False, server_default=text("''"), comment='头像')
+    status = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='用户状态 0：正常； 1：禁用 ；2：未验证')
+    login_time = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='登录时间')
+    add_time = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='添加时间')
+    update_time = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='更新时间')
+    delete_time = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='删除时间')
 
 
 class HtLog(Base):
     __tablename__ = 'ht_logs'
 
-    id = Column(Integer, primary_key=True)
-    type = Column(Integer, nullable=False, server_default=FetchedValue())
-    level = Column(Integer, nullable=False, server_default=FetchedValue())
-    data = Column(Text, nullable=False)
-    create_time = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    type = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='类型，1是普通接口日志')
+    level = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='报错等级，1是debug，2是warn，3是error')
+    data = Column(TEXT, nullable=False, comment='内容')
+    create_time = Column(INTEGER(11), nullable=False, comment='创建时间')
 
 
 class HtMsg(Base):
     __tablename__ = 'ht_msg'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False, server_default=FetchedValue())
-    msg = Column(Text, nullable=False)
-    room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
-    user_id = Column(Integer, nullable=False)
-    type = Column(Integer, nullable=False)
-    head_img = Column(String(255), nullable=False, server_default=FetchedValue())
-    created_at = Column(BigInteger, nullable=False)
-    send_status = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    name = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='名字')
+    msg = Column(TEXT, nullable=False, comment='聊天内容')
+    room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间唯一编号')
+    user_id = Column(INTEGER(11), nullable=False, comment='用户编号')
+    type = Column(TINYINT(2), nullable=False, comment='类型')
+    head_img = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='头像')
+    created_at = Column(BIGINT(14), nullable=False, comment='创建时间')
+    send_status = Column(TINYINT(2), nullable=False, comment='发送状态')
 
 
 class HtRoom(Base):
     __tablename__ = 'ht_room'
 
-    id = Column(Integer, primary_key=True)
-    room_uuid = Column(String(255), nullable=False, unique=True, server_default=FetchedValue())
-    last_msg = Column(String(255), nullable=False, server_default=FetchedValue())
-    updated_at = Column(Integer, nullable=False)
-    created_at = Column(Integer, nullable=False)
-    type = Column(Integer, nullable=False)
-    name = Column(String(255), nullable=False, server_default=FetchedValue())
-    user_id = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    room_uuid = Column(VARCHAR(255), nullable=False, unique=True, server_default=text("''"), comment='房间编号')
+    last_msg = Column(TEXT, nullable=False, comment='最后一条消息')
+    updated_at = Column(INTEGER(11), nullable=False, comment='最后一条消息时间')
+    created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
+    type = Column(INTEGER(11), nullable=False, comment='类型，0是单聊，1是群聊')
+    name = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间名')
+    user_id = Column(INTEGER(11), nullable=False, comment='用户编号')
 
 
 class HtUserRoomRelation(Base):
     __tablename__ = 'ht_user_room_relation'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False)
-    room_uuid = Column(String(255), nullable=False, server_default=FetchedValue())
-    save_action = Column(Integer, nullable=False, server_default=FetchedValue())
-    is_alert = Column(Integer, nullable=False)
-    unread_number = Column(Integer, nullable=False)
-    created_at = Column(Integer, nullable=False)
-    updated_at = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    user_id = Column(INTEGER(11), nullable=False, comment='用户编号')
+    room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间编号')
+    save_action = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='保存方式')
+    is_alert = Column(TINYINT(1), nullable=False, comment='是否提醒')
+    unread_number = Column(INTEGER(11), nullable=False, comment='未读取信息次数')
+    created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
+    updated_at = Column(INTEGER(11), nullable=False, comment='更新时间')
 
 
 class HtUser(Base):
     __tablename__ = 'ht_users'
 
-    id = Column(Integer, primary_key=True)
-    email = Column(String(255), nullable=False, unique=True, server_default=FetchedValue())
-    password = Column(String(500), nullable=False, server_default=FetchedValue())
-    nick_name = Column(String(255), nullable=False, server_default=FetchedValue())
-    head_img = Column(String(255), nullable=False)
-    first_word = Column(String(1), nullable=False, server_default=FetchedValue())
-    updated_at = Column(Integer, nullable=False)
-    created_at = Column(Integer, nullable=False)
+    id = Column(INTEGER(11), primary_key=True, comment='编号')
+    email = Column(VARCHAR(255), nullable=False, unique=True, server_default=text("''"), comment='邮箱')
+    password = Column(VARCHAR(500), nullable=False, server_default=text("''"), comment='密码')
+    nick_name = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='昵称')
+    head_img = Column(String(255), nullable=False, comment='头像')
+    first_word = Column(VARCHAR(1), nullable=False, server_default=text("''"), comment='首字母')
+    updated_at = Column(INTEGER(11), nullable=False, comment='更新时间')
+    created_at = Column(INTEGER(11), nullable=False, comment='创建时间')

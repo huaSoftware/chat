@@ -2,9 +2,10 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-07-22 20:48:36
+@LastEditTime: 2019-09-29 14:50:08
 '''
 from app import dBSession
+from app import socketio
 from functools import wraps
 from flask import request, make_response
 from app.Vendor.Utils import Utils
@@ -44,6 +45,38 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
     cookedReqVal = {name: requests[name]}
     if (v.validate(cookedReqVal)):  # validate
         return requests
+    error = {}
+    error['msg'] = v.errors
+    error['error_code'] = Code.ERROR
+    error['error'] = True
+    error['show'] = True
+    return error
+
+''' 
+* 验证输入信息根据字段名
+* @param  string name
+* @param  dict params
+* @param  dict rules
+* @param  string error_msg
+* @param  string default
+* @return response
+'''
+def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
+    #不准使用error关键字作为请求参数,请求参数都会被格式化成string，无法使用int去验证
+    if name == 'error':
+        error = {}
+        error['msg'] = '不能使用error关键字作用请求参数'
+        error['error_code'] = Code.ERROR
+        error['error'] = True
+        error['show'] = True
+        return error
+    v = cerberus.Validator(
+        rules, error_handler=CustomErrorHandler(custom_messages=error_msg))
+    #这边修改成json格式接收参数
+    
+    cookedReqVal = {name: params[name]}
+    if (v.validate(cookedReqVal)):  # validate
+        return params
     error = {}
     error['msg'] = v.errors
     error['error_code'] = Code.ERROR
@@ -116,5 +149,28 @@ def validator(name, rules, msg=dict(), default=""):
             else:
                 kwargs=error
             return func(params=kwargs)
+        return inner_wrappar 
+    return wrappar
+
+""" 
+    验证装饰器 
+    @params name 字段名
+    @params rules 规则
+    @params msg 描述
+    @params default 默认值
+    @return func|json
+    tobe 全局化socketio传入的参数
+"""
+def socketValidator(name, rules, msg=dict(), default=""):
+    # 装饰器就是把其他函数作为参数的函数
+    def wrappar(func):
+        @wraps(func)
+        def inner_wrappar(*args, **kwargs):
+            #18n
+            msgFormat = Utils.validateMsgFormat(name, rules, msg)
+            error = validateSocketDataByName(name, args[0], {name: rules}, {name:msgFormat}, default)
+            if 'error' in error:
+                return json.dumps(error)#socketio.emit('unAuthSend',json.dumps(error), room='@api.'+str(request.sid))
+            return func(args[0])
         return inner_wrappar 
     return wrappar

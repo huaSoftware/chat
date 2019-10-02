@@ -98,9 +98,9 @@ import {joinChatSend} from '@/socketIoApi/chat'
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import {delRoomMsg} from '@/utils/indexedDB'
-import {roomMsgDel, roomDel} from '@/api/room'
+import {roomMsgDel, roomDel} from '@/socketioApi/room'
 import {Alert, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert, userRoomRelationUpdateSaveAction} from '@/api/userRoomRelation'
+import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert, userRoomRelationUpdateSaveAction} from '@/socketioApi/userRoomRelation'
 export default {
     data() {
         return {

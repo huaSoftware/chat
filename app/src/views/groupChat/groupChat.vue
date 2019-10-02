@@ -87,8 +87,8 @@
 <script>
 import {mapGetters} from 'vuex'
 import storage from "@/utils/localstorage"
-import {addressBookGet} from '@/api/addressBook'
-import {groupChatCreate} from '@/api/groupChat'
+import {addressBookGet} from '@/socketioApi/addressBook'
+import {groupChatCreate} from '@/socketioApi/userRoomRelation'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
 import {joinChatSend} from '@/socketIoApi/chat'
 import vImg from '@/components/v-img/v-img'

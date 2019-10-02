@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-09-19 13:25:35
+ * @LastEditTime: 2019-10-02 20:17:04
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -104,11 +104,11 @@ import icons from './components/icons/icons'
 import def from './components/def/def'
 import cropperBox from './components/cropperBox/cropperBox'
 import MescrollVue from "mescroll.js/mescroll.vue"
-import { uploadFile } from "@/api/common";
+import { uploadFile } from "@/socketioApi/common";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
 import { getLocalRoomMsg } from "@/utils/indexedDB";
-import {getCloudRoomMsg} from '@/api/room'
+import {getCloudRoomMsg} from '@/socketioApi/room'
 import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
@@ -274,20 +274,29 @@ export default {
     },
     handleFileOnChange(event) {
       let file = event.target.files[0];
-      let data = new FormData(); 
-      data.append("file", file);
-      uploadFile(data).then(res => {
-        let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
-        let file = `<a href="${file_path}" download="${res.data.name.split('.')[0]}">${res.data.name.split('.')[0]}[文件]</a>`;
-        chatSend({
-          data: {
-            msg: file,
-            room_uuid: this.currentRoomUuid,
-            type: this.FILE,
-            save_action:this.currentRoomSaveAction
-          }
-        });
-      });
+
+      if (!!file) {
+        //读取本地文件，以gbk编码方式输出
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload =  (e) =>{
+          console.log(e)
+          //console.log(e.target.result);
+          //console.log(new Blob([this.result]))
+          uploadFile({arrayBuffer:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
+            let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
+            let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
+            chatSend({
+              data: {
+                msg: file,
+                room_uuid: this.currentRoomUuid,
+                type: this.FILE,
+                save_action:this.currentRoomSaveAction
+              }
+            });
+          });
+        }
+      }
     },
     handleImgOnChange(event) {
       let that = this;
@@ -416,7 +425,7 @@ export default {
       this.handleMsgListToBottom()
     },
     insertIcon(src) {
-      this.content = `${this.content}<img src="${src}">`
+      this.content = `${this.content}<img src='${src}'>`
     },
     handleStartRecord(){
       let that = this
@@ -497,14 +506,14 @@ export default {
     },
     formartFileName(msg){
       if(msg){
-        var pat=/href="(.+?)"/;
+        var pat=/href='(.+?)'/;
         let url = pat.exec(msg)[1]
         return url.split('uploads/')[1]
       }
     },
     handleDefMsg(msg){
-      if(msg.indexOf("download") != -1 ){
-        var pat=/href="(.+?)"/;
+      if(msg.indexOf('download') != -1 ){
+        var pat=/href='(.+?)'/;
         let url = pat.exec(msg)[1]
         axios({
           method: 'get',

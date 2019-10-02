@@ -3,7 +3,7 @@
  * @Date: 2019-07-18 08:54:06
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-18 09:54:23
+ * @LastEditTime: 2019-10-02 20:36:38
  -->
 <template>
    <!-- 裁剪图 -->
@@ -40,7 +40,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { uploadBase64 } from "@/api/common";
+import { uploadBase64 } from "@/socketioApi/common";
 import { VueCropper } from "vue-cropper";
 import { chatSend } from "@/socketIoApi/chat";
 export default {
@@ -81,7 +81,7 @@ export default {
                 this.$emit('recCropperShow', false)
                 //将剪裁后的图片执行上传
                 uploadBase64(this.reqImgData).then(res => {
-                    let img = `<img class="chat_img"  preview="1" preview-text="" width="100" src="${process.env.VUE_APP_CLIENT_API+res.data.path}">`;
+                    let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_API+res.data.path}'>`;
                     chatSend({
                         data: {
                         msg: img,
@@ -95,15 +95,17 @@ export default {
             });
         },
         handleOnRawImg() {
-            this.$emit('recReqImgData', data)
+            //this.$emit('recReqImgData', '')
             this.$emit('recCropperShow', false)
             uploadBase64(this.reqImgData).then(res => {
-                let img = `<img class="chat_img"  preview="1" preview-text="" width="100" src="${process.env.VUE_APP_CLIENT_API+res.data.path}">`;
+                let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_API+res.data.path}'>`;
                 chatSend({
                 data: {
                     msg: img,
                     room_uuid: window.room_uuid,
-                    type: 1
+                    room_uuid: this.currentRoomUuid,
+                    type: this.IMG,
+                    save_action:this.currentRoomSaveAction
                 }
                 });
             });

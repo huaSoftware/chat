@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-09-20 16:04:25
+ * @LastEditTime: 2019-09-29 17:06:04
  -->
 
 <template>
@@ -73,8 +73,8 @@
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex'
-import {addressBookGet} from '@/api/addressBook'
-import {userRoomRelationGet} from '@/api/userRoomRelation'
+import {addressBookGet} from '@/socketioApi/addressBook'
+import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
 import {joinChatSend} from '@/socketIoApi/chat'
 import vImg from '@/components/v-img/v-img'
 export default {
@@ -115,9 +115,11 @@ export default {
         init(){
             window.physicsBackRouter = null
             addressBookGet(this.reqData).then(res=>{
+                console.log(res)
                 this.adderssBookList = res.data.addressBookList
             })
             userRoomRelationGet().then(res=>{
+                console.log(res)
                 this.updateGroupRoomList(res.data)
                 this.loading = false
             })

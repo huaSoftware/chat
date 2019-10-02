@@ -4,7 +4,7 @@
  * 聊天数据临时管理
  */
 import { addLocalRoomMsg } from "@/utils/indexedDB"
-import {addCloudRoomMsg } from "@/api/room"
+import {addCloudRoomMsg } from "@/socketioApi/room"
 export default {
     state: {
         currentRoomUuid: '',//当前房间号

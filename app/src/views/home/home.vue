@@ -63,9 +63,9 @@
 	import vImg from '@/components/v-img/v-img'
 	import utils from '@/utils/utils'
 	import vEmpty from '@/components/v-empty/v-empty'
-	import {roomGet} from '@/api/room'
+	import {roomGet} from '@/socketioApi/room'
 	import storage from "@/utils/localstorage"
-	import {userRoomRelationGet} from '@/api/userRoomRelation'
+	import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'
 

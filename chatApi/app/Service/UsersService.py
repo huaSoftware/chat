@@ -2,9 +2,10 @@
 @Author: hua
 @Date: 2019-05-24 14:13:23
 @LastEditors: hua
-@LastEditTime: 2019-05-30 16:41:00
+@LastEditTime: 2019-09-29 15:22:53
 '''
 import time, re
+from app.Vendor.Decorator import socketValidator, socketValidator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.Users import Users
 from app.Vendor.Utils import Utils
@@ -17,7 +18,8 @@ class UsersService():
         @param dict 注册数据
         @return dict 返回格式化结果
     """
-    def register(self, params):
+    @staticmethod
+    def register(params):
         userData = Users().getOne({Users.email == params['email']})
         if(userData == None):
             #昵称首字母
@@ -48,15 +50,37 @@ class UsersService():
             return Utils.formatError(Code.BAD_REQUEST,'注册失败')
         return Utils.formatError(Code.BAD_REQUEST,'账号已注册')
     
+    @staticmethod
+    @socketValidator(name='email', rules={'required': True,'type': 'string','minlength': 10,'maxlength': 20})
+    @socketValidator(name='password', rules={'required':True,'type':'string','minlength':6,'maxlength':200})
+    def login(params):
+        return UsersAuthJWT.authenticate(params['email'], params['password'])
+
     """ 
         根据用户昵称查询
         @param string keywords
         @return list data 
     """
-    def getByNickName(self, keywords):
+    @staticmethod
+    @socketValidator(name='keywords', rules={'required': True,'type': 'string','minlength': 1,'maxlength': 20})
+    def search(params):
         filters = {
-            Users.nick_name.like('%'+keywords+'%')
+            Users.nick_name.like('%'+params['keywords']+'%')
         }
         userList = Users().getAll(filters)
         data = {"userList": userList}
         return data
+    
+    '''
+    *获取用户信息 
+    *jwt中修改error处理方法,统一响应头
+    *_default_jwt_error_handler
+    '''
+    @staticmethod
+    @UsersAuthJWT.socketAuth
+    def get(params, user_info):
+        #鉴权
+        if (user_info['data']):
+            user_data = Users().getOne({Users.id == user_info['data']['id']})
+        return Utils.formatBody(user_data)
+    

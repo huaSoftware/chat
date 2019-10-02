@@ -2,10 +2,11 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-09-14 13:32:45
+@LastEditTime: 2019-09-29 15:41:40
 '''
 from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
+from app import socketio
 from flask import request, make_response, jsonify
 from flask_socketio import emit
 from functools import wraps
@@ -13,9 +14,7 @@ from app.Vendor.Code import Code
 from app.env import SECRET_KEY, JWT_LEEWAY
 from app.Models.Users import Users
 from app.Models.Admin import Admin
-import datetime
-import jwt
-import time
+import datetime, jwt, time
 ''' JWT工具函数在这 '''
 
 
@@ -163,22 +162,19 @@ class UsersAuthJWT():
 
     """ 
     jwt认证装饰器,用于socketio
-        @params string name
         @return func|False
     """
     @staticmethod
-    def socketAuth(name):
-        def wrappar(func):
-            @wraps(func)
-            def inner_wrappar(*args, **kwargs):
-                result = UsersAuthJWT().identify(args[0]['Authorization'])
-                kwargs['user_info'] = result
-                if isinstance(result, str):
-                    return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')#emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, result))
-                res = func(*args, **kwargs)
-                return res
-            return inner_wrappar 
-        return wrappar
+    def socketAuth(func):
+        @wraps(func)
+        def inner_wrappar(*args, **kwargs):
+            result = UsersAuthJWT().identify(args[0]['Authorization'])
+            kwargs['user_info'] = result
+            if isinstance(result, str):
+                return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')#socketio.emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
+            res = func(*args, **kwargs)
+            return res
+        return inner_wrappar 
 
     """ 
     后台jwt认证装饰器,用于api

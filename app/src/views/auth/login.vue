@@ -50,7 +50,7 @@ import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import utils from '@/utils/utils'
 import { allvalidated, validatedError } from "@/utils/validator"
 import CrossLine from '@/components/cross-line/cross-line'
-import { login } from '@/api/user'
+import { login } from '@/socketioApi/user'
 import { setToken } from '@/utils/auth'
 import storage  from  '@/utils/localstorage'
 import {setup} from '@/utils/socketio'
@@ -106,7 +106,8 @@ export default {
         //根据错误生成input状态
         validatedError(errors, this.validated_status);
         if (errors.length == 0) {
-            login(this.email, md5(this.password)).then(res=>{
+            login({email:this.email, password:md5(this.password)}).then(res=>{
+                console.log(res)
                 deleteTables()
                 this.password = ''
                 Toast({mes:'登录成功'})

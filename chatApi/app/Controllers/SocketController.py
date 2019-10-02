@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-10 10:22:27
+@LastEditTime: 2019-09-29 17:17:56
 '''
 from flask_socketio import emit, join_room, leave_room
 from app import socketio
@@ -15,21 +15,19 @@ from app.Models.AddressBook import AddressBook
 from app.Models.Users import Users
 from app.Vendor.Code import Code
 from app.Service.ChatService import ChatService
+from app.Service.UsersService import UsersService
+from app.Service.UploadService import UploadService
+from app.Service.AddressBookService import AddressBookService
+from app.Service.RoomService import RoomService
+from app.Service.UserRoomRelationService import UserRoomRelationService
 import time
-
-#在线人数
-count =  0 
-#房间在线人数
-room_user_count = 0
-
 
 ''' 聊天室模式，进入，离开，聊天
 '''
-@socketio.on('join', namespace='/room')
-@UsersAuthJWT.socketAuth('join')
+@socketio.on('join', namespace='/api')
+@UsersAuthJWT.socketAuth
 def join(message, user_info):
     if message['type'] == 0:
-        name = message['name']
         room_uuid = message['room_uuid']
         join_room(room_uuid)
     elif message['type'] == 1:
@@ -37,35 +35,48 @@ def join(message, user_info):
         join_room(room_uuid)
     elif message['type'] == 2:
         join_room('@broadcast.'+str(user_info['data']['id']))
+    elif message['type'] == 3:#这个暂时用会话id表示，不需要token
+        join_room('@api.'+str(request.sid))
     return  Utils.formatBody({'action':"join"})
         
-            
-@socketio.on('leave', namespace='/room')
-@UsersAuthJWT.socketAuth('leave')
+""" 2,3的离开事件是否要写？ """
+@socketio.on('leave', namespace='/api')
+@UsersAuthJWT.socketAuth
 def leave(message, user_info):
     room_uuid = message['room_uuid']
     leave_room(room_uuid)
     return  Utils.formatBody({'action': "leave"})
 
-
-@socketio.on('chat', namespace='/room')
-@UsersAuthJWT.socketAuth('chat')
+@socketio.on('chat', namespace='/api')
+@UsersAuthJWT.socketAuth
 def chat(message, user_info):
     return ChatService().chat(message, user_info) # 客户端回调函数的参数
     
+""" 普通交互接口 """
+@socketio.on('send', namespace='/api')
+def send(message):
+    """ {c:'控制',a:'行为',Authorization:'行为',data:'JSON数据‘} """
+    if 'data' in message.keys():
+        message['data']['Authorization'] = message['Authorization']
+        return getattr(globals()[message['c']],message['a'])(message['data'])
+    else:
+        return getattr(globals()[message['c']],message['a'])(message)
 
+""" @socketio.on('unAuthSend', namespace='/api')
+def unAuthSend(message):
+    return getattr(globals()[message['c']],message['a'])(message['data']) """
+    #emit('unAuthSend', data, room='@api.'+str(request.sid))  
+    
 """ 连接事件 """
-@socketio.on('connect', namespace='/room')
+@socketio.on('connect', namespace='/api')
 def connect():
     #emit('my response', {'data': 'Connected'})
     return  Utils.formatBody({'action': "connect"})
 
-
 """ 断开事件 """
-@socketio.on('disconnect', namespace='/room')
+@socketio.on('disconnect', namespace='/api')
 def disconnect():
     #thread_pool[request.sid]['thread'].join()
     #print('Client disconnected')
     return  Utils.formatBody({'action': "disconnect"})
-    
 

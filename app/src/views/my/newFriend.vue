@@ -39,7 +39,7 @@ import {getAddressBookBeg, delAddressBookBeg} from "@/utils/indexedDB"
 import { Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import utils from '@/utils/utils'
 import storage from "@/utils/localstorage"
-import {addressBookAdd} from "@/api/addressBook"
+import {addressBookAdd} from "@/socketioApi/addressBook"
 export default {
     data() {
         return {
