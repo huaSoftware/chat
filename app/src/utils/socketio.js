@@ -197,6 +197,7 @@ export function  send(method, data, type = 'room') {
 			window.apiSocket.emit(method, data, (recv)=>{
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
+					console.log("ROOM发送确认消息:"+res)
 					if(res.data.action == 'chat'){
 						clearTimeout(window.sendTimeOut)
 					}
@@ -235,12 +236,25 @@ export function  send(method, data, type = 'room') {
 			})
 		}
 		if (type == 'broadcast') {
+			//响应超时
+			window.broadcastTimeOut = setTimeout(()=>{
+				if(method == 'join'){
+					Loading.open('重新链接中...')
+					send('join', {}, 'broadcast')
+				}
+				if(method == 'leave'){
+					Loading.open('退出超时,重新退出中...')
+					send('leave', {}, 'broadcast')
+				}
+			},1500)
 			data['type'] = store.getters.NOTIFICATION
 			window.apiSocket.emit(method, data, (recv)=>{
 				response(recv).then(res=>{
 					if(res.data.action == 'leave'){	
+						clearTimeout(window.broadcastTimeOut)
 					}
-					if(res.data.action == 'join'){				
+					if(res.data.action == 'join'){
+						clearTimeout(window.broadcastTimeOut)				
 					}
 				}).catch(e=>{
 					//服务器出错
@@ -289,46 +303,6 @@ export function  send(method, data, type = 'room') {
 						reject('error')
 					}
 					reject('error')
-					//未加入房间的时候对方收不到消息
-					/* response(recv).then(res=>{
-						console.log(res)
-						return Promise.reject('error')
-						if(res.data.action == 'send'){
-							clearTimeout(window.sendTimeOut)
-						}
-						if(res.data.action == 'send'){
-							clearTimeout(window.sendTimeOut)
-						}
-						if(res.data.action == 'leave'){
-							clearTimeout(window.sendTimeOut)
-							Loading.close()
-							//如果不在room路由下
-							if(router.history.current.fullPath.indexOf('room') == -1){
-								store.commit('updateCurrentRoomUuid', '')
-								store.commit('updateCurrentRoomName', '')
-								store.commit('updateCurrentRoomType', store.getters.ALONECHAT)
-								store.commit('updateCurrentRoomSaveAction', store.getters.LOCALSAVE)
-							}
-						}
-						if(res.data.action == 'join'){
-							clearTimeout(window.sendTimeOut)
-							Loading.close()
-							let queryData = {}
-							store.commit('updateCurrentRoomUuid', data.room_uuid)
-							store.commit('updateCurrentRoomName', data.name)
-							store.commit('updateCurrentRoomType', data.type)
-							store.commit('updateCurrentRoomSaveAction', data.save_action)
-							if(data.name){
-								queryData.name = data.name
-							}
-							router.push({
-								name: 'room',
-								query: queryData
-							}).catch(()=>{})
-						}
-					}).catch(e=>{
-						//服务器出错
-					}) */
 				})
 			})
 			return res
