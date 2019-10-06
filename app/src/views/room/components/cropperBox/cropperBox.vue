@@ -3,7 +3,7 @@
  * @Date: 2019-07-18 08:54:06
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-10-02 20:36:38
+ * @LastEditTime: 2019-10-06 14:27:09
  -->
 <template>
    <!-- 裁剪图 -->
@@ -43,6 +43,7 @@ import { mapGetters, mapMutations } from "vuex";
 import { uploadBase64 } from "@/socketioApi/common";
 import { VueCropper } from "vue-cropper";
 import { chatSend } from "@/socketIoApi/chat";
+import {Loading} from "vue-ydui/dist/lib.rem/dialog";
 export default {
     data(){
         return {
@@ -96,8 +97,10 @@ export default {
         },
         handleOnRawImg() {
             //this.$emit('recReqImgData', '')
+            Loading.open('上传中...')
             this.$emit('recCropperShow', false)
             uploadBase64(this.reqImgData).then(res => {
+                 Loading.close()
                 let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_API+res.data.path}'>`;
                 chatSend({
                 data: {

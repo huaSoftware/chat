@@ -87,6 +87,7 @@ export default {
           addAddressBookBeg(data['data']).then(res=>{
             getAddressBookBeg().then(res=>{
               let newFriendAlertNumber = 0
+              console.log("通讯录地址"+res)
               res.forEach((item)=>{
                 if(item.status==0){
                   newFriendAlertNumber++

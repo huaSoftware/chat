@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-10-02 20:17:04
+ * @LastEditTime: 2019-10-06 14:24:52
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -278,7 +278,7 @@ export default {
       if (!!file) {
         //读取本地文件，以gbk编码方式输出
         var reader = new FileReader();
-        reader.readAsArrayBuffer(file);
+        /* reader.readAsArrayBuffer(file);
         reader.onload =  (e) =>{
           console.log(e)
           //console.log(e.target.result);
@@ -286,6 +286,23 @@ export default {
           uploadFile({arrayBuffer:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
             let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
             let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
+            chatSend({
+              data: {
+                msg: file,
+                room_uuid: this.currentRoomUuid,
+                type: this.FILE,
+                save_action:this.currentRoomSaveAction
+              }
+            });
+          });
+        } */
+        reader.readAsDataURL(file);
+        reader.onload =  (e) =>{
+          Loading.open('上传中...')
+          uploadFile({dataUrl:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
+            let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
+            let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
+             Loading.close()
             chatSend({
               data: {
                 msg: file,

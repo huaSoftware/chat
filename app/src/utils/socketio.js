@@ -127,6 +127,7 @@ export function setup() {
 			});
 			//初始化好友邀请消息状态
 			getAddressBookBeg().then(res=>{
+				console.log("通讯录地址"+res)
 				let newFriendAlertNumber = 0
 				res.forEach((item)=>{
 					if(item.status==0){
@@ -194,7 +195,16 @@ export function  send(method, data, type = 'room') {
 					store.dispatch('updateMsgList', msgList)
 				}
 			},1500)
-			window.apiSocket.emit(method, data, (recv)=>{
+			//rsa加密
+			let encrypt = new JSEncrypt();
+			encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
+			let str = JSON.stringify(data)
+			let encryptStr = ""
+			for(let i=0; i<str.length;i+=40){
+				encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
+			}
+			encryptStr = encryptStr.substring(0,encryptStr.length-1);
+			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
 					console.log("ROOM发送确认消息:"+res)
@@ -248,13 +258,25 @@ export function  send(method, data, type = 'room') {
 				}
 			},1500)
 			data['type'] = store.getters.NOTIFICATION
-			window.apiSocket.emit(method, data, (recv)=>{
+			//rsa加密
+			let encrypt = new JSEncrypt();
+			encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
+			let str = JSON.stringify(data)
+			let encryptStr = ""
+			for(let i=0; i<str.length;i+=40){
+				encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
+				console.log(encryptStr)
+			}
+			encryptStr = encryptStr.substring(0,encryptStr.length-1);
+			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				response(recv).then(res=>{
 					if(res.data.action == 'leave'){	
 						clearTimeout(window.broadcastTimeOut)
+						Loading.close()
 					}
 					if(res.data.action == 'join'){
-						clearTimeout(window.broadcastTimeOut)				
+						clearTimeout(window.broadcastTimeOut)	
+						Loading.close()			
 					}
 				}).catch(e=>{
 					//服务器出错
@@ -263,7 +285,16 @@ export function  send(method, data, type = 'room') {
 		}
 		if(type == 'api'){
 			var res = new Promise((resolve, reject)=>{
-				window.apiSocket.emit(method, data, (res)=>{
+				//rsa加密
+				let encrypt = new JSEncrypt();
+				encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
+				let str = JSON.stringify(data)
+				let encryptStr = ""
+				for(let i=0; i<str.length;i+=40){
+					encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
+				}
+				encryptStr = encryptStr.substring(0,encryptStr.length-1);
+				window.apiSocket.emit(method, encryptStr, (res)=>{
 					console.log(res)
 					/**
 					* error为true时 显示msg提示信息
@@ -298,7 +329,7 @@ export function  send(method, data, type = 'room') {
 						// 这里需要删除token，不然携带错误token无法去登陆
 						window.localStorage.removeItem('token')
 						store.commit('SET_TOKEN', null)
-						setDown()
+						//setDown()
 						router.push({name: 'authLogin'})
 						reject('error')
 					}
@@ -347,7 +378,7 @@ export function response(res){
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
-			setDown()
+			//setDown()
 			router.push({name: 'authLogin'})
 			reject('error')
 		}

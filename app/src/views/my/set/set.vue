@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-09-03 17:07:10
+ -->
 
 <template>
     <div class="content">
@@ -50,7 +57,7 @@ export default {
         },
         handleExit(){
             clearData()
-            setDown()
+            //setDown()
             deleteTables()
             setTimeout(() => {
                 this.$router.push({ name: "authLogin" });

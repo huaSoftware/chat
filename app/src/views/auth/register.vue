@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-10-06 14:22:49
+ -->
 <template>
 <div>
     <CrossLine></CrossLine>
@@ -110,7 +117,7 @@
 </div>
 </template>
 <script>
-import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
+import { Toast, Loading} from 'vue-ydui/dist/lib.rem/dialog'
 import { allvalidated, validatedError } from "@/utils/validator"
 import CrossLine from '@/components/cross-line/cross-line'
 import vImg from '@/components/v-img/v-img'
@@ -195,13 +202,12 @@ export default {
             btn.click();
         },
         bindHeaderImg() {
-            let that = this;
             var reader = new FileReader();
             if(typeof event.target.files[0] !== 'undefined'){
                 reader.readAsDataURL(event.target.files[0]);
-                reader.onload = function() {
-                    that.option.img = reader.result;
-                    that.cropperShow = true;
+                reader.onload = () => {
+                    this.option.img = reader.result;
+                    this.cropperShow = true;
                 };
             }
         },
@@ -209,8 +215,10 @@ export default {
             this.$refs.cropper_header.getCropData(data => {
                 //console.log( process.env)
                 this.option.img = data;
+                Loading.open('正在上传...')
                 uploadBase64({ imgDatas: this.option.img})
                 .then(res => {
+                    Loading.close()
                     this.headImg = process.env.VUE_APP_CLIENT_API+res.data.path
                 })
                 this.cropperShow = false;

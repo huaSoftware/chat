@@ -15,7 +15,6 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "benz-amr-recorder": "^1.0.17",
-    "better-scroll": "^1.12.1",
     "core-js": "^2.6.5",
     "dexie": "^2.0.4",
     "es6-promise": "^4.2.8",
