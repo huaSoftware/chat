@@ -27,10 +27,10 @@ class AddressBookService:
     @UsersAuthJWT.socketAuth
     def beg(params,user_info):
         if user_info['data']['id'] == params['be_focused_user_id']:
-            return Utils.formatError(Code.BAD_REQUEST,msg='无法添加自己为新朋友')
+            return Utils.formatError(Code.BAD_REQUEST,'无法添加自己为新朋友')
         addressBookdata = AddressBook.getAdddressBookByFocusedUserId(user_info['data']['id'], params['be_focused_user_id'])
         if addressBookdata != None:
-            return Utils.formatError(Code.BAD_REQUEST,msg='已添加')
+            return Utils.formatError(Code.BAD_REQUEST,'已添加')
         msg_uuid = Utils.unique_id()
         userData = Users().getOne({Users.id == user_info['data']['id']})
         data = {

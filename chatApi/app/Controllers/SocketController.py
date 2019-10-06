@@ -2,13 +2,14 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-09-29 17:17:56
+@LastEditTime: 2019-10-05 19:54:50
 '''
 from flask_socketio import emit, join_room, leave_room
 from app import socketio
 from flask import session,request
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
+from app.Vendor.Decorator import decryptMessage
 from threading import Lock
 from app.Models.Room import Room
 from app.Models.AddressBook import AddressBook
@@ -25,6 +26,7 @@ import time
 ''' 聊天室模式，进入，离开，聊天
 '''
 @socketio.on('join', namespace='/api')
+@decryptMessage
 @UsersAuthJWT.socketAuth
 def join(message, user_info):
     if message['type'] == 0:
@@ -41,6 +43,7 @@ def join(message, user_info):
         
 """ 2,3的离开事件是否要写？ """
 @socketio.on('leave', namespace='/api')
+@decryptMessage
 @UsersAuthJWT.socketAuth
 def leave(message, user_info):
     room_uuid = message['room_uuid']
@@ -48,6 +51,7 @@ def leave(message, user_info):
     return  Utils.formatBody({'action': "leave"})
 
 @socketio.on('chat', namespace='/api')
+@decryptMessage
 @UsersAuthJWT.socketAuth
 def chat(message, user_info):
     return ChatService().chat(message, user_info) # 客户端回调函数的参数
@@ -55,17 +59,15 @@ def chat(message, user_info):
 """ 普通交互接口 """
 @socketio.on('send', namespace='/api')
 def send(message):
+    message = Utils.decrypt(message)
     """ {c:'控制',a:'行为',Authorization:'行为',data:'JSON数据‘} """
     if 'data' in message.keys():
-        message['data']['Authorization'] = message['Authorization']
+        if 'Authorization' in message.keys():
+            message['data']['Authorization'] = message['Authorization']
         return getattr(globals()[message['c']],message['a'])(message['data'])
     else:
         return getattr(globals()[message['c']],message['a'])(message)
 
-""" @socketio.on('unAuthSend', namespace='/api')
-def unAuthSend(message):
-    return getattr(globals()[message['c']],message['a'])(message['data']) """
-    #emit('unAuthSend', data, room='@api.'+str(request.sid))  
     
 """ 连接事件 """
 @socketio.on('connect', namespace='/api')

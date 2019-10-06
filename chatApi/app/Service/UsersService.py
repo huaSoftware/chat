@@ -69,7 +69,7 @@ class UsersService():
         }
         userList = Users().getAll(filters)
         data = {"userList": userList}
-        return data
+        return Utils.formatBody(data)
     
     '''
     *获取用户信息 

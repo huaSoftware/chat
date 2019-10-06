@@ -2,7 +2,7 @@
 import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
-import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
+import { Loading, Toast,Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg } from "@/utils/indexedDB"
 import {addCloudRoomMsg, updateCloudRoomMsg} from "@/socketioApi/room"
 import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
@@ -11,6 +11,10 @@ import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
 export function setup() {
 	// 创建添加新好友套接字连接
 	if (window.apiSocket == undefined) {
+		//房间尝试重连次数
+		window.tryRoomLinkCount = 0
+		//广播尝试连接次数
+		window.tryBroadcastLinkCount = 0
 		// 创建聊天室套接字监听
 		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_SOCKET + '/api');
 		window.apiSocket.on('join', (data) => {
@@ -20,6 +24,12 @@ export function setup() {
 			//逻辑处理
 		});
 		window.apiSocket.on('send', (data) => {
+			//逻辑处理
+		});
+		window.apiSocket.on('connect', (data) => {
+			//逻辑处理
+		});
+		window.apiSocket.on('disconnect', (data) => {
 			//逻辑处理
 		});
 		//有令牌则监听
@@ -170,18 +180,34 @@ export function  send(method, data, type = 'room') {
 			//响应超时
 			window.sendTimeOut = setTimeout(()=>{
 				if(method == 'join'){
-					Loading.open('加入超时,重新加入中...')
-					send('join', {
-						name: store.getters.currentRoomName,
-						room_uuid: store.getters.currentRoomUuid,
-						type: store.getters.currentRoomType
-					})
+					Loading.open('房间加入超时,重新加入中...')
+					if(window.tryRoomLinkCount<3){
+						send('join', {
+							name: store.getters.currentRoomName,
+							room_uuid: store.getters.currentRoomUuid,
+							type: store.getters.currentRoomType
+						})
+						window.tryRoomLinkCount++
+					}else{
+						window.tryRoomLinkCount = 0
+						clearTimeout(window.sendTimeOut)
+						Loading.close()
+						Alert({'mes':'房间连接已断开'})
+					}
 				}
 				if(method == 'leave'){
-					Loading.open('退出超时,重新退出中...')
-					send('leave', {
-						room_uuid: store.getters.currentRoomUuid
-					})
+					Loading.open('房间退出超时,重新退出中...')
+					if(window.tryRoomLinkCount<3){
+						send('leave', {
+							room_uuid: store.getters.currentRoomUuid
+						})
+						window.tryRoomLinkCount++
+					}else{
+						window.tryRoomLinkCount = 0
+						clearTimeout(window.sendTimeOut)
+						Loading.close()
+						Alert({'mes':'房间连接已断开'})
+					}
 				}
 				if(method == 'chat'){
 					Toast({
@@ -207,7 +233,6 @@ export function  send(method, data, type = 'room') {
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
-					console.log("ROOM发送确认消息:"+res)
 					if(res.data.action == 'chat'){
 						clearTimeout(window.sendTimeOut)
 					}
@@ -249,12 +274,28 @@ export function  send(method, data, type = 'room') {
 			//响应超时
 			window.broadcastTimeOut = setTimeout(()=>{
 				if(method == 'join'){
-					Loading.open('重新链接中...')
-					send('join', {}, 'broadcast')
+					Loading.open('广播重新链接中...')
+					if(window.tryBroadcastLinkCount<3){
+						send('join', {}, 'broadcast')
+						window.tryBroadcastLinkCount++
+					}else{
+						window.tryBroadcastLinkCount = 0
+						clearTimeout(window.broadcastTimeOut)
+						Loading.close()
+						Alert({'mes':'广播连接已断开'})
+					}
 				}
 				if(method == 'leave'){
-					Loading.open('退出超时,重新退出中...')
-					send('leave', {}, 'broadcast')
+					Loading.open('广播退出超时,重新退出中...')
+					if(window.tryBroadcastLinkCount<3){
+						send('leave', {}, 'broadcast')
+						window.tryBroadcastLinkCount++
+					}else{
+						window.tryBroadcastLinkCount = 0
+						clearTimeout(window.broadcastTimeOut)
+						Loading.close()
+						Alert({'mes':'广播连接已断开'})
+					}
 				}
 			},1500)
 			data['type'] = store.getters.NOTIFICATION

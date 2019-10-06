@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-09-29 14:50:08
+@LastEditTime: 2019-10-05 19:48:28
 '''
 from app import dBSession
 from app import socketio
@@ -174,3 +174,12 @@ def socketValidator(name, rules, msg=dict(), default=""):
             return func(args[0])
         return inner_wrappar 
     return wrappar
+
+
+# rsa解密
+def decryptMessage(func):
+    @wraps(func)
+    def inner_wrappar(*args, **kwargs):
+        args = Utils.decrypt(args[0])
+        return func(args)
+    return inner_wrappar 

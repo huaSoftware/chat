@@ -3,7 +3,7 @@
 @Date: 2019-09-28 20:50:59
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-29 21:28:38
+@LastEditTime: 2019-10-06 09:15:10
 '''
 from app import app
 from app.Controllers.BaseController import BaseController
@@ -37,14 +37,17 @@ class UploadService():
     @staticmethod
     def upload(params):
         filename = secure_filename(params['name'])
-        if(params['arrayBuffer'] and Utils.allowed_file(filename)):
+        base64Data = params['dataUrl'].split(',')[1]
+        if(base64Data and Utils.allowed_file(filename)):
             file_suffix = params['name'].split('.')[1]
             path = UPLOAD_FOLDER+Utils.unique_id()+'.'+file_suffix
             full_path = os.getcwd()+path
             f = open(full_path,'wb')
-            f.write(params['arrayBuffer'])
+            data = base64.b64decode(base64Data)
+            f.write(data)
+            #f.write(params['arrayBuffer'])
             f.close
-            return Utils.formatBody({'path': path, 'name': filename}, msg='图片提交成功')
+            return Utils.formatBody({'path': path, 'name': filename}, msg='上传成功')
         return Utils.formatError(Code.BAD_REQUEST,'文件类型不允许')
 
 
