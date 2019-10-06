@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-05-21 09:48:18
+ * @LastEditTime: 2019-10-06 19:52:21
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
@@ -32,6 +32,7 @@ http://doc.zhuhui.store
 - [x] 群聊
 - [x] 聊天未收到重发
 - [x] 增加聊天记录云端存储
+- [x] rsa加密数据
 
 ### 后台项目功能
 - [x] 登录

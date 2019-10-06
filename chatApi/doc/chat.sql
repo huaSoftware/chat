@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 26/07/2019 10:11:20
+ Date: 06/10/2019 19:24:46
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `ht_address_book`  (
   `unread_number` int(11) UNSIGNED NOT NULL COMMENT '未读取信息次数',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `focused_user_id`(`focused_user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_admin
@@ -66,7 +66,7 @@ CREATE TABLE `ht_logs`  (
   `data` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '内容',
   `create_time` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 311 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_msg
@@ -83,23 +83,24 @@ CREATE TABLE `ht_msg`  (
   `created_at` bigint(14) UNSIGNED NOT NULL COMMENT '创建时间',
   `send_status` tinyint(2) NOT NULL COMMENT '发送状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_room
 -- ----------------------------
 DROP TABLE IF EXISTS `ht_room`;
 CREATE TABLE `ht_room`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
   `room_uuid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '房间编号',
-  `last_msg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '最后一条消息',
-  `updated_at` int(10) UNSIGNED NOT NULL COMMENT '最后一条消息时间',
-  `created_at` int(10) UNSIGNED NOT NULL COMMENT '创建时间',
-  `type` int(10) UNSIGNED NOT NULL COMMENT '类型，0是单聊，1是群聊',
+  `last_msg` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '最后一条消息',
+  `updated_at` int(11) UNSIGNED NOT NULL COMMENT '最后一条消息时间',
+  `created_at` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
+  `type` int(11) UNSIGNED NOT NULL COMMENT '类型，0是单聊，1是群聊',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '房间名',
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户编号',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `room_uuid`(`room_uuid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 67 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_user_room_relation
@@ -115,7 +116,7 @@ CREATE TABLE `ht_user_room_relation`  (
   `created_at` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_users
