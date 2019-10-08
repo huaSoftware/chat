@@ -3,7 +3,7 @@
 @Date: 2019-06-17 14:14:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-17 14:14:29
+@LastEditTime: 2019-10-08 10:03:04
 '''
 from app import app, socketio
 from flask_cors import CORS
@@ -12,4 +12,4 @@ app = app
 CORS(app, supports_credentials=True)
 if __name__ == '__main__':
     app.debug = False
-    app.run(host='0.0.0.0', port=501)
+    app.run(host='0.0.0.0', port=500)

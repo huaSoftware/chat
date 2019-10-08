@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-03 14:38:32
+@LastEditTime: 2019-10-08 15:13:44
 '''
 from flask import Flask
 from flask import make_response
@@ -51,6 +51,6 @@ def socketio_error_handler(e):
 from app.Controllers import  SocketController
 #引入后台
 from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
-                                UserController, AdminController, IndexController)
+                                UserController, AdminController, IndexController,LogController)
 
 

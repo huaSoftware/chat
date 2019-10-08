@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-04-23 20:38:30
+ * @LastEditTime: 2019-10-08 14:48:09
  -->
 <template>
   <div class="app-container">
@@ -48,8 +48,19 @@
         </template>
       </el-table-column>
       <el-table-column label="最近留言" class-name="status-col" width="200">
-        <template slot-scope="scope">
-          <span v-html="scope.row.last_msg">{{scope.row.last_msg}}</span>
+        <template slot-scope="scope" v-if="scope.row.last_msg">
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == IMG ">
+            [图片]
+          </div>
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == FILE ">
+            [文件]
+          </div>
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == RECORD ">
+            [语音]
+          </div>
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == TEXT ">
+            {{JSON.parse(scope.row.last_msg)['msg']}}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" class-name="status-col" width="200">
@@ -79,6 +90,7 @@
 </template>
 
 <script>
+import {mapGetters, mapMutations} from 'vuex'
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import { getToken } from "@/utils/auth";
 import { roomList,roomDelete } from "@/api/room";
@@ -101,6 +113,14 @@ export default {
   },
   components: {
     Pagination
+  },
+  computed: {
+    ...mapGetters([
+      "RECORD",
+      "TEXT",
+      "IMG",
+      "FILE",
+    ])
   },
   methods: {
     getList() {

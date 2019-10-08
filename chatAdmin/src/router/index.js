@@ -130,6 +130,18 @@ export const constantRoutes = [
         meta: { title: '管理员管理', icon: 'peoples' }
       }
     ]
+  },
+  {
+    path: '/log',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/log/index'),
+        name: 'Log',
+        meta: { title: '日志管理', icon: 'edit' }
+      }
+    ]
   }
 ]
 

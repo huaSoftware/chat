@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-10-05 19:48:28
+@LastEditTime: 2019-10-08 16:22:33
 '''
 from app import dBSession
 from app import socketio
@@ -30,8 +30,6 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         error['error'] = True
         error['show'] = True
         return error
-    v = cerberus.Validator(
-        rules, error_handler=CustomErrorHandler(custom_messages=error_msg))
     #这边修改成json格式接收参数
     method = request.method
     if method == 'GET':
@@ -40,6 +38,13 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         requests = request.get_json()
     if requests == None:
         requests = dict()
+    if 'required' in rules[name].keys():
+        if rules[name]['required'] == False:
+            if name not in requests:
+                #requests[name] = default
+                return requests
+    v = cerberus.Validator(
+        rules, error_handler=CustomErrorHandler(custom_messages=error_msg))
     if name not in requests:
         requests[name] = default
     cookedReqVal = {name: requests[name]}
@@ -144,7 +149,11 @@ def validator(name, rules, msg=dict(), default=""):
                 res.headers['Content-Type'] = 'application/json'
                 return res
             if 'params' in kwargs.keys():
-                kwargs['params'][name]=error[name]
+                if 'required' in rules.keys():
+                    if rules['required'] != False:
+                        kwargs['params'][name]=error[name]
+                else:
+                    kwargs['params'][name]=error[name]
                 kwargs= kwargs['params']
             else:
                 kwargs=error

@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2019-06-24 14:28:10
+ * @LastEditTime: 2019-10-08 14:38:43
  -->
 <template>
   <div class="login-container">
@@ -281,7 +281,7 @@ export default {
     .el-input {
       display: inline-block;
       height: 47px;
-      width: 85%;
+      width: 80%;
       input {
         background: transparent;
         border: 0px;
@@ -370,4 +370,7 @@ $light_gray:#eee;
   padding-top: 20px;
   background-image: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
 };
+.show-pwd{
+  padding-left: 15px;
+}
 </style>

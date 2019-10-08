@@ -165,7 +165,8 @@ export function setDown(){
 	window.apiSocket = undefined
 }
 
-/* 发送消息 
+/**
+ * 发送消息 
  * @param string data
  * @param object data
  * @return void
@@ -221,15 +222,7 @@ export function  send(method, data, type = 'room') {
 					store.dispatch('updateMsgList', msgList)
 				}
 			},1500)
-			//rsa加密
-			let encrypt = new JSEncrypt();
-			encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
-			let str = JSON.stringify(data)
-			let encryptStr = ""
-			for(let i=0; i<str.length;i+=40){
-				encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
-			}
-			encryptStr = encryptStr.substring(0,encryptStr.length-1);
+			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
@@ -299,16 +292,7 @@ export function  send(method, data, type = 'room') {
 				}
 			},1500)
 			data['type'] = store.getters.NOTIFICATION
-			//rsa加密
-			let encrypt = new JSEncrypt();
-			encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
-			let str = JSON.stringify(data)
-			let encryptStr = ""
-			for(let i=0; i<str.length;i+=40){
-				encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
-				console.log(encryptStr)
-			}
-			encryptStr = encryptStr.substring(0,encryptStr.length-1);
+			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				response(recv).then(res=>{
 					if(res.data.action == 'leave'){	
@@ -326,15 +310,7 @@ export function  send(method, data, type = 'room') {
 		}
 		if(type == 'api'){
 			var res = new Promise((resolve, reject)=>{
-				//rsa加密
-				let encrypt = new JSEncrypt();
-				encrypt.setPublicKey(process.env.VUE_APP_PUBLIC_KEY);
-				let str = JSON.stringify(data)
-				let encryptStr = ""
-				for(let i=0; i<str.length;i+=40){
-					encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
-				}
-				encryptStr = encryptStr.substring(0,encryptStr.length-1);
+				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
 					console.log(res)
 					/**
@@ -382,7 +358,6 @@ export function  send(method, data, type = 'room') {
 	}
 }
 
-
 /* 解析返回消息 */
 export function response(res){
 	var res = new Promise((resolve, reject)=>{
@@ -426,4 +401,23 @@ export function response(res){
 		reject('error')
 	})
 	return res
+}
+
+/**
+ *  rsa加密
+ *  @param object data
+ *  @param string publicKey
+ *  @return string 
+ */
+export function rsaEncode(data, publicKey){
+	//rsa加密
+	let encrypt = new JSEncrypt();
+	encrypt.setPublicKey(publicKey);
+	let str = JSON.stringify(data)
+	let encryptStr = ""
+	for(let i=0; i<str.length;i+=40){
+		encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
+	}
+	encryptStr = encryptStr.substring(0,encryptStr.length-1);
+	return encryptStr
 }
