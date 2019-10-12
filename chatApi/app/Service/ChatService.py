@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-19 11:42:09
+@LastEditTime: 2019-10-12 10:35:04
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -50,7 +50,7 @@ class ChatService():
             #更新客户端房间信息
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
-                socketio.emit('room', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item.be_focused_user_id))
+                socketio.emit('room', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
         elif room_data != None and room_type == 1:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             #发送消息
@@ -64,7 +64,7 @@ class ChatService():
             for item in user_room_relation_data:
                 #if item.user_id != user_id:
                 roomList = UserRoomRelation.getRoomList(item.user_id)['data']
-                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item.user_id))
+                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat"})
         
     def groupChatCreate(self,user_info, params):

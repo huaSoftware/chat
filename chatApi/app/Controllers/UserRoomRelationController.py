@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-15 20:02:59
+@LastEditTime: 2019-10-12 10:38:15
 '''
 from app import app
 from app import socketio
@@ -30,7 +30,7 @@ def groupChatCreate(user_info, params):
         user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(data['room_uuid']))
         for item in user_room_relation_data:
             roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
-            socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item['user_id']))
+            socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
         return BaseController().successData(data, msg='创建成功')
     return BaseController().error(msg='创建失败')
     

@@ -23,7 +23,7 @@
 		<!-- 功能栏 -->
 		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
 		<!-- 单聊 -->
-		<article class="yd-list yd-list-theme4" style="padding-top:1.8rem">
+		<article class="yd-list yd-list-theme4" style="padding-top:1rem">
 			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
 				<div class="yd-list-img"><vImg :imgUrl="item.users.head_img"/></div>
 				<div class="yd-list-mes">

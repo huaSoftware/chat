@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2019-10-08 14:38:43
+ * @LastEditTime: 2019-10-11 10:10:02
  -->
 <template>
   <div class="login-container">
@@ -371,6 +371,6 @@ $light_gray:#eee;
   background-image: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
 };
 .show-pwd{
-  padding-left: 15px;
+  padding-left: 8px;
 }
 </style>

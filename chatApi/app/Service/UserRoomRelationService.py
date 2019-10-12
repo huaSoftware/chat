@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-29 19:58:53
+@LastEditTime: 2019-10-12 10:40:26
 '''
 from app import app
 from app import socketio
@@ -31,7 +31,7 @@ class UserRoomRelationService:
             user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(data['room_uuid']))
             for item in user_room_relation_data:
                 roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
-                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item['user_id']))
+                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
             return Utils.formatBody(data, msg='创建成功')
         return Utils.formatError(Code.BAD_REQUEST,msg='创建失败')
     

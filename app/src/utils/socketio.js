@@ -123,7 +123,7 @@ export function setup() {
 			window.apiSocket.on('room', (data) => {
 				response(data).then(res=>{
 					let data = res.data
-					//console.log(data)
+					console.log("房间列表"+data)
 					store.dispatch('updateRoomList', data)
 				})
 			});
@@ -264,6 +264,11 @@ export function  send(method, data, type = 'room') {
 			})
 		}
 		if (type == 'broadcast') {
+			if(!store.getters.token){
+				window.tryBroadcastLinkCount = 0
+				clearTimeout(window.broadcastTimeOut)
+				Loading.close()
+			}
 			//响应超时
 			window.broadcastTimeOut = setTimeout(()=>{
 				if(method == 'join'){
@@ -293,6 +298,7 @@ export function  send(method, data, type = 'room') {
 			},1500)
 			data['type'] = store.getters.NOTIFICATION
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
+			console.log("广播："+method, "秘钥："+encryptStr)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				response(recv).then(res=>{
 					if(res.data.action == 'leave'){	
@@ -415,8 +421,8 @@ export function rsaEncode(data, publicKey){
 	encrypt.setPublicKey(publicKey);
 	let str = JSON.stringify(data)
 	let encryptStr = ""
-	for(let i=0; i<str.length;i+=40){
-		encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+40))+",";
+	for(let i=0; i<str.length;i+=100){
+		encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+100))+",";
 	}
 	encryptStr = encryptStr.substring(0,encryptStr.length-1);
 	return encryptStr

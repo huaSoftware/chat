@@ -3,7 +3,7 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-10-06 19:18:37
+@LastEditTime: 2019-10-11 15:18:22
 '''
 
 from Cryptodome.PublicKey import RSA
@@ -199,9 +199,13 @@ class Utils:
         cipher_rsa = PKCS1_v1_5.new(private_key)
         #切割字符串
         en_data_list = en_data.split(",")
-        data = ""
+        data = ""      
         for en in en_data_list:
-            data +=str(cipher_rsa.decrypt(base64.b64decode(en), None),"utf-8")
+            en = base64.b64decode(en)
+            if len(en) == 127:
+                hex_fixed = '00' + en.hex()
+                en = base64.b16decode(hex_fixed.upper())
+            data +=str(cipher_rsa.decrypt(en, None),"utf-8")
         return json.loads(data)
           
     @staticmethod

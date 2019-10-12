@@ -3,7 +3,7 @@
 @Date: 2019-09-29 11:30:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-29 17:20:14
+@LastEditTime: 2019-10-12 10:37:24
 '''
 from app import app
 from app import cache
@@ -40,7 +40,7 @@ class AddressBookService:
             'be_focused_user_id': params['be_focused_user_id'],
             'focused_user_id': user_info['data']['id']
         }
-        socketio.emit('beg', Utils.formatBody(data), namespace='/room', room='@broadcast.'+str(params['be_focused_user_id']))#,callback=success)
+        socketio.emit('beg', Utils.formatBody(data), namespace='/api', room='@broadcast.'+str(params['be_focused_user_id']))#,callback=success)
         #只缓存最新的一条
         cache.set('@broadcast.beg'+str(params['be_focused_user_id']),data)
         return Utils.formatBody({},msg='发送成功')
@@ -70,12 +70,12 @@ class AddressBookService:
             socketio.emit('beg', Utils.formatBody({
                 'action':'beg_add_success',
                 'focused_user_id' : user_info['data']['id']
-            }), namespace='/room', room='@broadcast.'+str(params['focused_user_id']))
+            }), namespace='/api', room='@broadcast.'+str(params['focused_user_id']))
             #添加后同步房间
             addressBookData = AddressBook.get(room_uuid)
             for item in addressBookData:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
-                socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item.be_focused_user_id))   
+                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item.be_focused_user_id))   
             return Utils.formatBody({},msg='添加成功')
         return Utils.formatError(Code.BAD_REQUEST,msg='已添加')
     

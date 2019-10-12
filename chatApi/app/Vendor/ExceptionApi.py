@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-30 10:41:29
 @LastEditors: hua
-@LastEditTime: 2019-09-14 12:48:40
+@LastEditTime: 2019-10-11 15:21:50
 '''
 from flask import jsonify, make_response
 from app.env import DEBUG_LOG, SAVE_LOG
@@ -17,7 +17,7 @@ def ExceptionApi(code, e):
     exc_type, exc_value, exc_traceback = sys.exc_info()
     if DEBUG_LOG:
         if SAVE_LOG == 1:
-            log().exception(e)
+            log().exception(traceback.format_exception([], exc_value, exc_traceback))
         elif SAVE_LOG == 2:
             LogService().add(e, 1, 3) #导致文件互相引用
     body = {}

@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-29 16:38:08
+@LastEditTime: 2019-10-12 10:40:12
 '''
 from app import app
 from flask import request
@@ -49,9 +49,9 @@ class RoomService:
             Room().delete(filters)
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item['be_focused_user_id'])['data']
-                socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item['be_focused_user_id']))
+                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['be_focused_user_id']))
                 roomList = AddressBook.getRoomList(item['focused_user_id'])['data']
-                socketio.emit('room',Utils.formatBody(roomList), namespace="/room",room='@broadcast.'+str(item['focused_user_id']))
+                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['focused_user_id']))
         else:
             user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(params['room_uuid']))
             filters = {
@@ -69,7 +69,7 @@ class RoomService:
             UserRoomRelation().delete(filters)
             for item in user_room_relation_data:
                 roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
-                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/room', room='@broadcast.'+str(item['user_id']))
+                socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
         return  Utils.formatBody()
     
     @staticmethod
