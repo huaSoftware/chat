@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-09-20 19:50:46
+@LastEditTime: 2019-10-19 15:56:42
 '''
 import time, math
 
@@ -199,11 +199,10 @@ class Room(Base, HtRoom, SerializerMixin):
     #更新房间记录
     @staticmethod
     @classTransaction
-    def updateLastMsgRoom(room_uuid, data, created_at,user_id):
+    def updateLastMsgRoom(room_uuid, data, created_at):
         dBSession.query(Room).filter(Room.room_uuid == room_uuid).update({
             'last_msg': json.dumps(data),
             'updated_at': created_at,
-            'user_id': user_id
         })
         return True
     

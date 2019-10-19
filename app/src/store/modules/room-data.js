@@ -99,13 +99,13 @@ export default {
                         let msgData = {
                             msg:data['msg'],
                             created_at:item.room.updated_at,
-                            head_img:item.users.head_img,
-                            name:item.users.nick_name,
+                            head_img:data['head_img'],
+                            name:data['name'],
                             //id:item.id,
                             //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
-                            user_id:item.users.id,
+                            user_id:data['user_id'],
                             room_uuid:item.room_uuid
                         }
                         addLocalRoomMsg(msgData)
@@ -113,13 +113,13 @@ export default {
                         let msgData = {
                             msg:data['msg'],
                             created_at:item.room.updated_at,
-                            head_img:item.users.head_img,
-                            name:item.users.nick_name,
+                            head_img:data['head_img'],
+                            name:data['name'],
                             //id:item.id,
                             //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
-                            user_id:item.users.id,
+                            user_id:data['user_id'],
                             room_uuid:item.room_uuid
                         }
                         console.log(msgData)

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-07-12 20:37:26
+@LastEditTime: 2019-10-19 11:00:06
 '''
 import time, math
 
@@ -181,7 +181,7 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
             UserRoomRelation.unread_number: UserRoomRelation.unread_number+1,
             UserRoomRelation.updated_at: time.time()
         })
-        return dBSession.commit()
+        #return dBSession.commit()
     
     @staticmethod
     @transaction
@@ -193,5 +193,5 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         }
         dBSession.query(UserRoomRelation).filter(
             *filter).update({'unread_number': 0, 'updated_at': time.time()})
-        return dBSession.commit()
+        #return dBSession.commit()
     

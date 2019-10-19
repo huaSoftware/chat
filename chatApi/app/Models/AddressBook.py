@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-07-28 10:48:50
+@LastEditTime: 2019-10-19 11:12:34
 '''
 import time, math
 
@@ -232,7 +232,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             AddressBook.unread_number: AddressBook.unread_number+1,
             AddressBook.updated_at: time.time()
         })
-        return dBSession.commit()
+        #return dBSession.commit()
 
     # 清除关注者未读消息次数
     @staticmethod
@@ -244,4 +244,4 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         }
         dBSession.query(AddressBook).filter(
             *filter).update({'unread_number': 0, 'updated_at': time.time()})
-        return dBSession.commit()
+        #return dBSession.commit()

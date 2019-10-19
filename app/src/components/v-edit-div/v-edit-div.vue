@@ -2,7 +2,7 @@
     <div class="edit-div"
         v-html="innerText"
         :contenteditable="canEdit"
-        @focus="isLocked = true"
+        @focus="onFocus"
         @blur="isLocked = false"
         @input="changeText"
         >
@@ -48,6 +48,10 @@
                 //this.innerText = this.innerText + '<br>'
                 this.$emit('input', this.$el.innerHTML);
             },
+            onFocus(){
+                this.isLocked = true
+                this.$emit('onFocus');
+            }
         }
     }
 </script>

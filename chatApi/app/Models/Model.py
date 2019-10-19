@@ -1,12 +1,12 @@
 '''
 @Author: hua
-@Date: 2019-10-02 20:12:40
+@Date: 2019-10-19 15:48:23
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-02 20:12:40
+@LastEditTime: 2019-10-19 15:56:14
 '''
 # coding: utf-8
-from sqlalchemy import CHAR, Column, String, text
+from sqlalchemy import CHAR, Column, String, Text, text
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, TEXT, TINYINT, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -60,7 +60,7 @@ class HtMsg(Base):
 
     id = Column(INTEGER(11), primary_key=True, comment='编号')
     name = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='名字')
-    msg = Column(TEXT, nullable=False, comment='聊天内容')
+    msg = Column(Text, nullable=False, comment='聊天内容')
     room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间唯一编号')
     user_id = Column(INTEGER(11), nullable=False, comment='用户编号')
     type = Column(TINYINT(2), nullable=False, comment='类型')
@@ -74,7 +74,7 @@ class HtRoom(Base):
 
     id = Column(INTEGER(11), primary_key=True, comment='编号')
     room_uuid = Column(VARCHAR(255), nullable=False, unique=True, server_default=text("''"), comment='房间编号')
-    last_msg = Column(TEXT, nullable=False, comment='最后一条消息')
+    last_msg = Column(Text, nullable=False, comment='最后一条消息')
     updated_at = Column(INTEGER(11), nullable=False, comment='最后一条消息时间')
     created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
     type = Column(INTEGER(11), nullable=False, comment='类型，0是单聊，1是群聊')

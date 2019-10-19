@@ -13,7 +13,7 @@
       <!-- 语音输入 -->
       <div :class="touched? 'record touched':'record'" v-show="recordShow" @touchstart="startRecord" @touchend="stopRecord">按住说话</div>
       <!-- 输入栏 -->
-      <vEditDiv v-show="!recordShow" @click.native="closeDefIconsShow" class="input"  id="edit" placeholder="请输入文字"  v-model="innerText"></vEditDiv>
+      <vEditDiv v-show="!recordShow" @onFocus="onFocus" @click.native="closeDefIconsShow" class="input"  id="edit" placeholder="请输入文字"  v-model="innerText"></vEditDiv>
       <div class="def" @click="handleIconsShow">
         <yd-icon slot="icon" name="uniE905" custom></yd-icon>
       </div>
@@ -72,6 +72,9 @@ export default {
         }
     },
     methods:{
+        onFocus(){
+            this.$emit('onFocus');
+        },
         handleRecordShow(){
             this.$emit('handleRecordShow', '')
         },
@@ -123,7 +126,7 @@ export default {
 .voice {
     display: flex;
     flex-direction: column-reverse;
-    padding: 5px 8px;
+    padding: 0.2rem;
     vertical-align: middle;
 }
 
@@ -169,7 +172,7 @@ export default {
     display: flex;
     flex-direction: column-reverse;
     text-align: center;
-    padding: 5px 8px;
+    padding: 0.2rem;
     vertical-align: middle;
 }
 

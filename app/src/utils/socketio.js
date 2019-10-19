@@ -40,7 +40,7 @@ export function setup() {
 				response(data).then(res=>{
 					let data = res.data
 					//逻辑处理,存放indexdDB,存放一份实时的在vuex
-					console.log(data)
+					console.log("发送消息回复",data)
 					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 					let index = utils.arr.getIndexByTime(data['created_at'], msgList)
 					//console.log(index);//未找到索引说明是他人发送的消息
@@ -48,7 +48,7 @@ export function setup() {
 						msgList[index]['send_status'] = store.getters.SUCCESS
 						//他人发送的需要根据设置的房间状态去同步聊天数据
 						delete msgList[index]['id']
-						console.log(msgList[index])
+						console.log("消息列表",msgList[index])
 						if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
 							addLocalRoomMsg(msgList[index])
 						}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
@@ -224,6 +224,7 @@ export function  send(method, data, type = 'room') {
 			},1500)
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
+				console.log(recv)
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
 					if(res.data.action == 'chat'){
@@ -259,6 +260,16 @@ export function  send(method, data, type = 'room') {
 					Promise.resolve(recv)
 				}).catch(e=>{
 					//服务器出错
+					clearTimeout(window.sendTimeOut)
+					Toast({
+						mes: e.traceback.toString(),
+						timeout: 1500,
+						icon: 'error'
+					});
+					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+					let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+					msgList[index]['send_status'] = 2
+					store.dispatch('updateMsgList', msgList)
 					Promise.reject(e)
 				})
 			})
@@ -388,11 +399,11 @@ export function response(res){
 			}
 		}
 		Loading.close()
-		reject('error')
+		reject(res)
 		}
 		if (res.error_code === 401) {
 			Loading.close()
-			reject('error')
+			reject(res)
 		}
 		if (res.error_code === 10001) {
 			Loading.close()
@@ -402,9 +413,9 @@ export function response(res){
 			store.commit('SET_TOKEN', null)
 			//setDown()
 			router.push({name: 'authLogin'})
-			reject('error')
+			reject(res)
 		}
-		reject('error')
+		reject(res)
 	})
 	return res
 }

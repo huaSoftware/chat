@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-08 15:13:44
+@LastEditTime: 2019-10-19 13:24:38
 '''
 from flask import Flask
 from flask import make_response
@@ -20,7 +20,7 @@ app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
 async_mode = 'gevent'
-socketio = SocketIO(app,async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True)
+socketio = SocketIO(app, async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")
 # 配置 sqlalchemy  数据库驱动://数据库用户名:密码@主机地址:端口/数据库?编码
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
@@ -33,19 +33,19 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI,pool_recycle=7200,pool_size=5,max
 DBSession = scoped_session(sessionmaker(bind=engine))
 dBSession = DBSession()
 
-from app.Vendor.ExceptionApi import ExceptionApi
+from app.Vendor.ExceptionApi import ExceptionApi, SocketExceptionApi
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     dBSession.close() 
     
-#挂载500异常处理,并记录日志
+#挂载500异常处理,并记录日志,这里要做判断，如果是socket的则不挂载这个
 @app.errorhandler(Exception)
 def error_handler(e):
     return ExceptionApi(Code.ERROR, e)
 
 @socketio.on_error_default       # Handles the default namespace
 def socketio_error_handler(e):
-    return ExceptionApi(Code.ERROR, e)
+    return SocketExceptionApi(Code.ERROR, e)
 
 #引入使用的控制器
 from app.Controllers import  SocketController

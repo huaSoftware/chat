@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-12 10:35:04
+@LastEditTime: 2019-10-19 15:58:58
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -43,7 +43,7 @@ class ChatService():
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
             #聊天时同步房间信息
-            Room.updateLastMsgRoom(room_uuid, data, created_at,user_data['id'])
+            Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字
             AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
             AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
@@ -56,7 +56,7 @@ class ChatService():
             #发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
             #聊天时同步房间信息
-            Room.updateLastMsgRoom(room_uuid, data, created_at,user_data['id'])
+            Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字
             UserRoomRelation.updateUnreadNumber(room_uuid, user_data['id'])
             UserRoomRelation.cleanUnreadNumber(room_uuid, user_data['id'])

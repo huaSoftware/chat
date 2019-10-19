@@ -73,6 +73,7 @@
     <img v-show="recordingShow" class="recording" :src="'static/img/recording.png'"/>
     <!-- 输入 -->
     <inputWrapper :style="iconsShow || defsShow ?'bottom:200px':'bottom:0.2rem'"
+      @onFocus="handleOnfocus"
       @handleRecordShow="handleRecordShow"
       @closeDefIconsShow="closeDefIconsShow"
       @handleIconsShow="handleIconsShow"
@@ -95,6 +96,7 @@
   </div>
 </template>
 <script>
+/* 重新设计输入栏 */
 import Vue from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import vImg from '@/components/v-img/v-img'
@@ -113,6 +115,7 @@ import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from 'axios'
+import VConsole from 'vconsole'
 export default {
   components: {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
@@ -125,6 +128,7 @@ export default {
       uuidVal: "",
       scroll: "",
       content: "",
+      isPartChatPage:false,
       iconsShow: false,
       defsShow: false,
       sendShow: false,
@@ -134,6 +138,7 @@ export default {
       cropperShow: false,
       lockDown: false,
       moreInfoShow: false,
+      clientHeight:0,
       data: [],
       reqImgData: {
         url: process.env.VUE_APP_CLIENT_API,
@@ -185,6 +190,7 @@ export default {
       updateMsgList: "updateMsgList"
     }),
     init(){
+      new VConsole()
       this.updateMsgList([]);
       try {
         // 扩展API加载完毕后调用onPlusReady回调函数
@@ -196,8 +202,10 @@ export default {
       } catch (e) {
         //console.log('不是app内')
       }
+      this.clientHeight = document.body.clientHeight
       this.mescrollDom = document.getElementsByClassName('mescroll')[0]
-      this.handleHeightToBottom(this.htmlFontSize*3)
+      this.isPartChatPage = false
+      this.handleHeightToBottom()
       new Swiper(".swiper-cont", {
         loop: false,
         autoplay: false, //可选选项，自动滑动
@@ -211,13 +219,35 @@ export default {
       });
       window.onresize = () =>{
         setTimeout(() => {
-          this.handleHeightToBottom(this.htmlFontSize*3)
+          if(document.body.clientHeight<this.clientHeight){
+            //alert(1)
+            this.isPartChatPage = 'keyborad'
+          }else{
+            if(this.iconsShow !==true){
+              this.isPartChatPage = false
+            }
+          }
+          this.handleHeightToBottom()
           this.handleSendShow();
         }, 300);
       }; 
     },
-    handleHeightToBottom(value){
-      this.mescrollDom.style.height = document.body.clientHeight - value + "px";
+    handleHeightToBottom(){
+      console.log(this.isPartChatPage )
+      if(this.isPartChatPage == false){
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2+ "px";
+      }
+      else if(this.isPartChatPage == 'keyborad'){
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 +"px";
+      }
+      else{
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 - 200+ "px";
+      }
+     /*  setTimeout(()=>{
+        alert(document.body.clientHeight)
+      },1000) */
+      this.handleMsgListToBottom(100)
+      //console.log(document.body.clientHeight - this.htmlFontSize*2-70)
     },
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
@@ -398,7 +428,8 @@ export default {
     },
     closeDefIconsShow() {
       this.iconsShow = false;this.defsShow = false;this.recordShow = false;
-      this.handleHeightToBottom(this.htmlFontSize*3)
+      this.isPartChatPage = false
+      this.handleHeightToBottom()
     },
     handleSendShow() {
       if (this.content.length >= 1) {
@@ -407,8 +438,12 @@ export default {
         this.sendShow = false;
       }
     },
+    handleOnfocus(){
+      /* this.handleMsgListToBottom(700)
+      this.isFocus = true */
+    },
     /* 回滚到底部并重置预览图片 */
-    handleMsgListToBottom() {
+    handleMsgListToBottom(delayTime) {
       this.$nextTick(() => {
         setTimeout(() => {
           if(!this.lockDown){
@@ -416,30 +451,44 @@ export default {
           }
           this.$previewRefresh();
           this.lockDown = false;
-        }, 100);
+        }, delayTime);
       });
     },
     handleDefsShow() {
       if (this.defsShow) {
-        this.handleHeightToBottom(this.htmlFontSize*3)
+        this.isPartChatPage = false
+        this.handleHeightToBottom()
       } else {
-        this.handleHeightToBottom(this.htmlFontSize*7.5)
+        this.isPartChatPage = true
+        this.handleHeightToBottom()
       }
       this.defsShow = !this.defsShow;this.iconsShow = false;this.recordShow = false;
       this.handleSendShow();
       if (this.iconsShow == false && this.defsShow == false) {
-        this.handleHeightToBottom(this.htmlFontSize*3)
+        this.isPartChatPage = false
+        this.handleHeightToBottom()
       }
-      this.handleMsgListToBottom()
+      this.handleMsgListToBottom(100)
     },
     handleIconsShow() {
-      this.iconsShow?this.handleHeightToBottom(this.htmlFontSize*3):this.handleHeightToBottom(this.htmlFontSize*7.5)
+      //这边需要除了获取焦点后的再切换表情的bug
+      document.getElementsByClassName('edit-div')[0].blur()
+      if(this.iconsShow){
+        this.isPartChatPage = false
+        this.handleHeightToBottom()
+      }else{
+        this.isPartChatPage = true
+        this.handleHeightToBottom()
+      }
       this.iconsShow = !this.iconsShow;
       this.defsShow = false;
       this.recordShow = false;
       this.handleSendShow();
-      if (this.iconsShow == false && this.defsShow == false) this.handleHeightToBottom(this.htmlFontSize*3)
-      this.handleMsgListToBottom()
+      if (this.iconsShow == false && this.defsShow == false) {
+        this.isPartChatPage = false
+        this.handleHeightToBottom()
+      }
+      this.handleMsgListToBottom(100)
     },
     insertIcon(src) {
       this.content = `${this.content}<img src='${src}'>`
@@ -559,7 +608,11 @@ export default {
     //监听聊天数据变动
     content: "handleSendShow",
     data: "handleSendShow",
-    msgList: "handleMsgListToBottom"
+    msgList: {
+      handler(){
+        this.handleMsgListToBottom(100)
+      }
+    }
   }
 };
 </script>

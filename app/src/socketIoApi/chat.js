@@ -27,6 +27,7 @@ export function chatSend(data){
         console.log(msgInfo)
         addCloudRoomMsg(msgInfo)
     }
+    console.log("发送",data)
     return send('chat', data)
 }
 
@@ -41,6 +42,7 @@ export function reChatSend(data){
     //console.log(index)
     msgList[index]['send_status'] = 0
     store.dispatch('updateMsgList', msgList)
+    console.log("重发",data)
     return send('chat', data)
 }
 

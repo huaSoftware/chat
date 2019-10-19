@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-12 10:40:12
+@LastEditTime: 2019-10-19 15:26:50
 '''
 from app import app
 from flask import request
@@ -103,6 +103,7 @@ class RoomService:
         res = Msg().getOne({Msg.room_uuid == params['room_uuid'],Msg.created_at == params['created_at'],Msg.user_id==params['user_id']})
         if res == None:
             params['msg'] = json.dumps(params['msg'])
+            del params['Authorization']
             Msg().add(params)
         return Utils.formatBody()
     
