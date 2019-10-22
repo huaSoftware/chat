@@ -34,7 +34,7 @@
                   <yd-icon name="refresh"></yd-icon>
                 </span>
                 <span
-                  @click="reSendMsg(key.created_at)"
+                  @click="reSendMsg(key)"
                   v-if="key.send_status == FAIL"
                   class="send_status color_danger"
                 >
@@ -406,12 +406,13 @@ export default {
       this.content = "";
       this.closeDefIconsShow();
     },
-    reSendMsg(created_at) {
+    reSendMsg(key) {
       reChatSend({
         data: {
           room_uuid: this.currentRoomUuid,
           type: this.RESEND, 
-          created_at: created_at,
+          created_at: key.created_at,
+          msg: key.msg,
           save_action: this.currentRoomSaveAction
         }
       });
@@ -508,7 +509,8 @@ export default {
       window.r.record( {filename:"_doc/audio/"}, function (p) {
         console.log('录音完成:' + p)
         //上传
-        var task = plus.uploader.createUpload(process.env.VUE_APP_CLIENT_API+'/v2/api/upload', {  
+        that.Audio2dataURL(p)
+        /* var task = plus.uploader.createUpload(process.env.VUE_APP_CLIENT_API+'/v2/api/upload', {  
         method: "post"
         },function(t, status) {
         if(status == 200) { 
@@ -538,7 +540,43 @@ export default {
         let fileName = p.replace("_doc/audio/", '')
         task.addFile(p, {"key":"file",
                 "name": fileName});  
-        task.start();  
+        task.start();   */
+      })
+    },
+    /**
+    * 录音语音文件转base64字符串
+    * @param {Object} path
+    */
+    Audio2dataURL (path) {
+      let that = this
+      plus.io.resolveLocalFileSystemURL(path, function(entry){
+          entry.file(function(file){
+              var reader = new plus.io.FileReader();
+              reader.onloadend = function (e) {
+                //console.log(e.target.result);
+                uploadFile({dataUrl:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
+                  that.recordingShow = false
+                  var BenzAMRRecorder = require('benz-amr-recorder');
+                  var amr = new BenzAMRRecorder();
+                  let url = process.env.VUE_APP_CLIENT_API+ res.data.path
+                  amr.initWithUrl(url).then(function() {
+                    //获取录音长度
+                    //amr.getDuration(); 
+                    chatSend({
+                      data: {
+                        msg:{url:url,duration: amr.getDuration(),status:false},
+                        room_uuid: that.currentRoomUuid,
+                        type: that.RECORD, 
+                        save_action: that.currentRoomSaveAction
+                    }});
+                    console.log('录音路径'+url)
+                  });
+                })
+              };
+              reader.readAsDataURL(file);
+          },function(e){
+              console.log("读写出现异常: " + e.message );
+          })
       })
     },
     amrPlay(rawData, index) {

@@ -37,9 +37,9 @@ export function chatSend(data){
  */
 export function reChatSend(data){
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-    //console.log(msgList,data)
+    console.log(data)
     let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
-    //console.log(index)
+    console.log(index)
     msgList[index]['send_status'] = 0
     store.dispatch('updateMsgList', msgList)
     console.log("重发",data)

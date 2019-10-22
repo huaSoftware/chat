@@ -128,7 +128,6 @@
 					this.updateGroupRoomList(res.data)
 					this.loading = false
 				})
-				setup()
 			},
 			handleJoinRoom(item){
 				joinChatSend({

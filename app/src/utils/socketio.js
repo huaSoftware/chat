@@ -32,121 +32,121 @@ export function setup() {
 		window.apiSocket.on('disconnect', (data) => {
 			//逻辑处理
 		});
-		//有令牌则监听
-		if(store.getters.token){
-			///监听回复的消息
-			window.apiSocket.on('chat', (data) => {
-				// 回复根据标志分类todo
-				response(data).then(res=>{
-					let data = res.data
-					//逻辑处理,存放indexdDB,存放一份实时的在vuex
-					console.log("发送消息回复",data)
-					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-					let index = utils.arr.getIndexByTime(data['created_at'], msgList)
-					//console.log(index);//未找到索引说明是他人发送的消息
-					if(typeof index !== 'undefined'){
-						msgList[index]['send_status'] = store.getters.SUCCESS
-						//他人发送的需要根据设置的房间状态去同步聊天数据
-						delete msgList[index]['id']
-						console.log("消息列表",msgList[index])
-						if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
-							addLocalRoomMsg(msgList[index])
-						}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
-							addCloudRoomMsg(msgList[index])
-						}
-					}else{
-						msgList = msgList.concat(data)
-					}
-					store.dispatch('updateMsgList', msgList)
-					let reqData = {
-						room_uuid :data['room_uuid'],
-						created_at :data['created_at'],
-						send_status: store.getters.SUCCESS
-					}
+	}
+	//有令牌则监听
+	if(store.getters.token && window.apiSocket !== undefined){
+		///监听回复的消息
+		window.apiSocket.on('chat', (data) => {
+			// 回复根据标志分类todo
+			response(data).then(res=>{
+				let data = res.data
+				//逻辑处理,存放indexdDB,存放一份实时的在vuex
+				console.log("发送消息回复",data)
+				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
+				//这边会有发送后接收不到的问题
+				if(typeof index !== 'undefined'){
+					msgList[index]['send_status'] = store.getters.SUCCESS
+					//他人发送的需要根据设置的房间状态去同步聊天数据
+					delete msgList[index]['id']
+					console.log("消息列表",msgList[index])
 					if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
-						updateLocalRoomMsg(reqData)
+						addLocalRoomMsg(msgList[index])
 					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
-						updateCloudRoomMsg(reqData)
+						addCloudRoomMsg(msgList[index])
 					}
-		
-				})
-			});
-			//监听
-			send('join', {}, 'broadcast')
-			//如果当前存在房间则进入
-			if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){
-			send('join', {
-				name: store.getters.currentRoomName,
-				room_uuid: store.getters.currentRoomUuid,
-				type: store.getters.currentRoomType,
-				save_action: store.getters.currentRoomSaveAction
+				}else{
+					msgList = msgList.concat(data)
+				}
+				store.dispatch('updateMsgList', msgList)
+				let reqData = {
+					room_uuid :data['room_uuid'],
+					created_at :data['created_at'],
+					send_status: store.getters.SUCCESS
+				}
+				if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+					updateLocalRoomMsg(reqData)
+				}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
+					updateCloudRoomMsg(reqData)
+				}
+	
 			})
-			}
-			//监听好友请求
-			window.apiSocket.on('beg', (data) => {
-				response(data).then(res=>{
-					let data = res.data
-					if (data['action'] == 'beg_add') {
-						// 复制原来的值
-						data['data']['user_id'] = data['data']['id'];
-						// 删除原来的键
-						delete data['data']['id'];
-						// 增加状态,0申请，1通过，2拒绝
-						data['data']['status'] = 0
-						Toast({ mes: `${data.data.nick_name}申请加你好友` });
-						//接收到后删除缓存
-						addressBookBegCacheDel()
-						addAddressBookBeg(data['data'])
-						getAddressBookBeg().then(res=>{
-							console.log(res)
-							let newFriendAlertNumber = 0
-							res.forEach((item)=>{
-								if(item.status==0){
-									newFriendAlertNumber++
-								}
-							})
-							store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
-						})
-						
-					}
-					if (data['action'] == 'beg_success') {
-						Toast({ mes: '发送成功，对方已收到申请' });
-					}
-					if(data['action'] == 'beg_add_success' ){
-						Toast({ mes: '对方已同意添加好友' });
-						updateAddressBookBeg(data['focused_user_id'], 1)
-					}
-				})
-			});
-
-			//监听单聊房间动态消息
-			window.apiSocket.on('room', (data) => {
-				response(data).then(res=>{
-					let data = res.data
-					console.log("房间列表"+data)
-					store.dispatch('updateRoomList', data)
-				})
-			});
-			//监听群聊房间动态消息
-			window.apiSocket.on('groupRoom', (data) => {
-				response(data).then(res=>{
-					let data = res.data
-					console.log(data)
-					store.dispatch('updateGroupRoomList', data)
-				})
-			});
-			//初始化好友邀请消息状态
-			getAddressBookBeg().then(res=>{
-				console.log("通讯录地址"+res)
-				let newFriendAlertNumber = 0
-				res.forEach((item)=>{
-					if(item.status==0){
-						newFriendAlertNumber++
-					}
-				})
-				store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
-			})
+		});
+		//监听
+		send('join', {}, 'broadcast')
+		//如果当前存在房间则进入
+		if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){
+		send('join', {
+			name: store.getters.currentRoomName,
+			room_uuid: store.getters.currentRoomUuid,
+			type: store.getters.currentRoomType,
+			save_action: store.getters.currentRoomSaveAction
+		})
 		}
+		//监听好友请求
+		window.apiSocket.on('beg', (data) => {
+			response(data).then(res=>{
+				let data = res.data
+				if (data['action'] == 'beg_add') {
+					// 复制原来的值
+					data['data']['user_id'] = data['data']['id'];
+					// 删除原来的键
+					delete data['data']['id'];
+					// 增加状态,0申请，1通过，2拒绝
+					data['data']['status'] = 0
+					Toast({ mes: `${data.data.nick_name}申请加你好友` });
+					//接收到后删除缓存
+					addressBookBegCacheDel()
+					addAddressBookBeg(data['data'])
+					getAddressBookBeg().then(res=>{
+						console.log(res)
+						let newFriendAlertNumber = 0
+						res.forEach((item)=>{
+							if(item.status==0){
+								newFriendAlertNumber++
+							}
+						})
+						store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+					})
+					
+				}
+				if (data['action'] == 'beg_success') {
+					Toast({ mes: '发送成功，对方已收到申请' });
+				}
+				if(data['action'] == 'beg_add_success' ){
+					Toast({ mes: '对方已同意添加好友' });
+					updateAddressBookBeg(data['focused_user_id'], 1)
+				}
+			})
+		});
+
+		//监听单聊房间动态消息
+		window.apiSocket.on('room', (data) => {
+			response(data).then(res=>{
+				let data = res.data
+				console.log("房间列表"+data)
+				store.dispatch('updateRoomList', data)
+			})
+		});
+		//监听群聊房间动态消息
+		window.apiSocket.on('groupRoom', (data) => {
+			response(data).then(res=>{
+				let data = res.data
+				console.log(data)
+				store.dispatch('updateGroupRoomList', data)
+			})
+		});
+		//初始化好友邀请消息状态
+		getAddressBookBeg().then(res=>{
+			console.log("通讯录地址"+res)
+			let newFriendAlertNumber = 0
+			res.forEach((item)=>{
+				if(item.status==0){
+					newFriendAlertNumber++
+				}
+			})
+			store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+		})
 	}
 }
 
@@ -354,6 +354,8 @@ export function  send(method, data, type = 'room') {
 						reject('error')
 					}
 					if (res.error_code === 401) {
+						clearTimeout(window.sendTimeOut)
+						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
 						reject('error')
 					}
@@ -402,6 +404,8 @@ export function response(res){
 		reject(res)
 		}
 		if (res.error_code === 401) {
+			clearTimeout(window.sendTimeOut)
+			clearTimeout(window.broadcastTimeOut)
 			Loading.close()
 			reject(res)
 		}

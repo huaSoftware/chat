@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-19 13:24:38
+@LastEditTime: 2019-10-21 13:44:45
 '''
 from flask import Flask
 from flask import make_response
@@ -39,10 +39,10 @@ def shutdown_session(exception=None):
     dBSession.close() 
     
 #挂载500异常处理,并记录日志,这里要做判断，如果是socket的则不挂载这个
-@app.errorhandler(Exception)
+""" @app.errorhandler(Exception)
 def error_handler(e):
     return ExceptionApi(Code.ERROR, e)
-
+ """
 @socketio.on_error_default       # Handles the default namespace
 def socketio_error_handler(e):
     return SocketExceptionApi(Code.ERROR, e)

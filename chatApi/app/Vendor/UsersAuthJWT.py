@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-09-29 15:41:40
+@LastEditTime: 2019-10-21 15:56:45
 '''
 from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
@@ -168,7 +168,10 @@ class UsersAuthJWT():
     def socketAuth(func):
         @wraps(func)
         def inner_wrappar(*args, **kwargs):
-            result = UsersAuthJWT().identify(args[0]['Authorization'])
+            if 'Authorization' in args[0].keys():
+                result = UsersAuthJWT().identify(args[0]['Authorization'])
+            else:
+                return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')
             kwargs['user_info'] = result
             if isinstance(result, str):
                 return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')#socketio.emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
