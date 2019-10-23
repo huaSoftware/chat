@@ -108,7 +108,6 @@ export function setup() {
 						})
 						store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
 					})
-					
 				}
 				if (data['action'] == 'beg_success') {
 					Toast({ mes: '发送成功，对方已收到申请' });
@@ -338,28 +337,14 @@ export function  send(method, data, type = 'room') {
 					}
 					if (res.error_code === 400 || res.error_code === 500) {
 						if(res.show == true){
-							if(typeof res.msg == 'object'){
-								let msg = ''
-								Object.keys(res.msg).forEach(function(key){
-									res.msg[key].forEach(function(val, index) {
-									msg = msg + val + ',';
-									});
-								});
-								Toast({mes:msg.slice(0,msg.length-1)})
-							}else{
-								Toast({mes:res.msg})
-							}
+							Toast({mes:res.msg})
 						}
 						Loading.close()
 						reject('error')
 					}
-					if (res.error_code === 401) {
+					if (res.error_code === 401 || res.error_code === 10001) {
 						clearTimeout(window.sendTimeOut)
 						clearTimeout(window.broadcastTimeOut)
-						Loading.close()
-						reject('error')
-					}
-					if (res.error_code === 10001) {
 						Loading.close()
 						Toast({mes: res.msg})
 						// 这里需要删除token，不然携带错误token无法去登陆
@@ -388,34 +373,19 @@ export function response(res){
 		}
 		if (res.error_code === 400 || res.error_code === 500) {
 		if(res.show == true){
-			if(typeof res.msg == 'object'){
-				let msg = ''
-				Object.keys(res.msg).forEach(function(key){
-					res.msg[key].forEach(function(val, index) {
-					msg = msg + val + ',';
-					});
-				});
-				Toast({mes:msg.slice(0,msg.length-1)})
-			}else{
-				Toast({mes:res.msg})
-			}
+			Toast({mes:res.msg})
 		}
 		Loading.close()
 		reject(res)
 		}
-		if (res.error_code === 401) {
+		if (res.error_code === 401|| res.error_code === 10001) {
 			clearTimeout(window.sendTimeOut)
 			clearTimeout(window.broadcastTimeOut)
-			Loading.close()
-			reject(res)
-		}
-		if (res.error_code === 10001) {
 			Loading.close()
 			Toast({mes: res.msg})
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
-			//setDown()
 			router.push({name: 'authLogin'})
 			reject(res)
 		}

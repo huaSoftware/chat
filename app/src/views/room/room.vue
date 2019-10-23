@@ -166,13 +166,10 @@ export default {
   beforeRouteEnter(to, from, next) {
     to.meta.title = to.query.name;
     next(vm => {
-      // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
       vm.$refs.mescroll && vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
   },
   beforeRouteLeave(to, from, next) {
-    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
-    // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
     this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
     next();
   },
@@ -243,11 +240,7 @@ export default {
       else{
         this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 - 200+ "px";
       }
-     /*  setTimeout(()=>{
-        alert(document.body.clientHeight)
-      },1000) */
       this.handleMsgListToBottom(100)
-      //console.log(document.body.clientHeight - this.htmlFontSize*2-70)
     },
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
@@ -308,24 +301,6 @@ export default {
       if (!!file) {
         //读取本地文件，以gbk编码方式输出
         var reader = new FileReader();
-        /* reader.readAsArrayBuffer(file);
-        reader.onload =  (e) =>{
-          console.log(e)
-          //console.log(e.target.result);
-          //console.log(new Blob([this.result]))
-          uploadFile({arrayBuffer:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
-            let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
-            let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
-            chatSend({
-              data: {
-                msg: file,
-                room_uuid: this.currentRoomUuid,
-                type: this.FILE,
-                save_action:this.currentRoomSaveAction
-              }
-            });
-          });
-        } */
         reader.readAsDataURL(file);
         reader.onload =  (e) =>{
           Loading.open('上传中...')
@@ -510,37 +485,6 @@ export default {
         console.log('录音完成:' + p)
         //上传
         that.Audio2dataURL(p)
-        /* var task = plus.uploader.createUpload(process.env.VUE_APP_CLIENT_API+'/v2/api/upload', {  
-        method: "post"
-        },function(t, status) {
-        if(status == 200) { 
-            let data = JSON.parse(t.responseText)
-            console.log(data)
-            that.recordingShow = false
-            var BenzAMRRecorder = require('benz-amr-recorder');
-            var amr = new BenzAMRRecorder();
-            let url = process.env.VUE_APP_CLIENT_API+ data.data.path
-            amr.initWithUrl(url).then(function() {
-            //获取录音长度
-            //amr.getDuration(); 
-            chatSend({
-              data: {
-                msg:{url:url,duration: amr.getDuration(),status:false},
-                room_uuid: that.currentRoomUuid,
-                type: that.RECORD, 
-                save_action: that.currentRoomSaveAction
-            }});
-            console.log('录音路径'+url)
-          })
-        }else{
-            console.log(t.responseText)
-            console.log("上传失败："+status);
-        }
-        })
-        let fileName = p.replace("_doc/audio/", '')
-        task.addFile(p, {"key":"file",
-                "name": fileName});  
-        task.start();   */
       })
     },
     /**

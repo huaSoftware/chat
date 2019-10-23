@@ -47,10 +47,8 @@ export function getAddressBookBeg() {
         //统计次数
         let data =   await db.addressBookBeg.toArray()
         return data   
-
-
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
@@ -77,7 +75,7 @@ export function delAddressBookBeg(user_id) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
@@ -104,7 +102,7 @@ export function updateAddressBookBeg(user_id, status) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
@@ -164,7 +162,7 @@ export function getLocalRoomMsg(room_uuid, page, per_page) {
         data['total'] = count
         return data   
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
@@ -192,7 +190,7 @@ export function updateLocalRoomMsg(data) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
@@ -218,7 +216,7 @@ export function delRoomMsg(room_uuid) {
         return Promise.reject('update error') 
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
 }
