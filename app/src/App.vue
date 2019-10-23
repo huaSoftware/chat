@@ -42,7 +42,7 @@ import storage from "@/utils/localstorage"
 import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addressBookBegCache} from '@/socketioApi/addressBook'
 import {addAddressBookBeg, getAddressBookBeg,updateMsg} from "@/utils/indexedDB"
-import {setDown, setup} from '@/utils/socketio'
+import {setDown, setup, setupListen} from '@/utils/socketio'
 import utils from '@/utils/utils'
 import router from './router'
 
@@ -55,7 +55,24 @@ export default {
     utils.h5Plus.bindPhysicsBack(null)
     //获取html节点的字体大小
     this.setHtmlFontSizeToVuex()
+    //注册socketio
     setup()
+    //每2秒检测是否监听断开
+    setInterval(()=>{
+      if( window.apiSocket._callbacks.$beg == undefined ||
+          window.apiSocket._callbacks.$chat == undefined ||
+          window.apiSocket._callbacks.$connect == undefined ||
+          window.apiSocket._callbacks.$connecting == undefined ||
+          window.apiSocket._callbacks.$disconnect == undefined ||
+          window.apiSocket._callbacks.$groupRoom == undefined ||
+          window.apiSocket._callbacks.$join == undefined ||
+          window.apiSocket._callbacks.$leave == undefined ||
+          window.apiSocket._callbacks.$room == undefined ||
+          window.apiSocket._callbacks.$send == undefined
+        ){
+          setupListen()
+        }
+    },5000)
     document.addEventListener('visibilitychange',()=> {
       if(document.visibilityState=='hidden') {
         this.hiddenTime = new Date().getTime()	//记录页面隐藏时间
@@ -74,7 +91,6 @@ export default {
     });
     if(this.user.token){
       addressBookBegCache().then(res=>{
-        console.log(res)
         let data = res.data
         if(JSON.stringify(data) !== "{}"){
           // 复制原来的值

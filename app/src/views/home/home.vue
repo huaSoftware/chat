@@ -172,7 +172,8 @@
 		created() {
 			this.init()
 		},
-		mounted() {}
+		mounted() {
+		}
 	}
 </script>
 <style lang="scss" scoped>

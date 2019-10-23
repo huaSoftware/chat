@@ -17,6 +17,20 @@ export function setup() {
 		window.tryBroadcastLinkCount = 0
 		// 创建聊天室套接字监听
 		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_SOCKET + '/api');
+	}
+	setupListen()
+	
+}
+/* 注册监听 */
+export function setupListen(){
+	//有令牌则监听
+	if(store.getters.token && window.apiSocket !== undefined){
+		//删除所有监听
+		for(var listener in window.apiSocket.$events){
+			if(listener != undefined){
+				window.apiSocket.removeAllListeners(listener);
+			}
+		}
 		window.apiSocket.on('join', (data) => {
 			//逻辑处理
 		});
@@ -32,16 +46,13 @@ export function setup() {
 		window.apiSocket.on('disconnect', (data) => {
 			//逻辑处理
 		});
-	}
-	//有令牌则监听
-	if(store.getters.token && window.apiSocket !== undefined){
 		///监听回复的消息
 		window.apiSocket.on('chat', (data) => {
 			// 回复根据标志分类todo
 			response(data).then(res=>{
 				let data = res.data
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
-				console.log("发送消息回复",data)
+				console.log("发送消息监听回复",data)
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
 				//这边会有发送后接收不到的问题
@@ -148,7 +159,6 @@ export function setup() {
 		})
 	}
 }
-
 /* 注销socketio */
 export function setDown(){
 	if(typeof window.apiSocket == 'undefined'){
@@ -223,7 +233,7 @@ export function  send(method, data, type = 'room') {
 			},1500)
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
-				console.log(recv)
+				console.log("发送消息后emit回复"+recv)
 				//未加入房间的时候对方收不到消息
 				response(recv).then(res=>{
 					if(res.data.action == 'chat'){

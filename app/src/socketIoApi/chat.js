@@ -20,15 +20,25 @@ export function chatSend(data){
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
     msgList = msgList.concat(msgInfo)
     store.dispatch('updateMsgList', msgList)
+    //格式化emoji
+    var regStr = /[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF][\u200D|\uFE0F]|[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF]|[0-9|*|#]\uFE0F\u20E3|[0-9|#]\u20E3|[\u203C-\u3299]\uFE0F\u200D|[\u203C-\u3299]\uFE0F|[\u2122-\u2B55]|\u303D|[\A9|\AE]\u3030|\uA9|\uAE|\u3030/ig;
+    let formatData = JSON.parse(JSON.stringify(data))
+    formatData.data.msg.match(regStr).map(function(v) {
+        formatData.data.msg = formatData.data.msg.replace(v, escape(v).replace(/%/g,"\\"))
+    });
+    let formatMsgInfo = JSON.parse(JSON.stringify(msgInfo))
+    formatMsgInfo.msg.match(regStr).map(function(v) {
+        formatMsgInfo.msg = formatMsgInfo.msg.replace(v, escape(v).replace(/%/g,"\\"))
+    });
     if(data['data']['save_action'] == 0){
         addLocalRoomMsg(msgInfo)
     }else if(data['data']['save_action'] == 1){
         delete data.data.save_action;
         console.log(msgInfo)
-        addCloudRoomMsg(msgInfo)
+        addCloudRoomMsg(formatMsgInfo)
     }
-    console.log("发送",data)
-    return send('chat', data)
+    console.log("发送",formatData)
+    return send('chat', formatData)
 }
 
 /**
@@ -42,8 +52,13 @@ export function reChatSend(data){
     console.log(index)
     msgList[index]['send_status'] = 0
     store.dispatch('updateMsgList', msgList)
-    console.log("重发",data)
-    return send('chat', data)
+    //格式化emoji
+    let formatData = JSON.parse(JSON.stringify(data))
+    formatData.data.msg.match(regStr).map(function(v) {
+        formatData.data.msg = formatData.data.msg.replace(v, escape(v).replace(/%/g,"\\"))
+    });
+    console.log("重发",formatData)
+    return send('chat', formatData)
 }
 
 /**
