@@ -3,7 +3,7 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-10-23 17:28:40
+@LastEditTime: 2019-10-24 10:34:05
 '''
 
 from Cryptodome.PublicKey import RSA
@@ -207,7 +207,7 @@ class Utils:
                 hex_fixed = '00' + en.hex()
                 en = base64.b16decode(hex_fixed.upper())
             data +=str(cipher_rsa.decrypt(en, None),"unicode-escape")#chardet.detect(cipher_rsa.decrypt(en, None))['encoding'])#推断字符集
-        return json.loads(data, encoding='utf-8')
+        return json.loads(data, encoding='unicode-escape')
           
     @staticmethod
     def encrypt_and_decrypt_test():

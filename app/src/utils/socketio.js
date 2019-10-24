@@ -54,7 +54,10 @@ export function setupListen(){
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
 				console.log("发送消息监听回复",data)
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-				let index = utils.arr.getIndexByTime(data['created_at'], msgList)
+				console.log(msgList)
+				//uuid组成是由房间号+用户编号+时间戳
+				let uuid = data['room_uuid']+data['user_id']+data['created_at']
+				let index = utils.arr.getIndexByUuid(uuid, msgList)
 				//这边会有发送后接收不到的问题
 				if(typeof index !== 'undefined'){
 					msgList[index]['send_status'] = store.getters.SUCCESS
@@ -62,6 +65,7 @@ export function setupListen(){
 					delete msgList[index]['id']
 					console.log("消息列表",msgList[index])
 					if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+						console.log(msgList[index])
 						addLocalRoomMsg(msgList[index])
 					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
 						addCloudRoomMsg(msgList[index])
@@ -73,6 +77,7 @@ export function setupListen(){
 				let reqData = {
 					room_uuid :data['room_uuid'],
 					created_at :data['created_at'],
+					user_id:data['user_id'],
 					send_status: store.getters.SUCCESS
 				}
 				if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
@@ -129,7 +134,6 @@ export function setupListen(){
 				}
 			})
 		});
-
 		//监听单聊房间动态消息
 		window.apiSocket.on('room', (data) => {
 			response(data).then(res=>{
@@ -159,6 +163,7 @@ export function setupListen(){
 		})
 	}
 }
+
 /* 注销socketio */
 export function setDown(){
 	if(typeof window.apiSocket == 'undefined'){
@@ -226,7 +231,8 @@ export function  send(method, data, type = 'room') {
 						icon: 'error'
 					});
 					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-					let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+					let uuid = data.data['room_uuid']+data.data['user_id']+data.data['created_at']
+					let index = utils.arr.getIndexByUuid(uuid, msgList)
 					msgList[index]['send_status'] = 2
 					store.dispatch('updateMsgList', msgList)
 				}
@@ -276,7 +282,8 @@ export function  send(method, data, type = 'room') {
 						icon: 'error'
 					});
 					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-					let index = utils.arr.getIndexByTime(data.data['created_at'], msgList)
+					let uuid = data.data['room_uuid']+data.data['user_id']+data.data['created_at']
+					let index = utils.arr.getIndexByUuid(uuid, msgList)
 					msgList[index]['send_status'] = 2
 					store.dispatch('updateMsgList', msgList)
 					Promise.reject(e)

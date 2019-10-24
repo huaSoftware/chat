@@ -123,12 +123,10 @@ export function addLocalRoomMsg(value) {
         return true
     }
     db.transaction('rw', db.roomMsg,  async() => {
-        value['uuid']= value['room_uuid'] + value['created_at']
+        value['uuid']= value['room_uuid'] + value['user_id'] + value['created_at']
         if (await db.roomMsg.where({'uuid': value['uuid']}).count() === 0) {
             await db.roomMsg.add(value);
         }
-
-
     }).catch(e => {
         console.log(e.stack || e);
         return false
@@ -182,7 +180,7 @@ export function updateLocalRoomMsg(data) {
 
         // Make sure we have something in DB:
         //更新状态
-        let updated = db.roomMsg.where({ "uuid":data['room_uuid']+data['created_at']}).modify({send_status: data['send_status']});
+        let updated = db.roomMsg.where({ "uuid":data['room_uuid']+data['user_id']+data['created_at']}).modify({send_status: data['send_status']});
         if (updated){
             let data =   await db.roomMsg.toArray()
             return data   
