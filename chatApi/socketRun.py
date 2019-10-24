@@ -3,8 +3,14 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-23 17:17:43
+@LastEditTime: 2019-10-24 14:49:59
 '''
+import os,json
+path = os.getcwd()+'/.runtime/environment.json'
+data = {"environment":"app"}
+with open(path, "w") as f:
+    f.write(json.dumps(data))
+    
 """ from gevent import monkey
 monkey.patch_all(select=True, socket=True) #这边win下会报错用http请求时 """
 from app import app, socketio

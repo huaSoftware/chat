@@ -2,20 +2,22 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-21 13:44:45
+@LastEditTime: 2019-10-24 14:52:52
 '''
-from flask import Flask
+from flask import Flask,g
 from flask import make_response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_socketio import SocketIO
 from app.Vendor.Code import Code
-import os
-import time
 from cacheout import Cache
 from app.env import (SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH,REDIS_PAS, REDIS_IP, REDIS_PORT, REDIS_DB)
+import os, time, json
 
-#普通json带error_code风格使用此app示例
+path = os.getcwd()+'/.runtime/environment.json'
+with open(path, "r") as f:
+    environment = json.loads(f.read())['environment']
+    
 app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
@@ -39,18 +41,21 @@ def shutdown_session(exception=None):
     dBSession.close() 
     
 #挂载500异常处理,并记录日志,这里要做判断，如果是socket的则不挂载这个
-""" @app.errorhandler(Exception)
-def error_handler(e):
-    return ExceptionApi(Code.ERROR, e)
- """
-@socketio.on_error_default       # Handles the default namespace
-def socketio_error_handler(e):
-    return SocketExceptionApi(Code.ERROR, e)
+if environment == 'admin':
+    @app.errorhandler(Exception)
+    def error_handler(e):
+        return ExceptionApi(Code.ERROR, e)
+if environment == 'app':
+    @socketio.on_error_default       # Handles the default namespace
+    def socketio_error_handler(e):
+        return SocketExceptionApi(Code.ERROR, e)
 
 #引入使用的控制器
-from app.Controllers import  SocketController
-#引入后台
-from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
-                                UserController, AdminController, IndexController,LogController)
+if environment == 'app':
+    from app.Controllers import  SocketController
+if environment == 'admin':
+    #引入后台
+    from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
+                                    UserController, AdminController, IndexController,LogController)
 
 

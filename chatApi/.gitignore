@@ -5,5 +5,4 @@
 /app/Middleware/__pycache__
 /.vscode
 /spam.log
-/uploads
 /app/env.py
