@@ -13,18 +13,14 @@ Vue.config.devtools = process.env.NODE_ENV !== "production";
 
 //重置css
 import "@/assets/scss/reset.scss"
-
 //svg图标
 import "@/assets/style.css";
-
-
 //引入animate.css动画
 import animate from "animate.css";
 Vue.use(animate);
 
 //图标问题直接修改源码rem.css ttf
 import YDUI from "vue-ydui";
-import "vue-ydui/dist/ydui.rem.css";
 Vue.use(YDUI);
 
 
