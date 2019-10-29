@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-10-19 11:12:34
+@LastEditTime: 2019-10-29 19:52:47
 '''
 import time, math
 
@@ -14,7 +14,6 @@ from app.Models.Base import Base
 from app.Models.Model import HtAddressBook
 from app.Models.Room import Room
 from app.Models.Users import Users
-from app.Vendor.Decorator import classTransaction, transaction
 from app.Vendor.Utils import Utils
 
 
@@ -105,19 +104,16 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         @param obj data 数据
         @return bool
     """
-    @classTransaction
     def add(self, data):
         dBSession.add(AddressBook(**data))
         return True
-
-    
+ 
     """
         修改
         @param dict data 数据
         @param set filters 条件
         @return bool
     """
-    @classTransaction
     def edit(self, data, filters):
         dBSession.query(AddressBook).filter(*filters).update(data, synchronize_session=False)
         return True
@@ -127,7 +123,6 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         @paramset filters 条件
         @return bool
     """
-    @classTransaction
     def delete(self, filters):
         dBSession.query(AddressBook).filter(*filters).delete(synchronize_session=False)
         return True
@@ -167,7 +162,6 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         return data
     # 增加用户
     @staticmethod
-    @transaction
     def addRoomAndAddressBook(room_uuid, focused_user_id, be_focused_user_id):
         roomData = {
             'room_uuid': room_uuid,
@@ -222,7 +216,6 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
 
      # 更新关注者未读消息
     @staticmethod
-    @transaction
     def updateUnreadNumber(room_uuid, user_id):
         filter = {
             AddressBook.be_focused_user_id != user_id,
@@ -232,11 +225,9 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             AddressBook.unread_number: AddressBook.unread_number+1,
             AddressBook.updated_at: time.time()
         })
-        #return dBSession.commit()
-
+        
     # 清除关注者未读消息次数
     @staticmethod
-    @transaction
     def cleanUnreadNumber(room_uuid, user_id):
         filter = {
             AddressBook.be_focused_user_id == user_id,
@@ -244,4 +235,3 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         }
         dBSession.query(AddressBook).filter(
             *filter).update({'unread_number': 0, 'updated_at': time.time()})
-        #return dBSession.commit()

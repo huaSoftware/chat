@@ -3,11 +3,12 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-19 15:58:58
+@LastEditTime: 2019-10-29 19:49:44
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
 from app.Models.UserRoomRelation import UserRoomRelation
+from app.Vendor.Decorator import classTransaction
 from app.Models.Users import Users
 from app.Models.Room import Room
 from app.Vendor.Code import Code
@@ -16,6 +17,8 @@ from app import socketio
 import time
 
 class ChatService():
+    
+    @classTransaction
     def chat(self, message, user_info):
         """
             @param  dict message
@@ -67,6 +70,7 @@ class ChatService():
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat"})
         
+    @classTransaction
     def groupChatCreate(self,user_info, params):
         """ 
             创建聊天群组

@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-19 15:26:50
+@LastEditTime: 2019-10-29 19:48:30
 '''
 from app import app
 from flask import request
@@ -18,6 +18,7 @@ from app.Models.Users import Users
 from app.Models.Msg import Msg
 from app.Models.Room import Room
 from flask_socketio import emit, join_room
+from app.Vendor.Decorator import classTransaction
 from app.Vendor.Code import Code
 import time,json
 
@@ -32,6 +33,7 @@ class RoomService:
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def delete(params, user_info):
         filters = {
             Room.room_uuid == params['room_uuid']
@@ -75,6 +77,7 @@ class RoomService:
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def details(params, user_info):
         """ 获取群聊用户信息 """
         filters = {
@@ -93,6 +96,7 @@ class RoomService:
     @socketValidator(name='type', rules={'required': True, 'type': 'integer'})
     @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def addMsg(params, user_info):
         """ bug
             添加聊天数据
@@ -110,6 +114,7 @@ class RoomService:
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def delMsg(params, user_info):
         """ 删除聊天数据
             :param dict user_info
@@ -128,6 +133,7 @@ class RoomService:
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
     @socketValidator(name='send_status', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def updateMsg(params, user_info):
         """ 
             更新聊天数据

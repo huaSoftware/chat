@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-07-02 13:52:01
+@LastEditTime: 2019-10-29 19:51:38
 '''
 import math
 from sqlalchemy_serializer import SerializerMixin
@@ -10,7 +10,6 @@ from sqlalchemy import desc, asc
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.Models.Base import Base
 from app.Models.Model import HtAdmin
-from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 from app import dBSession
 
@@ -100,7 +99,7 @@ class Admin(Base, HtAdmin, SerializerMixin):
         @param obj data 数据
         @return bool
     """
-    @classTransaction
+    #@classTransaction
     def add(self, data):
         admin = Admin(**data)
         dBSession.add(admin)
@@ -113,7 +112,7 @@ class Admin(Base, HtAdmin, SerializerMixin):
         @param set filters 条件
         @return bool
     """
-    @classTransaction
+    #@classTransaction
     def edit(self, data, filters):
         dBSession.query(Admin).filter(*filters).update(data, synchronize_session=False)
         return True
@@ -123,7 +122,7 @@ class Admin(Base, HtAdmin, SerializerMixin):
         @paramset filters 条件
         @return bool
     """
-    @classTransaction
+    #@classTransaction
     def delete(self, filters):
         dBSession.query(Admin).filter(*filters).delete(synchronize_session=False)
         return True

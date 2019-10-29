@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-24 14:13:23
 @LastEditors: hua
-@LastEditTime: 2019-09-29 15:22:53
+@LastEditTime: 2019-10-29 19:45:48
 '''
 import time, re
 from app.Vendor.Decorator import socketValidator, socketValidator
@@ -10,6 +10,7 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.Users import Users
 from app.Vendor.Utils import Utils
 from app.Vendor.Code import Code
+from app.Vendor.Decorator import classTransaction
 from xpinyin import Pinyin
 
 class UsersService():
@@ -19,6 +20,7 @@ class UsersService():
         @return dict 返回格式化结果
     """
     @staticmethod
+    @classTransaction
     def register(params):
         userData = Users().getOne({Users.email == params['email']})
         if(userData == None):
@@ -26,6 +28,7 @@ class UsersService():
             isChinese = re.compile(u"[\u4e00-\u9fa5]+")
             isEnglish = re.compile('[a-zA-Z]')
             nickNameFirstWord = params['nickName'][0]
+            nowTime = time.time()
             if isChinese.search(nickNameFirstWord):
                 first_word = Pinyin().get_initial(nickNameFirstWord)
             elif isEnglish.search(nickNameFirstWord):
@@ -38,8 +41,8 @@ class UsersService():
                 'nick_name': params['nickName'],
                 'head_img':params['headImg'],
                 'first_word':first_word,
-                'created_at':time.time(),
-                'updated_at':time.time()
+                'created_at':nowTime,
+                'updated_at':nowTime
             }
             user = Users().add(data)
             if user == False:

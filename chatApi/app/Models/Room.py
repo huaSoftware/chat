@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-10-19 15:56:42
+@LastEditTime: 2019-10-29 20:20:02
 '''
 import time, math
 
@@ -13,7 +13,6 @@ from app import dBSession
 from app.Models.Base import Base
 from app.Models.Users import Users
 from app.Models.Model import HtRoom
-from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 import json
 
@@ -72,8 +71,6 @@ class Room(Base, HtRoom, SerializerMixin):
             res = [c.to_dict(only=field) for c in res]
         return res
 
-
-    
     """
         获取一条
         @param set filters 查询条件
@@ -101,21 +98,18 @@ class Room(Base, HtRoom, SerializerMixin):
         @param obj data 数据
         @return bool
     """
-    @classTransaction
     def addByClass(self, data):
         room = Room(**data)
         dBSession.add(room)
         dBSession.flush()
         return room.id
 
-    
     """
         修改
         @param dict data 数据
         @param set filters 条件
         @return bool
     """
-    @classTransaction
     def edit(self, data, filters):
         dBSession.query(Room).filter(*filters).update(data, synchronize_session=False)
         return True
@@ -125,7 +119,6 @@ class Room(Base, HtRoom, SerializerMixin):
         @paramset filters 条件
         @return bool
     """
-    @classTransaction
     def delete(self, filters):
         dBSession.query(Room).filter(*filters).delete(synchronize_session=False)
         return True
@@ -156,7 +149,6 @@ class Room(Base, HtRoom, SerializerMixin):
 
     # 增加房间
     @staticmethod
-    @transaction
     def add(room_data):
         dBSession.add(room_data)
         return True
@@ -172,14 +164,8 @@ class Room(Base, HtRoom, SerializerMixin):
         }
         return  dBSession.query(Room).filter(*filter).first()
 
-    @staticmethod
-    def getAll():
-        return  dBSession.query(Room).order_by(Room.created_at.desc()).all()
-
-
     #添加房间记录
     @staticmethod
-    @classTransaction
     def insertRoomData(message):
         room_data = Room(
             room_uuid          = message['room_uuid'],
@@ -198,7 +184,6 @@ class Room(Base, HtRoom, SerializerMixin):
 
     #更新房间记录
     @staticmethod
-    @classTransaction
     def updateLastMsgRoom(room_uuid, data, created_at):
         dBSession.query(Room).filter(Room.room_uuid == room_uuid).update({
             'last_msg': json.dumps(data),

@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-12 10:40:26
+@LastEditTime: 2019-10-29 19:51:01
 '''
 from app import app
 from app import socketio
@@ -15,6 +15,7 @@ from app.Models.AddressBook import AddressBook
 from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import socketValidator
+from app.Vendor.Decorator import classTransaction
 from app.Vendor.Code import Code
 from flask import request
 
@@ -77,6 +78,7 @@ class UserRoomRelationService:
     @staticmethod
     @socketValidator(name='is_alert', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def updateAlert(params, user_info):
         """ 更新对否提醒 """
         filters = {
@@ -107,6 +109,7 @@ class UserRoomRelationService:
     @staticmethod
     @socketValidator(name='save_action', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
+    @classTransaction
     def updateSaveAction(params, user_info):
         """ 更新是否云端保存 """
         filters = {

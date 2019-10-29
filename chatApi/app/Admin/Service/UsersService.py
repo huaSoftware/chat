@@ -2,10 +2,11 @@
 @Author: hua
 @Date: 2019-05-24 14:13:23
 @LastEditors: hua
-@LastEditTime: 2019-06-12 14:33:21
+@LastEditTime: 2019-10-29 19:59:19
 '''
 import time, re
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
+from app.Vendor.Decorator import classTransaction
 from app.Models.Users import Users
 from app.Vendor.Utils import Utils
 from app.Vendor.Code import Code
@@ -17,6 +18,7 @@ class UsersService():
         @param dict 注册数据
         @return dict 返回格式化结果
     """
+    @classTransaction
     def register(self, params):
         userData = Users().getOne({Users.email == params['email']})
         if(userData == None):

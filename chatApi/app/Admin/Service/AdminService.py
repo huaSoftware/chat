@@ -3,12 +3,13 @@
 @Date: 2019-06-10 10:13:37
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-12 19:45:30
+@LastEditTime: 2019-10-29 19:58:46
 '''
 from app.Models.Admin import Admin
 from app.Vendor.Utils import Utils
 from app.Vendor.Code import Code
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
+from app.Vendor.Decorator import classTransaction
 import time, hashlib
 
 
@@ -58,6 +59,7 @@ class AdminService():
             return Utils.formatBody({'token': token.decode(), 'user': admin})   
         return Utils.formatError(Code.ERROR)
     
+    @classTransaction
     def add(self, data = []):
         #添加
         if 'update_time' in data.keys():
@@ -100,6 +102,7 @@ class AdminService():
         return Utils.formatError(Code.ERROR, '添加失败')
 
     #修改
+    @classTransaction
     def edit(self, data, filters = {}):
     
         if 'update_time' in data.keys():

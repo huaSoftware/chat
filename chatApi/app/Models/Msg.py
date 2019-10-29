@@ -3,14 +3,13 @@
 @Date: 2019-07-25 14:22:49
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-21 10:05:54
+@LastEditTime: 2019-10-29 19:53:41
 '''
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import desc, asc
 from app.Models.Base import Base
 from app.Models.Model import HtMsg
-from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 from app import dBSession
 import math,json
@@ -102,7 +101,6 @@ class Msg(Base, HtMsg, SerializerMixin):
         @param obj data 数据
         @return bool
     """
-    @classTransaction
     def add(self, data):
         msg = Msg(**data)
         dBSession.add(msg)
@@ -115,7 +113,6 @@ class Msg(Base, HtMsg, SerializerMixin):
         @param set filters 条件
         @return bool
     """
-    @classTransaction
     def edit(self, data, filters):
         dBSession.query(Msg).filter(*filters).update(data, synchronize_session=False)
         return True
@@ -125,7 +122,6 @@ class Msg(Base, HtMsg, SerializerMixin):
         @paramset filters 条件
         @return bool
     """
-    @classTransaction
     def delete(self, filters):
         dBSession.query(Msg).filter(*filters).delete(synchronize_session=False)
         return True

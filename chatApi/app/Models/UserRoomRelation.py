@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-10-19 11:00:06
+@LastEditTime: 2019-10-29 19:55:32
 '''
 import time, math
 
@@ -14,7 +14,6 @@ from app.Models.Base import Base
 from app.Models.Model import HtUserRoomRelation
 from app.Models.Users import Users
 from app.Models.Room import Room
-from app.Vendor.Decorator import transaction, classTransaction
 from app.Vendor.Utils import Utils
 
 class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
@@ -103,7 +102,6 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         @param obj data 数据
         @return bool
     """
-    @classTransaction
     def add(self, data):
         userRoomRelation = UserRoomRelation(**data)
         dBSession.add(userRoomRelation)
@@ -117,7 +115,6 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         @param set filters 条件
         @return bool
     """
-    @classTransaction
     def edit(self, data, filters):
         dBSession.query(UserRoomRelation).filter(*filters).update(data, synchronize_session=False)
         return True
@@ -127,7 +124,6 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         @paramset filters 条件
         @return bool
     """
-    @classTransaction
     def delete(self, filters):
         dBSession.query(UserRoomRelation).filter(*filters).delete(synchronize_session=False)
         return True
@@ -170,7 +166,6 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         return data
     
     @staticmethod
-    @transaction
     def updateUnreadNumber(room_uuid, user_id):
         # 更新关注者未读消息
         filter = {
@@ -181,10 +176,8 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
             UserRoomRelation.unread_number: UserRoomRelation.unread_number+1,
             UserRoomRelation.updated_at: time.time()
         })
-        #return dBSession.commit()
     
     @staticmethod
-    @transaction
     def cleanUnreadNumber(room_uuid, user_id):
         # 清除关注者未读消息次数
         filter = {
@@ -193,5 +186,4 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         }
         dBSession.query(UserRoomRelation).filter(
             *filter).update({'unread_number': 0, 'updated_at': time.time()})
-        #return dBSession.commit()
     
