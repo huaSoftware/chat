@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-24 14:13:23
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:45:48
+@LastEditTime: 2019-10-30 10:05:17
 '''
 import time, re
 from app.Vendor.Decorator import socketValidator, socketValidator
@@ -56,6 +56,7 @@ class UsersService():
     @staticmethod
     @socketValidator(name='email', rules={'required': True,'type': 'string','minlength': 10,'maxlength': 20})
     @socketValidator(name='password', rules={'required':True,'type':'string','minlength':6,'maxlength':200})
+    @classTransaction
     def login(params):
         return UsersAuthJWT.authenticate(params['email'], params['password'])
 

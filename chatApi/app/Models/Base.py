@@ -1,12 +1,9 @@
 '''
 @Author: hua
-@Date: 2019-02-10 09:55:10
+@Date: 2019-06-17 14:14:28
+@description: 基础模型，封装一些基础方法 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 20:17:25
-'''
-''' author:hua
-    date:2018.2.6
-    基础模型，封装一些基础方法 
+@LastEditTime: 2019-10-30 09:07:59
 '''
 import logging, math
 from app.Vendor.Code import Code
@@ -25,6 +22,7 @@ class Base():
         @param int limit 取多少条
         @return dict
     """
+    
     def getList(self, cls_, filters, order, field=(), offset = 0, limit = 15):
         res = {}
         res['page'] ={}
@@ -71,7 +69,6 @@ class Base():
             res = [c.to_dict(only=field) for c in res]
         return res
 
-    
     """
         获取一条
         @param object cls_ 数据库模型实体类
@@ -203,7 +200,3 @@ class Base():
         body['msg'] = message
         body['show'] = show
         return body
-
-
-
-
