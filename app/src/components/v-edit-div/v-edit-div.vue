@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:55:50
+ * @LastEditTime: 2019-11-01 16:07:56
  -->
 <template>
     <div class="edit-div"
@@ -75,6 +75,7 @@
         background:#fff;
         border-top-left-radius:5px;
         border-top-right-radius:5px;
+        caret-color:#00C2E6;
         &[contenteditable=true]{
             //user-modify: read-write-plaintext-only;
             &:empty:before {
