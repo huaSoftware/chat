@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-09-06 17:20:39
+ * @LastEditTime: 2019-11-01 15:08:13
  -->
 <template>
     <div>
@@ -31,7 +31,7 @@
                 </div> 
                 <div class="yd-cell-right">
                 <div class="yd-input">
-                    <input type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
+                    <input @keyup.enter="handleLogin" type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
                     <span class="yd-input-error" v-show="validated_status.password"></span>  
                     <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handlePasswordShow($event.target, passwordShow)" v-show="!passwordShow"></a>
                     <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handlePasswordShow($event.target, passwordShow)" v-show="passwordShow"></a>

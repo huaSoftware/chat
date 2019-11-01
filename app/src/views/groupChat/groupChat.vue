@@ -1,13 +1,13 @@
 <!--
  * @Author: hua
- * @Date: 2019-02-01 17:12:59
+ * @Date: 2019-09-03 17:07:10
+ * @description: 群聊添加
  * @LastEditors: hua
- * @LastEditTime: 2019-06-03 14:31:51
+ * @LastEditTime: 2019-11-01 15:03:30
  -->
 <style>
 .yd-checkbox-icon{
     vertical-align: middle!important;
-    
 }
 .yd-checkbox-text{
     float:left;
@@ -170,26 +170,6 @@ export default {
         }
     },
     watch:{
-       /*  'checkedUsers'(){
-            this.keywords = ''
-            //console.log(this.checkedUsers)
-            this.checkedUsers.forEach((key, index)=>{
-                this.keywords = this.keywords + '<img height="20" src="'+JSON.parse(key)['head_img']+'"/>'
-            })
-        }, */
-        /* keywords(newValue, preValue){
-            let rawArr = []
-            let imgArr = newValue.match(/<img.+?>/ig)?newValue.match(/<img.+?>/ig):[]
-            this.checkedUsers.forEach((key, index)=>{
-                imgArr.forEach((imgKey, imgIndex)=>{
-                    console.log(imgKey)
-                    if(imgKey.indexOf(JSON.parse(key)['head_img']) !== -1){
-                        rawArr.push(key)  
-                    }
-                })
-            })
-            this.checkedUsers = rawArr
-        } */
     }
 }
 </script>
@@ -205,11 +185,9 @@ export default {
 dl {
     background-color: #fff;
 }
-
 .address-book-list {
     margin-bottom:0px;
 }
-
 .address-book-list dt {
     color: #666;
     height: 0.7rem;
@@ -219,7 +197,6 @@ dl {
     position: relative;
     padding-left:10px;
 }
-
 .address-book-list dd{
     margin-top:10px;
     padding-bottom:10px;
@@ -229,7 +206,6 @@ dl {
 .address-book-list dd.hot {
     padding-bottom: .25rem;
 }
-
 .address-book-list dd.hot a {
     height:27.5px;
     width: 33.3%;
@@ -239,7 +215,6 @@ dl {
     height: inherit;
     line-height: inherit;
 }
-
 .address-book-list dd a {
     display: block;
     height: 27.5px;
@@ -247,25 +222,20 @@ dl {
     position: relative;
     line-height:  27.5px;
 }
-
 .address-book-list dd a img {
     float: left;
-    /* margin: .25rem .5rem 0 0.25rem; */
     height: 27.5px;
     width:  27.5px;
     margin-right:5%;
 }
-
 .address-book-list dd.hot a span {
     display: block;
     padding-bottom: .25rem;
 }
-
 .address-book-list dd.hot a img {
     float: none;
     margin: .25rem auto 0;
 }
-
 .address-book-list dd.hot a {
     width: 33.3%;
     float: left;
@@ -287,7 +257,6 @@ dl {
     transform: translateY(-50%);
     z-index: 10;
 }
-
 #pop-address-book-letter li a {
     display: block;
     /* height:0.9rem;
@@ -296,7 +265,6 @@ dl {
     color: #576b95;
     font-size:0.3rem;
 }
-
 .navbar_icon{
 	color: rgb(92, 92, 92);
     font-size: 0.45rem;

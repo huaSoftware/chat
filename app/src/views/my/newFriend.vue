@@ -1,7 +1,7 @@
 <!--
  * @Author: hua
  * @Date: 2019-02-16 19:35:43
- * @description: 
+ * @description: 新的朋友列表
  * @LastEditors: hua
  * @LastEditTime: 2019-07-15 17:24:02
  -->

@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
+import authRouter from './modules/auth'
+import myRouter from './modules/my'
+import roomRouter from './modules/room'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 
@@ -8,32 +11,9 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    // 根路径.跳转首页
-    {
-      path: '/',
-      redirect: '/ad'
-    },
-    // 广告
-    {
-      path: '/ad', // 路径
-      name: 'ad', // 给他个名字，后期路由传参用
-      component: _import('ad/ad'), // 载入组件
-      meta: { title: '广告', isShowHead: false, isShowFoot: false, isShowBack: false, backPath:'home'} // 定义一些公共状态，你喜欢就好
-    },
-    //注册
-    {
-      path: '/auth/register', // 路径
-      name: 'authRegister', // 给他个名字，后期路由传参用
-      component: _import('auth/register'), // 载入组件
-      meta: { title: '注册', isShowHead: true, isShowFoot: false, isShowBack: false, backPath:null} // 定义一些公共状态，你喜欢就好
-    },
-    //登录
-    {
-      path: '/auth/login', // 路径
-      name: 'authLogin', // 给他个名字，后期路由传参用
-      component: _import('auth/login'), // 载入组件
-      meta: { title: '登录', isShowHead: true, isShowFoot: false, isShowBack: false, backPath:null} // 定义一些公共状态，你喜欢就好
-    },
+    ...authRouter,
+    ...myRouter,
+    ...roomRouter,
     // 首页
     {
       path: '/home', // 路径
@@ -55,68 +35,12 @@ const router = new Router({
       component: _import('groupChat/groupChat'), // 载入组件
       meta: { title: '发起群聊', isShowHead: false, isShowFoot: true, isShowBack: false, backPath: -1} // 定义一些公共状态，你喜欢就好
     },
-    // 我的
-    {
-      path: '/my', // 路径
-      name: 'my', // 给他个名字，后期路由传参用
-      component: _import('my/my'), // 载入组件
-      meta: { title: '我的', isShowHead: true, isShowFoot: true, isShowBack: false, backPath:'home'} // 定义一些公共状态，你喜欢就好
-    },
-    // 我的/设置
-    {
-      path: '/my/set', // 路径
-      name: 'mySet', // 给他个名字，后期路由传参用
-      component: _import('my/set/set'), // 载入组件
-      meta: { title: '设置', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'my'} // 定义一些公共状态，你喜欢就好
-    },
-    // 我的/设置/新消息提醒
-    {
-      path: '/my/set/alert', // 路径
-      name: 'mySetAlert', // 给他个名字，后期路由传参用
-      component: _import('my/set/alert'), // 载入组件
-      meta: { title: '新消息提醒', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'mySet'} // 定义一些公共状态，你喜欢就好
-    },
-    // 我的/设置/关于我们
-    {
-      path: '/my/set/about', // 路径
-      name: 'mySetAbout', // 给他个名字，后期路由传参用
-      component: _import('my/set/about'), // 载入组件
-      meta: { title: '关于我们', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'mySet'} // 定义一些公共状态，你喜欢就好
-    },
-    // 新的朋友
-    {
-      path: '/my/newFriend', // 路径
-      name: 'newFriend', // 给他个名字，后期路由传参用
-      component: _import('my/newFriend'), // 载入组件
-      meta: { title: '新的朋友', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'my'} // 定义一些公共状态，你喜欢就好
-    },
     // 搜索
     {
       path: '/search', // 路径
       name: 'search', // 给他个名字，后期路由传参用
       component: _import('search/search'), // 载入组件
       meta: { title: '添加好友', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home'} // 定义一些公共状态，你喜欢就好
-    },
-    //房间
-    {
-      path: '/room',
-      name: 'room',
-      component: _import('room/room'),
-      meta: { title: '房间', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home', isShowDef:true, defTextName:'详情', defPath:'roomDetails'} // 定义一些公共状态，你喜欢就好
-    },
-    //房间详情
-    {
-      path: '/room/details',
-      name: 'roomDetails',
-      component: _import('room/details'),
-      meta: { title: '房间详情', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:-1} // 定义一些公共状态，你喜欢就好
-    },
-    //聊天信息
-    {
-      path: '/room/msgList',
-      name: 'roomMsgList',
-      component: _import('room/msgList'),
-      meta: { title: '聊天信息', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:-1} // 定义一些公共状态，你喜欢就好
     }
   ]
 })

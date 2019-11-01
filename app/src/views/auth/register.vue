@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-10-06 14:22:49
+ * @LastEditTime: 2019-11-01 15:14:24
  -->
 <template>
 <div>
@@ -57,7 +57,7 @@
                     </div> 
                     <div class="yd-cell-right">
                     <div class="yd-input">
-                        <input type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
+                        <input @keyup.enter="handleRegister" type="password" name="password"  v-model="password" placeholder="请输入6-12位密码" autocomplete="off">
                         <span class="yd-input-error" v-show="validated_status.password"></span>  
                         <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handlePasswordShow($event.target, passwordShow)" v-show="!passwordShow"></a>
                         <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handlePasswordShow($event.target, passwordShow)" v-show="passwordShow"></a>
@@ -71,7 +71,7 @@
                     </div> 
                     <div class="yd-cell-right">
                     <div class="yd-input">
-                        <input type="password" name="confirm_password"  v-model="confirm_password" placeholder="请重复密码" autocomplete="off"> 
+                        <input @keyup.enter="handleRegister" type="password" name="confirm_password"  v-model="confirm_password" placeholder="请重复密码" autocomplete="off"> 
                         <span class="yd-input-error" v-show="validated_status.confirm_password"></span> 
                         <a href="javascript:;" tabindex="-1" class="yd-input-password" @click="handleConfirmPasswordShow($event.target)" v-show="!confirmPasswordShow"></a>
                         <a href="javascript:;" tabindex="-1" class="yd-input-password yd-input-password-open" @click="handleConfirmPasswordShow($event.target)" v-show="confirmPasswordShow"></a>
@@ -234,7 +234,7 @@ export default {
                 register(reqData).then(res=>{
                     deleteTables()
                     this.password = ''
-                    Toast({mes:'注册成功'})
+                    Toast({mes:'注册成功',icon: 'success'})
                     //存token
                     this.$store.commit('SET_TOKEN', res.data.token)
                     setToken('token',res.data.token)

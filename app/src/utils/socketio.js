@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-11-01 15:14:48
+ */
 
 import store from '../store'
 import router from '../router'
@@ -354,7 +361,7 @@ export function  send(method, data, type = 'room') {
 					}
 					if (res.error_code === 400 || res.error_code === 500) {
 						if(res.show == true){
-							Toast({mes:res.msg})
+							Toast({mes:res.msg,icon: 'error'})
 						}
 						Loading.close()
 						reject('error')
@@ -363,7 +370,7 @@ export function  send(method, data, type = 'room') {
 						clearTimeout(window.sendTimeOut)
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
-						Toast({mes: res.msg})
+						Toast({mes: res.msg,icon: 'error'})
 						// 这里需要删除token，不然携带错误token无法去登陆
 						window.localStorage.removeItem('token')
 						store.commit('SET_TOKEN', null)
@@ -390,7 +397,7 @@ export function response(res){
 		}
 		if (res.error_code === 400 || res.error_code === 500) {
 		if(res.show == true){
-			Toast({mes:res.msg})
+			Toast({mes:res.msg,icon: 'error'})
 		}
 		Loading.close()
 		reject(res)
@@ -399,7 +406,7 @@ export function response(res){
 			clearTimeout(window.sendTimeOut)
 			clearTimeout(window.broadcastTimeOut)
 			Loading.close()
-			Toast({mes: res.msg})
+			Toast({mes: res.msg,icon: 'error'})
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)

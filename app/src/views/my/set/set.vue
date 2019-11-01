@@ -30,6 +30,7 @@
 <script>
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
+import { Confirm } from 'vue-ydui/dist/lib.rem/dialog'
 import {deleteTables} from '@/utils/indexedDB'
 import { mapGetters} from 'vuex'
 import {setDown} from '@/utils/socketio'
@@ -56,12 +57,30 @@ export default {
             });
         },
         handleExit(){
-            clearData()
-            //setDown()
-            deleteTables()
-            setTimeout(() => {
-                this.$router.push({ name: "authLogin" });
-            }, 100);
+            Confirm({
+                title: '提示',
+                mes: '确认退出？退出后本地记录将自动删除！',
+                opts: [
+                {
+                    txt: '取消',
+                    color: false,
+                    callback: () => {
+                    }
+                },
+                {
+                    txt: '确定',
+                    color: true,
+                    callback: () => {
+                        clearData()
+                        //setDown()
+                        deleteTables()
+                        setTimeout(() => {
+                            this.$router.push({ name: "authLogin" });
+                        }, 100);
+                    }
+                }
+                ]
+            });
         }
     },
     created() {

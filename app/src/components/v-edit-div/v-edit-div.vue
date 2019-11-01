@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-11-01 15:55:50
+ -->
 <template>
     <div class="edit-div"
         v-html="innerText"
@@ -65,6 +72,9 @@
         user-select: text;
         white-space: pre-wrap;
         text-align: left;
+        background:#fff;
+        border-top-left-radius:5px;
+        border-top-right-radius:5px;
         &[contenteditable=true]{
             //user-modify: read-write-plaintext-only;
             &:empty:before {

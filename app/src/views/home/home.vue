@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-08-15 20:30:43
+ * @LastEditTime: 2019-11-01 15:55:16
  -->
 <template>
 	<div class="content">
@@ -95,14 +95,8 @@
 		},
 		computed: {
 			...mapGetters([
-				'navbarTitle',
-				'roomList',
-				'msgList',
-				'groupRoomList',
-				"RECORD",
-				"TEXT",
-				"IMG",
-				"FILE",
+				'navbarTitle','roomList','msgList','groupRoomList',
+				"RECORD","TEXT","IMG","FILE",
 			])
 		},
 		methods: {

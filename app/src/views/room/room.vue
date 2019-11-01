@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-10-06 14:24:52
+ * @LastEditTime: 2019-11-01 15:48:25
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -27,7 +27,7 @@
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
-                <div v-else-if="key.type == FILE" class="rawMsg"  @click="handleDefMsg(key.msg)">[文件]{{formartFileName(key.msg)}}</div>
+                <div v-else-if="key.type == FILE" class="rawMsg"  @click="handleDefMsg(key.msg)">[文件]{{formatFileName(key.msg)}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
                 <!-- 消息送达状态 -->
                 <span v-if="key.send_status == LOADING " class="send_status loading_color rotate_loading">
@@ -73,7 +73,6 @@
     <img v-show="recordingShow" class="recording" :src="'static/img/recording.png'"/>
     <!-- 输入 -->
     <inputWrapper :style="iconsShow || defsShow ?'bottom:200px':'bottom:0.2rem'"
-      @onFocus="handleOnfocus"
       @handleRecordShow="handleRecordShow"
       @closeDefIconsShow="closeDefIconsShow"
       @handleIconsShow="handleIconsShow"
@@ -187,22 +186,10 @@ export default {
       updateMsgList: "updateMsgList"
     }),
     init(){
-      new VConsole()
-      this.updateMsgList([]);
-      try {
-        // 扩展API加载完毕后调用onPlusReady回调函数
-        document.addEventListener("plusready", onPlusReady(), false);
-        // 扩展API加载完毕，现在可以正常调用扩展API
-        function onPlusReady() {
-          window.r = plus.audio.getRecorder();
-        }
-      } catch (e) {
-        //console.log('不是app内')
-      }
       this.clientHeight = document.body.clientHeight
       this.mescrollDom = document.getElementsByClassName('mescroll')[0]
       this.isPartChatPage = false
-      this.handleHeightToBottom()
+      new VConsole()
       new Swiper(".swiper-cont", {
         loop: false,
         autoplay: false, //可选选项，自动滑动
@@ -214,10 +201,17 @@ export default {
         observer: true,
         observeParents: true
       });
+      if(window.plus){
+        document.addEventListener("plusready", onPlusReady(), false);
+        function onPlusReady() {
+          window.r = plus.audio.getRecorder();
+        }
+      }
+      this.updateMsgList([]);
+      this.handleHeightToBottom()
       window.onresize = () =>{
         setTimeout(() => {
           if(document.body.clientHeight<this.clientHeight){
-            //alert(1)
             this.isPartChatPage = 'keyborad'
           }else{
             if(this.iconsShow !==true){
@@ -230,7 +224,6 @@ export default {
       }; 
     },
     handleHeightToBottom(){
-      console.log(this.isPartChatPage )
       if(this.isPartChatPage == false){
         this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2+ "px";
       }
@@ -242,9 +235,7 @@ export default {
       }
       this.handleMsgListToBottom(100)
     },
-    mescrollInit(mescroll) {
-      this.mescroll = mescroll;
-    },
+    mescrollInit(mescroll) {this.mescroll = mescroll;},
     downCallback(mescroll) {
       if(this.mescrollDown.page.num>1){
         this.lockDown = true;
@@ -321,7 +312,6 @@ export default {
       }
     },
     handleImgOnChange(event) {
-      let that = this;
       let file = event.target.files[0];
       if (file.type.indexOf("image/") == -1) {
         Alert({ mes: "请上传图片!" });
@@ -330,9 +320,9 @@ export default {
       //创建读取文件的对象
       let reader = new FileReader();
       //为文件读取成功设置事件
-      reader.onload = function(e) {
-        that.reqImgData.imgDatas = e.target.result;
-        that.cropperShow = true;
+      reader.onload = (e)=> {
+        this.reqImgData.imgDatas = e.target.result;
+        this.cropperShow = true;
       };
       //正式读取文件
       reader.readAsDataURL(file);
@@ -341,14 +331,7 @@ export default {
     getCurrentPosition() {
       plus.geolocation.getCurrentPosition(
         function(p) {
-          chatSend({
-            data: {
-              msg: p.addresses,
-              room_uuid: this.currentRoomUuid,
-              type: this.TEXT,
-              save_action:this.currentRoomSaveAction
-            }
-          });
+          chatSend({ data: {msg:p.addresses,room_uuid: this.currentRoomUuid,type: this.TEXT,save_action:this.currentRoomSaveAction}});
         },
         function(e) {
           switch (e.code) {
@@ -414,10 +397,6 @@ export default {
         this.sendShow = false;
       }
     },
-    handleOnfocus(){
-      /* this.handleMsgListToBottom(700)
-      this.isFocus = true */
-    },
     /* 回滚到底部并重置预览图片 */
     handleMsgListToBottom(delayTime) {
       this.$nextTick(() => {
@@ -470,7 +449,6 @@ export default {
       this.content = `${this.content}<img src='${src}'>`
     },
     handleStartRecord(){
-      let that = this
       this.defsShow = false
       this.iconsShow = false
       this.recordingShow = true
@@ -481,10 +459,10 @@ export default {
           alert( "Device not ready!" );
           return; 
       } 
-      window.r.record( {filename:"_doc/audio/"}, function (p) {
+      window.r.record( {filename:"_doc/audio/"}, (p)=> {
         console.log('录音完成:' + p)
         //上传
-        that.Audio2dataURL(p)
+        this.Audio2dataURL(p)
       })
     },
     /**
@@ -531,7 +509,6 @@ export default {
       data['status']=true
       msgList[index]['msg'] = data
       this.$store.dispatch('updateMsgList', msgList)
-      //Vue.set(this.data[index].data, "status", true);
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(data.url).then(function() {
@@ -543,7 +520,6 @@ export default {
         data['status']=false
         msgList[index]['msg'] = data
         this.$store.dispatch('updateMsgList', msgList)
-        //Vue.set(that.data[index].data, "status", false);
       });
     },
     recReqImgData(value){
@@ -552,7 +528,7 @@ export default {
     recCropperShow(value){
       this.cropperShow = value;
     },
-    formartFileName(msg){
+    formatFileName(msg){
       if(msg){
         var pat=/href='(.+?)'/;
         let url = pat.exec(msg)[1]
@@ -590,11 +566,7 @@ export default {
     //监听聊天数据变动
     content: "handleSendShow",
     data: "handleSendShow",
-    msgList: {
-      handler(){
-        this.handleMsgListToBottom(100)
-      }
-    }
+    msgList: {handler(){this.handleMsgListToBottom(100)}}
   }
 };
 </script>
