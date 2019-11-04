@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:48:25
+ * @LastEditTime: 2019-11-04 13:52:28
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -225,13 +225,13 @@ export default {
     },
     handleHeightToBottom(){
       if(this.isPartChatPage == false){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2+ "px";
       }
       else if(this.isPartChatPage == 'keyborad'){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 +"px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2 +"px";
       }
       else{
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 - 200+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2 - 200+ "px";
       }
       this.handleMsgListToBottom(100)
     },
@@ -370,6 +370,7 @@ export default {
           room_uuid: this.currentRoomUuid,
           type: this.RESEND, 
           created_at: key.created_at,
+          user_id:key.user_id,
           msg: key.msg,
           save_action: this.currentRoomSaveAction
         }

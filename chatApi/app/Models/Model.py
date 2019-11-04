@@ -1,12 +1,5 @@
-'''
-@Author: hua
-@Date: 2019-10-19 15:48:23
-@description: 
-@LastEditors: hua
-@LastEditTime: 2019-10-19 15:56:14
-'''
 # coding: utf-8
-from sqlalchemy import CHAR, Column, String, Text, text
+from sqlalchemy import CHAR, Column, Index, String, Text, text
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, TEXT, TINYINT, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -50,7 +43,7 @@ class HtLog(Base):
 
     id = Column(INTEGER(11), primary_key=True, comment='编号')
     type = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='类型，1是普通接口日志')
-    level = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='报错等级，1是debug，2是warn，3是error')
+    level = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='报错等级，0是normal,1是debug，2是warn，3是error')
     data = Column(TEXT, nullable=False, comment='内容')
     create_time = Column(INTEGER(11), nullable=False, comment='创建时间')
 
@@ -106,3 +99,4 @@ class HtUser(Base):
     first_word = Column(VARCHAR(1), nullable=False, server_default=text("''"), comment='首字母')
     updated_at = Column(INTEGER(11), nullable=False, comment='更新时间')
     created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
+

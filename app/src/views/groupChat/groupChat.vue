@@ -122,8 +122,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            "LOCALSAVE",
-            "GROUPCHAT"
+            "LOCAL",
+            "GROUP"
         ])
     },
     methods: {
@@ -152,9 +152,9 @@ export default {
                 const name = res.data.name
                 joinChatSend({
                     name: name,
-                    type: this.GROUPCHAT,
+                    type: this.GROUP,
                     room_uuid:room_uuid,
-                    save_action:this.LOCALSAVE
+                    save_action:this.LOCAL
                 })
             })
         }

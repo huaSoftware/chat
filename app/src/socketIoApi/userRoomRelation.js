@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-29 14:25:37
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-11-04 11:14:16
+ */
 import {send} from '@/utils/socketio'
 
 // 获取通讯录列表（群聊）
@@ -42,9 +49,10 @@ export function userRoomRelationUpdateSaveAction(data){
 
 // 创建群聊
 export function groupChatCreate (data) {
-    return request({
-        url: '/api/v2/groupChat/create',
-        method: 'post',
-        data
-    })
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'create',
+        'data':data
+    }
+    return send('send', reqData, 'api')
 }

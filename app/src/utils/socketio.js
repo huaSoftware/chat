@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:14:48
+ * @LastEditTime: 2019-11-04 14:43:06
  */
 
 import store from '../store'
@@ -60,21 +60,18 @@ export function setupListen(){
 				let data = res.data
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
 				console.log("发送消息监听回复",data)
+				modifyMsgStatus(data, store.getters.SUCCESS)
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-				console.log(msgList)
-				//uuid组成是由房间号+用户编号+时间戳
-				let uuid = data['room_uuid']+data['user_id']+data['created_at']
-				let index = utils.arr.getIndexByUuid(uuid, msgList)
 				//这边会有发送后接收不到的问题
 				if(typeof index !== 'undefined'){
 					msgList[index]['send_status'] = store.getters.SUCCESS
 					//他人发送的需要根据设置的房间状态去同步聊天数据
 					delete msgList[index]['id']
 					console.log("消息列表",msgList[index])
-					if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+					if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
 						console.log(msgList[index])
 						addLocalRoomMsg(msgList[index])
-					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
+					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
 						addCloudRoomMsg(msgList[index])
 					}
 				}else{
@@ -87,9 +84,9 @@ export function setupListen(){
 					user_id:data['user_id'],
 					send_status: store.getters.SUCCESS
 				}
-				if(store.getters.currentRoomSaveAction == store.getters.LOCALSAVE){
+				if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
 					updateLocalRoomMsg(reqData)
-				}else if(store.getters.currentRoomSaveAction == store.getters.CLOUDSAVE){
+				}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
 					updateCloudRoomMsg(reqData)
 				}
 	
@@ -116,7 +113,7 @@ export function setupListen(){
 					// 删除原来的键
 					delete data['data']['id'];
 					// 增加状态,0申请，1通过，2拒绝
-					data['data']['status'] = 0
+					data['data']['status'] = store.getters.APPLY
 					Toast({ mes: `${data.data.nick_name}申请加你好友` });
 					//接收到后删除缓存
 					addressBookBegCacheDel()
@@ -202,7 +199,7 @@ export function  send(method, data, type = 'room') {
 			//响应超时
 			window.sendTimeOut = setTimeout(()=>{
 				if(method == 'join'){
-					Loading.open('房间加入超时,重新加入中...')
+					Loading.open(`房间加入超时,尝试第${window.tryRoomLinkCount+1}次加入...`)
 					if(window.tryRoomLinkCount<3){
 						send('join', {
 							name: store.getters.currentRoomName,
@@ -218,7 +215,7 @@ export function  send(method, data, type = 'room') {
 					}
 				}
 				if(method == 'leave'){
-					Loading.open('房间退出超时,重新退出中...')
+					Loading.open(`房间退出超时,尝试第${window.tryRoomLinkCount+1}次退出...`)
 					if(window.tryRoomLinkCount<3){
 						send('leave', {
 							room_uuid: store.getters.currentRoomUuid
@@ -237,11 +234,7 @@ export function  send(method, data, type = 'room') {
 						timeout: 1500,
 						icon: 'error'
 					});
-					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-					let uuid = data.data['room_uuid']+data.data['user_id']+data.data['created_at']
-					let index = utils.arr.getIndexByUuid(uuid, msgList)
-					msgList[index]['send_status'] = 2
-					store.dispatch('updateMsgList', msgList)
+					modifyMsgStatus(data.data, store.getters.FAIL)
 				}
 			},1500)
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
@@ -251,6 +244,7 @@ export function  send(method, data, type = 'room') {
 				response(recv).then(res=>{
 					if(res.data.action == 'chat'){
 						clearTimeout(window.sendTimeOut)
+						modifyMsgStatus(data.data, store.getters.SUCCESS)
 					}
 					if(res.data.action == 'leave'){
 						clearTimeout(window.sendTimeOut)
@@ -259,8 +253,8 @@ export function  send(method, data, type = 'room') {
 						if(router.history.current.fullPath.indexOf('room') == -1){
 							store.commit('updateCurrentRoomUuid', '')
 							store.commit('updateCurrentRoomName', '')
-							store.commit('updateCurrentRoomType', store.getters.ALONECHAT)
-							store.commit('updateCurrentRoomSaveAction', store.getters.LOCALSAVE)
+							store.commit('updateCurrentRoomType', store.getters.ALONE)
+							store.commit('updateCurrentRoomSaveAction', store.getters.LOCAL)
 						}
 					}
 					if(res.data.action == 'join'){
@@ -288,11 +282,7 @@ export function  send(method, data, type = 'room') {
 						timeout: 1500,
 						icon: 'error'
 					});
-					let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-					let uuid = data.data['room_uuid']+data.data['user_id']+data.data['created_at']
-					let index = utils.arr.getIndexByUuid(uuid, msgList)
-					msgList[index]['send_status'] = 2
-					store.dispatch('updateMsgList', msgList)
+					modifyMsgStatus(data.data, store.getters.FAIL)
 					Promise.reject(e)
 				})
 			})
@@ -306,7 +296,7 @@ export function  send(method, data, type = 'room') {
 			//响应超时
 			window.broadcastTimeOut = setTimeout(()=>{
 				if(method == 'join'){
-					Loading.open('广播重新链接中...')
+					Loading.open(`广播尝试第${window.tryBroadcastLinkCount+1}次链接中...`)
 					if(window.tryBroadcastLinkCount<3){
 						send('join', {}, 'broadcast')
 						window.tryBroadcastLinkCount++
@@ -318,7 +308,7 @@ export function  send(method, data, type = 'room') {
 					}
 				}
 				if(method == 'leave'){
-					Loading.open('广播退出超时,重新退出中...')
+					Loading.open(`广播退出超时,尝试第${window.tryBroadcastLinkCount+1}次退出中...`)
 					if(window.tryBroadcastLinkCount<3){
 						send('leave', {}, 'broadcast')
 						window.tryBroadcastLinkCount++
@@ -330,7 +320,7 @@ export function  send(method, data, type = 'room') {
 					}
 				}
 			},1500)
-			data['type'] = store.getters.NOTIFICATION
+			data['type'] = store.getters.NOTIFY
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			console.log("广播："+method, "秘钥："+encryptStr)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
@@ -435,4 +425,19 @@ export function rsaEncode(data, publicKey){
 	}
 	encryptStr = encryptStr.substring(0,encryptStr.length-1);
 	return encryptStr
+}
+
+/**
+ * 修改发送信息状态
+ * @param  object data
+ * @param  int status
+ * return void
+ */
+export function modifyMsgStatus(data, status){
+	console.log(data)
+	let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+	let uuid = data['room_uuid']+data['user_id']+data['created_at']
+	let index = utils.arr.getIndexByUuid(uuid, msgList)
+	msgList[index]['send_status'] = status
+	store.dispatch('updateMsgList', msgList)
 }

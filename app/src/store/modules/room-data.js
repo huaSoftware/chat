@@ -89,11 +89,8 @@ export default {
             state.roomList = roomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
-            console.log(roomList)
             roomList.forEach((item)=>{
-                console.log(item)
                 if(item.room.last_msg !=''){
-                    console.log(item.room.last_msg)
                     let data = JSON.parse(item.room.last_msg)
                     if(item.save_action == 0){
                         let msgData = {
@@ -101,8 +98,6 @@ export default {
                             created_at:item.room.updated_at,
                             head_img:data['head_img'],
                             name:data['name'],
-                            //id:item.id,
-                            //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
                             user_id:data['user_id'],
@@ -115,8 +110,6 @@ export default {
                             created_at:item.room.updated_at,
                             head_img:data['head_img'],
                             name:data['name'],
-                            //id:item.id,
-                            //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
                             user_id:data['user_id'],
@@ -146,8 +139,6 @@ export default {
                             created_at:item.created_at,
                             head_img:item.users.head_img,
                             name:item.users.nick_name,
-                            //id:item.id,
-                            //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
                             user_id:item.users.id,
@@ -160,8 +151,6 @@ export default {
                             created_at:item.created_at,
                             head_img:item.users.head_img,
                             name:item.users.nick_name,
-                            //id:item.id,
-                            //save_action:item.save_action,
                             send_status:1,
                             type:data['type'],
                             user_id:item.users.id,

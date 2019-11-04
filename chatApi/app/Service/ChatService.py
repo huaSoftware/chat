@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:49:44
+@LastEditTime: 2019-11-04 13:53:46
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -68,7 +68,7 @@ class ChatService():
                 #if item.user_id != user_id:
                 roomList = UserRoomRelation.getRoomList(item.user_id)['data']
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
-        return  Utils.formatBody({'action':"chat"})
+        return  Utils.formatBody({'action':"chat","data": data})
         
     @classTransaction
     def groupChatCreate(self,user_info, params):

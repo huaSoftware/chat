@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-11-04 14:50:15
+ */
 /*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
 import 'babel-polyfill'
 import promise from 'es6-promise'
@@ -40,6 +47,13 @@ let options = {
   fullscreenEl: false
 };
 Vue.use(preview, options)
+
+//系统错误捕获，这里可以提交到后端
+const warnHandler = (msg, vm, trace)=>{
+  console.error((`[Vue warn]: ${new Date()} ` + msg + trace));
+}
+Vue.config.warnHandler = warnHandler;
+Vue.prototype.$throw = (error)=> warnHandler(error,this);
 
 new Vue({
   router,

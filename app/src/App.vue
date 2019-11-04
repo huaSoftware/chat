@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2019-09-20 15:35:27
+ * @LastEditTime: 2019-11-04 14:18:42
  -->
 <template>
   <yd-layout>
@@ -45,6 +45,7 @@ import { Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {addressBookBegCache} from '@/socketioApi/addressBook'
 import {addAddressBookBeg, getAddressBookBeg,updateMsg} from "@/utils/indexedDB"
 import {setDown, setup, setupListen} from '@/utils/socketio'
+import {getConst} from '@/socketioApi/config'
 import utils from '@/utils/utils'
 import router from './router'
 import navMenu from '@/components/nav-menu/nav-menu';
@@ -94,6 +95,16 @@ export default {
         }
       }
     });
+    //拉取配置常量
+    getConst().then(res=>{
+      console.log(res)
+      this.$store.commit('updateChat',res.data.CHAT)
+      this.$store.commit('updateLog',res.data.LOG)
+      this.$store.commit('updateRoom',res.data.ROOM)
+      this.$store.commit('updateSave',res.data.SAVE)
+      this.$store.commit('updateStatus',res.data.STATUS)
+      this.$store.commit('updateAddFriend',res.data.ADDFRIEND)
+    })
     if(this.user.token){
       addressBookBegCache().then(res=>{
         let data = res.data

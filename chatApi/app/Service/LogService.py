@@ -3,12 +3,11 @@
 @Date: 2019-07-23 15:36:31
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-09-14 12:32:01
+@LastEditTime: 2019-11-04 11:25:02
 '''
 from app.Models.Model import HtLog
 from app import dBSession
 import time
-
 class LogService:
     """ 
         日志服务层 
