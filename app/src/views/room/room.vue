@@ -1,8 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
+ * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 13:52:28
+ * @LastEditTime: 2019-11-04 16:29:49
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -210,17 +211,19 @@ export default {
       this.updateMsgList([]);
       this.handleHeightToBottom()
       window.onresize = () =>{
-        setTimeout(() => {
           if(document.body.clientHeight<this.clientHeight){
             this.isPartChatPage = 'keyborad'
+            this.handleHeightToBottom()
+            this.handleSendShow();
           }else{
-            if(this.iconsShow !==true){
-              this.isPartChatPage = false
-            }
+            setTimeout(() => {
+              if(this.iconsShow !==true && this.defsShow !==true){
+                this.isPartChatPage = false
+              }
+              this.handleHeightToBottom()
+              this.handleSendShow();
+            }, 200);
           }
-          this.handleHeightToBottom()
-          this.handleSendShow();
-        }, 300);
       }; 
     },
     handleHeightToBottom(){
@@ -288,7 +291,6 @@ export default {
     },
     handleFileOnChange(event) {
       let file = event.target.files[0];
-
       if (!!file) {
         //读取本地文件，以gbk编码方式输出
         var reader = new FileReader();
@@ -411,6 +413,8 @@ export default {
       });
     },
     handleDefsShow() {
+      //这边需要解决获取焦点后的再切换表情的bug
+      document.getElementsByClassName('edit-div')[0].blur()
       if (this.defsShow) {
         this.isPartChatPage = false
         this.handleHeightToBottom()
@@ -427,7 +431,7 @@ export default {
       this.handleMsgListToBottom(100)
     },
     handleIconsShow() {
-      //这边需要除了获取焦点后的再切换表情的bug
+      //这边需要解决获取焦点后的再切换表情的bug
       document.getElementsByClassName('edit-div')[0].blur()
       if(this.iconsShow){
         this.isPartChatPage = false

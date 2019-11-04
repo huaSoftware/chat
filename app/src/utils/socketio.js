@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 14:43:06
+ * @LastEditTime: 2019-11-04 16:00:24
  */
 
 import store from '../store'
@@ -60,7 +60,7 @@ export function setupListen(){
 				let data = res.data
 				//逻辑处理,存放indexdDB,存放一份实时的在vuex
 				console.log("发送消息监听回复",data)
-				modifyMsgStatus(data, store.getters.SUCCESS)
+				let index = modifyMsgStatus(data, store.getters.SUCCESS)
 				let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 				//这边会有发送后接收不到的问题
 				if(typeof index !== 'undefined'){
@@ -142,7 +142,7 @@ export function setupListen(){
 		window.apiSocket.on('room', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				console.log("房间列表"+data)
+				//console.log("房间列表"+data)
 				store.dispatch('updateRoomList', data)
 			})
 		});
@@ -431,7 +431,7 @@ export function rsaEncode(data, publicKey){
  * 修改发送信息状态
  * @param  object data
  * @param  int status
- * return void
+ * return index
  */
 export function modifyMsgStatus(data, status){
 	console.log(data)
@@ -440,4 +440,5 @@ export function modifyMsgStatus(data, status){
 	let index = utils.arr.getIndexByUuid(uuid, msgList)
 	msgList[index]['send_status'] = status
 	store.dispatch('updateMsgList', msgList)
+	return index
 }

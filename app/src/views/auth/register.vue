@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:14:24
+ * @LastEditTime: 2019-11-04 15:26:36
  -->
 <template>
 <div>
@@ -231,6 +231,7 @@ export default {
             validatedError(errors, this.validated_status);
             if (errors.length == 0) {
                 let reqData = {nickName: this.nickName, email: this.email, password: md5(this.password), headImg: this.headImg}
+                console.log(reqData)
                 register(reqData).then(res=>{
                     deleteTables()
                     this.password = ''
