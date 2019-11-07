@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:55:16
+ * @LastEditTime: 2019-11-06 20:02:46
  -->
 <template>
 	<div class="content">
@@ -19,9 +19,9 @@
 				<span class="icon-custom-jia2 navbar_icon"></span>
 			</div>
 		</header>
-		<!-- 头部结束 -->
 		<!-- 功能栏 -->
 		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
+		<!-- 头部结束 -->
 		<!-- 单聊 -->
 		<article class="yd-list yd-list-theme4" style="padding-top:1rem">
 			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
@@ -68,9 +68,9 @@
 	import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'
-
+	import vScroll from '@/components/v-scroll/v-scroll'
 	export default {
-		components: {vImg, vEmpty},
+		components: {vImg, vEmpty,vScroll},
 		name: 'home',
 		data() {
 			return {

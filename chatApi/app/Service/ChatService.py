@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-04 13:53:46
+@LastEditTime: 2019-11-06 20:53:40
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -11,10 +11,11 @@ from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import classTransaction
 from app.Models.Users import Users
 from app.Models.Room import Room
+from app.Models.Msg import Msg
 from app.Vendor.Code import Code
 from app.Vendor.Utils import Utils
 from app import socketio
-import time
+import time,json
 
 class ChatService():
     
@@ -31,6 +32,7 @@ class ChatService():
         room_data = Room.get(room_uuid)
         room_type = room_data.type
         created_at = message['data']['created_at']  
+        save_action = message['data']['save_action']  
         user_data = Users().getOne({Users.id == user_info['data']['id']})
         data = {
             'msg': msg, 
@@ -45,6 +47,14 @@ class ChatService():
             address_book_data = AddressBook.get(room_uuid)
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
+            #如果是云端存储则记录
+            if save_action == 1:
+                res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
+                if res == None:
+                    copy_data = data.copy()
+                    copy_data['msg'] = json.dumps(msg)
+                    copy_data['send_status'] = 0
+                    Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字

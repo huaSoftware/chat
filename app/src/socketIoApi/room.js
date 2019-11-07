@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-29 13:53:24
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-11-07 11:19:16
+ */
 import {send} from '@/utils/socketio'
 
 
@@ -31,7 +38,7 @@ export function getCloudRoomMsg(data){
     return send('send', reqData, 'api')
 }
 
-//添加房间聊天记录
+/* //添加房间聊天记录
 export function addCloudRoomMsg(data){
     let reqData = {
         'c':'RoomService',
@@ -39,7 +46,7 @@ export function addCloudRoomMsg(data){
         'data':data
     }
     return send('send', reqData, 'api')
-}
+} */
 
 //删除房间聊天记录
 export function roomMsgDel(data){

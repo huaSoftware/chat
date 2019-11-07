@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-19 10:40:20
+ * @LastEditTime: 2019-11-06 21:04:11
  -->
 <template>
     <div class="room_details">
@@ -192,7 +192,9 @@ export default {
         },
         save_action:{
             handler(){
-                userRoomRelationUpdateSaveAction({save_action: this.save_action, room_uuid: this.currentRoomUuid})
+                userRoomRelationUpdateSaveAction({save_action: this.save_action, room_uuid: this.currentRoomUuid}).then(res=>{
+                    this.$store.commit('updateCurrentRoomSaveAction',this.save_action)
+                })
             }
         }
     }

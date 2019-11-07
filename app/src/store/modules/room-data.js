@@ -104,7 +104,7 @@ export default {
                             room_uuid:item.room_uuid
                         }
                         addLocalRoomMsg(msgData)
-                    }else if(item.save_action == 1){
+                    }/* else if(item.save_action == 1){
                         let msgData = {
                             msg:data['msg'],
                             created_at:item.room.updated_at,
@@ -117,7 +117,7 @@ export default {
                         }
                         console.log(msgData)
                         addCloudRoomMsg(msgData)
-                    }
+                    } */
                     if(item.is_alert){
                         unread_number = unread_number+item.unread_number
                     }
@@ -145,7 +145,7 @@ export default {
                             room_uuid:item.room_uuid
                         }
                         addLocalRoomMsg(msgData)      
-                    }else if(item.save_action == 1){
+                    }/* else if(item.save_action == 1){
                         let msgData = {
                             msg:data['msg'],
                             created_at:item.created_at,
@@ -157,7 +157,7 @@ export default {
                             room_uuid:item.room_uuid
                         }
                         addCloudRoomMsg(msgData)
-                    }
+                    } */
                     if(item.is_alert){
                         unread_number = unread_number+item.unread_number
                     }

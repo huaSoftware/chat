@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 16:00:24
+ * @LastEditTime: 2019-11-06 20:55:15
  */
 
 import store from '../store'
@@ -71,9 +71,9 @@ export function setupListen(){
 					if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
 						console.log(msgList[index])
 						addLocalRoomMsg(msgList[index])
-					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
+					}/* else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
 						addCloudRoomMsg(msgList[index])
-					}
+					} */
 				}else{
 					msgList = msgList.concat(data)
 				}

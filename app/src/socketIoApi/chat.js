@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 13:41:31
+ * @LastEditTime: 2019-11-06 20:54:49
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
@@ -45,12 +45,12 @@ export function chatSend(data){
     }
     if(data['data']['save_action'] == 0){
         addLocalRoomMsg(msgInfo)
-    }else if(data['data']['save_action'] == 1){
+    }/* else if(data['data']['save_action'] == 1){
         //delete data.data.save_action;
         delete formatMsgInfo.save_action;
         console.log(msgInfo)
         addCloudRoomMsg(formatMsgInfo)
-    }
+    } */
     console.log("发送",formatData)
     return send('chat', formatData)
 }

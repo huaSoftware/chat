@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 15:26:36
+ * @LastEditTime: 2019-11-06 20:05:38
  -->
 <template>
 <div>
@@ -194,7 +194,7 @@ export default {
     };
     },
     created() {
-        window.physicsBackRouter = '/auth/login'
+        window.physicsBackRouter = -1
     },
     methods: {
         bindFile(name) {
