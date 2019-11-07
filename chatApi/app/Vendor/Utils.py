@@ -3,15 +3,15 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-11-04 15:36:20
+@LastEditTime: 2019-11-07 22:00:07
 '''
 
 from Cryptodome.PublicKey import RSA
-from Cryptodome.Cipher import PKCS1_OAEP, PKCS1_v1_5
+from Cryptodome.Cipher import  PKCS1_v1_5
 from app.env import ALLOWED_EXTENSIONS
 from app.Lang.zh_CN.validation import validation
 from app.Vendor.Code import Code
-import time,os,json,base64,chardet
+import time,os,json,base64
 
 
 class Utils:
@@ -197,7 +197,7 @@ class Utils:
         private_key = RSA.import_key(
             open(os.getcwd()+"/app/my_private_rsa_key.bin").read()
         )
-        cipher_rsa = PKCS1_v1_5.new(private_key)
+        cipher_rsa = PKCS1_v1_5.new(private_key)# type: ignore
         #切割字符串
         en_data_list = en_data.split(",")
         data = ""      
@@ -215,7 +215,7 @@ class Utils:
         recipient_key = RSA.import_key(
             open("my_rsa_public.pem").read()
         )
-        cipher_rsa = PKCS1_v1_5.new(recipient_key)
+        cipher_rsa = PKCS1_v1_5.new(recipient_key)# type: ignore
 
         en_data = cipher_rsa.encrypt(b"123456")
         print(len(en_data), en_data)
@@ -224,7 +224,7 @@ class Utils:
         private_key = RSA.import_key(
             open("my_private_rsa_key.bin").read()
         )
-        cipher_rsa = PKCS1_v1_5.new(private_key)
+        cipher_rsa = PKCS1_v1_5.new(private_key)# type: ignore
         data = cipher_rsa.decrypt(en_data, None)
 
         print(data)

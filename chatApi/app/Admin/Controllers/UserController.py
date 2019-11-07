@@ -3,15 +3,13 @@
 @Date: 2019-06-11 14:59:11
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-06-12 16:02:25
+@LastEditTime: 2019-11-07 16:24:21
 '''
 from app import app
 from app.Vendor.Decorator import validator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
 from app.Models.Users import Users
-from app.Admin.Service.AdminService import AdminService
-from sqlalchemy import or_
 
 @app.route('/api/v2/admin/user/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)

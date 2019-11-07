@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-30 10:41:29
 @LastEditors: hua
-@LastEditTime: 2019-10-19 13:29:22
+@LastEditTime: 2019-11-07 21:38:07
 '''
 from flask import jsonify, make_response
 from app.env import DEBUG_LOG, SAVE_LOG
@@ -16,12 +16,12 @@ import json
 def ExceptionApi(code, e):
     """ 接口异常处理 """
     exc_type, exc_value, exc_traceback = sys.exc_info()
-    error_trace = traceback.format_exception([], exc_value, exc_traceback)
+    error_trace = traceback.format_exception(exc_type, exc_value, exc_traceback)
     if DEBUG_LOG:
         if SAVE_LOG == 1:
             log().exception(error_trace)
         elif SAVE_LOG == 2:
-            LogService().add(error_trace, 1, 3) #导致文件互相引用
+            LogService().add(json.dumps(error_trace), 1, 3) #导致文件互相引用
     body = {}
     body['error_code'] = code
     body['error'] = True
@@ -35,7 +35,7 @@ def ExceptionApi(code, e):
 def SocketExceptionApi(code, e):
     """ 接口异常处理 """
     exc_type, exc_value, exc_traceback = sys.exc_info()
-    error_trace = traceback.format_exception([], exc_value, exc_traceback)
+    error_trace = traceback.format_exception(exc_type, exc_value, exc_traceback)
     if DEBUG_LOG:
         if SAVE_LOG == 1:
             log().exception(error_trace)

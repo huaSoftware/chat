@@ -3,11 +3,10 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 14:12:45
+@LastEditTime: 2019-11-07 16:29:40
 '''
-from app import app,CONST
+from app import CONST
 from app import socketio
-from app.Controllers.BaseController import BaseController
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Vendor.Utils import Utils
 from app.Service.ChatService import ChatService
@@ -17,7 +16,6 @@ from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import socketValidator
 from app.Vendor.Decorator import transaction
 from app.Vendor.Code import Code
-from flask import request
 
 class UserRoomRelationService:
     

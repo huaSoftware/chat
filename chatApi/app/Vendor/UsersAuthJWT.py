@@ -2,13 +2,10 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-21 15:56:45
+@LastEditTime: 2019-11-07 21:51:32
 '''
-from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
-from app import socketio
 from flask import request, make_response, jsonify
-from flask_socketio import emit
 from functools import wraps
 from app.Vendor.Code import Code
 from app.env import SECRET_KEY, JWT_LEEWAY
@@ -83,7 +80,7 @@ class UsersAuthJWT():
                 Users().edit({'updated_at': updated_at}, {Users.email == email})
                 token = UsersAuthJWT.encode_auth_token(userInfo['id'], updated_at)
                 userInfo.pop('password')#删除密码
-                return  Utils.formatBody({'token': token.decode(), 'user': userInfo}, '登陆成功')
+                return  Utils.formatBody({'token': token, 'user': userInfo}, '登陆成功')
             else:
                 return Utils.formatError(Code.BAD_REQUEST,'密码不正确')
 

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-02-10 09:55:10
+@LastEditTime: 2019-11-07 21:56:13
 '''
 import cerberus
 
@@ -17,9 +17,11 @@ class CustomErrorHandler(cerberus.errors.BasicErrorHandler):
             try:
                 tmp = tmp[x]
             except KeyError:
-                return super(CustomErrorHandler, self).format_message(field, error)
+                new = super(CustomErrorHandler, self)
+                return new.format_message(field, error)
         if isinstance(tmp, dict):  # if "unknown field"
-            return super(CustomErrorHandler, self).format_message(field, error)
+            new = super(CustomErrorHandler, self)
+            return new.format_message(field, error)
         else:
             return tmp
 

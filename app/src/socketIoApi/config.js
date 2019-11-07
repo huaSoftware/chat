@@ -3,7 +3,7 @@
  * @Date: 2019-11-04 11:13:25
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-07 14:25:18
+ * @LastEditTime: 2019-11-07 15:10:43
  */
 import {send} from '@/utils/socketio'
 
@@ -20,7 +20,7 @@ export function getConst () {
 export function logAdd (data) {
     let reqData = {
         'c':'LogService',
-        'a':'add',
+        'a':'clientAdd',
         'data':data
     }
     return send('send', reqData, 'api')

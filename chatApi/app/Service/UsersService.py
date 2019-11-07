@@ -3,7 +3,7 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 14:12:28
+@LastEditTime: 2019-11-07 21:32:00
 '''
 import time, re
 from app.Vendor.Decorator import socketValidator, socketValidator
@@ -85,7 +85,6 @@ class UsersService():
     @UsersAuthJWT.socketAuth
     def get(params, user_info):
         #鉴权
-        if (user_info['data']):
-            user_data = Users().getOne({Users.id == user_info['data']['id']})
+        user_data = Users().getOne({Users.id == user_info['data']['id']})
         return Utils.formatBody(user_data)
     

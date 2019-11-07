@@ -3,24 +3,19 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 14:11:46
+@LastEditTime: 2019-11-07 16:29:16
 '''
-from app import app, CONST
-from flask import request
+from app import CONST
 from app import socketio
-from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.AddressBook import AddressBook
 from app.Vendor.Decorator import socketValidator
 from app.Models.UserRoomRelation import UserRoomRelation
-from app.Models.Users import Users
 from app.Models.Msg import Msg
 from app.Models.Room import Room
-from flask_socketio import emit, join_room
 from app.Vendor.Decorator import transaction
-from app.Vendor.Code import Code
-import time,json
+import json
 
 class RoomService:
     

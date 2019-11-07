@@ -3,7 +3,7 @@
 @Date: 2019-11-04 10:54:31
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-04 13:12:19
+@LastEditTime: 2019-11-07 15:24:01
 '''
 import json
 import os
@@ -15,10 +15,11 @@ class ConfigService():
     
     '''
     @description: 获取常量配置
+    @param: dict
     @return: dict
     '''
     @staticmethod
-    def getConst(params):
+    def getConst(params:dict)->dict:
         path = os.getcwd()+'/app/const.json'
         with open(path, "rb") as f:
             const = json.loads(f.read(), encoding='utf-8')

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-10-08 16:22:33
+@LastEditTime: 2019-11-07 21:52:36
 '''
 from app import dBSession
 from app import socketio
@@ -32,6 +32,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         return error
     #这边修改成json格式接收参数
     method = request.method
+    requests = None
     if method == 'GET':
         requests = request.values
     if method == 'POST':

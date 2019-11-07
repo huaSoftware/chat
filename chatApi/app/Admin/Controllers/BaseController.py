@@ -3,14 +3,13 @@
     基础控制器，封装一些基础方法 
     验证库https://cerberus.readthedocs.io/en/stable/index.html
 '''
-from app.env import DEBUG_LOG, MAX_CONTENT_LENGTH, ALLOWED_EXTENSIONS
+from app.env import DEBUG_LOG
 from app.Vendor.Code import Code
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
 from app.Vendor.Log import log
 from app.Vendor.Utils import Utils
 from flask import request, jsonify
 import cerberus
-import time
 import json
 
 
@@ -81,7 +80,7 @@ class BaseController:
                     'PARAMETERS': request.args,
                     'RESPONSES': body
                 }))
-        body['debug_id'] = debug_id
+            body['debug_id'] = debug_id
         return jsonify(body)
 
     '''

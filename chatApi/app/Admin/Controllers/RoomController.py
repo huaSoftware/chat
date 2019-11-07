@@ -9,7 +9,6 @@ from app import app
 from app.Vendor.Decorator import validator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
-from app.Models.Admin import Admin
 from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 

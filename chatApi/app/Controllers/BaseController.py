@@ -3,14 +3,14 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-07-25 08:44:31
+@LastEditTime: 2019-11-07 21:49:42
 '''
 ''' author:hua
     date:2018.2.6
     基础控制器，封装一些基础方法 
     验证库https://cerberus.readthedocs.io/en/stable/index.html
 '''
-from app.env import DEBUG_LOG, SAVE_LOG, MAX_CONTENT_LENGTH, ALLOWED_EXTENSIONS
+from app.env import DEBUG_LOG, SAVE_LOG
 from app.Service.LogService import LogService
 from app.Vendor.Code import Code
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
@@ -18,7 +18,6 @@ from app.Vendor.Log import log
 from app.Vendor.Utils import Utils
 from flask import request, jsonify
 import cerberus
-import time
 import json
 
 
@@ -92,7 +91,7 @@ class BaseController:
                 log().debug(data)
             elif SAVE_LOG == 2:
                 LogService().add(json.dumps(data), 1, 2)
-        body['debug_id'] = debug_id
+            body['debug_id'] = debug_id
         return jsonify(body)
 
     '''

@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-07 14:33:29
+ * @LastEditTime: 2019-11-07 15:09:10
  */
 /*从babel的官方网站下载babel-polyfill,安装到web应用的头部即可轻松解决问题,并能支持ES6所有的新方法**/
 import 'babel-polyfill'
@@ -53,7 +53,7 @@ Vue.use(preview, options)
 //系统错误捕获，这里可以提交到后端
 const warnHandler = (msg, vm, trace)=>{
   console.error((`[Vue warn]: ${new Date()} ` + msg + trace));
-  logAdd({data:JSON.stringify([`[Vue warn]: ${new Date()} ${msg} ${trace} `]), type:1, level:1})
+  logAdd({data:JSON.stringify([`[Vue warn]: ${new Date()} ${msg} ${trace} `]), type:1, level:2})
 
 }
 Vue.config.warnHandler = warnHandler;

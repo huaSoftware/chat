@@ -3,7 +3,7 @@
 @Date: 2019-06-10 10:13:37
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:58:46
+@LastEditTime: 2019-11-07 21:54:47
 '''
 from app.Models.Admin import Admin
 from app.Vendor.Utils import Utils
@@ -56,7 +56,7 @@ class AdminService():
             update_time = int(time.time())
             Admin().edit({Admin.update_time: update_time}, filters)
             token = UsersAuthJWT.encode_auth_token(admin['id'], update_time)    
-            return Utils.formatBody({'token': token.decode(), 'user': admin})   
+            return Utils.formatBody({'token': token, 'user': admin})   
         return Utils.formatError(Code.ERROR)
     
     @classTransaction
