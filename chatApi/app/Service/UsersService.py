@@ -3,7 +3,7 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-04 11:26:29
+@LastEditTime: 2019-11-07 14:12:28
 '''
 import time, re
 from app.Vendor.Decorator import socketValidator, socketValidator
@@ -11,7 +11,7 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Vendor.Utils import Utils
 from app.Vendor.Code import Code
 from app.Models.Users import Users
-from app.Vendor.Decorator import classTransaction
+from app.Vendor.Decorator import transaction
 from xpinyin import Pinyin
 
 class UsersService():
@@ -21,7 +21,7 @@ class UsersService():
         @return dict 返回格式化结果
     """
     @staticmethod
-    @classTransaction
+    @transaction
     def register(params):
         userData = Users().getOne({Users.email == params['email']})
         if(userData == None):
@@ -57,7 +57,7 @@ class UsersService():
     @staticmethod
     @socketValidator(name='email', rules={'required': True,'type': 'string','minlength': 10,'maxlength': 20})
     @socketValidator(name='password', rules={'required':True,'type':'string','minlength':6,'maxlength':200})
-    @classTransaction
+    @transaction
     def login(params):
         return UsersAuthJWT.authenticate(params['email'], params['password'])
 

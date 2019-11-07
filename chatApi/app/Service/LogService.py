@@ -3,7 +3,7 @@
 @Date: 2019-07-23 15:36:31
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-04 11:25:02
+@LastEditTime: 2019-11-07 13:29:46
 '''
 from app.Models.Model import HtLog
 from app import dBSession
@@ -16,9 +16,9 @@ class LogService:
         """ 
         添加
         @param: string  data
-        @param: integer type
-        @param: integer level
-        @retrun integer boolean
+        @param: int type
+        @param: int level
+        @retrun int boolean
         """
         data = {
             'data': data,
@@ -36,6 +36,7 @@ class LogService:
         except  Exception as e:
             dBSession.rollback()  
             return 0
+
     
         
         

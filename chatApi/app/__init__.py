@@ -2,9 +2,9 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-10-24 14:52:52
+@LastEditTime: 2019-11-07 14:15:04
 '''
-from flask import Flask,g
+from flask import Flask
 from flask import make_response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -14,11 +14,13 @@ from cacheout import Cache
 from app.env import (SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH,REDIS_PAS, REDIS_IP, REDIS_PORT, REDIS_DB)
 import os, time, json
 
-path = os.getcwd()+'/.runtime/environment.json'
-with open(path, "r") as f:
+with open(os.getcwd()+'/.runtime/environment.json', "r") as f:
     environment = json.loads(f.read())['environment']
     
 app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
+#动态设置全局常量
+with open(os.getcwd()+'/app/const.json', "rb") as f:
+    CONST = json.loads(f.read(), encoding='utf-8')
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
 async_mode = 'gevent'

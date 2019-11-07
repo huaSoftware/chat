@@ -3,24 +3,25 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-06 20:53:40
+@LastEditTime: 2019-11-07 14:10:25
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
 from app.Models.UserRoomRelation import UserRoomRelation
-from app.Vendor.Decorator import classTransaction
+from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
 from app.Models.Room import Room
 from app.Models.Msg import Msg
 from app.Vendor.Code import Code
 from app.Vendor.Utils import Utils
-from app import socketio
+from app import socketio, CONST
 import time,json
 
 class ChatService():
     
-    @classTransaction
-    def chat(self, message, user_info):
+    @staticmethod
+    @transaction
+    def chat(message, user_info):
         """
             @param  dict message
             @param  dict user_info
@@ -43,7 +44,7 @@ class ChatService():
             'room_uuid': room_uuid,
             'created_at': created_at
         }
-        if room_data != None and room_type == 0:
+        if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
@@ -53,7 +54,7 @@ class ChatService():
                 if res == None:
                     copy_data = data.copy()
                     copy_data['msg'] = json.dumps(msg)
-                    copy_data['send_status'] = 0
+                    copy_data['send_status'] = CONST['SAVE']['LOCAL']['value']
                     Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
@@ -64,7 +65,7 @@ class ChatService():
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
                 socketio.emit('room', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
-        elif room_data != None and room_type == 1:
+        elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             #发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
@@ -75,13 +76,13 @@ class ChatService():
             UserRoomRelation.cleanUnreadNumber(room_uuid, user_data['id'])
             #更新客户端房间信息
             for item in user_room_relation_data:
-                #if item.user_id != user_id:
                 roomList = UserRoomRelation.getRoomList(item.user_id)['data']
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat","data": data})
         
-    @classTransaction
-    def groupChatCreate(self,user_info, params):
+    @staticmethod
+    @transaction
+    def groupChatCreate(user_info, params):
         """ 
             创建聊天群组
             @Param dict userInfo
@@ -106,7 +107,7 @@ class ChatService():
         room_data = {
             'room_uuid' : room_uuid,
             'last_msg'  : '',
-            'type'      : 1,
+            'type'      : CONST['CHAT']['TEXT']['value'],
             'updated_at': now_item,
             'created_at': now_item,
             'name': name.strip(','),

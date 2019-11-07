@@ -3,9 +3,9 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:51:01
+@LastEditTime: 2019-11-07 14:12:45
 '''
-from app import app
+from app import app,CONST
 from app import socketio
 from app.Controllers.BaseController import BaseController
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -15,7 +15,7 @@ from app.Models.AddressBook import AddressBook
 from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import socketValidator
-from app.Vendor.Decorator import classTransaction
+from app.Vendor.Decorator import transaction
 from app.Vendor.Code import Code
 from flask import request
 
@@ -55,7 +55,7 @@ class UserRoomRelationService:
             Room.room_uuid == params['room_uuid']
         }
         roomData = Room().getOne(filters)
-        if roomData['type'] == 0:
+        if roomData['type'] == CONST['ROOM']['ALONE']['value']:
             filters = {
                 AddressBook.room_uuid == params['room_uuid']
             }
@@ -78,14 +78,14 @@ class UserRoomRelationService:
     @staticmethod
     @socketValidator(name='is_alert', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
-    @classTransaction
+    @transaction
     def updateAlert(params, user_info):
         """ 更新对否提醒 """
         filters = {
             Room.room_uuid == params['room_uuid']
         }
         roomData = Room().getOne(filters)
-        if roomData['type'] == 0:
+        if roomData['type'] == CONST['ROOM']['ALONE']['value']:
             filters = {
                 AddressBook.room_uuid == params['room_uuid'],
                 AddressBook.be_focused_user_id == user_info['data']['id']
@@ -109,14 +109,14 @@ class UserRoomRelationService:
     @staticmethod
     @socketValidator(name='save_action', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
-    @classTransaction
+    @transaction
     def updateSaveAction(params, user_info):
         """ 更新是否云端保存 """
         filters = {
             Room.room_uuid == params['room_uuid']
         }
         roomData = Room().getOne(filters)
-        if roomData['type'] == 0:
+        if roomData['type'] == CONST['ROOM']['ALONE']['value']:
             filters = {
                 AddressBook.room_uuid == params['room_uuid'],
                 AddressBook.be_focused_user_id == user_info['data']['id']

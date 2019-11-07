@@ -3,12 +3,11 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-24 14:49:59
+@LastEditTime: 2019-11-07 13:49:39
 '''
 import os,json
-path = os.getcwd()+'/.runtime/environment.json'
 data = {"environment":"app"}
-with open(path, "w") as f:
+with open(os.getcwd()+'/.runtime/environment.json', "w") as f:
     f.write(json.dumps(data))
     
 """ from gevent import monkey

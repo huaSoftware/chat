@@ -3,7 +3,7 @@
 @Date: 2019-09-29 11:30:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:46:08
+@LastEditTime: 2019-11-07 14:09:41
 '''
 from app import app
 from app import cache
@@ -16,7 +16,7 @@ from app.Vendor.Decorator import socketValidator
 from app.Models.AddressBook import AddressBook
 from app.Models.Users import Users
 from app.Models.Room import Room
-from app.Vendor.Decorator import classTransaction
+from app.Vendor.Decorator import transaction
 from flask_socketio import emit, join_room
 from app.Vendor.Code import Code
 import time
@@ -49,7 +49,7 @@ class AddressBookService:
     @staticmethod
     @socketValidator(name='focused_user_id', rules={'required': True, 'type': 'integer', 'minlength': 1, 'maxlength': 20})
     @UsersAuthJWT.socketAuth
-    @classTransaction
+    @transaction
     def add(params,user_info):
         ''' 添加通讯录 '''
         if params['focused_user_id'] == user_info['data']['id']:
