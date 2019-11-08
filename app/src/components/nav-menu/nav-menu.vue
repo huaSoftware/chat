@@ -3,7 +3,7 @@
  * @Date: 2019-10-12 17:11:53
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-10-13 10:11:55
+ * @LastEditTime: 2019-11-08 21:28:05
  -->
 <template>
   <div>
@@ -62,8 +62,8 @@ export default {
      /*  screenfull.toggle() */
     },
     handleFull(){
-        this.isFull=!this.isFull
-        screenfull.toggle()
+      screenfull.toggle()
+      this.isFull=screenfull.isFullscreen
     },
     handleOpenQQ(){
         if(window.plus){

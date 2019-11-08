@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 16:29:49
+ * @LastEditTime: 2019-11-08 21:17:51
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -67,7 +67,7 @@
           </li>
         </ul>
         <!-- 暂无消息 -->
-        <vEmpty v-if="msgList.length==0"></vEmpty>
+        <vEmpty v-if="msgList.length==0 && isEmpty"></vEmpty>
       </div>
     </mescroll-vue>
     <!-- 语音输入gif图 -->
@@ -128,6 +128,7 @@ export default {
       uuidVal: "",
       scroll: "",
       content: "",
+      isEmpty:true,
       isPartChatPage:false,
       iconsShow: false,
       defsShow: false,
@@ -211,30 +212,34 @@ export default {
       this.updateMsgList([]);
       this.handleHeightToBottom()
       window.onresize = () =>{
-          if(document.body.clientHeight<this.clientHeight){
+        this.isEmpty = false
+        if(document.body.clientHeight<this.clientHeight){
+          console.log(43423423432)
+          setTimeout(() => {
             this.isPartChatPage = 'keyborad'
             this.handleHeightToBottom()
             this.handleSendShow();
-          }else{
-            setTimeout(() => {
-              if(this.iconsShow !==true && this.defsShow !==true){
-                this.isPartChatPage = false
-              }
-              this.handleHeightToBottom()
-              this.handleSendShow();
-            }, 200);
-          }
+          }, 400);
+        }else{
+          setTimeout(() => {
+            if(this.iconsShow !==true && this.defsShow !==true){
+              this.isPartChatPage = false
+            }
+            this.handleHeightToBottom()
+            this.handleSendShow();
+          }, 200);
+        }
       }; 
     },
     handleHeightToBottom(){
       if(this.isPartChatPage == false){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5+ "px";
       }
       else if(this.isPartChatPage == 'keyborad'){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2 +"px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5 +"px";
       }
       else{
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.2 - 200+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5 - 200+ "px";
       }
       this.handleMsgListToBottom(100)
     },
@@ -534,10 +539,14 @@ export default {
       this.cropperShow = value;
     },
     formatFileName(msg){
-      if(msg){
-        var pat=/href='(.+?)'/;
-        let url = pat.exec(msg)[1]
-        return url.split('uploads/')[1]
+      try{
+        if(msg){
+          var pat=/href='(.+?)'/;
+          let url = pat.exec(msg)[1]
+          return url.split('uploads/')[1]
+        }
+      }catch(e){
+        return "解析错误"
       }
     },
     handleDefMsg(msg){

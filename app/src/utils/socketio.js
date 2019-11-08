@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-08 09:16:29
+ * @LastEditTime: 2019-11-08 21:38:10
  */
 
 import store from '../store'
@@ -75,6 +75,10 @@ export function setupListen(){
 						addCloudRoomMsg(msgList[index])
 					} */
 				}else{
+					//app消息推送
+					if(window.plus){
+						plus.push.createMessage(data['msg'], "LocalMSG", {cover:false,title:data['name']});
+					}
 					msgList = msgList.concat(data)
 				}
 				store.dispatch('updateMsgList', msgList)
@@ -142,7 +146,10 @@ export function setupListen(){
 		window.apiSocket.on('room', (data) => {
 			response(data).then(res=>{
 				let data = res.data
-				//console.log("房间列表"+data)
+				//app消息通知
+				/*if(window.plus){
+					plus.push.createMessage("聊天消息", "LocalMSG", {cover:false});
+				}*/
 				store.dispatch('updateRoomList', data)
 			})
 		});
@@ -150,6 +157,10 @@ export function setupListen(){
 		window.apiSocket.on('groupRoom', (data) => {
 			response(data).then(res=>{
 				let data = res.data
+				//app消息通知
+				/*if(window.plus){
+					plus.push.createMessage("聊天消息", "LocalMSG", {cover:false});
+				}*/
 				console.log(data)
 				store.dispatch('updateGroupRoomList', data)
 			})
@@ -342,7 +353,12 @@ export function  send(method, data, type = 'room') {
 		if(type == 'api'){
 			var res = new Promise((resolve, reject)=>{
 				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
+				//设置超时时间5s
+				let timeOut = setTimeout(()=>{
+					reject('error')
+				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
+					clearTimeout(timeOut)
 					console.log(res)
 					/**
 					* error为true时 显示msg提示信息
@@ -371,6 +387,7 @@ export function  send(method, data, type = 'room') {
 					}
 					reject('error')
 				})
+				
 			})
 			return res
 		}
@@ -439,6 +456,10 @@ export function modifyMsgStatus(data, status){
 	let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
 	let uuid = data['room_uuid']+data['user_id']+data['created_at']
 	let index = utils.arr.getIndexByUuid(uuid, msgList)
+	console.log(index)
+	if(typeof index == 'undefined'){
+		return undefined
+	}
 	msgList[index]['send_status'] = status
 	store.dispatch('updateMsgList', msgList)
 	return index
