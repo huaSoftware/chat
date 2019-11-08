@@ -1,0 +1,8 @@
+{
+    "reportMissingImports": false,
+    "reportTypeshedErrors": false,
+    "reportMissingTypeStubs": true,
+    "ignore":[
+        "./typings/"
+    ]
+}

@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-06 20:55:15
+ * @LastEditTime: 2019-11-08 09:16:29
  */
 
 import store from '../store'
@@ -157,6 +157,7 @@ export function setupListen(){
 		//初始化好友邀请消息状态
 		getAddressBookBeg().then(res=>{
 			console.log("通讯录地址"+res)
+			if(!res)return
 			let newFriendAlertNumber = 0
 			res.forEach((item)=>{
 				if(item.status==0){

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:51:32
+@LastEditTime: 2019-11-08 09:18:44
 '''
 from app.Vendor.Utils import Utils
 from flask import request, make_response, jsonify
@@ -38,7 +38,7 @@ class UsersAuthJWT():
                     'updated_at': updated_at
                 }
             }
-            return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+            return jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode()
         except Exception as e:
             return e
 

@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 15:59:28
+ * @LastEditTime: 2019-11-08 09:12:39
  -->
 <template>
   <yd-layout>
@@ -120,6 +120,7 @@ export default {
             getAddressBookBeg().then(res=>{
               let newFriendAlertNumber = 0
               console.log("通讯录地址"+res)
+              if(!res)return
               if(res.length>0){
                 res.forEach((item)=>{
                   if(item.status==0){
