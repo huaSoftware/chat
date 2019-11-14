@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-10-06 19:52:21
+ * @LastEditTime: 2019-11-14 11:08:35
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
@@ -13,7 +13,7 @@ http://im.zhuhui.store
 ### 安卓版下载地址
 http://down.zhuhui.store/chat.apk
 
-### 文档地址（未完善）
+### 文档地址
 http://doc.zhuhui.store
 
 ### 项目架构
@@ -76,7 +76,10 @@ http://doc.zhuhui.store
 
 #### 捐助作者
 ![捐助作者](https://images.gitee.com/uploads/images/2019/0124/105407_661d1190_1588193.png "mm_facetoface_collect_qrcode_1548297043215.png")	
+### 购买实时最新版
+[淘宝链接](https://item.taobao.com/item.htm?id=607024716747 ).
 
 ### 二次开发
+
     如果你对此项目有什么好的想法，可以联系作者定制开发。
    
