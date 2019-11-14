@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-08 21:38:10
+ * @LastEditTime: 2019-11-14 10:25:35
  */
 
 import store from '../store'
@@ -76,7 +76,7 @@ export function setupListen(){
 					} */
 				}else{
 					//app消息推送
-					if(window.plus){
+					if(window.plus && !store.getters.isPaused){
 						plus.push.createMessage(data['msg'], "LocalMSG", {cover:false,title:data['name']});
 					}
 					msgList = msgList.concat(data)
@@ -355,14 +355,20 @@ export function  send(method, data, type = 'room') {
 				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 				//设置超时时间5s
 				let timeOut = setTimeout(()=>{
-					reject('error')
+					console.log(1)
+					Alert({
+						'mes':'接口已断开链接，请重启',
+						callback: () => {
+							router.push({
+								name: 'ad'
+							})
+						}
+					})
 				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
+					console.log(2)
 					clearTimeout(timeOut)
 					console.log(res)
-					/**
-					* error为true时 显示msg提示信息
-					*/
 					if (res.error_code === 200) {
 						resolve(res)
 					}

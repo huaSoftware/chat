@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-08 21:17:51
+ * @LastEditTime: 2019-11-14 10:17:11
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -73,7 +73,7 @@
     <!-- 语音输入gif图 -->
     <img v-show="recordingShow" class="recording" :src="'static/img/recording.png'"/>
     <!-- 输入 -->
-    <inputWrapper :style="iconsShow || defsShow ?'bottom:200px':'bottom:0.2rem'"
+    <inputWrapper :style="iconsShow || defsShow ?'bottom:200px':'bottom:0rem'"
       @handleRecordShow="handleRecordShow"
       @closeDefIconsShow="closeDefIconsShow"
       @handleIconsShow="handleIconsShow"
@@ -214,32 +214,37 @@ export default {
       window.onresize = () =>{
         this.isEmpty = false
         if(document.body.clientHeight<this.clientHeight){
-          console.log(43423423432)
-          setTimeout(() => {
+          /* if(this.iconsShow ==true || this.defsShow ==true){
+            setTimeout(() => {
+              this.isPartChatPage = 'keyborad'
+              this.handleHeightToBottom()
+              this.handleSendShow();
+            }, 50);
+          }else{ */
             this.isPartChatPage = 'keyborad'
             this.handleHeightToBottom()
             this.handleSendShow();
-          }, 400);
+          //}
         }else{
-          setTimeout(() => {
+          //setTimeout(() => {
             if(this.iconsShow !==true && this.defsShow !==true){
               this.isPartChatPage = false
             }
             this.handleHeightToBottom()
             this.handleSendShow();
-          }, 200);
+          //}, 200);
         }
       }; 
     },
     handleHeightToBottom(){
       if(this.isPartChatPage == false){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2+ "px";
       }
       else if(this.isPartChatPage == 'keyborad'){
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5 +"px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2+"px";
       }
       else{
-        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2.5 - 200+ "px";
+        this.mescrollDom.style.height = document.body.clientHeight - this.htmlFontSize*2 - 200+ "px";
       }
       this.handleMsgListToBottom(100)
     },
@@ -267,6 +272,7 @@ export default {
             this.mescrollDown.page.num++
           });
         });
+        
       }else if(this.currentRoomSaveAction == 1){
         getCloudRoomMsg(
           {room_uuid:this.currentRoomUuid,

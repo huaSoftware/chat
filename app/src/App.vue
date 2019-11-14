@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-08 09:12:39
+ * @LastEditTime: 2019-11-09 20:32:14
  -->
 <template>
   <yd-layout>
@@ -54,6 +54,7 @@ export default {
   components: {navMenu},
   name: "app",
   created() {
+    let that  = this
     //刷新回首页
     this.$router.push('/');
     utils.h5Plus.bindPhysicsBack(null)
@@ -95,6 +96,35 @@ export default {
         }
       }
     });
+    //app的监听事件
+    document.addEventListener('plusready',function(){
+      //运行环境从前台切换到后台事件
+      document.addEventListener("pause", onAppPause, false);
+      //运行环境从后台切换到前台事件
+      document.addEventListener("resume", onAppReume, false);
+      //应用切换到后台运行事件
+      document.addEventListener("background", onAppBackground, false);
+      //应用切换到前台运行事件
+      document.addEventListener("foreground", onAppForeground, false);
+      //应用需要清理内存事件
+      document.addEventListener("trimmemory", onAppTrimMemory, false); 
+    },false);   
+    function onAppPause(){
+      console.log("Application paused!"); 
+      that.$store.commit('updateIsPaused', true)
+    }
+    function onAppReume(){
+      console.log("Application resumed!"); 
+      that.$store.commit('updateIsPaused', false)
+    }
+    function onAppBackground(){
+      console.log("Application background!"); 
+    }
+    function onAppForeground(e){
+    }
+    function onAppTrimMemory(){
+      console.log("Trim Memory!"); 
+    }
     //拉取配置常量
     getConst().then(res=>{
       console.log(res)

@@ -2,9 +2,9 @@
  /*通过fixed固定mescroll的高度*/
 .mescroll {
     position: fixed;
-    padding:0.24rem;
+    padding:0.24rem 0.24rem 0rem 0.24rem;
     top: 1rem;
-    bottom: 0;
+    bottom: 1rem;
     height: auto;
     width:100%;
     max-width: 750px;
@@ -15,16 +15,7 @@
     text-align: center;
     font-size: 0.24rem;
 }
-.input_wrapper {
-    width: 100%;
-    display:flex;
-    bottom: 0.2rem;
-    flex-wrap:row;
-    justify-content:space-between;
-    position:fixed;
-    max-width: 750px;
-    min-width: 300px;
-}
+
 
 .voice {
     display: flex;

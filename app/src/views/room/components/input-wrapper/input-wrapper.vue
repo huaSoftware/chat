@@ -3,7 +3,7 @@
  * @Date: 2019-08-15 21:16:40
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-08-16 14:24:34
+ * @LastEditTime: 2019-11-14 09:50:13
  -->
 <template>
     <div class="input_wrapper">
@@ -115,7 +115,7 @@ export default {
 .input_wrapper {
     width: 100%;
     display:flex;
-    bottom: 0.2rem;
+    bottom: 0rem;
     flex-wrap:row;
     justify-content:space-between;
     position:fixed;
@@ -131,15 +131,19 @@ export default {
 }
 
 .input {
-   /*  width: 61%; */
+    /* width: 61%; */
     max-height: 100px;
-    line-height: 24px;
+    line-height: 0.6rem;
     font-size: 20px;
-    padding: 5px 8px;
+    /* padding: 5px 8px; */
     border-bottom: 1px solid #00C2E6;
     overflow-x: auto;
-    margin-bottom: 5px;
-    vertical-align: middle;
+    /* margin-bottom: 5px; */
+    /* vertical-align: middle; */
+    /* height: 0.6rem!important; */
+    padding: 0rem 0.2rem 0rem 0.2rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
 }
 
 .input:empty::before {
