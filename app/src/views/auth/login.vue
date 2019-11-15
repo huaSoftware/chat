@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:08:13
+ * @LastEditTime: 2019-11-15 09:46:04
  -->
 <template>
     <div>
@@ -41,7 +41,7 @@
             </div> 
         </div>
         </form>
-        <yd-button class="primary_bk" size="large"  color="#FFF" @click.native="handleLogin">一键登录</yd-button>
+        <yd-button :loading="loading" class="primary_bk" size="large"  color="#FFF" @click.native="handleLogin">一键登录</yd-button>
         <router-link :to="{name: 'authRegister'}" class="right">快速注册</router-link>
     </div>
 </template>
@@ -60,6 +60,7 @@ export default {
     components: { CrossLine },
     data() {
     return {
+        loading:false,
         email: "",
         password: "",
         confirm_password: "",
@@ -106,9 +107,11 @@ export default {
         //根据错误生成input状态
         validatedError(errors, this.validated_status);
         if (errors.length == 0) {
+            this.loading = true
             login({email:this.email, password:md5(this.password)}).then(res=>{
                 console.log(res)
                 deleteTables()
+                this.loading = false
                 this.password = ''
                 Toast({mes:'登录成功'})
                 //存token
@@ -118,6 +121,8 @@ export default {
                 this.$store.commit('updateUserInfo', res.data.user)
                 setup()
                 this.$router.push({name:'home'})
+            }).catch(e=>{
+                this.loading = false
             })
         }
     },
@@ -143,6 +148,7 @@ export default {
     padding-right: 0.3rem;
     margin-top: 0.2rem;
     display: inline-block;
+    font-size: .28rem;
 }
 </style>
     

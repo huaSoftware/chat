@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-06 20:05:38
+ * @LastEditTime: 2019-11-15 09:47:10
  -->
 <template>
 <div>
@@ -81,7 +81,7 @@
             </div> 
         </div>
     </form>
-    <yd-button class="primary_bk" size="large"  color="#FFF" @click.native="handleRegister">一键注册</yd-button>
+    <yd-button :loading="loading" class="primary_bk" size="large"  color="#FFF" @click.native="handleRegister">一键注册</yd-button>
     <router-link :to="{name: 'authLogin'}" class="right">用户登录</router-link>
     <!-- 头像裁剪图 -->
     <header v-if="cropperShow" style="    background-color: rgb(255, 255, 255);
@@ -133,6 +133,7 @@ export default {
     components: {CrossLine, VueCropper, vImg},
     data() {
     return {
+        loading:false,
         option: {
             img: "",
             size: 1,
@@ -230,9 +231,11 @@ export default {
             //根据错误生成input状态
             validatedError(errors, this.validated_status);
             if (errors.length == 0) {
+                this.loading = true
                 let reqData = {nickName: this.nickName, email: this.email, password: md5(this.password), headImg: this.headImg}
                 console.log(reqData)
                 register(reqData).then(res=>{
+                    this.loading = false
                     deleteTables()
                     this.password = ''
                     Toast({mes:'注册成功',icon: 'success'})
@@ -243,6 +246,8 @@ export default {
                     this.$store.commit('updateUserInfo', res.data.user)
                     setup()
                     this.$router.push('/home')
+                }).catch(e=>{
+                    this.loading = false
                 })
             }
         },
@@ -289,6 +294,7 @@ export default {
     padding-right: 0.3rem;
     margin-top: 0.2rem;
     display: inline-block;
+    font-size: .28rem;
 }
 </style>
         

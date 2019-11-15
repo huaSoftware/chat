@@ -3,7 +3,7 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:32:00
+@LastEditTime: 2019-11-15 10:14:37
 '''
 import time, re
 from app.Vendor.Decorator import socketValidator, socketValidator
@@ -12,6 +12,7 @@ from app.Vendor.Utils import Utils
 from app.Vendor.Code import Code
 from app.Models.Users import Users
 from app.Vendor.Decorator import transaction
+from sqlalchemy import or_
 from xpinyin import Pinyin
 
 class UsersService():
@@ -51,7 +52,6 @@ class UsersService():
             else:
                 result = UsersAuthJWT.authenticate(params['email'], params['password'])
                 return result
-            return Utils.formatError(Code.BAD_REQUEST,'注册失败')
         return Utils.formatError(Code.BAD_REQUEST,'账号已注册')
     
     @staticmethod
@@ -70,7 +70,8 @@ class UsersService():
     @socketValidator(name='keywords', rules={'required': True,'type': 'string','minlength': 1,'maxlength': 20})
     def search(params):
         filters = {
-            Users.nick_name.like('%'+params['keywords']+'%')
+            Users.nick_name.like('%'+params['keywords']+'%'),
+            or_(Users.email.like('%'+params['keywords']+'%'))
         }
         userList = Users().getAll(filters)
         data = {"userList": userList}

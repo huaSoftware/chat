@@ -3,7 +3,7 @@
  * @Date: 2019-08-15 21:16:40
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-14 09:50:13
+ * @LastEditTime: 2019-11-15 10:17:56
  -->
 <template>
     <div class="input_wrapper">
@@ -159,12 +159,14 @@ export default {
 .record {
     width: 100%;
     max-height: 100px;
-    line-height: 35px;
     font-size: 20px;
-    height: 35px;
     border: 1px solid #999999;
     border-radius: 5px;
     text-align: center;
+    padding: 0rem 0.2rem 0rem 0.2rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    line-height: 0.6rem;
 }
 
 .touched {

@@ -3,6 +3,7 @@
     "reportTypeshedErrors": false,
     "reportMissingTypeStubs": true,
     "ignore":[
-        "./typings/"
+        "./typings/",
+        "./app/Models/Model.py"
     ]
 }

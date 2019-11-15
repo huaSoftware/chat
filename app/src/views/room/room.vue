@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-14 10:17:11
+ * @LastEditTime: 2019-11-15 12:03:46
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -21,10 +21,10 @@
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
-                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
-                  <img class="vioce_start" style="margin-right:-3px" :src="'static/img/voice_left.gif'" v-show="key.msg.status"/>
-                  <i class="vioce_stop_left" v-show="!key.msg.status"></i>
-                  <span class="vioce_second">{{key.msg.duration}}s</span>
+                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(JSON.parse(key.msg), index)">
+                  <img class="vioce_start" style="margin-right:-3px" :src="'static/img/voice_left.gif'" v-show="JSON.parse(key.msg)['status']"/>
+                  <i class="vioce_stop_left" v-show="!JSON.parse(key.msg)['status']"></i>
+                  <span class="vioce_second">{{JSON.parse(key.msg)['duration']}}s</span>
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
@@ -49,14 +49,14 @@
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
-                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(key.msg, index)">
+                <div v-if="key.type == RECORD" class="msg" @touchstart="amrPlay(JSON.parse(key.msg), index)">
                   <img
                     class="chat_right vioce_start"
                     :src="'static/img/voice_right.gif'"
-                    v-show="key.msg.status"
+                    v-show="JSON.parse(key.msg)['status']"
                   />
-                  <i class="vioce_stop_right" v-show="!key.msg.status"></i>
-                  <span class="vioce_second">{{key.msg.duration}}s</span>
+                  <i class="vioce_stop_right" v-show="!JSON.parse(key.msg)['status']"></i>
+                  <span class="vioce_second">{{JSON.parse(key.msg)['duration']}}s</span>
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg"></div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
@@ -497,17 +497,20 @@ export default {
                   var BenzAMRRecorder = require('benz-amr-recorder');
                   var amr = new BenzAMRRecorder();
                   let url = process.env.VUE_APP_CLIENT_API+ res.data.path
+                  console.log(url)
                   amr.initWithUrl(url).then(function() {
                     //获取录音长度
                     //amr.getDuration(); 
+                    console.log('录音路径1'+url)
                     chatSend({
                       data: {
-                        msg:{url:url,duration: amr.getDuration(),status:false},
+                        msg:JSON.stringify({url:url,duration: amr.getDuration(),status:false}),
                         room_uuid: that.currentRoomUuid,
                         type: that.RECORD, 
                         save_action: that.currentRoomSaveAction
                     }});
-                    console.log('录音路径'+url)
+                  }).catch(e=>{
+                    console.log(e)
                   });
                 })
               };
@@ -523,7 +526,7 @@ export default {
       let msgList = JSON.parse(JSON.stringify(this.msgList))
        console.log(data)
       data['status']=true
-      msgList[index]['msg'] = data
+      msgList[index]['msg'] = JSON.stringify(data)
       this.$store.dispatch('updateMsgList', msgList)
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
@@ -534,7 +537,7 @@ export default {
         let data = JSON.parse(JSON.stringify(rawData))
         let msgList = JSON.parse(JSON.stringify(this.msgList))
         data['status']=false
-        msgList[index]['msg'] = data
+        msgList[index]['msg'] = JSON.stringify(data)
         this.$store.dispatch('updateMsgList', msgList)
       });
     },

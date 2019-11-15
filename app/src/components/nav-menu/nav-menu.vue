@@ -3,7 +3,7 @@
  * @Date: 2019-10-12 17:11:53
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-08 21:28:05
+ * @LastEditTime: 2019-11-15 09:05:32
  -->
 <template>
   <div>
@@ -84,7 +84,7 @@ export default {
 .home .openHomeCon{overflow: hidden;width:0.86rem;border-radius:0.5rem;transition:all 0.3s ease-in-out 0s;-webkit-transition:all 0.3s ease-in-out 0s;-moz-transition:all 0.3s ease-in-out 0s;-o-transition:all 0.3s ease-in-out 0s;opacity:0;transform: scale(0);-webkit-transform: scale(0);-ms-transform: scale(0);-moz-transform: scale(0);-o-transform: scale(0);height:0;color:$color-primary;background:$color-primary}
 .home .homeCon.on{box-shadow: 0px 0px 5px #ddd;opacity:1;transform: scale(1);-webkit-transform: scale(1);-ms-transform: scale(1);-moz-transform: scale(1);-o-transform: scale(1);height:2.5rem;padding: 0.34rem 0;margin-bottom: 0.2rem;}
 .home .homeCon .iconfont{font-size:0.48rem;color:#fff;display: inline-block;height: 0.9rem;margin: 0 auto;}
-.home .pictrue{width:0.86rem;height:0.86rem;border-radius:50%;border-radius:50%;box-shadow: 0px 0px 5px #ddd;}
+.home .pictrue{background:#fff;width:0.86rem;height:0.86rem;border-radius:50%;border-radius:50%;box-shadow: 0px 0px 5px #ddd;}
 .home .pictrue .image{width:70%;height:70%;border-radius:50%;margin-top:15%;}
 
 .home .openPictrue{width:0.86rem;height:0.86rem;border-radius:50%;background:#ffffff;border-radius:50%;box-shadow: 0px 0px 5px #ddd;}

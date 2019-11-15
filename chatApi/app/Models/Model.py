@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import CHAR, Column, Index, String, Text, text
+from sqlalchemy import CHAR, Column, String, Text, text 
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, TEXT, TINYINT, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
 
