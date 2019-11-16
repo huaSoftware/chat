@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-10-08 14:48:09
+ * @LastEditTime: 2019-11-16 15:27:42
  -->
 <template>
   <div class="app-container">
@@ -17,58 +17,57 @@
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getList">搜索</el-button>
       </div>
     </div>
-
     <el-table
       key="tableKey"
       v-loading="listLoading"
       :data="list"
       fit
+      @sort-change="handleSort"
       highlight-current-row
       style="width: 100%;border: 1px solid #ebeef5;"
     >
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column label="ID" prop="id" sortable align="center" >
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间名">
+      <el-table-column label="房间名"  sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间编号" width="110px" align="center">
+      <el-table-column label="房间编号" sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.room_uuid}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间类型" width="110px" align="center">
+      <el-table-column label="房间类型" sortable align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.type == 0">单聊</span>
           <span v-if="scope.row.type == 1">群聊</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近留言" class-name="status-col" width="200">
+      <el-table-column label="最近留言" sortable class-name="status-col">
         <template slot-scope="scope" v-if="scope.row.last_msg">
-          <div v-if="JSON.parse(scope.row.last_msg)['type'] == IMG ">
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == IMG">
             [图片]
           </div>
-          <div v-if="JSON.parse(scope.row.last_msg)['type'] == FILE ">
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == FILE">
             [文件]
           </div>
-          <div v-if="JSON.parse(scope.row.last_msg)['type'] == RECORD ">
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == RECORD">
             [语音]
           </div>
-          <div v-if="JSON.parse(scope.row.last_msg)['type'] == TEXT ">
-            {{JSON.parse(scope.row.last_msg)['msg']}}
+          <div v-if="JSON.parse(scope.row.last_msg)['type'] == TEXT" v-html="JSON.parse(scope.row.last_msg)['msg']">
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" class-name="status-col" width="200">
+      <el-table-column label="创建时间" sortable class-name="status-col">
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" width="200">
+      <el-table-column label="更新时间" sortable class-name="status-col">
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>
@@ -107,7 +106,9 @@ export default {
       listQuery: {
         page_no: 1,
         per_page: 10,
-        keyword: ""
+        keyword: "",
+        orderBy:'updated_at',
+        order:'desc'
       }
     };
   },
@@ -140,6 +141,16 @@ export default {
         });
         this.getList();
       });
+    },
+    handleSort({ column, prop, order }){
+      if(order == 'descending'){
+          this.listQuery['order'] = 'desc';
+          this.listQuery['orderBy'] = prop;
+          }else{
+          this.listQuery['order'] = 'asc';
+          this.listQuery['orderBy'] = prop;
+      }
+      this.getList();
     },
     parseTime(time){
       return parseTime(time)
