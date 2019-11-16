@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:52:47
+@LastEditTime: 2019-11-16 15:48:03
 '''
 import time, math
 
@@ -39,10 +39,13 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         res['page']['current_page'] = offset
         if offset != 0:
             offset = (offset - 1) * limit
-
         if res['page']['count'] > 0:
             res['list'] = dBSession.query(AddressBook).filter(*filters)
-            res['list'] = res['list'].order_by(order).offset(offset).limit(limit).all()
+            order = order.split(' ')
+            if order[1] == 'desc':
+                res['list'] = res['list'].order_by(desc(order[0])).offset(offset).limit(limit).all()
+            else:
+                res['list'] = res['list'].order_by(asc(order[0])).offset(offset).limit(limit).all()
         if not field:
             res['list'] = [c.to_dict() for c in res['list']]
         else:

@@ -3,7 +3,7 @@
 @Date: 2019-06-10 10:02:46
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 16:24:10
+@LastEditTime: 2019-11-16 13:10:57
 '''
 
 from app import app
@@ -14,6 +14,7 @@ from app.Vendor.Captcha import validate_picture
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Service.AdminService import AdminService
 from app.Admin.Controllers.BaseController import BaseController
+from app.Vendor.Decorator import transaction
 from app.Models.Admin import Admin
 from io import BytesIO
 import time
@@ -53,6 +54,7 @@ def getCode():
 """ 退出登录 """
 @app.route('/api/v2/admin/logout', methods=['POST'])
 @UsersAuthJWT.AdminApiAuth
+@transaction
 def adminLogout(user_info):
     data = {
         'update_time': int(time.time())

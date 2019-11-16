@@ -3,7 +3,7 @@
 @Date: 2019-07-25 14:22:49
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:53:11
+@LastEditTime: 2019-11-16 15:53:11
 '''
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.declarative import declared_attr
@@ -33,10 +33,13 @@ class Log(Base, HtLog, SerializerMixin):
         res['page']['current_page'] = offset
         if offset != 0:
             offset = (offset - 1) * limit
-
         if res['page']['count'] > 0:
             res['list'] = dBSession.query(Log).filter(*filters)
-            res['list'] = res['list'].order_by(order).offset(offset).limit(limit).all()
+            order = order.split(' ')
+            if order[1] == 'desc':
+                res['list'] = res['list'].order_by(desc(order[0])).offset(offset).limit(limit).all()
+            else:
+                res['list'] = res['list'].order_by(asc(order[0])).offset(offset).limit(limit).all()
         if not field:
             res['list'] = [c.to_dict() for c in res['list']]
         else:

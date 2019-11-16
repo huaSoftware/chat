@@ -3,7 +3,7 @@
 @Date: 2019-06-10 10:13:37
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:54:47
+@LastEditTime: 2019-11-16 13:09:04
 '''
 from app.Models.Admin import Admin
 from app.Vendor.Utils import Utils
@@ -20,6 +20,7 @@ class AdminService():
         @param string data['pwd'] 密码
         @return array
     """
+    @classTransaction
     def login(self, data):
         name = data['name']
         #生成一个md5对象

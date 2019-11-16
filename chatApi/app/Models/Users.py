@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:29:14
+@LastEditTime: 2019-11-16 15:51:33
 '''
 import math
 from sqlalchemy_serializer import SerializerMixin
@@ -35,10 +35,13 @@ class Users(Base, HtUser, SerializerMixin):
         res['page']['current_page'] = offset
         if offset != 0:
             offset = (offset - 1) * limit
-
         if res['page']['count'] > 0:
             res['list'] = dBSession.query(Users).filter(*filters)
-            res['list'] = res['list'].order_by(order).offset(offset).limit(limit).all()
+            order = order.split(' ')
+            if order[1] == 'desc':
+                res['list'] = res['list'].order_by(desc(order[0])).offset(offset).limit(limit).all()
+            else:
+                res['list'] = res['list'].order_by(asc(order[0])).offset(offset).limit(limit).all()
         if not field:
             res['list'] = [c.to_dict() for c in res['list']]
         else:

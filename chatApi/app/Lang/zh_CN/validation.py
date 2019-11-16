@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-28 20:11:04
 @LastEditors: hua
-@LastEditTime: 2019-07-25 20:58:43
+@LastEditTime: 2019-11-16 14:47:41
 '''
 
 validation = {
@@ -41,5 +41,7 @@ validation = {
     'head_img':'头像',
     'msg':'聊天内容',
     'send_status':'发送状态',
-    'user_id':'用户编号'
+    'user_id':'用户编号',
+    'orderBy':'排序字段',
+    'order':'排序方式'
 }

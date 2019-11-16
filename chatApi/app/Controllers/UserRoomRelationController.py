@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-10-12 10:38:15
+@LastEditTime: 2019-11-16 15:49:57
 '''
 from app import app
 from app import socketio
@@ -59,7 +59,7 @@ def userRoomRelationGetByRoomUuid(params, user_info):
         filters = {
             AddressBook.room_uuid == params['room_uuid']
         }
-        data = AddressBook().getList( filters, AddressBook.updated_at.desc())
+        data = AddressBook().getList( filters, 'updated_at desc')
         filters.add(
             AddressBook.be_focused_user_id == user_info['data']['id']
         )
@@ -68,7 +68,7 @@ def userRoomRelationGetByRoomUuid(params, user_info):
         filters = {
             UserRoomRelation.room_uuid == params['room_uuid']
         }
-        data = UserRoomRelation().getList( filters, UserRoomRelation.updated_at.desc())
+        data = UserRoomRelation().getList( filters, 'updated_at desc')
         filters.add(
             UserRoomRelation.user_id == user_info['data']['id']
         )
