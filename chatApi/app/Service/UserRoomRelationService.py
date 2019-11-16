@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 16:29:40
+@LastEditTime: 2019-11-16 09:41:33
 '''
 from app import CONST
 from app import socketio
@@ -22,9 +22,9 @@ class UserRoomRelationService:
     @staticmethod
     @socketValidator(name='ids', rules={'required': True, 'type': 'list', 'minlength': 1, 'maxlength': 20})
     @UsersAuthJWT.socketAuth
-    def create(user_info, params):
+    def create(params, user_info):
         # 加入房间号
-        data = ChatService().groupChatCreate(user_info, params)
+        data = ChatService().groupChatCreate(params, user_info)
         if data:
             #添加后同步房间
             user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(data['room_uuid']))

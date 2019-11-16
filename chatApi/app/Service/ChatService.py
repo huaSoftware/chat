@@ -3,11 +3,12 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 14:10:25
+@LastEditTime: 2019-11-16 09:42:29
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
 from app.Models.UserRoomRelation import UserRoomRelation
+from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
 from app.Models.Room import Room
@@ -82,7 +83,7 @@ class ChatService():
         
     @staticmethod
     @transaction
-    def groupChatCreate(user_info, params):
+    def groupChatCreate(params, user_info):
         """ 
             创建聊天群组
             @Param dict userInfo
@@ -113,6 +114,6 @@ class ChatService():
             'name': name.strip(','),
             'user_id': user_info['data']['id']
         }
-        room = Room().addByClass(room_data)
+        Room().addByClass(room_data)
         return {'room_uuid' : room_uuid,'name':name.strip(',')}
     
