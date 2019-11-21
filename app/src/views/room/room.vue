@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-15 12:03:46
+ * @LastEditTime: 2019-11-21 10:49:50
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -60,7 +60,7 @@
                 </div>
                 <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg"></div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
-                <div v-else-if="key.type == FILE" class="rawMsg" @click="handleDefMsg(key.msg)">[文件]{{formartFileName(key.msg)}}</div>
+                <div v-else-if="key.type == FILE" class="rawMsg" @click="handleDefMsg(key.msg)">[文件]{{formatFileName(key.msg)}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
               </div>
             </div>

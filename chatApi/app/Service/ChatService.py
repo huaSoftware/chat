@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 09:42:29
+@LastEditTime: 2019-11-21 09:47:08
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -19,23 +19,9 @@ from app import socketio, CONST
 import time,json
 
 class ChatService():
-    
     @staticmethod
     @transaction
-    def chat(message, user_info):
-        """
-            @param  dict message
-            @param  dict user_info
-            @return dict 
-        """
-        msg = message['data']['msg']
-        room_uuid = message['data']['room_uuid']
-        Type = message['data']['type']
-        room_data = Room.get(room_uuid)
-        room_type = room_data.type
-        created_at = message['data']['created_at']  
-        save_action = message['data']['save_action']  
-        user_data = Users().getOne({Users.id == user_info['data']['id']})
+    def sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, user_data):
         data = {
             'msg': msg, 
             'name': user_data['nick_name'], 
@@ -50,12 +36,12 @@ class ChatService():
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
             #如果是云端存储则记录
-            if save_action == 1:
+            if save_action == CONST['SAVE']['LOCAL']['value']:
                 res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
                 if res == None:
                     copy_data = data.copy()
                     copy_data['msg'] = json.dumps(msg)
-                    copy_data['send_status'] = CONST['SAVE']['LOCAL']['value']
+                    copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                     Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
@@ -70,6 +56,14 @@ class ChatService():
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             #发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
+            #如果是云端存储则记录
+            if save_action == CONST['SAVE']['LOCAL']['value']:
+                res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
+                if res == None:
+                    copy_data = data.copy()
+                    copy_data['msg'] = json.dumps(msg)
+                    copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                    Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字
@@ -80,6 +74,41 @@ class ChatService():
                 roomList = UserRoomRelation.getRoomList(item.user_id)['data']
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat","data": data})
+    
+
+    @staticmethod
+    @transaction
+    def adminChat(message:dict)->dict:
+        admin_user_info = UsersAuthJWT().adminIdentify(message['Authorization'])
+        if isinstance(admin_user_info, str):
+            return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, admin_user_info)
+        #整合数据信息
+        msg = message['data']['msg']
+        room_uuid = message['data']['room_uuid']
+        Type = message['data']['type']
+        room_data = Room.get(room_uuid)
+        room_type = room_data.type
+        created_at = message['data']['created_at']  
+        save_action = message['data']['save_action']  
+        admin_user_info = Users().getOne({Users.id == admin_user_info['data']['id']})
+        return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, admin_user_info)
+    
+    @staticmethod
+    def chat(message, user_info):
+        """
+            @param  dict message
+            @param  dict user_info
+            @return dict 
+        """
+        msg = message['data']['msg']
+        room_uuid = message['data']['room_uuid']
+        Type = message['data']['type']
+        room_data = Room.get(room_uuid)
+        room_type = room_data.type
+        created_at = message['data']['created_at']  
+        save_action = message['data']['save_action']  
+        user_data = Users().getOne({Users.id == user_info['data']['id']})
+        return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, user_data)
         
     @staticmethod
     @transaction

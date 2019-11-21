@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-16 15:27:42
+ * @LastEditTime: 2019-11-21 15:37:48
  -->
 <template>
   <div class="app-container">
@@ -74,6 +74,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="primary" plain @click="send(scope.row.room_uuid, scope.row.user_id)">发送信息</el-button>
           <el-button size="mini" type="danger" plain @click="move(scope.row.room_uuid)">删除</el-button>
         </template>
       </el-table-column>
@@ -85,22 +86,46 @@
       :limit.sync="listQuery.per_page"
       @pagination="getList"
     />
+    <el-dialog 
+      title="新增回复"
+      :visible.sync="addReqVisible"
+      :close-on-click-modal="false"
+      width="500px">
+      <div>
+          <el-form>
+            <chat-item :msgList="msgList" 
+            :user_id="user_id"></chat-item>
+            <el-form-item label="回复内容">
+                    <el-input type="textarea" v-model="content"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button size="mini" @click="addReqVisible=false">取消</el-button>
+                <el-button size="mini" type="primary" @click="addReq()">确定</el-button>
+            </el-form-item>
+          </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
+import ChatItem from "@/components/ChatItem/index"
 import { getToken } from "@/utils/auth";
-import { roomList,roomDelete } from "@/api/room";
+import { roomList,roomDelete, msgGet } from "@/api/room";
+import { chatSend } from "@/socketioApi/chat";
 import {parseTime} from "@/utils/index"
-
 export default {
   data() {
     return {
       listLoading: false,
+      addReqVisible: false,
+      currentRoomUuid:"",
       //表单
       list: [],
+      msgList:[],
+      user_id:0,
       //页码
       total: 0,
       listQuery: {
@@ -109,11 +134,12 @@ export default {
         keyword: "",
         orderBy:'updated_at',
         order:'desc'
-      }
+      },
+      content:"" 
     };
   },
   components: {
-    Pagination
+    Pagination, ChatItem
   },
   computed: {
     ...mapGetters([
@@ -127,7 +153,6 @@ export default {
     getList() {
       this.listLoading = true;
       roomList(this.listQuery).then(res => {
-        console.log(res);
         this.list = res.data.list;
         this.total = res.data.page.count
         this.listLoading = false;
@@ -154,6 +179,39 @@ export default {
     },
     parseTime(time){
       return parseTime(time)
+    },
+    send(room_uuid, user_id){
+      msgGet({room_uuid:room_uuid, page_no:1, per_page:10}).then(res=>{
+        this.currentRoomUuid = room_uuid
+        this.addReqVisible = true
+        let rawList = res.data.list
+        rawList.map(item => {
+          item['msg'] =  item['formatMsg']
+          delete item['formatMsg']
+          return item
+        })
+        this.msgList = rawList.reverse()
+        this.user_id = user_id
+        console.log(user_id)
+      })
+    },
+    addReq(){
+      chatSend({
+        data: {
+          msg: this.content,
+          room_uuid: this.currentRoomUuid,
+          type: 1,
+          save_action: 1,
+          created_at: parseInt(new Date().getTime()/1000)
+        }
+      }).then(res=>{
+        this.addReqVisible = false
+        this.$message({
+          message: "回复成功",
+          type: "success"
+        });
+        this.getList();
+      });
     }
   },
   created: function() {

@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-07 17:29:30
+@LastEditTime: 2019-11-21 09:01:28
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio
@@ -34,8 +34,6 @@ def join(message, user_info):
         join_room(room_uuid)
     elif message['type'] == 2:
         join_room('@broadcast.'+str(user_info['data']['id']))
-    elif message['type'] == 3:#这个暂时用会话id表示，不需要token
-        join_room('@api.'+str(request.sid))
     return  Utils.formatBody({'action':"join"})
         
 """ 2,3的离开事件是否要写？ """

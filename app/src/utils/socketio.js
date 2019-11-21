@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-14 10:25:35
+ * @LastEditTime: 2019-11-20 17:23:00
  */
 
 import store from '../store'
@@ -100,12 +100,12 @@ export function setupListen(){
 		send('join', {}, 'broadcast')
 		//如果当前存在房间则进入
 		if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){
-		send('join', {
-			name: store.getters.currentRoomName,
-			room_uuid: store.getters.currentRoomUuid,
-			type: store.getters.currentRoomType,
-			save_action: store.getters.currentRoomSaveAction
-		})
+			send('join', {
+				name: store.getters.currentRoomName,
+				room_uuid: store.getters.currentRoomUuid,
+				type: store.getters.currentRoomType,
+				save_action: store.getters.currentRoomSaveAction
+			})
 		}
 		//监听好友请求
 		window.apiSocket.on('beg', (data) => {
