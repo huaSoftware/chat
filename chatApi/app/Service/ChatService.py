@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-21 09:47:08
+@LastEditTime: 2019-11-21 16:04:53
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -36,7 +36,7 @@ class ChatService():
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
             #如果是云端存储则记录
-            if save_action == CONST['SAVE']['LOCAL']['value']:
+            if save_action == CONST['SAVE']['CLOUD']['value']:
                 res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
                 if res == None:
                     copy_data = data.copy()
@@ -57,7 +57,7 @@ class ChatService():
             #发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
             #如果是云端存储则记录
-            if save_action == CONST['SAVE']['LOCAL']['value']:
+            if save_action == CONST['SAVE']['CLOUD']['value']:
                 res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
                 if res == None:
                     copy_data = data.copy()
@@ -77,12 +77,14 @@ class ChatService():
     
 
     @staticmethod
-    @transaction
     def adminChat(message:dict)->dict:
         admin_user_info = UsersAuthJWT().adminIdentify(message['Authorization'])
         if isinstance(admin_user_info, str):
             return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, admin_user_info)
         #整合数据信息
+        admin_user_info['nick_name'] = '系统消息'
+        admin_user_info['head_img']  = 'static/img/about/python.jpg'#这里后期改成配置的
+        admin_user_info['id']  = admin_user_info['data']['id']
         msg = message['data']['msg']
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
@@ -90,7 +92,6 @@ class ChatService():
         room_type = room_data.type
         created_at = message['data']['created_at']  
         save_action = message['data']['save_action']  
-        admin_user_info = Users().getOne({Users.id == admin_user_info['data']['id']})
         return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, admin_user_info)
     
     @staticmethod

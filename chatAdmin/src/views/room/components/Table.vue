@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-21 15:37:48
+ * @LastEditTime: 2019-11-21 16:09:48
  -->
 <template>
   <div class="app-container">
@@ -181,7 +181,7 @@ export default {
       return parseTime(time)
     },
     send(room_uuid, user_id){
-      msgGet({room_uuid:room_uuid, page_no:1, per_page:10}).then(res=>{
+      msgGet({room_uuid:room_uuid, page_no:1, per_page:4}).then(res=>{
         this.currentRoomUuid = room_uuid
         this.addReqVisible = true
         let rawList = res.data.list
@@ -192,7 +192,6 @@ export default {
         })
         this.msgList = rawList.reverse()
         this.user_id = user_id
-        console.log(user_id)
       })
     },
     addReq(){
@@ -211,6 +210,7 @@ export default {
           type: "success"
         });
         this.getList();
+        this.content = ""
       });
     }
   },
