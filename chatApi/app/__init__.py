@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-07 16:22:48
+@LastEditTime: 2019-11-21 17:13:18
 '''
 from flask import Flask
 from sqlalchemy import create_engine
@@ -57,6 +57,7 @@ if environment == 'app':
 if environment == 'admin':
     #引入后台
     from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
-                                    UserController, AdminController, IndexController,LogController)
+                                    UserController, AdminController, IndexController,LogController,
+                                    ConfigController)
 
 

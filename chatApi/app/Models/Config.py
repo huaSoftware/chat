@@ -1,19 +1,11 @@
-'''
-@Author: hua
-@Date: 2019-02-26 09:54:21
-@LastEditors: hua
-@LastEditTime: 2019-11-21 16:43:43
-'''
-import time, math
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy import desc, asc
-from app import dBSession
 from app.Models.Base import Base
-from app.Models.Model import HtRoom
-from app.Vendor.Utils import Utils
-import json
+from app.Models.Model import HtConfig
+from app import dBSession
+import math,json
 
-class Room(Base, HtRoom, SerializerMixin):
+class Config(Base, HtConfig, SerializerMixin):
     """ 
         列表
         @param set filters 查询条件
@@ -23,10 +15,10 @@ class Room(Base, HtRoom, SerializerMixin):
         @param int limit 取多少条
         @return dict
     """
-    def getList(self, filters, order, field=(), offset = 0, limit = 15):
+    def getList(self, filters, order="updated_at desc", field=(), offset = 0, limit = 15):
         res = {}
         res['page'] ={}
-        res['page']['count'] = dBSession.query(Room).filter(*filters).count()
+        res['page']['count'] = dBSession.query(Config).filter(*filters).count()
         res['list'] = []
         res['page']['total_page'] = self.get_page_number(res['page']['count'], limit)
         res['page']['current_page'] = offset
@@ -34,7 +26,7 @@ class Room(Base, HtRoom, SerializerMixin):
             offset = (offset - 1) * limit
 
         if res['page']['count'] > 0:
-            res['list'] = dBSession.query(Room).filter(*filters)
+            res['list'] = dBSession.query(Config).filter(*filters)
             order = order.split(' ')
             if order[1] == 'desc':
                 res['list'] = res['list'].order_by(desc(order[0])).offset(offset).limit(limit).all()
@@ -56,9 +48,9 @@ class Room(Base, HtRoom, SerializerMixin):
     """
     def getAll(self, filters, order, field = (), limit = 0):
         if not filters:
-            res = dBSession.query(Room)
+            res = dBSession.query(Config)
         else:   
-            res = dBSession.query(Room).filter(*filters)
+            res = dBSession.query(Config).filter(*filters)
         if limit != 0:
             res = res.limit(limit)
         order = order.split(' ')
@@ -80,7 +72,7 @@ class Room(Base, HtRoom, SerializerMixin):
         @return dict
     """
     def getOne(self, filters, order = 'id desc', field = ()):
-        res = dBSession.query(Room).filter(*filters)
+        res = dBSession.query(Config).filter(*filters)
         order = order.split(' ')
         if order[1] == 'desc':
             res = res.order_by(desc(order[0])).first()
@@ -100,7 +92,7 @@ class Room(Base, HtRoom, SerializerMixin):
         @return bool
     """
     def addByClass(self, data):
-        room = Room(**data)
+        room = Config(**data)
         dBSession.add(room)
         dBSession.flush()
         return room.id
@@ -112,7 +104,7 @@ class Room(Base, HtRoom, SerializerMixin):
         @return bool
     """
     def edit(self, data, filters):
-        dBSession.query(Room).filter(*filters).update(data, synchronize_session=False)
+        dBSession.query(Config).filter(*filters).update(data, synchronize_session=False)
         return True
     
     """
@@ -121,7 +113,7 @@ class Room(Base, HtRoom, SerializerMixin):
         @return bool
     """
     def delete(self, filters):
-        dBSession.query(Room).filter(*filters).delete(synchronize_session=False)
+        dBSession.query(Config).filter(*filters).delete(synchronize_session=False)
         return True
     
     """
@@ -132,9 +124,9 @@ class Room(Base, HtRoom, SerializerMixin):
     """  
     def getCount(self, filters, field = None):
         if field == None:
-            return dBSession.query(Room).filter(*filters).count()
+            return dBSession.query(Config).filter(*filters).count()
         else:
-            return dBSession.query(Room).filter(*filters).count(field)
+            return dBSession.query(Config).filter(*filters).count(field)
         
     @staticmethod
     def get_page_number(count, page_size):
@@ -145,55 +137,3 @@ class Room(Base, HtRoom, SerializerMixin):
         else:
             total_page = math.ceil(count / 5)
         return total_page
-    
-    """ 转服务层 """
-
-    # 增加房间
-    @staticmethod
-    def add(room_data):
-        dBSession.add(room_data)
-        return True
-
-    @staticmethod
-    def get(room_uuid):
-        return dBSession.query(Room).filter(Room.room_uuid == room_uuid).first()
-
-    @staticmethod
-    def filters(message):
-        filter = {
-            Room.focused_user_id == message['focused_user_id']
-        }
-        return  dBSession.query(Room).filter(*filter).first()
-
-    #添加房间记录
-    @staticmethod
-    def insertRoomData(message):
-        room_data = Room(
-            room_uuid          = message['room_uuid'],
-            last_msg           = message['last_msg'],
-            type               = 0,
-            name               = '',
-            user_id            = message['user_id'],
-            updated_at         = int(time.time()),
-            created_at         = int(time.time())
-        )
-        #实例化后orm添加
-        status = room_data.add(room_data)
-        if status == False:
-            return False
-        return True
-
-    #更新房间记录
-    @staticmethod
-    def updateLastMsgRoom(room_uuid, data, created_at):
-        dBSession.query(Room).filter(Room.room_uuid == room_uuid).update({
-            'last_msg': json.dumps(data),
-            'updated_at': created_at,
-        })
-        return True
-    
-    #获取一周数据
-    def getWeekData(self):
-        result = Utils.db_t_d(dBSession.execute('SELECT count(*) as n, (TO_DAYS( NOW( ) ) - TO_DAYS( from_unixtime(created_at))) as `d` FROM ht_room group by TO_DAYS( from_unixtime(created_at)) having d <= :val', {'val': 6}).fetchall())    
-        
-        return result
