@@ -3,7 +3,7 @@
 @Date: 2019-11-21 16:51:53
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-21 17:06:55
+@LastEditTime: 2019-11-22 16:54:57
 '''
 
 
@@ -14,6 +14,7 @@ from app.Models.Config import Config
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
 from app.Vendor.Code import Code
+import time
 
 @app.route('/api/v2/config/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)
@@ -48,16 +49,20 @@ def configDelete(*args, **kwargs):
 @validator(name="config", rules={'type': 'string'}, default='')
 @validator(name="status", rules={'type': 'integer'}, default=0)
 @UsersAuthJWT.AdminApiAuth
+@transaction
 def configAdd(*args, **kwargs):
     """ 增加配置 """
     params = kwargs['params']
-    data = Config().addByClass(params)
-    if data['error_code'] != Code.SUCCESS:
-        return BaseController().json(data)
-    return BaseController().successData()
+    nowTime = int(time.time())
+    params['created_at'] = nowTime
+    params['updated_at'] = nowTime
+    id = Config().addByClass(params)
+    if id:
+        return BaseController().successData({'id':id})
+    return BaseController().error()
 
 @app.route('/api/v2/config/edit', methods=['POST'])
-@validator(name="id", rules={'type': 'string'}, default=0)
+@validator(name="id", rules={'type': 'integer'}, default=0)
 @validator(name="name", rules={'type': 'string'}, default='')
 @validator(name="type", rules={'type': 'string'}, default='')
 @validator(name="description", rules={'type': 'string'}, default='')
@@ -72,5 +77,7 @@ def configEdit(*args, **kwargs):
     filters = {
         Config.id == params['id']
     }
+    nowTime = int(time.time())
+    params['updated_at'] = nowTime
     Config().edit(params, filters)
     return BaseController().successData()

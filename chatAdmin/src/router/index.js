@@ -142,6 +142,18 @@ export const constantRoutes = [
         meta: { title: '日志管理', icon: 'edit' }
       }
     ]
+  },
+  {
+    path: '/config',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/config/index'),
+        name: 'Config',
+        meta: { title: '配置管理', icon: 'nested' }
+      }
+    ]
   }
 ]
 

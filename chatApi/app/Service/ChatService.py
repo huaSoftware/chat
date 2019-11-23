@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-21 16:04:53
+@LastEditTime: 2019-11-22 17:20:18
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -13,6 +13,7 @@ from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
 from app.Models.Room import Room
 from app.Models.Msg import Msg
+from app.Models.Config import Config
 from app.Vendor.Code import Code
 from app.Vendor.Utils import Utils
 from app import socketio, CONST
@@ -82,8 +83,13 @@ class ChatService():
         if isinstance(admin_user_info, str):
             return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, admin_user_info)
         #整合数据信息
+        default_img_data = Config().getOne({Config.type == 'img', Config.code == 'default.img', Config.status == 1})
+        if default_img_data == None:
+            default_img = 'static/img/about/python.jpg'
+        else:
+            default_img = default_img_data['config']
         admin_user_info['nick_name'] = '系统消息'
-        admin_user_info['head_img']  = 'static/img/about/python.jpg'#这里后期改成配置的
+        admin_user_info['head_img']  = default_img#这里后期改成配置的
         admin_user_info['id']  = admin_user_info['data']['id']
         msg = message['data']['msg']
         room_uuid = message['data']['room_uuid']
