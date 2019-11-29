@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-16 16:06:24
+ * @LastEditTime: 2019-11-29 08:39:54
  -->
 <template>
   <div class="app-container">
@@ -193,16 +193,16 @@ export default {
       });
     },
     move(id) {
-      adminDelete({ id: id }).then(res => {
+     /*  adminDelete({ id: id }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"
         });
         this.getList();
-      });
+      }); */
     },
     handleAdd(){
-      this.$refs.addForm.validate(valid => {
+     /*  this.$refs.addForm.validate(valid => {
         if (valid) {
           adminAdd(this.addForm).then(res=>{
             this.$message({
@@ -213,15 +213,15 @@ export default {
             this.getList()
           })
         }
-      })
+      }) */
     },
     handleEdit(item){
-      this.editDialogVisible = true
+      /* this.editDialogVisible = true
       this.editForm.name = item.name
-      this.editForm.id = item.id
+      this.editForm.id = item.id */
     },
     comfrimEdit(){
-      this.$refs.editForm.validate(valid => {
+      /* this.$refs.editForm.validate(valid => {
         if (valid) {
           adminEdit(this.editForm).then(res=>{
             this.$message({
@@ -232,7 +232,7 @@ export default {
             this.getList()
           })
         }
-      })
+      }) */
     },
     handleSort({ column, prop, order }){
       if(order == 'descending'){

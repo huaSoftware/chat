@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-21 16:09:48
+ * @LastEditTime: 2019-11-29 08:40:40
  -->
 <template>
   <div class="app-container">
@@ -159,13 +159,13 @@ export default {
       });
     },
     move(room_uuid) {
-      roomDelete({ room_uuid: room_uuid }).then(res => {
+      /* roomDelete({ room_uuid: room_uuid }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"
         });
         this.getList();
-      });
+      }); */
     },
     handleSort({ column, prop, order }){
       if(order == 'descending'){
@@ -181,7 +181,7 @@ export default {
       return parseTime(time)
     },
     send(room_uuid, user_id){
-      msgGet({room_uuid:room_uuid, page_no:1, per_page:4}).then(res=>{
+      /* msgGet({room_uuid:room_uuid, page_no:1, per_page:4}).then(res=>{
         this.currentRoomUuid = room_uuid
         this.addReqVisible = true
         let rawList = res.data.list
@@ -192,10 +192,10 @@ export default {
         })
         this.msgList = rawList.reverse()
         this.user_id = user_id
-      })
+      }) */
     },
     addReq(){
-      chatSend({
+      /* chatSend({
         data: {
           msg: this.content,
           room_uuid: this.currentRoomUuid,
@@ -211,7 +211,7 @@ export default {
         });
         this.getList();
         this.content = ""
-      });
+      }); */
     }
   },
   created: function() {

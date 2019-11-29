@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-22 17:12:24
+ * @LastEditTime: 2019-11-29 08:41:00
  -->
 <template>
   <div class="app-container">
@@ -246,16 +246,16 @@ export default {
       });
     },
     move(id) {
-      configDelete({ id: id }).then(res => {
+      /* configDelete({ id: id }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"
         });
         this.getList();
-      });
+      }); */
     },
     handleAdd(){
-      this.addForm.status = parseInt(this.addForm.status)
+      /* this.addForm.status = parseInt(this.addForm.status)
       configAdd(this.addForm).then(res=>{
         this.$message({
           message: "新增成功",
@@ -263,23 +263,23 @@ export default {
         });
         this.dialogVisible = false
         this.getList()
-      })
+      }) */
     },
     handleEdit(item){
-      this.editForm = JSON.parse(JSON.stringify(item))
+      /* this.editForm = JSON.parse(JSON.stringify(item))
       //this.editForm.status = String(JSON.parse(JSON.stringify(item))['status'])
-      this.editDialogVisible = true
+      this.editDialogVisible = true */
     },
     comfrimEdit(){
       //this.editForm.status = parseInt(this.editForm.status)
-      configEdit(this.editForm).then(res=>{
+      /* configEdit(this.editForm).then(res=>{
         this.$message({
           message: "编辑成功",
           type: "success"
         });
         this.editDialogVisible = false
         this.getList()
-      })
+      }) */
     },
     handleSort({ column, prop, order }){
       if(order == 'descending'){

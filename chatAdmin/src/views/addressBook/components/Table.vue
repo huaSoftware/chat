@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-16 15:35:51
+ * @LastEditTime: 2019-11-29 08:41:14
  -->
 <template>
   <div class="app-container">
@@ -96,13 +96,13 @@ export default {
       });
     },
     move(id) {
-      addressBookDelete({ id: id }).then(res => {
+      /* addressBookDelete({ id: id }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"
         });
         this.getList();
-      });
+      }); */
     },
     handleSort({ column, prop, order }){
       if(order == 'descending'){

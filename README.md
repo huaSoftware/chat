@@ -2,13 +2,18 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-11-14 11:08:35
+ * @LastEditTime: 2019-11-29 09:13:25
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
 
-### 体验地址
+### 客户端体验地址
 http://im.zhuhui.store    
+
+### 后台体验地址
+http://admin.zhuhui.store    
+账户: admin888
+密码：123456
 
 ### 安卓版下载地址
 http://down.zhuhui.store/chat.apk
