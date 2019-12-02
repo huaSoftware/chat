@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-20 17:23:00
+ * @LastEditTime: 2019-12-02 21:53:30
  */
 
 import store from '../store'
@@ -26,7 +26,6 @@ export function setup() {
 		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_SOCKET + '/api');
 	}
 	setupListen()
-	
 }
 /* 注册监听 */
 export function setupListen(){
@@ -75,10 +74,10 @@ export function setupListen(){
 						addCloudRoomMsg(msgList[index])
 					} */
 				}else{
-					//app消息推送
-					if(window.plus && !store.getters.isPaused){
+					//app消息推送，废弃，直接监听外部消息
+					/* if(window.plus && store.getters.isPaused){
 						plus.push.createMessage(data['msg'], "LocalMSG", {cover:false,title:data['name']});
-					}
+					} */
 					msgList = msgList.concat(data)
 				}
 				store.dispatch('updateMsgList', msgList)
@@ -146,10 +145,11 @@ export function setupListen(){
 		window.apiSocket.on('room', (data) => {
 			response(data).then(res=>{
 				let data = res.data
+				console.log(data)
 				//app消息通知
-				/*if(window.plus){
-					plus.push.createMessage("聊天消息", "LocalMSG", {cover:false});
-				}*/
+				if(window.plus && store.getters.isPaused){
+					plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0]['msg']});
+				} 
 				store.dispatch('updateRoomList', data)
 			})
 		});
@@ -158,9 +158,9 @@ export function setupListen(){
 			response(data).then(res=>{
 				let data = res.data
 				//app消息通知
-				/*if(window.plus){
-					plus.push.createMessage("聊天消息", "LocalMSG", {cover:false});
-				}*/
+				if(window.plus && store.getters.isPaused){
+					plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
+				} 
 				console.log(data)
 				store.dispatch('updateGroupRoomList', data)
 			})
@@ -469,4 +469,26 @@ export function modifyMsgStatus(data, status){
 	msgList[index]['send_status'] = status
 	store.dispatch('updateMsgList', msgList)
 	return index
+}
+
+export function formatLastMsg(last_msg){
+	try{
+		let data = JSON.parse(last_msg)
+		if(data['type'] == store.getters.IMG ){
+			return '[图片]'
+		}
+		if(data['type'] == store.getters.FILE ){
+			return '[文件]'
+		}
+		if(data['type'] == store.getters.RECORD ){
+			return '[语音]'
+		}
+		if(data['type'] == store.getters.TEXT ){
+			return data['msg']
+		}
+		return data['msg']
+	}catch(e){
+		console.log(e)
+		return last_msg
+	}
 }

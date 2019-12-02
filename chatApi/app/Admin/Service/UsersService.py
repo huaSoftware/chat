@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-05-24 14:13:23
 @LastEditors: hua
-@LastEditTime: 2019-10-29 19:59:19
+@LastEditTime: 2019-12-02 21:39:37
 '''
 import time, re
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -32,14 +32,15 @@ class UsersService():
                 first_word = nickNameFirstWord.upper()
             else:
                 first_word = '#'
+            nowTime = int(time.time())
             data = {
                 'email': params['email'],
                 'password': Users.set_password(params['password']),
                 'nick_name': params['nickName'],
                 'head_img':params['headImg'],
                 'first_word':first_word,
-                'created_at':time.time(),
-                'updated_at':time.time()
+                'created_at':nowTime,
+                'updated_at':nowTime
             }
             user = Users().add(data)
             if user == False:
