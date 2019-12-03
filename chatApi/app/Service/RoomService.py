@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 16:29:16
+@LastEditTime: 2019-12-03 10:04:56
 '''
 from app import CONST
 from app import socketio
@@ -23,7 +23,7 @@ class RoomService:
     @UsersAuthJWT.socketAuth
     def get(params, user_info):
         """ 获取房间列表 """
-        return AddressBook.getRoomList(user_info['data']['id'])
+        return Utils.formatBody(AddressBook.getRoomList(user_info['data']['id']))
     
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})

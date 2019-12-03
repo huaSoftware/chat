@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-11-06 20:02:46
+ * @LastEditTime: 2019-12-03 10:31:57
  -->
 <template>
 	<div class="content">
@@ -53,7 +53,7 @@
 				</div>
 			</a>
 		</article>
-		<vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />
+		<!-- <vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />-->
 		<!-- 参数空时页面 -->
 		<vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty>
 	</div>
@@ -113,14 +113,16 @@
 					this.alert = storage.get('alert')
 				}
 				roomGet().then(res=>{
-					if(res.data != null){
-						this.updateRoomList(res.data)
+					if(res.data.list != null){
+						this.updateRoomList(res.data.list)
 						this.loading = false
 					}
 				})
 				userRoomRelationGet().then(res=>{
-					this.updateGroupRoomList(res.data)
-					this.loading = false
+					if(res.data.list != null){
+						this.updateGroupRoomList(res.data.list)
+						this.loading = false
+					}
 				})
 			},
 			handleJoinRoom(item){

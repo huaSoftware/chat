@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-02 21:53:30
+ * @LastEditTime: 2019-12-03 10:28:43
  */
 
 import store from '../store'
@@ -144,10 +144,10 @@ export function setupListen(){
 		//监听单聊房间动态消息
 		window.apiSocket.on('room', (data) => {
 			response(data).then(res=>{
-				let data = res.data
-				console.log(data)
+				let data = res.data.list
+				console.log(res)
 				//app消息通知
-				if(window.plus && store.getters.isPaused){
+				if(window.plus && store.getters.isPaused && data[0].is_alert){
 					plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0]['msg']});
 				} 
 				store.dispatch('updateRoomList', data)
@@ -156,9 +156,9 @@ export function setupListen(){
 		//监听群聊房间动态消息
 		window.apiSocket.on('groupRoom', (data) => {
 			response(data).then(res=>{
-				let data = res.data
+				let data = res.data.list
 				//app消息通知
-				if(window.plus && store.getters.isPaused){
+				if(window.plus && store.getters.isPaused && data[0].is_alert){
 					plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
 				} 
 				console.log(data)
@@ -366,7 +366,7 @@ export function  send(method, data, type = 'room') {
 					})
 				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
-					console.log(2)
+					console.log(method)
 					clearTimeout(timeOut)
 					console.log(res)
 					if (res.error_code === 200) {

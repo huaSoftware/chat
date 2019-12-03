@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-09-29 17:06:04
+ * @LastEditTime: 2019-12-03 10:31:13
  -->
 
 <template>
@@ -116,11 +116,14 @@ export default {
             window.physicsBackRouter = null
             addressBookGet(this.reqData).then(res=>{
                 console.log(res)
-                this.adderssBookList = res.data.addressBookList
+                if(res.data.addressBookList){
+                    this.adderssBookList = res.data.addressBookList
+                }
             })
             userRoomRelationGet().then(res=>{
-                console.log(res)
-                this.updateGroupRoomList(res.data)
+                if(res.data.list){
+                    this.updateGroupRoomList(res.data.list)
+                }
                 this.loading = false
             })
         },

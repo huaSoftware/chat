@@ -3,7 +3,7 @@
 @Date: 2019-09-29 11:30:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 14:09:41
+@LastEditTime: 2019-12-03 10:05:12
 '''
 from app import app
 from app import cache
@@ -91,7 +91,7 @@ class AddressBookService:
         filters = {
             AddressBook.be_focused_user_id == user_info['data']['id']
         }
-        return AddressBook.rawGetList(params['page_no'], params['per_page'], filters)
+        return Utils.formatBody(AddressBook.rawGetList(params['page_no'], params['per_page'], filters))
        
     
     @staticmethod

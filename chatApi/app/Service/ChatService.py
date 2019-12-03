@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-02 21:41:15
+@LastEditTime: 2019-12-03 10:23:15
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -51,7 +51,7 @@ class ChatService():
             AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
             #更新客户端房间信息
             for item in address_book_data:
-                roomList = AddressBook.getRoomList(item.be_focused_user_id)['data']
+                roomList = AddressBook.getRoomList(item.be_focused_user_id)
                 socketio.emit('room', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
         elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
@@ -72,7 +72,7 @@ class ChatService():
             UserRoomRelation.cleanUnreadNumber(room_uuid, user_data['id'])
             #更新客户端房间信息
             for item in user_room_relation_data:
-                roomList = UserRoomRelation.getRoomList(item.user_id)['data']
+                roomList = UserRoomRelation.getRoomList(item.user_id)
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat","data": data})
     

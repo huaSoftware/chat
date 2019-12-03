@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 15:50:13
+@LastEditTime: 2019-12-03 10:12:02
 '''
 from app import CONST
 from app import socketio
@@ -42,7 +42,7 @@ class UserRoomRelationService:
             UserRoomRelation.user_id == user_info['data']['id']
         }
         data = UserRoomRelation().getAll(filters, 'updated_at desc')
-        return Utils.formatBody(data)
+        return Utils.formatBody({"list":data})
     
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})

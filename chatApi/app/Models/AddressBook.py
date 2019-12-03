@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-12-02 21:40:05
+@LastEditTime: 2019-12-03 09:22:07
 '''
 import time, math
 
@@ -214,8 +214,8 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         filters = {
             AddressBook.be_focused_user_id == user_id
         }
-        data = dBSession.query(AddressBook).order_by(AddressBook.updated_at.desc()).filter(*filters).all()
-        data = Base.formatBody(Utils.db_l_to_d(data))
+        res = dBSession.query(AddressBook).order_by(AddressBook.updated_at.desc()).filter(*filters).all()
+        data = {"list":Utils.db_l_to_d(res)}
         return data
 
      # 更新关注者未读消息

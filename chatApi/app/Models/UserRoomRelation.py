@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-11-16 15:41:52
+@LastEditTime: 2019-12-03 09:32:38
 '''
 import time, math
 
@@ -164,8 +164,8 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
         filters = {
             UserRoomRelation.user_id == user_id
         }
-        data = dBSession.query(UserRoomRelation).order_by(UserRoomRelation.updated_at.desc()).filter(*filters).all()
-        data = Base.formatBody(Utils.db_l_to_d(data))
+        res = dBSession.query(UserRoomRelation).order_by(UserRoomRelation.updated_at.desc()).filter(*filters).all()
+        data = {"list":Utils.db_l_to_d(res)}
         return data
     
     @staticmethod
