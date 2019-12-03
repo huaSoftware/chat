@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-21 17:13:18
+@LastEditTime: 2019-12-03 15:09:48
 '''
 from flask import Flask
 from sqlalchemy import create_engine
@@ -59,5 +59,5 @@ if environment == 'admin':
     from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
                                     UserController, AdminController, IndexController,LogController,
                                     ConfigController)
-
-
+#数据库事件
+from app.Event import AddressBook, Admin, Config, Log, Msg, Room, UserRoomRelation, Users

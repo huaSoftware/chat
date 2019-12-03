@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-12-02 21:40:32
+@LastEditTime: 2019-12-03 15:12:23
 '''
 import time, math
 from sqlalchemy_serializer import SerializerMixin
@@ -168,15 +168,12 @@ class Room(Base, HtRoom, SerializerMixin):
     #添加房间记录
     @staticmethod
     def insertRoomData(message):
-        nowTime = int(time.time())
         room_data = Room(
             room_uuid          = message['room_uuid'],
             last_msg           = message['last_msg'],
             type               = 0,
             name               = '',
-            user_id            = message['user_id'],
-            updated_at         = nowTime,
-            created_at         = nowTime
+            user_id            = message['user_id']
         )
         #实例化后orm添加
         status = room_data.add(room_data)

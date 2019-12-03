@@ -3,7 +3,7 @@
 @Date: 2019-11-21 16:51:53
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-22 16:54:57
+@LastEditTime: 2019-12-03 15:11:01
 '''
 
 
@@ -53,9 +53,6 @@ def configDelete(*args, **kwargs):
 def configAdd(*args, **kwargs):
     """ 增加配置 """
     params = kwargs['params']
-    nowTime = int(time.time())
-    params['created_at'] = nowTime
-    params['updated_at'] = nowTime
     id = Config().addByClass(params)
     if id:
         return BaseController().successData({'id':id})
@@ -77,7 +74,5 @@ def configEdit(*args, **kwargs):
     filters = {
         Config.id == params['id']
     }
-    nowTime = int(time.time())
-    params['updated_at'] = nowTime
     Config().edit(params, filters)
     return BaseController().successData()

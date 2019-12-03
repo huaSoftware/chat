@@ -3,7 +3,7 @@
 @Date: 2019-07-23 15:36:31
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:34:11
+@LastEditTime: 2019-12-03 15:12:46
 '''
 from app.Models.Model import HtLog
 from app import dBSession
@@ -23,8 +23,7 @@ class LogService:
         insertData = {
             'data': data,
             'type': type,
-            'level': level,
-            'create_time': int(time.time())
+            'level': level
         }
         try:
             log = HtLog(**insertData)
@@ -47,8 +46,7 @@ class LogService:
         insertData = {
             'data': data['data'],
             'type': data['type'],
-            'level': data['level'],
-            'create_time': int(time.time())
+            'level': data['level']
         }
         try:
             log = HtLog(**insertData)
