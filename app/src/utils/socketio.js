@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-05 10:50:32
+ * @LastEditTime: 2019-12-05 13:09:19
  */
 
 import store from '../store'
@@ -40,6 +40,7 @@ export function setupListen(){
 		window.apiSocket.on('connect', (data) => {
 			//逻辑处理
 			console.log("连接成功")
+			//Alert.close()
 		});
 		window.apiSocket.on('connecting', (data) => {
 			//逻辑处理
@@ -288,7 +289,7 @@ export function  send(method, data, type = 'room') {
 					});
 					modifyMsgStatus(data.data, store.getters.FAIL)
 				}
-			},1500)
+			},5500)
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				console.log("发送消息后emit回复"+recv)
@@ -377,7 +378,7 @@ export function  send(method, data, type = 'room') {
 						}})
 					}
 				}
-			},1500)
+			},5500)
 			data['type'] = store.getters.NOTIFY
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			console.log("广播："+method, "秘钥："+encryptStr)
