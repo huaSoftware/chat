@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-03 15:12:36
+@LastEditTime: 2019-12-04 08:54:26
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -90,7 +90,7 @@ class ChatService():
             default_img = default_img_data['config']
         admin_user_info['nick_name'] = '系统消息'
         admin_user_info['head_img']  = default_img#这里后期改成配置的
-        admin_user_info['id']  = admin_user_info['data']['id']
+        admin_user_info['id']  = 0#使用0作为系统id
         msg = message['data']['msg']
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
