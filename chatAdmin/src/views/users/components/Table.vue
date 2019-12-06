@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-12-06 16:42:17
+ * @LastEditTime: 2019-12-06 17:24:31
  -->
 <template>
   <div class="app-container">
@@ -20,32 +20,32 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" sortable>
+      <el-table-column label="用户昵称" prop="nick_name" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.nick_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" sortable height="50px"  align="center">
+      <el-table-column label="头像" prop="head_img" sortable height="50px"  align="center">
         <template slot-scope="scope">
           <span><Vimg style="width:50px;height:50px" :imgUrl="scope.row.head_img"/></span>
         </template>
       </el-table-column>
-      <el-table-column label="首字母" sortable align="center">
+      <el-table-column label="首字母"  prop="first_word" sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.first_word}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" sortable align="center">
+      <el-table-column label="邮箱"  prop="email" sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.email}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" class-name="status-col" sortable>
+      <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" sortable>
+      <el-table-column label="更新时间" prop="updated_at"  class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>
@@ -111,6 +111,7 @@ export default {
       }); */
     },
     handleSort({ column, prop, order }){
+      console.log(column, prop)
       if(order == 'descending'){
         this.listQuery['order'] = 'desc';
         this.listQuery['orderBy'] = prop;

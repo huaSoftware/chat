@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:40:40
+ * @LastEditTime: 2019-12-06 17:25:38
  -->
 <template>
   <div class="app-container">
@@ -31,23 +31,23 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间名"  sortable align="center">
+      <el-table-column label="房间名" prop="name"  sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间编号" sortable align="center">
+      <el-table-column label="房间编号"  prop="room_uuid"  sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.room_uuid}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间类型" sortable align="center">
+      <el-table-column label="房间类型" prop="type" sortable align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.type == 0">单聊</span>
           <span v-if="scope.row.type == 1">群聊</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近留言" sortable class-name="status-col">
+      <el-table-column label="最近留言" prop="last_msg" sortable class-name="status-col">
         <template slot-scope="scope" v-if="scope.row.last_msg">
           <div v-if="JSON.parse(scope.row.last_msg)['type'] == IMG">
             [图片]
@@ -62,12 +62,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" sortable class-name="status-col">
+      <el-table-column label="创建时间" prop="created_at" sortable class-name="status-col">
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" sortable class-name="status-col">
+      <el-table-column label="更新时间"  prop="updated_at" sortable class-name="status-col">
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>

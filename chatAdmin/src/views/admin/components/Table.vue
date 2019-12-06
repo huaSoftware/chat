@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:39:54
+ * @LastEditTime: 2019-12-06 17:27:12
  -->
 <template>
   <div class="app-container">
@@ -87,22 +87,22 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center" sortable>
+      <el-table-column label="用户名" prop="name" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" align="center" sortable>
+      <el-table-column label="邮箱" prop="email" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.email}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="登录时间" align="center" sortable>
+      <el-table-column label="登录时间" prop="login_time" align="center" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.login_time)}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" sortable>
+      <el-table-column label="更新时间" prop="update_time" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.update_time)}}</span>
         </template>

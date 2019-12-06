@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:41:00
+ * @LastEditTime: 2019-12-06 17:26:41
  -->
 <template>
   <div class="app-container">
@@ -141,27 +141,27 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" align="center" sortable>
+      <el-table-column label="名称" prop="name" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" sortable>
+      <el-table-column label="类型" prop="type" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.type}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="描述" align="center" sortable>
+      <el-table-column label="描述" prop="description" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.description}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="编号" align="center" sortable>
+      <el-table-column label="编号"  prop="code" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.code}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" sortable>
+      <el-table-column label="状态"  prop="status" align="center" sortable>
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -172,17 +172,17 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="配置" align="center" sortable>
+      <el-table-column label="配置" prop="config" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.config}}</span> 
         </template>
       </el-table-column>
-       <el-table-column label="创建时间" class-name="status-col" sortable>
+       <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" sortable>
+      <el-table-column label="更新时间" prop="updated_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>
