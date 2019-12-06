@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:41:33
+ * @LastEditTime: 2019-12-06 16:42:17
  -->
 <template>
   <div class="app-container">
@@ -25,9 +25,9 @@
           <span>{{scope.row.nick_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" sortable height="50px" align="center">
+      <el-table-column label="头像" sortable height="50px"  align="center">
         <template slot-scope="scope">
-          <span><img style="width:100%;height:100%" :src="scope.row.head_img"/></span>
+          <span><Vimg style="width:50px;height:50px" :imgUrl="scope.row.head_img"/></span>
         </template>
       </el-table-column>
       <el-table-column label="首字母" sortable align="center">
@@ -68,6 +68,7 @@
 
 <script>
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
+import Vimg from "@/components/Vimg";
 import { getToken } from "@/utils/auth";
 import { userList, userDelete } from "@/api/user";
 import {parseTime} from "@/utils/index"
@@ -88,7 +89,7 @@ export default {
     };
   },
   components: {
-    Pagination
+    Pagination, Vimg
   },
   methods: {
     getList() {

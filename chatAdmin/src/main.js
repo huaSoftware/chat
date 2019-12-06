@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-06-10 16:26:59
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2019-12-06 16:41:38
+ */
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
@@ -19,19 +26,6 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online! ! !
- */
-import { mockXHR } from '../mock'
-if (process.env.NODE_ENV === 'production') {
-  mockXHR()
-}
-
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
@@ -42,6 +36,16 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+// 图片懒加载
+import VueLazyload from "vue-lazyload";
+Vue.use(VueLazyload, {
+  preLoad: 1.3,   //预加载的宽高比
+  loading: require("@/assets/img/loading-bars.svg"),
+  error: require('@/assets/img/default.png'),
+  attempt: 3,//尝试加载次数
+  throttleWait:500
+});
 
 new Vue({
   el: '#app',
