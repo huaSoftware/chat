@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-12-05 15:48:17
+ * @LastEditTime: 2019-12-07 09:31:41
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -90,7 +90,7 @@
     <!-- 表情 -->
     <icons @recInsertIcon="insertIcon" v-if="iconsShow"/>
     <!-- 功能栏 -->
-    <def v-show="defsShow"/>
+    <def v-show="defsShow"/> 
     <!-- 裁剪图 -->
     <cropperBox v-if="cropperShow" :reqImgData="reqImgData" @recReqImgData="recReqImgData"  @recCropperShow="recCropperShow"/>   
   </div>
@@ -115,7 +115,6 @@ import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from 'axios'
-import VConsole from 'vconsole'
 export default {
   components: {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
@@ -194,7 +193,6 @@ export default {
       if(window.plus){
         window.r = plus.audio.getRecorder();
       }
-      new VConsole()
       new Swiper(".swiper-cont", {
         loop: false,
         autoplay: false, //可选选项，自动滑动

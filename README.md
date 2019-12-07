@@ -2,10 +2,33 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-12-06 10:14:25
+ * @LastEditTime: 2019-12-07 16:38:58
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
+
+### 单机并发性能测试
+```
+[root@VM_65_181_centos ~]# websocket-bench -a 1000 -c 1000   http://212.64.83.121:501/room
+Launch bench with 1000 total connection, 1000 concurent connection
+0 message(s) send by client
+1 worker(s)
+WS server : socket.io
+
+#### steps report ####
+┌────────┬─────────────┬────────┬──────────────┐
+│ Number │ Connections │ Errors │ Duration(ms) │
+├────────┼─────────────┼────────┼──────────────┤
+│ 1000   │ 1000        │ 0      │ 27790        │
+└────────┴─────────────┴────────┴──────────────┘
+#### total report ####
+┌────────┬─────────────┬────────┬──────────────┬──────────────┬──────────────┐
+│ Number │ Connections │ Errors │ Message Send │ Message Fail │ Duration(ms) │
+├────────┼─────────────┼────────┼──────────────┼──────────────┼──────────────┤
+│ 1000   │ 1000        │ 0      │ 0            │ 0            │ 27790        │
+└────────┴─────────────┴────────┴──────────────┴──────────────┴──────────────┘
+
+```
 
 ### 客户端体验地址
 http://im.zhuhui.store    

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-12-03 15:12:12
+@LastEditTime: 2019-12-07 09:21:23
 '''
 import time, math
 
@@ -198,9 +198,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def rawGetList(page_no, per_page, filters):
         dataObj = dBSession.query(AddressBook).order_by(AddressBook.created_at.desc()).filter(*filters).all()
-        addressBookList = Utils.db_l_to_d(dataObj)
-        data = Base.formatBody(
-            {"addressBookList": addressBookList})
+        data =  {"addressBookList":  Utils.db_l_to_d(dataObj)}
         return data
 
     # 获取消息房间列表
