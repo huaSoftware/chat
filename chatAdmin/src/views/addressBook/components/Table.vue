@@ -105,6 +105,7 @@ export default {
       }); */
     },
     handleSort({ column, prop, order }){
+      if(!prop)return
       if(order == 'descending'){
           this.listQuery['order'] = 'desc';
           this.listQuery['orderBy'] = prop;

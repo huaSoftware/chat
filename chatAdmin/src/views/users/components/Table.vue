@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-12-06 17:24:31
+ * @LastEditTime: 2019-12-09 10:01:58
  -->
 <template>
   <div class="app-container">
@@ -112,6 +112,7 @@ export default {
     },
     handleSort({ column, prop, order }){
       console.log(column, prop)
+      if(!prop)return
       if(order == 'descending'){
         this.listQuery['order'] = 'desc';
         this.listQuery['orderBy'] = prop;

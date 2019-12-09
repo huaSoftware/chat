@@ -3,7 +3,7 @@
 @Date: 2019-06-10 10:02:46
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 13:10:57
+@LastEditTime: 2019-12-09 15:30:00
 '''
 
 from app import app
@@ -26,9 +26,12 @@ import time
 @validator(name="captcha", rules={'required': True,'type': 'string'})
 def adminLogin(params):
     # 将验证码字符串储存在session中
-    if cache.get('captcha') is None:
+    captcha = cache.get('captcha')
+    if captcha is None:
         return BaseController().error(msg='验证码错误')
-    if params['captcha'].lower() != cache.get('captcha').lower():
+    inputCaptcha = params['captcha'].lower()
+    captcha = captcha.lower()
+    if captcha != inputCaptcha:
         return BaseController().error(msg='验证码错误')
     res = AdminService().login(params)
     """ if res['code'] == Code.SUCCESS:
