@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-15 09:46:04
+ * @LastEditTime: 2019-12-10 17:01:58
  -->
 <template>
     <div>
@@ -87,11 +87,10 @@ export default {
     },
     created() {
         window.physicsBackRouter = null
+        //注册socketio
+        setup()
     },
     mounted() {
-    /*     this.$nextTick(function () {
-            document.getElementById('bottom_login').style.marginTop = (document.documentElement.clientHeight-260)+'px'
-        }) */
     },
     methods: {
     handleFingerpring(){

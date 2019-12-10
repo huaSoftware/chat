@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-05 13:09:19
+ * @LastEditTime: 2019-12-10 17:09:15
  */
 
 import store from '../store'
@@ -11,7 +11,7 @@ import router from '../router'
 import utils from '@/utils/utils'
 import { Loading, Toast,Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg } from "@/utils/indexedDB"
-import {addCloudRoomMsg, updateCloudRoomMsg} from "@/socketioApi/room"
+import { updateCloudRoomMsg} from "@/socketioApi/room"
 import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
 
 /* 注册socketio */
@@ -29,14 +29,9 @@ export function setup() {
 }
 /* 注册监听 */
 export function setupListen(){
-
 	if(window.apiSocket !== undefined){
 		//删除所有监听
-		for(var listener in window.apiSocket.$events){
-			if(listener != undefined){
-				window.apiSocket.removeAllListeners(listener);
-			}
-		}
+		handleRemoveAllListeners()
 		window.apiSocket.on('connect', (data) => {
 			//逻辑处理
 			console.log("连接成功")
@@ -180,24 +175,28 @@ export function setupListen(){
 			window.apiSocket.on('room', (data) => {
 				response(data).then(res=>{
 					let data = res.data.list
-					console.log(res)
-					//app消息通知
-					if(window.plus && store.getters.isPaused && data[0].is_alert){
-						plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0]['msg']});
-					} 
-					store.dispatch('updateRoomList', data)
+					if(data != null){
+						console.log(res)
+						//app消息通知
+						if(window.plus && store.getters.isPaused && data[0].is_alert){
+							plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0]['msg']});
+						} 
+						store.dispatch('updateRoomList', data)
+					}
 				})
 			});
 			//监听群聊房间动态消息
 			window.apiSocket.on('groupRoom', (data) => {
 				response(data).then(res=>{
 					let data = res.data.list
-					//app消息通知
-					if(window.plus && store.getters.isPaused && data[0].is_alert){
-						plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
-					} 
-					console.log(data)
-					store.dispatch('updateGroupRoomList', data)
+					if(data != null){
+						//app消息通知
+						if(window.plus && store.getters.isPaused && data[0].is_alert){
+							plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
+						} 
+						console.log(data)
+						store.dispatch('updateGroupRoomList', data)
+					}
 				})
 			});
 			//初始化好友邀请消息状态
@@ -223,12 +222,18 @@ export function setDown(){
 	}
 	window.apiSocket.io.disconnect();    //先主动关闭连接
 	//删除所有监听
+	handleRemoveAllListeners()
+	window.apiSocket = undefined
+}
+
+/* 注销监听 */
+export function handleRemoveAllListeners(){
+	//删除所有监听
 	for(var listener in window.apiSocket.$events){
 		if(listener != undefined){
 			window.apiSocket.removeAllListeners(listener);
 		}
 	}
-	window.apiSocket = undefined
 }
 
 /**

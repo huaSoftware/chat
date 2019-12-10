@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-09-03 17:07:10
+ * @LastEditTime: 2019-12-10 16:58:03
  -->
 
 <template>
@@ -71,8 +71,9 @@ export default {
                     txt: '确定',
                     color: true,
                     callback: () => {
+                        //监听
                         clearData()
-                        //setDown()
+                        setDown()
                         deleteTables()
                         setTimeout(() => {
                             this.$router.push({ name: "authLogin" });

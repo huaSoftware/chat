@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-12-07 09:19:01
+ * @LastEditTime: 2019-12-10 16:18:38
  -->
 
 <template>
@@ -42,16 +42,16 @@
         <div class="address-book-list">  
             <dl v-for = "num in 26" :key="num">
                 <dt :ref="String.fromCharCode(64+num)">{{String.fromCharCode(64+num)}}</dt>
-                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="String.fromCharCode(64+num) == item.users.first_word"> <!-- 循环 -->
-                    <a>
+                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index"> <!-- 循环 -->
+                    <a v-if="String.fromCharCode(64+num) == item.users.first_word">
                     <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
                     </a>
                 </dd>
             </dl >
             <dl>
                 <dt ref="#">#</dt>
-                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
-                    <a>
+                <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index"> <!-- 循环 -->
+                    <a  v-if="item.users.first_word == '#'">
                     <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
                     </a>
                 </dd>
