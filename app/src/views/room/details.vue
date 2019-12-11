@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-06 21:04:11
+ * @LastEditTime: 2019-12-11 17:00:20
  -->
 <template>
     <div class="room_details">
@@ -92,6 +92,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations} from "vuex";
+import {Confirm} from "vue-ydui/dist/lib.rem/dialog";
 import storage from "@/utils/localstorage"
 import vImg from '@/components/v-img/v-img'
 import {joinChatSend} from '@/socketIoApi/chat'
@@ -150,25 +151,61 @@ export default {
             this.isHide = true; //点击onHide切换为true，显示为折叠画面
         },
         handleDelRoom(){
-            roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
-                Alert({
-                    'mes':'删除并退出成功',
-                    callback:()=>{
-                        this.$router.push({name:'home'})
+            Confirm({
+                title: '提示',
+                mes: '确认删除？',
+                opts: [
+                {
+                    txt: '取消',
+                    color: false,
+                    callback: () => {
                     }
-                })
-            })
+                },
+                {
+                    txt: '确定',
+                    color: true,
+                    callback: () => {
+                        roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                            Alert({
+                                'mes':'删除并退出成功',
+                                callback:()=>{
+                                    this.$router.push({name:'home'})
+                                }
+                            })
+                        })
+                    }
+                }
+                ]
+            });
         },
         handleDelRoomMsg(){
-            if(this.currentRoomSaveAction == 0){
-                delRoomMsg(this.currentRoomUuid).then(res=>{
-                    Toast({'mes':'删除成功'})
-                })
-            }else if(this.currentRoomSaveAction == 1){
-                roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
-                    Toast({'mes':'删除成功'})
-                })
-            }
+            Confirm({
+                title: '提示',
+                mes: '确认删除？',
+                opts: [
+                {
+                    txt: '取消',
+                    color: false,
+                    callback: () => {
+                    }
+                },
+                {
+                    txt: '确定',
+                    color: true,
+                    callback: () => {
+                         if(this.currentRoomSaveAction == 0){
+                            delRoomMsg(this.currentRoomUuid).then(res=>{
+                                Toast({'mes':'删除成功'})
+                            })
+                        }else if(this.currentRoomSaveAction == 1){
+                            roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                                Toast({'mes':'删除成功'})
+                            })
+                        }
+                    }
+                }
+                ]
+            });
         }
     },
     destroyed(){
