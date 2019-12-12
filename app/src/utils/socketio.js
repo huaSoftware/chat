@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-12 09:31:39
+ * @LastEditTime: 2019-12-12 10:05:33
  */
 
 import store from '../store'
@@ -149,10 +149,10 @@ export function setupListen(){
 						data['data']['status'] = store.getters.APPLY
 						Toast({ mes: `${data.data.nick_name}申请加你好友` });
 						//app消息通知
-						if(window.plus && store.getters.isPaused && data[0].is_alert){
+						if(window.plus && store.getters.isPaused){
 							plus.push.createMessage(`${data.data.nick_name}申请加你好友`, "LocalMSG", {cover:false,title:data.data.nick_name});
 						} 
-						console.log('3131',data)
+						console.log(data)
 						//接收到后删除缓存
 						addressBookBegCacheDel()
 						addAddressBookBeg(data['data'])
