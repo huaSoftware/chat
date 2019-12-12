@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-10 17:09:15
+ * @LastEditTime: 2019-12-12 09:31:39
  */
 
 import store from '../store'
@@ -148,6 +148,11 @@ export function setupListen(){
 						// 增加状态,0申请，1通过，2拒绝
 						data['data']['status'] = store.getters.APPLY
 						Toast({ mes: `${data.data.nick_name}申请加你好友` });
+						//app消息通知
+						if(window.plus && store.getters.isPaused && data[0].is_alert){
+							plus.push.createMessage(`${data.data.nick_name}申请加你好友`, "LocalMSG", {cover:false,title:data.data.nick_name});
+						} 
+						console.log('3131',data)
 						//接收到后删除缓存
 						addressBookBegCacheDel()
 						addAddressBookBeg(data['data'])
@@ -176,10 +181,10 @@ export function setupListen(){
 				response(data).then(res=>{
 					let data = res.data.list
 					if(data != null){
-						console.log(res)
+						console.log(1111,res)
 						//app消息通知
 						if(window.plus && store.getters.isPaused && data[0].is_alert){
-							plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0]['msg']});
+							plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
 						} 
 						store.dispatch('updateRoomList', data)
 					}
@@ -458,11 +463,11 @@ export function response(res){
 			resolve(res)
 		}
 		if (res.error_code === 400 || res.error_code === 500) {
-		if(res.show == true){
-			Toast({mes:res.msg,icon: 'error'})
-		}
-		Loading.close()
-		reject(res)
+			if(res.show == true){
+				Toast({mes:res.msg,icon: 'error'})
+			}
+			Loading.close()
+			reject(res)
 		}
 		if (res.error_code === 401|| res.error_code === 10001) {
 			clearTimeout(window.sendTimeOut)
@@ -473,6 +478,13 @@ export function response(res){
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
 			router.push({name: 'authLogin'})
+			reject(res)
+		}
+		if (res.error_code === 20000) {
+			if(res.show == true){
+				Toast({mes:res.msg,icon: 'error'})
+			}
+			Loading.close()
 			reject(res)
 		}
 		reject(res)

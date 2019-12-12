@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-04 08:54:26
+@LastEditTime: 2019-12-12 09:26:15
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -76,7 +76,6 @@ class ChatService():
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item.user_id))
         return  Utils.formatBody({'action':"chat","data": data})
     
-
     @staticmethod
     def adminChat(message:dict)->dict:
         admin_user_info = UsersAuthJWT().adminIdentify(message['Authorization'])
@@ -95,6 +94,8 @@ class ChatService():
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
         room_data = Room.get(room_uuid)
+        if room_data == None:
+            return Utils.formatError(Code.ROOM_NO_EXIST, "房间不存在")
         room_type = room_data.type
         created_at = message['data']['created_at']  
         save_action = message['data']['save_action']  
@@ -111,12 +112,14 @@ class ChatService():
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
         room_data = Room.get(room_uuid)
+        if room_data == None:
+            return Utils.formatError(Code.ROOM_NO_EXIST, "房间不存在")
         room_type = room_data.type
         created_at = message['data']['created_at']  
         save_action = message['data']['save_action']  
         user_data = Users().getOne({Users.id == user_info['data']['id']})
         return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, user_data)
-        
+
     @staticmethod
     @transaction
     def groupChatCreate(params, user_info):
