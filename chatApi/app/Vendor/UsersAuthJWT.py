@@ -2,12 +2,12 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-08 09:18:44
+@LastEditTime: 2019-12-12 14:25:32
 '''
+from app import CONST
 from app.Vendor.Utils import Utils
 from flask import request, make_response, jsonify
 from functools import wraps
-from app.Vendor.Code import Code
 from app.env import SECRET_KEY, JWT_LEEWAY
 from app.Models.Users import Users
 from app.Models.Admin import Admin
@@ -73,7 +73,7 @@ class UsersAuthJWT():
         """
         userInfo = Users().getOne({Users.email==email}, 'id desc', ('email', 'password', 'id', 'nick_name', 'head_img'))
         if(userInfo is None):
-            return Utils.formatError(Code.BAD_REQUEST,'找不到用户')
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'找不到用户')
         else:
             if (Users.check_password(userInfo['password'], password)):
                 updated_at = int(time.time())
@@ -82,7 +82,7 @@ class UsersAuthJWT():
                 userInfo.pop('password')#删除密码
                 return  Utils.formatBody({'token': token, 'user': userInfo}, '登陆成功')
             else:
-                return Utils.formatError(Code.BAD_REQUEST,'密码不正确')
+                return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'密码不正确')
 
     def identify(self, auth_header):
         """
@@ -152,7 +152,7 @@ class UsersAuthJWT():
             result = UsersAuthJWT().identify(request.headers.get('Authorization'))
             kwargs['user_info'] = result
             if isinstance(result, str):
-                return make_response(jsonify(Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL)))
+                return make_response(jsonify(Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'])))
             res = func(*args, **kwargs)
             return res
         return inner_wrappar 
@@ -168,10 +168,10 @@ class UsersAuthJWT():
             if 'Authorization' in args[0].keys():
                 result = UsersAuthJWT().identify(args[0]['Authorization'])
             else:
-                return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')
+                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')
             kwargs['user_info'] = result
             if isinstance(result, str):
-                return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效')#socketio.emit(name,Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
+                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')#socketio.emit(name,Utils.formatError(CONST['CODE']['ERROR']['value']_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
             res = func(*args, **kwargs)
             return res
         return inner_wrappar 
@@ -188,7 +188,7 @@ class UsersAuthJWT():
             result = UsersAuthJWT().adminIdentify(request.headers.get('Authorization'))
             kwargs['user_info'] = result
             if isinstance(result, str):
-                return make_response(jsonify(Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, result)))
+                return make_response(jsonify(Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], result)))
             res = func(*args, **kwargs)
             return res
         return inner_wrappar 

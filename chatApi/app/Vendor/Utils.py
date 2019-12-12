@@ -3,14 +3,13 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 22:00:07
+@LastEditTime: 2019-12-12 14:38:32
 '''
-
+from app import CONST
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import  PKCS1_v1_5
 from app.env import ALLOWED_EXTENSIONS
 from app.Lang.zh_CN.validation import validation
-from app.Vendor.Code import Code
 import time,os,json,base64
 
 
@@ -113,7 +112,7 @@ class Utils:
         * @return dict
         """
         dataformat = {}
-        dataformat['error_code'] = Code.SUCCESS
+        dataformat['error_code'] = CONST['CODE']['SUCCESS']['value']
         dataformat['data'] = data
         dataformat['msg'] = msg
         dataformat['show'] = show

@@ -3,13 +3,13 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 09:46:14
+@LastEditTime: 2019-12-12 14:49:22
 '''
 import time, re
+from app import CONST
 from app.Vendor.Decorator import socketValidator, socketValidator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Vendor.Utils import Utils
-from app.Vendor.Code import Code
 from app.Models.Users import Users
 from app.Vendor.Decorator import transaction
 from xpinyin import Pinyin
@@ -47,11 +47,11 @@ class UsersService():
             }
             user = Users().add(data)
             if user == False:
-                return Utils.formatError(Code.BAD_REQUEST,'注册失败')
+                return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'注册失败')
             else:
                 result = UsersAuthJWT.authenticate(params['email'], params['password'])
                 return result
-        return Utils.formatError(Code.BAD_REQUEST,'账号已注册')
+        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'账号已注册')
     
     @staticmethod
     @socketValidator(name='email', rules={'required': True,'type': 'string','minlength': 10,'maxlength': 20})

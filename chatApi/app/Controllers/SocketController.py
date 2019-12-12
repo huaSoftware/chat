@@ -3,10 +3,10 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-11-21 09:01:28
+@LastEditTime: 2019-12-12 14:56:21
 '''
 from flask_socketio import join_room, leave_room
-from app import socketio
+from app import socketio, CONST
 from flask import request
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -26,13 +26,13 @@ import time
 @decryptMessage
 @UsersAuthJWT.socketAuth
 def join(message, user_info):
-    if message['type'] == 0:
+    if message['type'] == CONST['ROOM']['ALONE']['value']:
         room_uuid = message['room_uuid']
         join_room(room_uuid)
-    elif message['type'] == 1:
+    elif message['type'] == CONST['ROOM']['GROUP']['value']:
         room_uuid = message['room_uuid']
         join_room(room_uuid)
-    elif message['type'] == 2:
+    elif message['type'] == CONST['ROOM']['NOTIFY']['value']:
         join_room('@broadcast.'+str(user_info['data']['id']))
     return  Utils.formatBody({'action':"join"})
         

@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-12 09:26:15
+@LastEditTime: 2019-12-12 14:49:13
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -14,10 +14,9 @@ from app.Models.Users import Users
 from app.Models.Room import Room
 from app.Models.Msg import Msg
 from app.Models.Config import Config
-from app.Vendor.Code import Code
 from app.Vendor.Utils import Utils
 from app import socketio, CONST
-import time,json
+import json
 
 class ChatService():
     @staticmethod
@@ -80,7 +79,7 @@ class ChatService():
     def adminChat(message:dict)->dict:
         admin_user_info = UsersAuthJWT().adminIdentify(message['Authorization'])
         if isinstance(admin_user_info, str):
-            return Utils.formatError(Code.ERROR_AUTH_CHECK_TOKEN_FAIL, admin_user_info)
+            return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], admin_user_info)
         #整合数据信息
         default_img_data = Config().getOne({Config.type == 'img', Config.code == 'default.img', Config.status == 1})
         if default_img_data == None:
@@ -95,7 +94,7 @@ class ChatService():
         Type = message['data']['type']
         room_data = Room.get(room_uuid)
         if room_data == None:
-            return Utils.formatError(Code.ROOM_NO_EXIST, "房间不存在")
+            return Utils.formatError(CONST['CODE']['ROOM_NO_EXIST']['value'], "房间不存在")
         room_type = room_data.type
         created_at = message['data']['created_at']  
         save_action = message['data']['save_action']  
@@ -113,7 +112,7 @@ class ChatService():
         Type = message['data']['type']
         room_data = Room.get(room_uuid)
         if room_data == None:
-            return Utils.formatError(Code.ROOM_NO_EXIST, "房间不存在")
+            return Utils.formatError(CONST['CODE']['ROOM_NO_EXIST']['value'], "房间不存在")
         room_type = room_data.type
         created_at = message['data']['created_at']  
         save_action = message['data']['save_action']  

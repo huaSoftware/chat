@@ -3,7 +3,7 @@
 @Date: 2019-11-21 16:51:53
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-03 15:11:01
+@LastEditTime: 2019-12-12 14:48:34
 '''
 
 
@@ -13,7 +13,6 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.Config import Config
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
-from app.Vendor.Code import Code
 import time
 
 @app.route('/api/v2/config/list', methods=['POST'])

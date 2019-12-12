@@ -2,13 +2,13 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-12-03 15:09:48
+@LastEditTime: 2019-12-12 14:54:20
 '''
 from flask import Flask
+from apscheduler.schedulers.blocking import BlockingScheduler# type: ignore
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_socketio import SocketIO
-from app.Vendor.Code import Code
 from cacheout import Cache
 from app.env import (SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH,REDIS_PAS, REDIS_IP, REDIS_PORT, REDIS_DB)
 import os, time, json
@@ -45,11 +45,11 @@ def shutdown_session(exception=None):
 if environment == 'admin':
     @app.errorhandler(Exception)
     def error_handler(e):
-        return ExceptionApi(Code.ERROR, e)
+        return ExceptionApi(CONST['CODE']['ERROR']['value'], e)
 if environment == 'app':
     @socketio.on_error_default       # Handles the default namespace
     def socketio_error_handler(e):
-        return SocketExceptionApi(Code.ERROR, e)
+        return SocketExceptionApi(CONST['CODE']['ERROR']['value'], e)
 
 #引入使用的控制器
 if environment == 'app':
@@ -61,3 +61,11 @@ if environment == 'admin':
                                     ConfigController)
 #数据库事件
 from app.Event import AddressBook, Admin, Config, Log, Msg, Room, UserRoomRelation, Users
+
+
+""" #任务调剂
+sched = BlockingScheduler()
+#引入任务
+from app.Job import Cron, Interval
+#开始任务
+sched.start() """

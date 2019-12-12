@@ -3,23 +3,18 @@
 @Date: 2019-09-29 11:30:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-10 15:53:10
+@LastEditTime: 2019-12-12 14:49:04
 '''
-from app import app
+from app import CONST
 from app import cache
-from flask import request
 from app import socketio
-from app.Controllers.BaseController import BaseController
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Vendor.Decorator import socketValidator
 from app.Models.AddressBook import AddressBook
 from app.Models.Users import Users
-from app.Models.Room import Room
 from app.Vendor.Decorator import transaction
-from flask_socketio import emit, join_room
-from app.Vendor.Code import Code
-import time
+
 
 class AddressBookService:
     
@@ -28,10 +23,10 @@ class AddressBookService:
     @UsersAuthJWT.socketAuth
     def beg(params,user_info):
         if user_info['data']['id'] == params['be_focused_user_id']:
-            return Utils.formatError(Code.BAD_REQUEST,'无法添加自己为新朋友')
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'无法添加自己为新朋友')
         addressBookdata = AddressBook.getAdddressBookByFocusedUserId(user_info['data']['id'], params['be_focused_user_id'])
         if addressBookdata != None:
-            return Utils.formatError(Code.BAD_REQUEST,'已添加')
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'已添加')
         msg_uuid = Utils.unique_id()
         userData = Users().getOne({Users.id == user_info['data']['id']})
         data = {
@@ -53,7 +48,7 @@ class AddressBookService:
     def add(params,user_info):
         ''' 添加通讯录 '''
         if params['focused_user_id'] == user_info['data']['id']:
-            return Utils.formatError(Code.BAD_REQUEST,msg='无法添加自己为新朋友')
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='无法添加自己为新朋友')
         filters = {
             AddressBook.focused_user_id == params['focused_user_id'],
             AddressBook.be_focused_user_id == user_info['data']['id']
@@ -66,7 +61,7 @@ class AddressBookService:
             status = AddressBook.addRoomAndAddressBook(
                 room_uuid, params['focused_user_id'], user_info['data']['id'])
             if status == False:
-                return Utils.formatError(Code.BAD_REQUEST,msg='添加失败')
+                return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='添加失败')
         
             #回复被添加用户
             socketio.emit('beg', Utils.formatBody({
@@ -79,7 +74,7 @@ class AddressBookService:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)['list']
                 socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item.be_focused_user_id))   
             return Utils.formatBody({},msg='添加成功')
-        return Utils.formatError(Code.BAD_REQUEST,msg='已添加')
+        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='已添加')
     
     
     @staticmethod

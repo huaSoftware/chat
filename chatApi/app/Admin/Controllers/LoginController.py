@@ -34,7 +34,7 @@ def adminLogin(params):
     if captcha != inputCaptcha:
         return BaseController().error(msg='验证码错误')
     res = AdminService().login(params)
-    """ if res['code'] == Code.SUCCESS:
+    """ if res['code'] == CONST['CODE']['SUCCESS']['value']:
         return  BaseController.json(res) """
     return BaseController().json(res)
 

@@ -2,15 +2,13 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:52:36
+@LastEditTime: 2019-12-12 14:22:57
 '''
-from app import dBSession
-from app import socketio
+from app import dBSession,CONST
 from functools import wraps
 from flask import request, make_response
 from app.Vendor.Utils import Utils
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
-from app.Vendor.Code import Code
 import cerberus, json
 
 ''' 
@@ -26,7 +24,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
     if name == 'error':
         error = {}
         error['msg'] = '不能使用error关键字作用请求参数'
-        error['error_code'] = Code.ERROR
+        error['error_code'] = CONST['CODE']['ERROR']['value']
         error['error'] = True
         error['show'] = True
         return error
@@ -53,7 +51,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         return requests
     error = {}
     error['msg'] = v.errors
-    error['error_code'] = Code.ERROR
+    error['error_code'] = CONST['CODE']['ERROR']['value']
     error['error'] = True
     error['show'] = True
     return error
@@ -72,7 +70,7 @@ def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
     if name == 'error':
         error = {}
         error['msg'] = '不能使用error关键字作用请求参数'
-        error['error_code'] = Code.ERROR
+        error['error_code'] = CONST['CODE']['ERROR']['value']
         error['error'] = True
         error['show'] = True
         return error
@@ -85,7 +83,7 @@ def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
         return params
     error = {}
     error['msg'] = v.errors
-    error['error_code'] = Code.ERROR
+    error['error_code'] = CONST['CODE']['ERROR']['value']
     error['error'] = True
     error['show'] = True
     return error

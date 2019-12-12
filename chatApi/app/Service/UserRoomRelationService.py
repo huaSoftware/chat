@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-03 10:12:02
+@LastEditTime: 2019-12-12 14:43:39
 '''
 from app import CONST
 from app import socketio
@@ -15,7 +15,6 @@ from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import socketValidator
 from app.Vendor.Decorator import transaction
-from app.Vendor.Code import Code
 
 class UserRoomRelationService:
     
@@ -32,7 +31,7 @@ class UserRoomRelationService:
                 roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
             return Utils.formatBody(data, msg='创建成功')
-        return Utils.formatError(Code.BAD_REQUEST,msg='创建失败')
+        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='创建失败')
     
     @staticmethod
     @UsersAuthJWT.socketAuth

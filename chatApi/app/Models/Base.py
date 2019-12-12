@@ -3,10 +3,10 @@
 @Date: 2019-06-17 14:14:28
 @description: 基础模型，封装一些基础方法 
 @LastEditors: hua
-@LastEditTime: 2019-11-25 17:25:36
+@LastEditTime: 2019-12-12 14:48:16
 '''
+from app import CONST
 import logging, math
-from app.Vendor.Code import Code
 from sqlalchemy import desc, asc
 from app import dBSession
 
@@ -184,7 +184,7 @@ class Base():
         * @return dict
         """
         dataformat = {}
-        dataformat['error_code'] = Code.SUCCESS
+        dataformat['error_code'] = CONST['CODE']['SUCCESS']['value']
         dataformat['data'] = data
         dataformat['msg'] = msg
         dataformat['show'] = show
@@ -199,13 +199,13 @@ class Base():
         * @param bool show
         * @return dict
         """
-        if code == Code.BAD_REQUEST:
+        if code == CONST['CODE']['BAD_REQUEST']['value']:
             message = 'Bad request.'
-        elif code == Code.NOT_FOUND:
+        elif code == CONST['CODE']['NOT_FOUND']['value']:
             message = 'No result matched.'
         body = {}
         body['error'] = True
-        body['error_code'] = Code.BAD_REQUEST
+        body['error_code'] = CONST['CODE']['BAD_REQUEST']['value']
         body['msg'] = message
         body['show'] = show
         return body

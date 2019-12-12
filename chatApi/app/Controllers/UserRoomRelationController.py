@@ -3,7 +3,7 @@
 @Date: 2019-06-05 14:54:18
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 15:49:57
+@LastEditTime: 2019-12-12 14:48:51
 '''
 from app import app
 from app import socketio
@@ -15,8 +15,6 @@ from app.Models.AddressBook import AddressBook
 from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Vendor.Decorator import validator
-from app.Vendor.Code import Code
-from flask import request
 
 
 @app.route('/api/v2/groupChat/create', methods=['POST'])
