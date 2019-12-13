@@ -3,12 +3,13 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-12-12 14:49:22
+@LastEditTime: 2019-12-13 13:15:42
 '''
 import time, re
-from app import CONST
+from app import CONST, delayQueue
 from app.Vendor.Decorator import socketValidator, socketValidator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
+from app.Struct.Invite import Invite
 from app.Vendor.Utils import Utils
 from app.Models.Users import Users
 from app.Vendor.Decorator import transaction
@@ -50,6 +51,12 @@ class UsersService():
                 return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'注册失败')
             else:
                 result = UsersAuthJWT.authenticate(params['email'], params['password'])
+                # 发送延时推广进群广告
+                invite = Invite()
+                invite.setAction("invite")
+                invite.setId(result['data']['user']['id'])
+                # 延时2分钟推送
+                delayQueue.product(invite.__dict__, 120)
                 return result
         return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'账号已注册')
     

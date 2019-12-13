@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2019-12-05 15:18:38
+ * @LastEditTime: 2019-12-13 10:29:28
  -->
 <template>
   <yd-layout>
@@ -75,9 +75,7 @@ export default {
             window.apiSocket._callbacks.$leave == undefined ||
             window.apiSocket._callbacks.$room == undefined ||
             window.apiSocket._callbacks.$send == undefined
-        ){
-          setupListen()
-        }
+        ){setupListen()}
       }
     },5000)
     document.addEventListener('visibilitychange',()=> {

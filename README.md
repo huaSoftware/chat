@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-12-07 16:38:58
+ * @LastEditTime: 2019-12-13 13:55:03
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
@@ -86,7 +86,7 @@ http://doc.zhuhui.store
     npm run build
 
 ### 后端项目安装
-    1.运行环境python3.5+, mysql5.6+, centos7+
+    1.运行环境python3.5+, mysql5.6+, redis3+, centos7+
     2.数据库sql文件在doc目录下，运行安装
     3.centos运行install下面的脚本进行安装python3及扩展
         ./install_py3.sh

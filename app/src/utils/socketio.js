@@ -3,13 +3,13 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-12 10:05:33
+ * @LastEditTime: 2019-12-13 13:45:32
  */
 
 import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
-import { Loading, Toast,Alert } from 'vue-ydui/dist/lib.rem/dialog'
+import { Confirm, Loading, Toast,Alert } from 'vue-ydui/dist/lib.rem/dialog'
 import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg } from "@/utils/indexedDB"
 import { updateCloudRoomMsg} from "@/socketioApi/room"
 import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
@@ -173,6 +173,32 @@ export function setupListen(){
 					if(data['action'] == 'beg_add_success' ){
 						Toast({ mes: '对方已同意添加好友' });
 						updateAddressBookBeg(data['focused_user_id'], 1)
+					}
+					if(data['action'] == 'invite'){
+						console.log('延时推送任务咨询是否需要联系作者')
+						Confirm({
+							title: '提示',
+							mes: '是否有问题需要反馈?点确认自动咨询作者！',
+							opts: [
+							{
+								txt: '取消',
+								color: false,
+								callback: () => {
+								}
+							},
+							{
+								txt: '确定',
+								color: true,
+								callback: () => {
+									if(window.plus){
+										plus.runtime.openURL('http://wpa.qq.com/msgrd?v=3&uin=584425439&site=qq&menu=yes')
+									}else{
+										window.open('http://wpa.qq.com/msgrd?v=3&uin=584425439&site=qq&menu=yes')
+									}
+								}
+							}
+							]
+						});
 					}
 				})
 			});

@@ -6,7 +6,7 @@
 @LastEditTime: 2019-12-12 14:48:16
 '''
 from app import CONST
-import logging, math
+import math
 from sqlalchemy import desc, asc
 from app import dBSession
 

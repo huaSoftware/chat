@@ -3,10 +3,10 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-12-12 14:56:21
+@LastEditTime: 2019-12-13 13:28:04
 '''
 from flask_socketio import join_room, leave_room
-from app import socketio, CONST
+from app import socketio, CONST, delayQueue
 from flask import request
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -77,3 +77,12 @@ def disconnect():
     #print('Client disconnected')
     return  Utils.formatBody({'action': "disconnect"})
 
+def background_thread():
+    """启动一个后台线程来处理所有的延时任务
+    """
+    while True:
+        socketio.sleep(1)
+        d_list = delayQueue.consumer()
+        for item in d_list:
+            if item["action"] == 'invite':
+                socketio.emit('beg', Utils.formatBody(item), namespace='/api', room='@broadcast.'+str(item["id"])) 
