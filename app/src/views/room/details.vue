@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-11 17:00:20
+ * @LastEditTime: 2019-12-14 10:47:41
  -->
 <template>
     <div class="room_details">
@@ -87,12 +87,22 @@
             </span>
         </yd-cell-item>
         <!--删除并退出-->
-        <yd-button size="large" type="hollow" @click.native="handleDelRoom">删除并退出</yd-button>
+        <yd-button size="large" type="hollow" @click.native="$refs.DelRoomRef.openMask">删除并退出</yd-button>
+        <!-- 模态窗 -->
+        <vModal 
+            ref="DelRoomRef"
+            @onConfirm="handleDelRoom"
+            :title="'提示'"
+            :text="'删除房间'"
+            :description="'删除后聊天记录将清空'"
+		>
+		</vModal>
     </div>
 </template>
 <script>
 import { mapGetters, mapMutations} from "vuex";
 import {Confirm} from "vue-ydui/dist/lib.rem/dialog";
+import vModal from '@/components/v-modal/v-modal'
 import storage from "@/utils/localstorage"
 import vImg from '@/components/v-img/v-img'
 import {joinChatSend} from '@/socketIoApi/chat'
@@ -113,7 +123,7 @@ export default {
             }
         };
     },
-    components: {vImg, CrossLine},
+    components: {vImg, vModal, CrossLine},
     computed: {
         ...mapGetters([
             "currentRoomUuid",
@@ -150,33 +160,18 @@ export default {
         onHide: function() {
             this.isHide = true; //点击onHide切换为true，显示为折叠画面
         },
-        handleDelRoom(){
-            Confirm({
-                title: '提示',
-                mes: '确认删除？',
-                opts: [
-                {
-                    txt: '取消',
-                    color: false,
-                    callback: () => {
-                    }
-                },
-                {
-                    txt: '确定',
-                    color: true,
-                    callback: () => {
-                        roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
-                            Alert({
-                                'mes':'删除并退出成功',
-                                callback:()=>{
-                                    this.$router.push({name:'home'})
-                                }
-                            })
-                        })
-                    }
-                }
-                ]
-            });
+        handleDelRoom(){      
+            this.$refs.DelRoomRef.closeMask()
+            setTimeout(()=>{
+                roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                    Alert({
+                        'mes':'删除并退出成功',
+                        callback:()=>{
+                            this.$router.push({name:'home'})
+                        }
+                    })
+                }) 
+            },500)    
         },
         handleDelRoomMsg(){
             Confirm({

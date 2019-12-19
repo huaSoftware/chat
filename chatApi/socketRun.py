@@ -2,14 +2,11 @@
 @Author: hua
 @Date: 2019-06-17 14:14:28
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-11-07 13:49:39
+@LastEditors  : hua
+@LastEditTime : 2019-12-19 09:40:16
 '''
-import os,json
-data = {"environment":"app"}
-with open(os.getcwd()+'/.runtime/environment.json', "w") as f:
-    f.write(json.dumps(data))
-    
+import environment
+environment.init("app")
 """ from gevent import monkey
 monkey.patch_all(select=True, socket=True) #这边win下会报错用http请求时 """
 from app import app, socketio

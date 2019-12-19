@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:38:32
+@LastEditors  : hua
+@LastEditTime : 2019-12-19 09:16:02
 '''
 from app import CONST
 from Cryptodome.PublicKey import RSA
@@ -14,7 +14,6 @@ import time,os,json,base64
 
 
 class Utils:
-    
     @staticmethod
     def getColumn(name, data):
         """ 

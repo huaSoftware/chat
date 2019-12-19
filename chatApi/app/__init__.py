@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors: hua
-@LastEditTime: 2019-12-13 13:33:11
+@LastEditors  : hua
+@LastEditTime : 2019-12-19 09:11:59
 '''
 from flask import Flask
 from apscheduler.schedulers.blocking import BlockingScheduler# type: ignore
@@ -11,11 +11,11 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_socketio import SocketIO
 from app.Vendor.DelayQueue import DelayQueue
 from cacheout import Cache
+import environment as e
 from app.env import (SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER, MAX_CONTENT_LENGTH,REDIS_PAS, REDIS_IP, REDIS_PORT, REDIS_DB)
 import os, time, json
 
-with open(os.getcwd()+'/.runtime/environment.json', "r") as f:
-    environment = json.loads(f.read())['environment']
+environment = e.read()
 app = Flask(__name__,static_folder=os.getcwd()+'/uploads')
 # 动态设置全局常量
 with open(os.getcwd()+'/app/const.json', "rb") as f:
@@ -66,7 +66,7 @@ if environment == 'admin':
 #数据库事件
 from app.Event import AddressBook, Admin, Config, Log, Msg, Room, UserRoomRelation, Users
 
-if environment == 'admin':
+if environment == 'job':
     #任务调剂
     sched = BlockingScheduler()
     #引入任务

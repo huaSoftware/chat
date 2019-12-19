@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2019-12-03 10:31:57
+ * @LastEditTime: 2019-12-14 10:40:07
  -->
 <template>
 	<div class="content">
@@ -68,15 +68,15 @@
 	import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'
-	import vScroll from '@/components/v-scroll/v-scroll'
 	export default {
-		components: {vImg, vEmpty,vScroll},
+		components: {vImg, vEmpty},
 		name: 'home',
 		data() {
 			return {
 				alert: true,
 				loading: true,
 				defShow: false,
+				mask_show:false,
                 defs: [
                     {
                         label: '发起群聊',
