@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
- * @LastEditors: hua
- * @LastEditTime: 2019-12-14 10:40:07
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-24 13:27:18
  -->
 <template>
 	<div class="content">
@@ -25,7 +25,7 @@
 		<!-- 单聊 -->
 		<article class="yd-list yd-list-theme4" style="padding-top:1rem">
 			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
-				<div class="yd-list-img"><vImg :imgUrl="item.users.head_img"/></div>
+				<div class="yd-list-img"><vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"/></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
 						<span class="title-left">{{item.users.nick_name}}</span><span class="title-right">{{formatTime(item.room.updated_at)}}</span>

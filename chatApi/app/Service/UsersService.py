@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-17 14:14:28
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-13 13:15:42
+@LastEditors  : hua
+@LastEditTime : 2019-12-24 13:12:11
 '''
 import time, re
 from app import CONST, delayQueue
@@ -94,4 +94,9 @@ class UsersService():
         #鉴权
         user_data = Users().getOne({Users.id == user_info['data']['id']})
         return Utils.formatBody(user_data)
-    
+
+    @staticmethod
+    @transaction
+    def edit(data, filters):
+        status = Users().edit(data, filters)
+        return status

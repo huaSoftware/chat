@@ -2,8 +2,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors: hua
-@LastEditTime: 2019-12-13 13:28:04
+@LastEditors  : hua
+@LastEditTime : 2019-12-24 13:15:01
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -19,6 +19,7 @@ from app.Service.AddressBookService import AddressBookService
 from app.Service.RoomService import RoomService
 from app.Service.UserRoomRelationService import UserRoomRelationService
 import time
+from app.Models.Users import Users
 
 ''' 聊天室模式，进入，离开，聊天
 '''
@@ -67,22 +68,49 @@ def send(message):
 """ 连接事件 """
 @socketio.on('connect', namespace='/api')
 def connect():
-    #emit('my response', {'data': 'Connected'})
     return  Utils.formatBody({'action': "connect"})
 
 """ 断开事件 """
 @socketio.on('disconnect', namespace='/api')
 def disconnect():
-    #thread_pool[request.sid]['thread'].join()
-    #print('Client disconnected')
     return  Utils.formatBody({'action': "disconnect"})
+
+""" 用户登录事件 """
+@socketio.on('loginConnect', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.socketAuth
+def loginConnect(message, user_info):
+    user_id = user_info['data']['id']
+    delayQueue.client.zadd('onlineUsers', {str(user_id): int(time.time())})
+    return  Utils.formatBody({'action': "loginConnect"})
+
+""" 用户退出事件 """
+@socketio.on('logoutDisconnect', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.socketAuth
+def logoutDisconnect(message, user_info):
+    user_id = user_info['data']['id']
+    UsersService.edit({'online': 0}, {Users.id == str(user_id)})
+    delayQueue.client.zrem('onlineUsers', str(user_id))
+    return  Utils.formatBody({'action': "logoutDisconnect"})
 
 def background_thread():
     """启动一个后台线程来处理所有的延时任务
     """
     while True:
         socketio.sleep(1)
+        #延迟推送
         d_list = delayQueue.consumer()
         for item in d_list:
             if item["action"] == 'invite':
-                socketio.emit('beg', Utils.formatBody(item), namespace='/api', room='@broadcast.'+str(item["id"])) 
+                socketio.emit('beg', Utils.formatBody(item), namespace='/api', room='@broadcast.'+str(item["id"]))
+        #查询用户是否在线 
+        onlineUsers = delayQueue.client.zrange('onlineUsers',0,-1,withscores = True)
+        for onlineUser in onlineUsers:
+            nowTime = int(time.time())
+            onlineTime = int(onlineUser[1])+5
+            if onlineTime < nowTime:
+                UsersService.edit({'online': 0}, {Users.id == onlineUser[0]})
+                delayQueue.client.zrem('onlineUsers', onlineUser[0])
+            else:
+                UsersService.edit({'online': 1}, {Users.id == onlineUser[0]})

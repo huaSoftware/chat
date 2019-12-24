@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-12-13 13:45:32
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-24 11:21:26
  */
 
 import store from '../store'
@@ -127,6 +127,12 @@ export function setupListen(){
 			});
 			//监听
 			send('join', {}, 'broadcast')
+			//更新在线状态
+			if(!window.loginConnectInterval){
+				window.loginConnectInterval = setInterval(()=>{
+					send('loginConnect',{},'loginConnect')
+				},5000)
+			}
 			//如果当前存在房间则进入
 			if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){
 				send('join', {
@@ -467,6 +473,48 @@ export function  send(method, data, type = 'room') {
 						window.localStorage.removeItem('token')
 						store.commit('SET_TOKEN', null)
 						//setDown()
+						router.push({name: 'authLogin'})
+						reject('error')
+					}
+					reject('error')
+				})
+				
+			})
+			return res
+		}
+		if(type == 'loginConnect' || type == 'logoutDisconnect'){
+			var res = new Promise((resolve, reject)=>{
+				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
+				//设置超时时间5s
+				let timeOut = setTimeout(()=>{
+					Alert({
+						'mes':'在线检测已断开链接，请重启',
+						callback: () => {
+							window.location.reload()
+						}
+					})
+				},5000)
+				window.apiSocket.emit(method, encryptStr, (res)=>{
+					clearTimeout(timeOut)
+					console.log(res)
+					if (res.error_code === 200) {
+						resolve(res)
+					}
+					if (res.error_code === 400 || res.error_code === 500) {
+						if(res.show == true){
+							Toast({mes:res.msg,icon: 'error'})
+						}
+						Loading.close()
+						reject('error')
+					}
+					if (res.error_code === 401 || res.error_code === 10001) {
+						clearTimeout(window.sendTimeOut)
+						clearTimeout(window.broadcastTimeOut)
+						Loading.close()
+						Toast({mes: res.msg,icon: 'error'})
+						// 这里需要删除token，不然携带错误token无法去登陆
+						window.localStorage.removeItem('token')
+						store.commit('SET_TOKEN', null)
 						router.push({name: 'authLogin'})
 						reject('error')
 					}

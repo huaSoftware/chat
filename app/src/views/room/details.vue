@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-07-10 10:50:03
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-12-14 10:47:41
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-24 13:30:26
  -->
 <template>
     <div class="room_details">
@@ -14,7 +14,7 @@
                 <p class="summary">
                     <ul class="user_header_wrapper">
                         <li v-for="(item, index) in list" :key="index">
-                            <vImg :imgUrl="item.users.head_img"></vImg>
+                            <vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"></vImg>
                             <span>{{item.users.nick_name}}</span>
                         </li>
                     </ul>
