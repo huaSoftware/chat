@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2019-09-29 17:06:04
+ * @LastEditTime: 2019-12-11 16:56:32
  -->
 
 <template>
@@ -51,7 +51,7 @@
             <dl>
                 <dt ref="#">#</dt>
                 <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
-                    <a>
+                    <a >
                     <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
                     </a>
                 </dd>
@@ -116,11 +116,14 @@ export default {
             window.physicsBackRouter = null
             addressBookGet(this.reqData).then(res=>{
                 console.log(res)
-                this.adderssBookList = res.data.addressBookList
+                if(res.data.addressBookList){
+                    this.adderssBookList = res.data.addressBookList
+                }
             })
             userRoomRelationGet().then(res=>{
-                console.log(res)
-                this.updateGroupRoomList(res.data)
+                if(res.data.list){
+                    this.updateGroupRoomList(res.data.list)
+                }
                 this.loading = false
             })
         },

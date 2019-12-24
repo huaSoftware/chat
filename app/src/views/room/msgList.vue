@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-07-26 08:50:34
+ * @LastEditTime: 2019-12-11 17:10:22
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -15,7 +15,9 @@
                         <div>{{item.name}}</div> 
                         <div>{{formatTime(item.created_at)}}</div>
                     </div>
-                    <div class="msg" v-html="item.msg"></div>
+                    
+                    <div class="msg" v-if="item.type != TEXT">{{formatMsg(item)}}</div>
+                    <div class="msg" v-else v-html="item.msg"></div>
                 </div>
                 
             </div>
@@ -39,7 +41,8 @@ export default {
         "currentRoomUuid",
         "currentRoomName",
         "currentRoomType",
-        "currentRoomSaveAction"
+        "currentRoomSaveAction",
+        "RECORD","TEXT","IMG","FILE"
       ])
     },
   data() {
@@ -135,8 +138,28 @@ export default {
           });
         }
     },
+    formatMsg(data){
+      console.log(data)
+      try{
+        if(data['type'] == this.IMG ){
+          return '[图片]'
+        }
+        if(data['type'] == this.FILE ){
+          return '[文件]'
+        }
+        if(data['type'] == this.RECORD ){
+          return '[语音]'
+        }
+        if(data['type'] == this.TEXT ){
+          return data['msg']
+        }
+        return data['msg']
+      }catch(e){
+        return msg
+      }
+		},
     formatTime(value){
-        return utils.time.formatDate(value, 'hh:mm:ss')
+      return utils.time.formatDate(value, 'hh:mm:ss')
     }
   },
   beforeRouteEnter(to, from, next) {

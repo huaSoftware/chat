@@ -3,12 +3,11 @@
 @Date: 2019-06-11 14:59:11
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 16:03:04
+@LastEditTime: 2019-12-12 14:37:09
 '''
-from app import app
+from app import app,CONST
 from app.Vendor.Decorator import validator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
-from app.Vendor.Code import Code
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
 from app.Models.Admin import Admin
@@ -54,7 +53,7 @@ def adminAdd(*args, **kwargs):
     """ 增加管理员 """
     params = kwargs['params']
     data = AdminService().add(params)
-    if data['error_code'] != Code.SUCCESS:
+    if data['error_code'] != CONST['CODE']['SUCCESS']['value']:
         return BaseController().json(data)
     return BaseController().successData()
 

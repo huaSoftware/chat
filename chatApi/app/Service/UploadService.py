@@ -3,14 +3,14 @@
 @Date: 2019-09-28 20:50:59
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 16:29:29
+@LastEditTime: 2019-12-12 14:40:22
 '''
+from app import CONST
 from app.Vendor.Utils import Utils
 from app.Vendor.Decorator import socketValidator
 from werkzeug.utils import secure_filename
 import os, base64
 from app.env import UPLOAD_FOLDER
-from app.Vendor.Code import Code
 
 class UploadService():
     @staticmethod
@@ -45,6 +45,6 @@ class UploadService():
             #f.write(params['arrayBuffer'])
             f.close
             return Utils.formatBody({'path': path, 'name': filename}, msg='上传成功')
-        return Utils.formatError(Code.BAD_REQUEST,'文件类型不允许')
+        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'文件类型不允许')
 
 

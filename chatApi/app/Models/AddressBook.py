@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2019-11-16 15:48:03
+@LastEditTime: 2019-12-07 09:21:23
 '''
 import time, math
 
@@ -171,15 +171,13 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             'last_msg': '',
             'user_id': focused_user_id
         }
-        room = Room.insertRoomData(roomData)
+        Room.insertRoomData(roomData)
         addressBook = AddressBook(
             focused_user_id=focused_user_id,
             be_focused_user_id=be_focused_user_id,
             room_uuid=room_uuid,
             unread_number=0,
-            is_alert=1,
-            created_at=time.time(),
-            updated_at=time.time()
+            is_alert=1
         )
         dBSession.add(addressBook)
         addressBook = AddressBook(
@@ -187,9 +185,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             be_focused_user_id=focused_user_id,
             room_uuid=room_uuid,
             unread_number=0,
-            is_alert=1,
-            created_at=time.time(),
-            updated_at=time.time()
+            is_alert=1
         )
         dBSession.add(addressBook)
         return True
@@ -202,9 +198,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def rawGetList(page_no, per_page, filters):
         dataObj = dBSession.query(AddressBook).order_by(AddressBook.created_at.desc()).filter(*filters).all()
-        addressBookList = Utils.db_l_to_d(dataObj)
-        data = Base.formatBody(
-            {"addressBookList": addressBookList})
+        data =  {"addressBookList":  Utils.db_l_to_d(dataObj)}
         return data
 
     # 获取消息房间列表
@@ -213,8 +207,8 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         filters = {
             AddressBook.be_focused_user_id == user_id
         }
-        data = dBSession.query(AddressBook).order_by(AddressBook.updated_at.desc()).filter(*filters).all()
-        data = Base.formatBody(Utils.db_l_to_d(data))
+        res = dBSession.query(AddressBook).order_by(AddressBook.updated_at.desc()).filter(*filters).all()
+        data = {"list":Utils.db_l_to_d(res)}
         return data
 
      # 更新关注者未读消息

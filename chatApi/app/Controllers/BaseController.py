@@ -3,16 +3,16 @@
 @Date: 2019-06-17 14:14:28
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:49:42
+@LastEditTime: 2019-12-12 14:48:41
 '''
 ''' author:hua
     date:2018.2.6
     基础控制器，封装一些基础方法 
     验证库https://cerberus.readthedocs.io/en/stable/index.html
 '''
+from app import CONST
 from app.env import DEBUG_LOG, SAVE_LOG
 from app.Service.LogService import LogService
-from app.Vendor.Code import Code
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
 from app.Vendor.Log import log
 from app.Vendor.Utils import Utils
@@ -43,7 +43,7 @@ class BaseController:
             return requests
         error = {}
         error['msg'] = v.errors
-        error['error_code'] = Code.BAD_REQUEST
+        error['error_code'] = CONST['CODE']['BAD_REQUEST']['value']
         error['error'] = True
         return self.json(error)
 
@@ -67,7 +67,7 @@ class BaseController:
             return requests
         error = {}
         error['msg'] = v.errors
-        error['error_code'] = Code.BAD_REQUEST
+        error['error_code'] = CONST['CODE']['BAD_REQUEST']['value']
         error['error'] = True
         return self.json(error)
 
@@ -99,7 +99,7 @@ class BaseController:
     * @param  msg string
     * @return json
     '''
-    def error(self, msg='', show=True , code=Code.BAD_REQUEST ):
+    def error(self, msg='', show=True , code=CONST['CODE']['BAD_REQUEST']['value'] ):
         return self.json({'error_code': code, 'error': True, 'msg': msg, 'show': show})
 
     '''
@@ -108,6 +108,6 @@ class BaseController:
     * @return json
     '''
     def successData(self, data='', msg='', show=True):
-        return self.json({'error_code': Code.SUCCESS, 'data': data,'msg': msg, 'show': show})
+        return self.json({'error_code': CONST['CODE']['SUCCESS']['value'], 'data': data,'msg': msg, 'show': show})
 
 

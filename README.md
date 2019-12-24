@@ -2,10 +2,33 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 09:13:25
+ * @LastEditTime: 2019-12-13 13:55:03
  -->
 ### 工具鸡-聊天室
     兼容web,android,ios的聊天室。一次开发多端使用。
+
+### 单机并发性能测试
+```
+[root@VM_65_181_centos ~]# websocket-bench -a 1000 -c 1000   http://212.64.83.121:501/room
+Launch bench with 1000 total connection, 1000 concurent connection
+0 message(s) send by client
+1 worker(s)
+WS server : socket.io
+
+#### steps report ####
+┌────────┬─────────────┬────────┬──────────────┐
+│ Number │ Connections │ Errors │ Duration(ms) │
+├────────┼─────────────┼────────┼──────────────┤
+│ 1000   │ 1000        │ 0      │ 27790        │
+└────────┴─────────────┴────────┴──────────────┘
+#### total report ####
+┌────────┬─────────────┬────────┬──────────────┬──────────────┬──────────────┐
+│ Number │ Connections │ Errors │ Message Send │ Message Fail │ Duration(ms) │
+├────────┼─────────────┼────────┼──────────────┼──────────────┼──────────────┤
+│ 1000   │ 1000        │ 0      │ 0            │ 0            │ 27790        │
+└────────┴─────────────┴────────┴──────────────┴──────────────┴──────────────┘
+
+```
 
 ### 客户端体验地址
 http://im.zhuhui.store    
@@ -63,12 +86,18 @@ http://doc.zhuhui.store
     npm run build
 
 ### 后端项目安装
-    1.运行环境python3.5+, mysql
-    2.数据库在doc目录下
-    3.安装扩展
-        pip install -r requirements.txt
-    4.运行项目
+    1.运行环境python3.5+, mysql5.6+, redis3+, centos7+
+    2.数据库sql文件在doc目录下，运行安装
+    3.centos运行install下面的脚本进行安装python3及扩展
+        ./install_py3.sh
+        ./install_vendor.sh
+        
+    4.将uwsgi的配置文件放在后端根目录下并执行命令
+        uwsgi uwsgi.ini
+        uwsgi uwsgiWeb.ini
+    5.测试运行
         python socketRun.py
+        python run.py
 
 #### 作者其他开源产品
 1. <a href="https://gitee.com/huashiyuting/flask " target="_blank">mvc分层,json api载体(中庸)的flask</a>

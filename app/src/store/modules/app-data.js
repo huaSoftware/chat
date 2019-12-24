@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-09 20:32:49
+ * @LastEditTime: 2019-12-02 20:58:08
  */
 /**
  * 作者：yujinjin9@126.com
@@ -15,8 +15,7 @@ export default {
     navbarTitle: '首页', // app的导航页标题
     imgUrl: process.env.PATH_INDEX_PIC,//图片前缀路径
     headerContentType:'application/json;charset=UTF-8',//规定类型
-    htmlFontSize: 0,
-    isPaused:false
+    htmlFontSize: 0
   },
   getters:{
     //判断吧标题是否和导航的一样 一样就有背景样式
@@ -25,9 +24,6 @@ export default {
     },
     htmlFontSize(state){
       return state.htmlFontSize
-    },
-    isPaused(state){
-      return state.isPaused
     }
   },
 
@@ -39,9 +35,6 @@ export default {
   },
 
   mutations: {
-    updateIsPaused(state, data){
-      state.isPaused = data
-    },
     //修改仓库值
     updateNavbarTitle(state, navbarTitle){
       state.navbarTitle = navbarTitle

@@ -2,15 +2,13 @@
 @Author: hua
 @Date: 2019-04-02 16:50:55
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:52:36
+@LastEditTime: 2019-12-13 14:47:01
 '''
-from app import dBSession
-from app import socketio
+from app import dBSession,CONST
 from functools import wraps
 from flask import request, make_response
 from app.Vendor.Utils import Utils
 from app.Vendor.CustomErrorHandler import CustomErrorHandler
-from app.Vendor.Code import Code
 import cerberus, json
 
 ''' 
@@ -26,7 +24,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
     if name == 'error':
         error = {}
         error['msg'] = '不能使用error关键字作用请求参数'
-        error['error_code'] = Code.ERROR
+        error['error_code'] = CONST['CODE']['ERROR']['value']
         error['error'] = True
         error['show'] = True
         return error
@@ -53,7 +51,7 @@ def validateInputByName(name, rules, error_msg=dict(), default=''):
         return requests
     error = {}
     error['msg'] = v.errors
-    error['error_code'] = Code.ERROR
+    error['error_code'] = CONST['CODE']['ERROR']['value']
     error['error'] = True
     error['show'] = True
     return error
@@ -72,7 +70,7 @@ def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
     if name == 'error':
         error = {}
         error['msg'] = '不能使用error关键字作用请求参数'
-        error['error_code'] = Code.ERROR
+        error['error_code'] = CONST['CODE']['ERROR']['value']
         error['error'] = True
         error['show'] = True
         return error
@@ -85,7 +83,7 @@ def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
         return params
     error = {}
     error['msg'] = v.errors
-    error['error_code'] = Code.ERROR
+    error['error_code'] = CONST['CODE']['ERROR']['value']
     error['error'] = True
     error['show'] = True
     return error
@@ -98,7 +96,7 @@ def validateSocketDataByName(name, params, rules, error_msg=dict(), default=''):
 """
 def transaction(func):
     @wraps(func)
-    def inner_wrappar(*args, **kwargs):
+    def inner_wrapper(*args, **kwargs):
         try:
             #print('something before')
             result = func(*args, **kwargs)
@@ -108,7 +106,7 @@ def transaction(func):
         except  Exception as e:
             dBSession.rollback()  
             raise e
-    return inner_wrappar 
+    return inner_wrapper 
 
 """ 
     事务装饰器,用于类方法
@@ -141,7 +139,7 @@ def validator(name, rules, msg=dict(), default=""):
     # 装饰器就是把其他函数作为参数的函数
     def wrappar(func):
         @wraps(func)
-        def inner_wrappar(*args, **kwargs):
+        def inner_wrapper(*args, **kwargs):
             #18n
             msgFormat = Utils.validateMsgFormat(name, rules, msg)
             error = validateInputByName(name, {name: rules}, {name:msgFormat}, default)
@@ -159,7 +157,7 @@ def validator(name, rules, msg=dict(), default=""):
             else:
                 kwargs=error
             return func(params=kwargs)
-        return inner_wrappar 
+        return inner_wrapper 
     return wrappar
 
 """ 
@@ -175,21 +173,21 @@ def socketValidator(name, rules, msg=dict(), default=""):
     # 装饰器就是把其他函数作为参数的函数
     def wrappar(func):
         @wraps(func)
-        def inner_wrappar(*args, **kwargs):
+        def inner_wrapper(*args, **kwargs):
             #18n
             msgFormat = Utils.validateMsgFormat(name, rules, msg)
             error = validateSocketDataByName(name, args[0], {name: rules}, {name:msgFormat}, default)
             if 'error' in error:
                 return json.dumps(error)#socketio.emit('unAuthSend',json.dumps(error), room='@api.'+str(request.sid))
             return func(args[0])
-        return inner_wrappar 
+        return inner_wrapper 
     return wrappar
 
 
 # rsa解密
 def decryptMessage(func):
     @wraps(func)
-    def inner_wrappar(*args, **kwargs):
+    def inner_wrapper(*args, **kwargs):
         args = Utils.decrypt(args[0])
         return func(args)
-    return inner_wrappar 
+    return inner_wrapper 

@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:41:33
+ * @LastEditTime: 2019-12-09 10:01:58
  -->
 <template>
   <div class="app-container">
@@ -20,32 +20,32 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" sortable>
+      <el-table-column label="用户昵称" prop="nick_name" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.nick_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" sortable height="50px" align="center">
+      <el-table-column label="头像" prop="head_img" sortable height="50px"  align="center">
         <template slot-scope="scope">
-          <span><img style="width:100%;height:100%" :src="scope.row.head_img"/></span>
+          <span><Vimg style="width:50px;height:50px" :imgUrl="scope.row.head_img"/></span>
         </template>
       </el-table-column>
-      <el-table-column label="首字母" sortable align="center">
+      <el-table-column label="首字母"  prop="first_word" sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.first_word}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" sortable align="center">
+      <el-table-column label="邮箱"  prop="email" sortable align="center">
         <template slot-scope="scope">
           <span>{{scope.row.email}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" class-name="status-col" sortable>
+      <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" sortable>
+      <el-table-column label="更新时间" prop="updated_at"  class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>
@@ -68,6 +68,7 @@
 
 <script>
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
+import Vimg from "@/components/Vimg";
 import { getToken } from "@/utils/auth";
 import { userList, userDelete } from "@/api/user";
 import {parseTime} from "@/utils/index"
@@ -88,7 +89,7 @@ export default {
     };
   },
   components: {
-    Pagination
+    Pagination, Vimg
   },
   methods: {
     getList() {
@@ -110,6 +111,8 @@ export default {
       }); */
     },
     handleSort({ column, prop, order }){
+      console.log(column, prop)
+      if(!prop)return
       if(order == 'descending'){
         this.listQuery['order'] = 'desc';
         this.listQuery['orderBy'] = prop;

@@ -3,7 +3,7 @@
  * @Date: 2019-08-15 21:16:40
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-15 10:17:56
+ * @LastEditTime: 2019-12-05 15:39:32
  -->
 <template>
     <div class="input_wrapper">
@@ -86,9 +86,7 @@ export default {
         // 录音结束
         stopRecord() {
             this.$emit('handleRecordShow', false)
-            if (window.plus) {
-                window.r.stop();
-            }
+            //window.r.stop();
         },
         closeDefIconsShow(){
             this.$emit('closeDefIconsShow', '')

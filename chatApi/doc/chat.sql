@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 23/11/2019 15:34:46
+ Date: 24/12/2019 13:33:00
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `ht_address_book`  (
   `unread_number` int(11) UNSIGNED NOT NULL COMMENT '未读取信息次数',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `focused_user_id`(`focused_user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 219 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_admin
@@ -70,7 +70,7 @@ CREATE TABLE `ht_config`  (
   `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_logs
@@ -79,11 +79,11 @@ DROP TABLE IF EXISTS `ht_logs`;
 CREATE TABLE `ht_logs`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
   `type` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型，1是普通接口日志',
-  `level` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT '报错等级，0是normal,1是debug，2是warn，3是error',
+  `level` tinyint(2) UNSIGNED NOT NULL DEFAULT 1 COMMENT '报错等级，1是debug，2是warn，3是error',
   `data` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '内容',
   `create_time` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 230 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 159 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_msg
@@ -100,7 +100,7 @@ CREATE TABLE `ht_msg`  (
   `created_at` bigint(14) UNSIGNED NOT NULL COMMENT '创建时间',
   `send_status` tinyint(2) NOT NULL COMMENT '发送状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 264 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_room
@@ -117,7 +117,7 @@ CREATE TABLE `ht_room`  (
   `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户编号',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `room_uuid`(`room_uuid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 199 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_user_room_relation
@@ -133,7 +133,7 @@ CREATE TABLE `ht_user_room_relation`  (
   `created_at` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for ht_users
@@ -146,10 +146,11 @@ CREATE TABLE `ht_users`  (
   `nick_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '昵称',
   `head_img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '头像',
   `first_word` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '首字母',
+  `online` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '在线状态',
   `updated_at` int(11) UNSIGNED NOT NULL COMMENT '更新时间',
   `created_at` int(11) UNSIGNED NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 418 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;

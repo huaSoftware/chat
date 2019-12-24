@@ -109,7 +109,7 @@ export function updateAddressBookBeg(user_id, status) {
 
 
 /* 
- *增加聊天记录
+ *增加聊天记录 to be hua 
  *params: obj value
  *return bool
  */

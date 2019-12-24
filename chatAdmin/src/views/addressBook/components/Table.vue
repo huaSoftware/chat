@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-11-29 08:41:14
+ * @LastEditTime: 2019-12-06 17:27:43
  -->
 <template>
   <div class="app-container">
@@ -20,27 +20,27 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关注者" align="center" sortable>
+      <el-table-column label="关注者" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.users.nick_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="房间编号" align="center" sortable>
+      <el-table-column label="房间编号" prop="room_uuid" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.room_uuid}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="被关注者" align="center" sortable>
+      <el-table-column label="被关注者" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
           <span>{{scope.row.be_users.nick_name}}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" class-name="status-col" sortable>
+      <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" class-name="status-col" sortable>
+      <el-table-column label="更新时间" prop="updated_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.updated_at)}}</span>
         </template>
@@ -105,6 +105,7 @@ export default {
       }); */
     },
     handleSort({ column, prop, order }){
+      if(!prop)return
       if(order == 'descending'){
           this.listQuery['order'] = 'desc';
           this.listQuery['orderBy'] = prop;

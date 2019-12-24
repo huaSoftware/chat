@@ -3,7 +3,7 @@
  * @Date: 2019-02-16 19:35:43
  * @description: 新的朋友列表
  * @LastEditors: hua
- * @LastEditTime: 2019-07-15 17:24:02
+ * @LastEditTime: 2019-12-10 16:06:41
  -->
 <template>
 <div class="newFriend_content">

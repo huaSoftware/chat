@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-09-03 17:07:10
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-24 11:23:18
  -->
 
 <template>
@@ -33,7 +33,7 @@ import CrossItem from '@/components/cross-item/cross-item'
 import { Confirm } from 'vue-ydui/dist/lib.rem/dialog'
 import {deleteTables} from '@/utils/indexedDB'
 import { mapGetters} from 'vuex'
-import {setDown} from '@/utils/socketio'
+import {setDown, send} from '@/utils/socketio'
 import {clearData} from '@/utils/auth'
 
 export default {
@@ -71,8 +71,12 @@ export default {
                     txt: '确定',
                     color: true,
                     callback: () => {
+                        //更新在线状态
+                        clearInterval(window.loginConnectInterval)
+                        send('logoutDisconnect',{},'logoutDisconnect')
+                        //监听
                         clearData()
-                        //setDown()
+                        setDown()
                         deleteTables()
                         setTimeout(() => {
                             this.$router.push({ name: "authLogin" });

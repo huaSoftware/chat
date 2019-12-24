@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
- * @LastEditors: hua
- * @LastEditTime: 2019-11-06 20:02:46
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-24 13:27:18
  -->
 <template>
 	<div class="content">
@@ -25,7 +25,7 @@
 		<!-- 单聊 -->
 		<article class="yd-list yd-list-theme4" style="padding-top:1rem">
 			<a @click="handleJoinRoom(item)" href="javascript:;" class="yd-list-item" v-for=" (item, index) in roomList" :key="index">
-				<div class="yd-list-img"><vImg :imgUrl="item.users.head_img"/></div>
+				<div class="yd-list-img"><vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"/></div>
 				<div class="yd-list-mes">
 					<div class="yd-list-title">
 						<span class="title-left">{{item.users.nick_name}}</span><span class="title-right">{{formatTime(item.room.updated_at)}}</span>
@@ -53,7 +53,7 @@
 				</div>
 			</a>
 		</article>
-		<vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />
+		<!-- <vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />-->
 		<!-- 参数空时页面 -->
 		<vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty>
 	</div>
@@ -68,15 +68,15 @@
 	import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
 	import {setup} from '@/utils/socketio'
 	import {joinChatSend} from '@/socketIoApi/chat'
-	import vScroll from '@/components/v-scroll/v-scroll'
 	export default {
-		components: {vImg, vEmpty,vScroll},
+		components: {vImg, vEmpty},
 		name: 'home',
 		data() {
 			return {
 				alert: true,
 				loading: true,
 				defShow: false,
+				mask_show:false,
                 defs: [
                     {
                         label: '发起群聊',
@@ -113,14 +113,16 @@
 					this.alert = storage.get('alert')
 				}
 				roomGet().then(res=>{
-					if(res.data != null){
-						this.updateRoomList(res.data)
+					if(res.data.list != null){
+						this.updateRoomList(res.data.list)
 						this.loading = false
 					}
 				})
 				userRoomRelationGet().then(res=>{
-					this.updateGroupRoomList(res.data)
-					this.loading = false
+					if(res.data.list != null){
+						this.updateGroupRoomList(res.data.list)
+						this.loading = false
+					}
 				})
 			},
 			handleJoinRoom(item){

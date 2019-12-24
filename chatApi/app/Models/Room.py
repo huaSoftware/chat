@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-26 09:54:21
 @LastEditors: hua
-@LastEditTime: 2019-11-21 16:43:43
+@LastEditTime: 2019-12-03 15:12:23
 '''
 import time, math
 from sqlalchemy_serializer import SerializerMixin
@@ -173,9 +173,7 @@ class Room(Base, HtRoom, SerializerMixin):
             last_msg           = message['last_msg'],
             type               = 0,
             name               = '',
-            user_id            = message['user_id'],
-            updated_at         = int(time.time()),
-            created_at         = int(time.time())
+            user_id            = message['user_id']
         )
         #实例化后orm添加
         status = room_data.add(room_data)
@@ -185,10 +183,10 @@ class Room(Base, HtRoom, SerializerMixin):
 
     #更新房间记录
     @staticmethod
-    def updateLastMsgRoom(room_uuid, data, created_at):
+    def updateLastMsgRoom(room_uuid, data, updated_at):
         dBSession.query(Room).filter(Room.room_uuid == room_uuid).update({
             'last_msg': json.dumps(data),
-            'updated_at': created_at,
+            'updated_at': updated_at,
         })
         return True
     

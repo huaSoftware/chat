@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2019-11-21 10:49:50
+ * @LastEditTime: 2019-12-07 09:31:41
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -90,7 +90,7 @@
     <!-- 表情 -->
     <icons @recInsertIcon="insertIcon" v-if="iconsShow"/>
     <!-- 功能栏 -->
-    <def v-show="defsShow"/>
+    <def v-show="defsShow"/> 
     <!-- 裁剪图 -->
     <cropperBox v-if="cropperShow" :reqImgData="reqImgData" @recReqImgData="recReqImgData"  @recCropperShow="recCropperShow"/>   
   </div>
@@ -115,7 +115,6 @@ import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from 'axios'
-import VConsole from 'vconsole'
 export default {
   components: {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
@@ -191,7 +190,9 @@ export default {
       this.clientHeight = document.body.clientHeight
       this.mescrollDom = document.getElementsByClassName('mescroll')[0]
       this.isPartChatPage = false
-      new VConsole()
+      if(window.plus){
+        window.r = plus.audio.getRecorder();
+      }
       new Swiper(".swiper-cont", {
         loop: false,
         autoplay: false, //可选选项，自动滑动
@@ -203,12 +204,6 @@ export default {
         observer: true,
         observeParents: true
       });
-      if(window.plus){
-        document.addEventListener("plusready", onPlusReady(), false);
-        function onPlusReady() {
-          window.r = plus.audio.getRecorder();
-        }
-      }
       this.updateMsgList([]);
       this.handleHeightToBottom()
       window.onresize = () =>{
@@ -398,6 +393,7 @@ export default {
       }else{
         this.recordShow = value
       }
+    
     },
     closeDefIconsShow() {
       this.iconsShow = false;this.defsShow = false;this.recordShow = false;
@@ -469,17 +465,23 @@ export default {
       this.iconsShow = false
       this.recordingShow = true
       this.touched = true
-      if ( typeof window.r == 'undefined' ) {
+      if(window.plus){
+        if ( window.r == null ) {
           this.recordingShow = false
           this.touched = false
-          alert( "Device not ready!" );
-          return; 
+          return;
+        }
+        window.r.stop();
+        window.r.record({filename:"_doc/audio/"}, (p)=> {
+          console.log('录音完成:' + p)
+          //上传
+          this.Audio2dataURL(p)
+        },(e)=>{
+          console.log("录音出错",e)
+          this.recordingShow = false
+          this.touched = false
+        } );
       } 
-      window.r.record( {filename:"_doc/audio/"}, (p)=> {
-        console.log('录音完成:' + p)
-        //上传
-        this.Audio2dataURL(p)
-      })
     },
     /**
     * 录音语音文件转base64字符串
@@ -589,7 +591,13 @@ export default {
     //监听聊天数据变动
     content: "handleSendShow",
     data: "handleSendShow",
-    msgList: {handler(){this.handleMsgListToBottom(100)}}
+    msgList: {handler(){this.handleMsgListToBottom(100)}},
+    'recordShow'(newVal,oldVal){
+      console.log('录音显示',newVal)
+      if(!newVal){
+        window.r.stop();
+      }
+    }
   }
 };
 </script>

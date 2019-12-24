@@ -16,7 +16,8 @@ export default {
         newFriendAlertNumber:0,//新好友提醒           
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
-        groupRoomList: [] //群聊房间数据
+        groupRoomList: [], //群聊房间数据
+        isPaused:false
 
     },
     getters:{
@@ -50,6 +51,9 @@ export default {
         newFriendAlertNumber(state){
             return state.newFriendAlertNumber
         },
+        isPaused(state){
+        return state.isPaused
+        }
     },
 
     actions: {
@@ -77,7 +81,8 @@ export default {
         },
         updateNewFriendAlertNumber({commit}, newFriendAlertNumber){
             commit("updateNewFriendAlertNumber", newFriendAlertNumber);
-        }
+        },
+        
     },
 
     mutations: {
@@ -145,7 +150,9 @@ export default {
                             room_uuid:item.room_uuid
                         }
                         addLocalRoomMsg(msgData)      
-                    }/* else if(item.save_action == 1){
+                    }
+                    
+                    /* else if(item.save_action == 1){
                         let msgData = {
                             msg:data['msg'],
                             created_at:item.created_at,
@@ -182,6 +189,9 @@ export default {
         },
         updateNewFriendAlertNumber(state, newFriendAlertNumber){
             state.newFriendAlertNumber = newFriendAlertNumber
+        },
+        updateIsPaused(state, data){
+            state.isPaused = data
         }
     }
 }
