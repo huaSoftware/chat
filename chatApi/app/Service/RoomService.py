@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2019-12-28 10:00:49
+@LastEditTime : 2019-12-28 16:06:18
 '''
 from app import CONST
 from app import socketio
@@ -55,7 +55,7 @@ class RoomService:
                 UserRoomRelation.room_uuid == params['room_uuid'],
                 UserRoomRelation.user_id == user_info['data']['id']
             }
-            data = UserRoomRelation().delete(filters)
+            UserRoomRelation().delete(filters)
             filters = {
                 Room.room_uuid == params['room_uuid']
             }
@@ -67,7 +67,7 @@ class RoomService:
             for item in user_room_relation_data:
                 roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
-        return  Utils.formatBody()
+        return  Utils.formatBody({},msg='删除成功')
     
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -104,7 +104,7 @@ class RoomService:
             params['msg'] = json.dumps(params['msg'])
             del params['Authorization']
             Msg().add(params)
-        return Utils.formatBody()
+        return Utils.formatBody({},msg='添加成功')
     
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -142,7 +142,7 @@ class RoomService:
             Msg.user_id == user_info['data']['id']
         }
         Msg().edit({'send_status': params['send_status']}, filters)
-        return Utils.formatBody()
+        return Utils.formatBody({}, msg='更新成功')
 
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -161,7 +161,7 @@ class RoomService:
             Msg.user_id == params['user_id']
         }
         Msg().edit({'read_status': 1}, filters)
-        return Utils.formatBody()
+        return Utils.formatBody({}, msg='更新成功')
 
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -183,4 +183,4 @@ class RoomService:
             x['msg'] = json.loads(x['msg'])
             return x
         data['list'] = list(map(format, data['list'])) """
-        return Utils.formatBody(data)
+        return Utils.formatBody(data, msg='获取成功')

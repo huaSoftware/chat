@@ -3,7 +3,7 @@
 @Date: 2019-09-29 11:30:28
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2019-12-26 17:20:04
+@LastEditTime : 2019-12-28 16:03:19
 '''
 from app import CONST
 from app import cache
@@ -95,7 +95,7 @@ class AddressBookService:
         """ 获取添加好友缓存 """
         data = cache.get('@broadcast.beg'+str(user_info['data']['id']))
         if data is None:
-            return Utils.formatBody()
+            return Utils.formatBody({},msg='获取成功')
         else:
             cache.delete('@broadcast.beg'+str(user_info['data']['id']))
             return Utils.formatBody(data)
@@ -104,4 +104,4 @@ class AddressBookService:
     @UsersAuthJWT.socketAuth
     def begCacheDel(params, user_info):
         cache.delete('@broadcast.beg'+str(user_info['data']['id']))
-        return Utils.formatBody()
+        return Utils.formatBody({},msg='删除成功')
