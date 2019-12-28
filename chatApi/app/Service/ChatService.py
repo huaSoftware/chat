@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-01 11:49:33
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:49:13
+@LastEditors  : hua
+@LastEditTime : 2019-12-27 17:12:13
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -29,7 +29,8 @@ class ChatService():
             'type':  Type,
             'head_img':user_data['head_img'],
             'room_uuid': room_uuid,
-            'created_at': created_at
+            'created_at': created_at,
+            'read_status':0
         }
         if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
@@ -150,3 +151,16 @@ class ChatService():
         Room().addByClass(room_data)
         return {'room_uuid' : room_uuid,'name':name.strip(',')}
     
+    @staticmethod
+    @transaction
+    def input(params, user_info):
+        filters = {
+            AddressBook.focused_user_id == user_info['data']['id'],
+            AddressBook.room_uuid == params['room_uuid']
+        }
+        AddressBook().edit({'is_input':1}, filters)
+        #发送消息
+        data = AddressBook().getOne(filters)
+        data['even'] = params['even']
+        emit('input',  Utils.formatBody(data), room='@broadcast.'+str(data['be_focused_user_id']))
+        return  Utils.formatBody({'action':"input","data": data})

@@ -1,8 +1,8 @@
 /*
  * @Author: hua
  * @Date: 2019-04-26 20:00:00
- * @LastEditors: hua
- * @LastEditTime: 2019-05-29 20:03:11
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-26 13:20:19
  */
 module.exports = {
   NODE_ENV: '"production"',

@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-09-29 12:03:29
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-10 15:53:38
+@LastEditors  : hua
+@LastEditTime : 2019-12-28 10:00:49
 '''
 from app import CONST
 from app import socketio
@@ -142,6 +142,25 @@ class RoomService:
             Msg.user_id == user_info['data']['id']
         }
         Msg().edit({'send_status': params['send_status']}, filters)
+        return Utils.formatBody()
+
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def updateReadStatusCloudRoomMsgByRoomIdAndUserId(params, user_info):
+        """ 
+            更新聊天数据
+            :param dict user_info
+            :param dict params
+            :return dict
+        """
+        filters = {
+            Msg.room_uuid == params['room_uuid'],
+            Msg.user_id == params['user_id']
+        }
+        Msg().edit({'read_status': 1}, filters)
         return Utils.formatBody()
 
     @staticmethod

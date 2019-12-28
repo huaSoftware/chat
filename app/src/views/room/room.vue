@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
- * @LastEditors: hua
- * @LastEditTime: 2019-12-07 09:31:41
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-28 09:45:36
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -15,6 +15,7 @@
         </div>
         <ul>
           <li v-for="(key, index) in msgList" :key="index">
+          <div class="format_time" v-if="index>0 && key.created_at> parseInt(msgList[index-1].created_at)+60">{{formatTime(key.created_at)}}</div>
             <div class="chat-item" v-if="key.user_id == userInfo.id">
               <div class="mychat">
                 <vImg :imgUrl="key.head_img"  class="img" />
@@ -40,6 +41,11 @@
                   class="send_status color_danger"
                 >
                   <yd-icon name="error"></yd-icon>
+                </span>
+                 <!-- 消息读取状态键盘输入时更新-->
+                <span class="read_status" v-if="key.send_status == SUCCESS ">
+                  <yd-badge v-if="key.read_status == 0">未读</yd-badge>
+                  <yd-badge v-else type="primary">已读</yd-badge>
                 </span>
               </div>
             </div>
@@ -83,6 +89,8 @@
       @handleFileOnChange="handleFileOnChange"
       @handleContent="handleContent"
       @handleStartRecord="handleStartRecord"
+      @onFocus="handleOnFocus"
+      @onBlur="handleOnblur"
       :recordShow="recordShow"
       :content="content"
       :touched="touched"
@@ -138,6 +146,7 @@ export default {
       cropperShow: false,
       lockDown: false,
       moreInfoShow: false,
+      onFocusLock:false,
       clientHeight:0,
       data: [],
       reqImgData: {
@@ -230,6 +239,16 @@ export default {
           //}, 200);
         }
       }; 
+    },
+    handleOnFocus(){
+      if(!this.onFocusLock){
+        this.onFocusLock = true
+        send("input", { room_uuid: this.currentRoomUuid, even:'focus' }, 'broadcast');
+      }
+    },
+    handleOnblur(){
+      this.onFocusLock = false
+      send("input", { room_uuid: this.currentRoomUuid, even:'blur' }, 'broadcast');
     },
     handleHeightToBottom(){
       if(this.isPartChatPage == false){
@@ -548,6 +567,9 @@ export default {
     },
     recCropperShow(value){
       this.cropperShow = value;
+    },
+    formatTime(value){
+      return utils.time.formatDate(value, 'yyyy-MM-dd hh:mm:ss')
     },
     formatFileName(msg){
       try{

@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-08-15 21:16:40
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-12-05 15:39:32
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-27 13:53:43
  -->
 <template>
     <div class="input_wrapper">
@@ -13,7 +13,7 @@
       <!-- 语音输入 -->
       <div :class="touched? 'record touched':'record'" v-show="recordShow" @touchstart="startRecord" @touchend="stopRecord">按住说话</div>
       <!-- 输入栏 -->
-      <vEditDiv v-show="!recordShow" @onFocus="onFocus" @click.native="closeDefIconsShow" class="input"  id="edit" placeholder="请输入文字"  v-model="innerText"></vEditDiv>
+      <vEditDiv v-show="!recordShow" @onFocus="onFocus" @onBlur="onBlur" @click.native="closeDefIconsShow" class="input"  id="edit" placeholder="请输入文字"  v-model="innerText"></vEditDiv>
       <div class="def" @click="handleIconsShow">
         <yd-icon slot="icon" name="uniE905" custom></yd-icon>
       </div>
@@ -74,6 +74,9 @@ export default {
     methods:{
         onFocus(){
             this.$emit('onFocus');
+        },
+        onBlur(){
+            this.$emit('onBlur');
         },
         handleRecordShow(){
             this.$emit('handleRecordShow', '')

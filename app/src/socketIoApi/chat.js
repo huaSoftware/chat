@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-06 20:54:49
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-27 16:53:46
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
@@ -20,6 +20,7 @@ export function chatSend(data){
     let userInfo = storage.get('user')
     let msgInfo = data.data
     msgInfo['send_status'] = 0
+    msgInfo['read_status'] = 0
     msgInfo['name'] = userInfo['nick_name']
     msgInfo['user_id'] =  userInfo['id']
     msgInfo['head_img'] = userInfo['head_img']

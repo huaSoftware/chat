@@ -3,15 +3,15 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-24 11:21:26
+ * @LastEditTime : 2019-12-28 11:26:31
  */
 
 import store from '../store'
 import router from '../router'
 import utils from '@/utils/utils'
 import { Confirm, Loading, Toast,Alert } from 'vue-ydui/dist/lib.rem/dialog'
-import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg } from "@/utils/indexedDB"
-import { updateCloudRoomMsg} from "@/socketioApi/room"
+import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg, updateReadStatusLocalRoomMsgByRoomIdAndUserId } from "@/utils/indexedDB"
+import { updateCloudRoomMsg, updateReadStatusCloudRoomMsgByRoomIdAndUserId } from "@/socketioApi/room"
 import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
 
 /* 注册socketio */
@@ -82,6 +82,28 @@ export function setupListen(){
 			window.apiSocket.on('send', (data) => {
 				//逻辑处理
 			});
+			window.apiSocket.on('input', (data) => {
+				//用户输入时逻辑处理
+				response(data).then(res=>{
+					let data = res.data
+					if(data.even =='focus' && store.getters.currentRoomType == 0 && store.getters.currentRoomUuid == data.room_uuid && data.users.id != store.getters.userInfo.id){
+						document.getElementsByClassName('yd-navbar-center-title')[0].innerHTML = `${data.users.nick_name}正在输入...`
+						//更新房间对方信息是已读
+						if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
+							updateReadStatusLocalRoomMsgByRoomIdAndUserId(data.room_uuid, data.be_users.id)
+							modifyMsgReadStatus()
+						}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
+							//updateCloudRoomMsg(reqData)
+							console.log("432432",data)
+							updateReadStatusCloudRoomMsgByRoomIdAndUserId(data.room_uuid, data.be_users.id)
+							modifyMsgReadStatus()
+						}
+
+					}else{
+						document.getElementsByClassName('yd-navbar-center-title')[0].innerHTML = `${data.users.nick_name}`
+					}
+				})
+			});
 			///监听回复的消息
 			window.apiSocket.on('chat', (data) => {
 				// 回复根据标志分类todo
@@ -122,7 +144,6 @@ export function setupListen(){
 					}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
 						updateCloudRoomMsg(reqData)
 					}
-		
 				})
 			});
 			//监听
@@ -254,6 +275,7 @@ export function setupListen(){
 
 /* 注销socketio */
 export function setDown(){
+	clearTimeout(window.timeOut)
 	if(typeof window.apiSocket == 'undefined'){
 		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/api');
 	}
@@ -420,12 +442,28 @@ export function  send(method, data, type = 'room') {
 						}})
 					}
 				}
+				if(method == 'input'){
+					/* Loading.open(`输入监听,尝试第${window.tryBroadcastLinkCount+1}次退出中...`) */
+					if(window.tryBroadcastLinkCount<3){
+						/* send('input', {}, 'broadcast') */
+						window.tryBroadcastLinkCount++
+					}else{
+						window.tryBroadcastLinkCount = 0
+						clearTimeout(window.broadcastTimeOut)
+						Loading.close()
+						Alert({'mes':'输入监听连接已断开',
+						callback: () => {
+							window.location.reload()
+						}})
+					}
+				}
 			},5500)
 			data['type'] = store.getters.NOTIFY
 			let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 			console.log("广播："+method, "秘钥："+encryptStr)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				response(recv).then(res=>{
+					console.log('14141124',res)
 					if(res.data.action == 'leave'){	
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
@@ -433,6 +471,18 @@ export function  send(method, data, type = 'room') {
 					if(res.data.action == 'join'){
 						clearTimeout(window.broadcastTimeOut)	
 						Loading.close()			
+					}
+					if(res.data.action == 'input'){
+						clearTimeout(window.broadcastTimeOut)	
+						Loading.close()		
+						//to be
+						/* if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
+							updateReadStatusLocalRoomMsgByRoomIdAndUserId(res.data.room_uuid, res.data.users.id)
+							modifyMsgReadStatus()
+						}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
+							updateReadStatusCloudRoomMsgByRoomIdAndUserId(res.data.room_uuid, res.data.users.id)
+							modifyMsgReadStatus()
+						}	 */
 					}
 				}).catch(e=>{
 					//服务器出错
@@ -486,7 +536,7 @@ export function  send(method, data, type = 'room') {
 			var res = new Promise((resolve, reject)=>{
 				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 				//设置超时时间5s
-				let timeOut = setTimeout(()=>{
+				window.timeOut = setTimeout(()=>{
 					Alert({
 						'mes':'在线检测已断开链接，请重启',
 						callback: () => {
@@ -495,7 +545,7 @@ export function  send(method, data, type = 'room') {
 					})
 				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
-					clearTimeout(timeOut)
+					clearTimeout(window.timeOut)
 					console.log(res)
 					if (res.error_code === 200) {
 						resolve(res)
@@ -510,6 +560,7 @@ export function  send(method, data, type = 'room') {
 					if (res.error_code === 401 || res.error_code === 10001) {
 						clearTimeout(window.sendTimeOut)
 						clearTimeout(window.broadcastTimeOut)
+						clearInterval(window.loginConnectInterval)
 						Loading.close()
 						Toast({mes: res.msg,icon: 'error'})
 						// 这里需要删除token，不然携带错误token无法去登陆
@@ -603,6 +654,20 @@ export function modifyMsgStatus(data, status){
 	msgList[index]['send_status'] = status
 	store.dispatch('updateMsgList', msgList)
 	return index
+}
+
+/**
+ * 修改读取信息状态
+ * @param  object data
+ * @param  int status
+ * return index
+ */
+export function modifyMsgReadStatus(){
+	let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
+	msgList.forEach((item, index)=>{
+		item['read_status'] = 1
+	})
+	store.dispatch('updateMsgList', msgList)
 }
 
 export function formatLastMsg(last_msg){

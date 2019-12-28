@@ -101,6 +101,12 @@ ul {
     flex-direction: column;
     width: 100%;
 }
+.format_time{
+    widows: 100%;
+    text-align: center;
+    font-size:14px;
+    height:30px;
+}
 .mscroll-container ul li {
     padding: 0;
     margin-top: 20px;
@@ -371,4 +377,15 @@ li {
 
     100%{-webkit-transform:rotate(360deg);}
 
+}
+.read_status{
+    float: right;
+    max-width: 60%;
+    border-radius: 8px;
+    font-size: 14px;
+    word-wrap: break-word;
+    position: relative;
+    top: 3px;
+    min-height: 21px;
+    padding:6px;
 }

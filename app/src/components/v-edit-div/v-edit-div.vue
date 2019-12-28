@@ -2,15 +2,15 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-01 16:07:56
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-27 13:57:16
  -->
 <template>
     <div class="edit-div"
         v-html="innerText"
         :contenteditable="canEdit"
         @focus="onFocus"
-        @blur="isLocked = false"
+        @blur="onBlur"
         @input="changeText"
         >
     </div>
@@ -57,7 +57,13 @@
             },
             onFocus(){
                 this.isLocked = true
+                console.log('onFocus')
                 this.$emit('onFocus');
+            },
+            onBlur(){
+                this.isLocked = false
+                console.log('onBlur')
+                this.$emit('onBlur');
             }
         }
     }

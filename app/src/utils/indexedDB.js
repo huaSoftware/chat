@@ -117,11 +117,12 @@ export function addLocalRoomMsg(value) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, read_status, uuid" });
     //事务读写
     if(value['msg'] == ''){
         return true
     }
+    value['read_status'] = 0
     db.transaction('rw', db.roomMsg,  async() => {
         value['uuid']= value['room_uuid'] + value['user_id'] + value['created_at']
         if (await db.roomMsg.where({'uuid': value['uuid']}).count() === 0) {
@@ -142,7 +143,7 @@ export function getLocalRoomMsg(room_uuid, page, per_page) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, read_status, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
         let data = {}
@@ -174,13 +175,44 @@ export function updateLocalRoomMsg(data) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, read_status, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
 
         // Make sure we have something in DB:
         //更新状态
+        data['read_status'] = 0
         let updated = db.roomMsg.where({ "uuid":data['room_uuid']+data['user_id']+data['created_at']}).modify({send_status: data['send_status']});
+        if (updated){
+            let data =   await db.roomMsg.toArray()
+            return data   
+        }
+        return Promise.reject('update error') 
+
+    }).catch(e => {
+        console.log(e.stack || e);
+        return false
+    });
+}
+
+/* 
+ *更新读取状态聊天记录
+ *@param room_uuid
+ *@param user_id
+ *return bool
+ */
+export function updateReadStatusLocalRoomMsgByRoomIdAndUserId(room_uuid, user_id) {
+    //申明数据库
+    const db = new Dexie("msg");
+    //定义字段
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, read_status, uuid" });
+    //事务读写
+    return db.transaction('rw', db.roomMsg, async() => {
+
+        // Make sure we have something in DB:
+        //更新状态
+        //let updated = db.roomMsg.where({ "room_uuid":room_uuid, 'user_id':user_id}).offset(0).limit(10).reverse().sortBy('created_at').modify({read_status: 1});
+        let updated = db.roomMsg.where({ "room_uuid":room_uuid, 'user_id':user_id}).modify({read_status: 1});
         if (updated){
             let data =   await db.roomMsg.toArray()
             return data   
@@ -201,7 +233,7 @@ export function delRoomMsg(room_uuid) {
     //申明数据库
     const db = new Dexie("msg");
     //定义字段
-    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, uuid" });
+    db.version(1).stores({ roomMsg: "++id, name, msg, room_uuid, user_id, type, head_img, created_at, send_status, save_action, read_status, uuid" });
     //事务读写
     return db.transaction('rw', db.roomMsg, async() => {
         // Make sure we have something in DB:

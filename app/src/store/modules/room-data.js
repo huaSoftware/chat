@@ -4,7 +4,7 @@
  * 聊天数据临时管理
  */
 import { addLocalRoomMsg } from "@/utils/indexedDB"
-import {addCloudRoomMsg } from "@/socketioApi/room"
+
 export default {
     state: {
         currentRoomUuid: '',//当前房间号
@@ -42,6 +42,9 @@ export default {
         currentRoomSaveAction(state){
             return state.currentRoomSaveAction
         },
+        currentRoomInput(state){
+            return state.currentRoomInput
+        },
         msgAlertNumber(state){
             return state.msgAlertNumber
         },
@@ -77,7 +80,7 @@ export default {
             commit("updateCurrentRoomType", currentRoomType);
         },
         updateCurrentRoomSaveAction({commit}, currentRoomSaveAction){
-            commit("updateCurrentRoomType", currentRoomSaveAction);
+            commit("currentRoomSaveAction", currentRoomSaveAction);
         },
         updateNewFriendAlertNumber({commit}, newFriendAlertNumber){
             commit("updateNewFriendAlertNumber", newFriendAlertNumber);

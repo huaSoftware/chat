@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-29 13:53:24
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-07 11:19:16
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-28 09:55:08
  */
 import {send} from '@/utils/socketio'
 
@@ -64,6 +64,15 @@ export function updateCloudRoomMsg(data){
         'c':'RoomService',
         'a':'updateMsg',
         'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+export function updateReadStatusCloudRoomMsgByRoomIdAndUserId(room_uuid, user_id){
+    let reqData = {
+        'c':'RoomService',
+        'a':'updateReadStatusCloudRoomMsgByRoomIdAndUserId',
+        'data':{room_uuid:room_uuid, user_id:user_id}
     }
     return send('send', reqData, 'api')
 }

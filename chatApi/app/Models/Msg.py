@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-07-25 14:22:49
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-11-21 16:45:32
+@LastEditors  : hua
+@LastEditTime : 2019-12-28 09:58:23
 '''
 '''
 @Author: hua
@@ -120,6 +120,16 @@ class Msg(Base, HtMsg, SerializerMixin):
     """
     def edit(self, data, filters):
         dBSession.query(Msg).filter(*filters).update(data, synchronize_session=False)
+        return True
+    
+    """
+        修改前十条数据
+        @param dict data 数据
+        @param set filters 条件
+        @return bool
+    """
+    def editByLimit(self, data, filters, limit):
+        dBSession.query(Msg).filter(*filters).offset(0).limit(limit).order_by(Msg.created_at.desc()).update(data, synchronize_session=False)
         return True
     
     """

@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors  : hua
-@LastEditTime : 2019-12-24 13:15:01
+@LastEditTime : 2019-12-27 14:16:57
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -64,7 +64,14 @@ def send(message):
     else:
         return getattr(globals()[message['c']],message['a'])(message)
 
-    
+''' 输入事件 '''
+@socketio.on('input', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.socketAuth
+def input(message, user_info):
+    return ChatService().input(message, user_info) # 客户端回调函数的参数
+
+
 """ 连接事件 """
 @socketio.on('connect', namespace='/api')
 def connect():

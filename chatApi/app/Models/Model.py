@@ -18,7 +18,8 @@ class HtAddressBook(Base):
     room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='房间唯一编号')
     save_action = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='保存方式')
     is_alert = Column(TINYINT(1), nullable=False, comment='是否提醒')
-    unread_number = Column(INTEGER(11), nullable=False, comment='未读取信息次数')
+    unread_number = Column(INTEGER(11), nullable=False, server_default=text("'0'"), comment='未读取信息次数')
+    is_input = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='是否在输入')
 
 
 class HtAdmin(Base):
@@ -57,7 +58,7 @@ class HtLog(Base):
 
     id = Column(INTEGER(11), primary_key=True, comment='编号')
     type = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='类型，1是普通接口日志')
-    level = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='报错等级，0是normal,1是debug，2是warn，3是error')
+    level = Column(TINYINT(2), nullable=False, server_default=text("'1'"), comment='报错等级，1是debug，2是warn，3是error')
     data = Column(TEXT, nullable=False, comment='内容')
     create_time = Column(INTEGER(11), nullable=False, comment='创建时间')
 
@@ -73,7 +74,8 @@ class HtMsg(Base):
     type = Column(TINYINT(2), nullable=False, comment='类型')
     head_img = Column(VARCHAR(255), nullable=False, server_default=text("''"), comment='头像')
     created_at = Column(BIGINT(14), nullable=False, comment='创建时间')
-    send_status = Column(TINYINT(2), nullable=False, comment='发送状态')
+    send_status = Column(TINYINT(1), nullable=False, comment='发送状态')
+    read_status = Column(TINYINT(1), nullable=False, server_default=text("'0'"), comment='读取状态')
 
 
 class HtRoom(Base):
