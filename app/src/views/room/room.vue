@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 09:45:36
+ * @LastEditTime : 2019-12-28 15:22:00
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -230,13 +230,11 @@ export default {
             this.handleSendShow();
           //}
         }else{
-          //setTimeout(() => {
-            if(this.iconsShow !==true && this.defsShow !==true){
-              this.isPartChatPage = false
-            }
-            this.handleHeightToBottom()
-            this.handleSendShow();
-          //}, 200);
+          if(this.iconsShow !==true && this.defsShow !==true){
+            this.isPartChatPage = false
+          }
+          this.handleHeightToBottom()
+          this.handleSendShow();
         }
       }; 
     },
@@ -512,17 +510,12 @@ export default {
           entry.file(function(file){
               var reader = new plus.io.FileReader();
               reader.onloadend = function (e) {
-                //console.log(e.target.result);
                 uploadFile({dataUrl:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
                   that.recordingShow = false
                   var BenzAMRRecorder = require('benz-amr-recorder');
                   var amr = new BenzAMRRecorder();
                   let url = process.env.VUE_APP_CLIENT_API+ res.data.path
-                  console.log(url)
                   amr.initWithUrl(url).then(function() {
-                    //获取录音长度
-                    //amr.getDuration(); 
-                    console.log('录音路径1'+url)
                     chatSend({
                       data: {
                         msg:JSON.stringify({url:url,duration: amr.getDuration(),status:false}),
@@ -545,7 +538,6 @@ export default {
       let that = this;
       let data = JSON.parse(JSON.stringify(rawData))
       let msgList = JSON.parse(JSON.stringify(this.msgList))
-       console.log(data)
       data['status']=true
       msgList[index]['msg'] = JSON.stringify(data)
       this.$store.dispatch('updateMsgList', msgList)
@@ -615,7 +607,6 @@ export default {
     data: "handleSendShow",
     msgList: {handler(){this.handleMsgListToBottom(100)}},
     'recordShow'(newVal,oldVal){
-      console.log('录音显示',newVal)
       if(!newVal){
         window.r.stop();
       }

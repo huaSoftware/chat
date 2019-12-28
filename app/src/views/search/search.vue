@@ -2,12 +2,12 @@
  * @Author: hua
  * @Date: 2019-02-13 16:35:24
  * @description: 搜索
- * @LastEditors: hua
- * @LastEditTime: 2019-06-17 15:08:06
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-28 15:48:52
  -->
 <template>
 <div class="search_content">
-    <yd-search :result="result" fullpage v-model="value2"  :on-submit="submitHandler"></yd-search>
+    <yd-search :result="result" fullpage v-model="value" :item-click="submitHandler" :on-submit="submitHandler"></yd-search>
     <article class="yd-list yd-list-theme4">
         <a href="javascript:;" class="yd-list-item" v-for="(item, index) in userList" :key="index">
             <div class="yd-list-img"><vImg :src="item.head_img"/></div>
@@ -35,7 +35,7 @@
     export default {
         data() {
             return {
-                value2: '',
+                value: '',
                 result: [],
                 userList: []
             }
@@ -59,6 +59,15 @@
             }
         },
         watch: {
+            value(newVal,oldVal){
+                search({keywords: newVal}).then(res=>{
+                    //console.log(res.data.userList)
+                    let list = res.data.userList
+                    list.forEach(element => {
+                        this.result.push(element.email)
+                    });
+                })
+            }
         }
     }
 </script>

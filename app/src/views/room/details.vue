@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-24 13:30:26
+ * @LastEditTime : 2019-12-28 15:26:29
  -->
 <template>
     <div class="room_details">
@@ -11,43 +11,43 @@
         <template v-if="isHide">
             <!-- 只显示摘要的画面 -->
             <div class="hideBg" >
-                <p class="summary">
+                <div class="summary">
                     <ul class="user_header_wrapper">
                         <li v-for="(item, index) in list" :key="index">
                             <vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"></vImg>
                             <span>{{item.users.nick_name}}</span>
                         </li>
                     </ul>
-            </p>
-            <div class="showBtn">
-                <!-- 绑定点击事件onShow，点击展开全文 -->
-                <a href="#" @click.stop.prevent="onShow">
-                展开查看全部&nbsp;
-                <!-- 向下的角箭头符号，用css画 -->
-                <span class="downArrow"></span>
-                </a>
-            </div>
+                </div>
+                <div class="showBtn">
+                    <!-- 绑定点击事件onShow，点击展开全文 -->
+                    <a href="#" @click.stop.prevent="onShow">
+                        展开查看全部&nbsp;
+                        <!-- 向下的角箭头符号，用css画 -->
+                        <span class="downArrow"></span>
+                    </a>
+                </div>
             </div>
         </template>
         <template v-else>
             <!-- 显示完整内容的画面 -->
             <div class="showBg">
-            <p>
-                <ul class="user_header_wrapper">
+                <div>
+                    <ul class="user_header_wrapper">
                         <li v-for="(item, index) in list" :key="index">
                             <vImg :imgUrl="item.users.head_img"></vImg>
                             <span>{{item.users.nick_name}}</span>
                         </li>
                     </ul>
-            </p>
-            <div class="hideBtn">
-                <!-- 绑定点击事件onHide，点击收起内容 -->
-                <a href="#" @click.stop.prevent="onHide">
-                收起&nbsp;
-                <!-- 向上的角箭头符号 -->
-                <span class="upArrow"></span>
-                </a>
-            </div>
+                </div>
+                <div class="hideBtn">
+                    <!-- 绑定点击事件onHide，点击收起内容 -->
+                    <a href="#" @click.stop.prevent="onHide">
+                        收起&nbsp;
+                        <!-- 向上的角箭头符号 -->
+                        <span class="upArrow"></span>
+                    </a>
+                </div>
             </div>
         </template>
         <!-- 房间名称 -->
@@ -178,27 +178,27 @@ export default {
                 title: '提示',
                 mes: '确认删除？',
                 opts: [
-                {
-                    txt: '取消',
-                    color: false,
-                    callback: () => {
-                    }
-                },
-                {
-                    txt: '确定',
-                    color: true,
-                    callback: () => {
-                         if(this.currentRoomSaveAction == 0){
-                            delRoomMsg(this.currentRoomUuid).then(res=>{
-                                Toast({'mes':'删除成功'})
-                            })
-                        }else if(this.currentRoomSaveAction == 1){
-                            roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
-                                Toast({'mes':'删除成功'})
-                            })
+                    {
+                        txt: '取消',
+                        color: false,
+                        callback: () => {
+                        }
+                    },
+                    {
+                        txt: '确定',
+                        color: true,
+                        callback: () => {
+                            if(this.currentRoomSaveAction == 0){
+                                delRoomMsg(this.currentRoomUuid).then(res=>{
+                                    Toast({'mes':'删除成功'})
+                                })
+                            }else if(this.currentRoomSaveAction == 1){
+                                roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                                    Toast({'mes':'删除成功'})
+                                })
+                            }
                         }
                     }
-                }
                 ]
             });
         }

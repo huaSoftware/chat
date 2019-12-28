@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 11:26:31
+ * @LastEditTime : 2019-12-28 15:19:16
  */
 
 import store from '../store'
@@ -122,14 +122,8 @@ export function setupListen(){
 						if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
 							console.log(msgList[index])
 							addLocalRoomMsg(msgList[index])
-						}/* else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
-							addCloudRoomMsg(msgList[index])
-						} */
-					}else{
-						//app消息推送，废弃，直接监听外部消息
-						/* if(window.plus && store.getters.isPaused){
-							plus.push.createMessage(data['msg'], "LocalMSG", {cover:false,title:data['name']});
-						} */
+						}
+					}else{	
 						msgList = msgList.concat(data)
 					}
 					store.dispatch('updateMsgList', msgList)
@@ -184,7 +178,6 @@ export function setupListen(){
 						addressBookBegCacheDel()
 						addAddressBookBeg(data['data'])
 						getAddressBookBeg().then(res=>{
-							console.log(res)
 							let newFriendAlertNumber = 0
 							res.forEach((item)=>{
 								if(item.status==0){
@@ -234,7 +227,6 @@ export function setupListen(){
 				response(data).then(res=>{
 					let data = res.data.list
 					if(data != null){
-						console.log(1111,res)
 						//app消息通知
 						if(window.plus && store.getters.isPaused && data[0].is_alert){
 							plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
@@ -443,9 +435,7 @@ export function  send(method, data, type = 'room') {
 					}
 				}
 				if(method == 'input'){
-					/* Loading.open(`输入监听,尝试第${window.tryBroadcastLinkCount+1}次退出中...`) */
 					if(window.tryBroadcastLinkCount<3){
-						/* send('input', {}, 'broadcast') */
 						window.tryBroadcastLinkCount++
 					}else{
 						window.tryBroadcastLinkCount = 0
@@ -463,7 +453,6 @@ export function  send(method, data, type = 'room') {
 			console.log("广播："+method, "秘钥："+encryptStr)
 			window.apiSocket.emit(method, encryptStr, (recv)=>{
 				response(recv).then(res=>{
-					console.log('14141124',res)
 					if(res.data.action == 'leave'){	
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
@@ -475,14 +464,6 @@ export function  send(method, data, type = 'room') {
 					if(res.data.action == 'input'){
 						clearTimeout(window.broadcastTimeOut)	
 						Loading.close()		
-						//to be
-						/* if(store.getters.currentRoomSaveAction == store.getters.LOCAL){
-							updateReadStatusLocalRoomMsgByRoomIdAndUserId(res.data.room_uuid, res.data.users.id)
-							modifyMsgReadStatus()
-						}else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
-							updateReadStatusCloudRoomMsgByRoomIdAndUserId(res.data.room_uuid, res.data.users.id)
-							modifyMsgReadStatus()
-						}	 */
 					}
 				}).catch(e=>{
 					//服务器出错
