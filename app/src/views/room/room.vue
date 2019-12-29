@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 15:22:00
+ * @LastEditTime : 2019-12-29 14:21:16
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -43,7 +43,7 @@
                   <yd-icon name="error"></yd-icon>
                 </span>
                  <!-- 消息读取状态键盘输入时更新-->
-                <span class="read_status" v-if="key.send_status == SUCCESS ">
+                <span class="read_status" v-if="key.send_status == SUCCESS && currentRoomType == 0">
                   <yd-badge v-if="key.read_status == 0">未读</yd-badge>
                   <yd-badge v-else type="primary">已读</yd-badge>
                 </span>
@@ -128,7 +128,7 @@ export default {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
   },
   computed: {
-    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "userInfo", "htmlFontSize", "currentRoomSaveAction","RECORD","TEXT","RESEND","IMG","FILE","LOADING","SUCCESS","FAIL"])
+    ...mapGetters(["msgList", "currentRoomUuid", "currentRoomName", "currentRoomType","userInfo", "htmlFontSize", "currentRoomSaveAction","RECORD","TEXT","RESEND","IMG","FILE","LOADING","SUCCESS","FAIL"])
   },
   data() {
     return {
