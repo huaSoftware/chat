@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-10-12 17:11:53
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-16 09:22:25
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-30 11:17:47
  -->
 <template>
   <div>
@@ -16,8 +16,8 @@
     >
       <div  :class="homeActive === true ? 'on homeCon bg-color-red' : 'openHomeCon bg-color-red'">
         <img style="width:70%;"  @click="handleOpenQQ" :src="require('@/assets/img/qq.png')"/>
-        <img  style="margin-top: 0.4rem;width:70%;"  v-if="!isFull" @click="handleFull" :src="require('@/assets/img/full.png')"/>
-        <img  style="margin-top: 0.4rem;width:70%;"  v-if="isFull" @click="handleFull" :src="require('@/assets/img/shrink.png')"/>
+        <img  style="margin-top: 0.4rem;width:70%;"  v-if="!isFullscreen" @click="openFullscreen" :src="require('@/assets/img/full.png')"/>
+        <img  style="margin-top: 0.4rem;width:70%;"  v-if="isFullscreen" @click="exitFullScreen" :src="require('@/assets/img/shrink.png')"/>
       </div>
       <div :class="homeActive?'pictrue':'openPictrue'" @click="open">
         <img
@@ -40,8 +40,10 @@ export default {
     return {
       top: "",
       homeActive:false,
-      isFull:false
+      isFullscreen: false
     };
+  },
+  mounted(){
   },
   methods: {
     touchmove(event) {
@@ -61,9 +63,26 @@ export default {
         : this.$store.commit("OPEN_HOME"); */
      /*  screenfull.toggle() */
     },
-    handleFull(){
-      screenfull.toggle()
-      this.isFull=screenfull.isFullscreen
+    //打开全屏方法
+    openFullscreen() {
+        screenfull.toggle();
+        this.isFullscreen = true
+    },
+    //退出全屏方法
+    exitFullScreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExiFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+        this.isFullscreen = false
     },
     handleOpenQQ(){
         if(window.plus){

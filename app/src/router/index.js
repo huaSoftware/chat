@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-30 09:54:00
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
@@ -41,6 +48,13 @@ const router = new Router({
       name: 'search', // 给他个名字，后期路由传参用
       component: _import('search/search'), // 载入组件
       meta: { title: '添加好友', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home'} // 定义一些公共状态，你喜欢就好
+    },
+    //错误页面
+    {
+      path: '/connectLose',
+      name: 'connectLose',
+      component: _import('error/connectLose'),
+      meta: { title: '链接丢失', isShowHead: false, isShowFoot: false, isShowBack: false, backPath:'home'}
     }
   ]
 })

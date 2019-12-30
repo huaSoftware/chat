@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 15:19:16
+ * @LastEditTime : 2019-12-30 10:28:26
  */
 
 import store from '../store'
@@ -52,11 +52,15 @@ export function setupListen(){
 		window.apiSocket.on('error', (data) => {
 			//逻辑处理
 			console.log("错误发生，并且无法被其他事件类型所处理")
-			Alert({
+			/* Alert({
 				'mes':'链接已经断开',
 				callback: () => {
 					window.location.reload()
 				}
+			}) */
+			router.push({
+				name: 'connectLose',
+				query: {text:"链接已经断开"}
 			})
 		});
 		window.apiSocket.on('reconnect', (data) => {
@@ -315,10 +319,14 @@ export function  send(method, data, type = 'room') {
 						window.tryRoomLinkCount = 0
 						clearTimeout(window.sendTimeOut)
 						Loading.close()
-						Alert({'mes':'房间连接已断开',
+						/* Alert({'mes':'房间连接已断开',
 							callback: () => {
 								window.location.reload()
-						}})
+						}}) */
+						router.push({
+							name: 'connectLose',
+							query: {text:"房间连接已断开"}
+						})
 					}
 				}
 				if(method == 'leave'){
@@ -332,9 +340,13 @@ export function  send(method, data, type = 'room') {
 						window.tryRoomLinkCount = 0
 						clearTimeout(window.sendTimeOut)
 						Loading.close()
-						Alert({'mes':'房间连接已断开', callback: () => {
+						/* Alert({'mes':'房间连接已断开', callback: () => {
 							window.location.reload()
-						}})
+						}}) */
+						router.push({
+							name: 'connectLose',
+							query: {text:"房间连接已断开"}
+						})
 					}
 				}
 				if(method == 'chat'){
@@ -413,10 +425,14 @@ export function  send(method, data, type = 'room') {
 						window.tryBroadcastLinkCount = 0
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
-						Alert({'mes':'广播连接已断开',
+						/* Alert({'mes':'广播连接已断开',
 						callback: () => {
 							window.location.reload()
-						}})
+						}}) */
+						router.push({
+							name: 'connectLose',
+							query: {text:"广播连接已断开"}
+						})
 					}
 				}
 				if(method == 'leave'){
@@ -428,10 +444,14 @@ export function  send(method, data, type = 'room') {
 						window.tryBroadcastLinkCount = 0
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
-						Alert({'mes':'广播连接已断开',
+						/* Alert({'mes':'广播连接已断开',
 						callback: () => {
 							window.location.reload()
-						}})
+						}}) */
+						router.push({
+							name: 'connectLose',
+							query: {text:"广播连接已断开"}
+						})
 					}
 				}
 				if(method == 'input'){
@@ -441,10 +461,14 @@ export function  send(method, data, type = 'room') {
 						window.tryBroadcastLinkCount = 0
 						clearTimeout(window.broadcastTimeOut)
 						Loading.close()
-						Alert({'mes':'输入监听连接已断开',
+						/* Alert({'mes':'输入监听连接已断开',
 						callback: () => {
 							window.location.reload()
-						}})
+						}}) */
+						router.push({
+							name: 'connectLose',
+							query: {text:"输入监听连接已断开"}
+						})
 					}
 				}
 			},5500)
@@ -475,11 +499,15 @@ export function  send(method, data, type = 'room') {
 				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 				//设置超时时间5s
 				let timeOut = setTimeout(()=>{
-					Alert({
+					/* Alert({
 						'mes':'接口已断开链接，请重启',
 						callback: () => {
 							window.location.reload()
 						}
+					}) */
+					router.push({
+						name: 'connectLose',
+						query: {text:"接口已断开链接，请重启"}
 					})
 				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
@@ -518,11 +546,16 @@ export function  send(method, data, type = 'room') {
 				let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
 				//设置超时时间5s
 				window.timeOut = setTimeout(()=>{
-					Alert({
+					clearInterval(window.loginConnectInterval)
+					/* Alert({
 						'mes':'在线检测已断开链接，请重启',
 						callback: () => {
 							window.location.reload()
 						}
+					}) */
+					router.push({
+						name: 'connectLose',
+						query: {text:"接口已断开链接，请重启"}
 					})
 				},5000)
 				window.apiSocket.emit(method, encryptStr, (res)=>{
