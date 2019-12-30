@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 17:20:34
  * @description: 我的页面
- * @LastEditors: hua
- * @LastEditTime: 2019-06-17 15:10:14
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-30 15:28:38
  -->
 
 <template>
@@ -16,7 +16,7 @@
             <div class="header_id">
                 账号：{{userInfo.email}}
             </div>
-            <span class="icon-custom-you icon_right"></span>
+            <!-- <span class="icon-custom-you icon_right"></span> -->
         </div>
         <CrossLine ></CrossLine>
         <!-- 功能区 -->

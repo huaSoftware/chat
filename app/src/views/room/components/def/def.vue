@@ -43,12 +43,12 @@ export default {
                 icon: "uniE904",
                 name: "文件",
                 router: "file"
-                },
+                }/* ,
                 {
                 icon: "dingw",
                 name: "位置",
                 router: "position"
-                }
+                } */
             ]
         }
     },
