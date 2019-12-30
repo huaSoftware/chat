@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-10 10:02:46
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-09 15:30:00
+@LastEditors  : hua
+@LastEditTime : 2019-12-30 13:29:34
 '''
 
 from app import app
@@ -34,6 +34,7 @@ def adminLogin(params):
     if captcha != inputCaptcha:
         return BaseController().error(msg='验证码错误')
     res = AdminService().login(params)
+    cache.delete('captcha')
     """ if res['code'] == CONST['CODE']['SUCCESS']['value']:
         return  BaseController.json(res) """
     return BaseController().json(res)

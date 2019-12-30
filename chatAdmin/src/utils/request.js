@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-06-10 16:27:01
+ * @description: 
+ * @LastEditors  : hua
+ * @LastEditTime : 2019-12-30 13:23:54
+ */
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
@@ -47,12 +54,6 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.error_code !== 200) {
-      Message({
-        message: res.msg || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-    
       if (res.error_code === 401 || res.error_code === 10001) {
         // to re-login
         MessageBox.confirm('凭证过期，重新登陆', {
@@ -64,7 +65,15 @@ service.interceptors.response.use(
             location.reload()
           })
         })
+        
+      }else{
+        Message({
+          message: res.msg || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
       }
+      
       return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       return res
