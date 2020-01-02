@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2019-12-28 16:06:18
+@LastEditTime : 2020-01-02 21:37:14
 '''
 from app import CONST
 from app import socketio
@@ -47,8 +47,8 @@ class RoomService:
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item['be_focused_user_id'])['list']
                 socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['be_focused_user_id']))
-                roomList = AddressBook.getRoomList(item['focused_user_id'])['list']
-                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['focused_user_id']))
+                """  roomList = AddressBook.getRoomList(item['focused_user_id'])['list']
+                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['focused_user_id'])) """
         else:
             user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(params['room_uuid']))
             filters = {

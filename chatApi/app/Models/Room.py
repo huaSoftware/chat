@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-26 09:54:21
-@LastEditors: hua
-@LastEditTime: 2019-12-03 15:12:23
+@LastEditors  : hua
+@LastEditTime : 2020-01-02 20:42:10
 '''
 import time, math
 from sqlalchemy_serializer import SerializerMixin
@@ -192,6 +192,5 @@ class Room(Base, HtRoom, SerializerMixin):
     
     #获取一周数据
     def getWeekData(self):
-        result = Utils.db_t_d(dBSession.execute('SELECT count(*) as n, (TO_DAYS( NOW( ) ) - TO_DAYS( from_unixtime(created_at))) as `d` FROM ht_room group by TO_DAYS( from_unixtime(created_at)) having d <= :val', {'val': 6}).fetchall())    
-        
+        result = [item['c'] for item in Utils.db_t_d(dBSession.execute("SELECT count(*) as c FROM ht_room WHERE YEARWEEK(date_format(from_unixtime(created_at),'%Y-%m-%d')) = YEARWEEK(now()) GROUP BY date_format(from_unixtime(created_at),'%Y-%m-%d');").fetchall())]    
         return result

@@ -3,9 +3,10 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 21:06:48
+ * @LastEditTime : 2020-01-02 21:44:37
  */
 import store from '../store'
+import router from '../router'
 import { Confirm, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import {send, response, modifyMsgStatus, modifyMsgReadStatus} from '@/utils/socketio'
 import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg, updateReadStatusLocalRoomMsgByRoomIdAndUserId } from "@/utils/indexedDB"
@@ -133,8 +134,11 @@ export default function setupAuthEvent(){
                 Toast({ mes: '发送成功，对方已收到申请' });
             }
             if(data['action'] == 'beg_add_success' ){
-                Toast({ mes: '对方已同意添加好友' });
-                updateAddressBookBeg(data['focused_user_id'], 1)
+                Toast({ mes: `${data['nick_name']}已同意添加好友` });
+                updateAddressBookBeg(data['focused_user_id'], 1);
+                router.push({
+                    name: 'home'
+                })
             }
             if(data['action'] == 'invite'){
                 console.log('延时推送任务咨询是否需要联系作者')
@@ -166,15 +170,20 @@ export default function setupAuthEvent(){
     });
     //监听单聊房间动态消息
     window.apiSocket.on('room', (data) => {
+        console.log(24234234,data)
         response(data).then(res=>{
-            let data = res.data.list
+            console.log(24234235,res)
+            let data = res.data
             if(data != null){
                 //app消息通知
                 if(window.plus && store.getters.isPaused && data[0].is_alert){
                     plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
                 } 
+                console.log(24234234,data)
                 store.dispatch('updateRoomList', data)
             }
+        }).catch(e=>{
+            console.log(24234234,e)
         })
     });
     //监听群聊房间动态消息

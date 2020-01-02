@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors: hua
-@LastEditTime: 2019-11-16 15:52:18
+@LastEditors  : hua
+@LastEditTime : 2020-01-02 20:42:21
 '''
 import math
 from sqlalchemy_serializer import SerializerMixin
@@ -166,5 +166,5 @@ class Admin(Base, HtAdmin, SerializerMixin):
     
     #获取一周数据
     def getWeekData(self):
-        result = Utils.db_t_d(dBSession.execute('SELECT count(*) as n, (TO_DAYS( NOW( ) ) - TO_DAYS( from_unixtime(add_time))) as `d` FROM ht_admin group by TO_DAYS( from_unixtime(add_time)) having d <= :val', {'val': 6}).fetchall())   
+        result = [item['c'] for item in Utils.db_t_d(dBSession.execute("SELECT count(*) as c FROM ht_admin WHERE YEARWEEK(date_format(from_unixtime(add_time),'%Y-%m-%d')) = YEARWEEK(now()) GROUP BY date_format(from_unixtime(add_time),'%Y-%m-%d');").fetchall())]   
         return result

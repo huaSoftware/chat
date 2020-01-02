@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-06-10 16:27:01
+ * @description: 
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-02 20:56:15
+ -->
 <template>
   <div class="dashboard-editor-container">
     <!-- <github-corner class="github-corner" />
@@ -5,7 +12,7 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" :panelGroupData="panelGroupData"/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart :chart-data="lineChartDataList"  :name="name"/>
     </el-row>
   </div>
 </template>
@@ -15,7 +22,7 @@ import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import {index} from '@/api/user'
 
-const lineChartData = {
+let lineChartData = {
   weekUsersData: [120, 82, 91, 154, 162, 140, 145],
   weekRoomData: [180, 160, 151, 106, 145, 150, 130],
   weekAdminData: [120, 90, 100, 138, 142, 130, 130]
@@ -34,42 +41,26 @@ export default {
         roomCount:0,
         usersCount:0
       },
-      lineChartData: lineChartData.weekUsersData
-      
+      lineChartDataList: lineChartData.weekUsersData,
+      name:"用户注册数量"
     }
   },
   created(){
     index().then(res=>{
         let data = res.data
         this.panelGroupData = data.panelGroupData
-        let weekUsersData = []
-        let weekRoomData = []
-        let weekAdminData = []
-        for(let i=0;i<7;i++){
-          if(i<data.weekUsersData.length && typeof data.weekUsersData[i]['d']!=='undefined'){
-            weekUsersData.push(data.weekUsersData[i]['n'])
-          }else{
-            weekUsersData.push(0)
-          }
-          if(i<data.weekRoomData.length  && typeof data.weekRoomData[i]['d']!=='undefined'){
-            weekRoomData.push(data.weekRoomData[i]['n'])
-          }else{
-            weekRoomData.push(0)
-          }
-          if(i<data.weekAdminData.length && typeof data.weekAdminData[i]['d']!=='undefined'){
-            weekAdminData.push(data.weekAdminData[i]['n'])
-          }else{
-            weekAdminData.push(0)
-          }
-        }
-        lineChartData.weekUsersData = weekUsersData
-        lineChartData.weekRoomData = weekRoomData
-        lineChartData.weekAdminData = weekAdminData
+        this.lineChartDataList = data.weekUsersData
+        lineChartData.weekUsersData = data.weekUsersData
+        lineChartData.weekRoomData = data.weekRoomData
+        lineChartData.weekAdminData = data.weekAdminData
     })
   },
   methods: {
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      if(type == "weekUsersData")this.name = "用户注册数量"
+      if(type == "weekRoomData")this.name = "房间注册数量"
+      if(type == "weekAdminData")this.name = "管理注册数量"
+      this.lineChartDataList = lineChartData[type]
     }
   }
 }

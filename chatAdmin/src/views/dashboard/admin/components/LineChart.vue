@@ -29,6 +29,10 @@ export default {
     chartData: {
       type: Array,
       required: true
+    },
+    name:{
+      type: String,
+      default: '用户注册数量'
     }
   },
   data() {
@@ -64,7 +68,7 @@ export default {
     setOptions(chartData) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -90,11 +94,11 @@ export default {
           }
         },
         legend: {
-          data: ['actual']
+          data: [this.name]
         },
         series: [
         {
-          name: 'actual',
+          name: this.name,
           smooth: true,
           type: 'line',
           itemStyle: {
