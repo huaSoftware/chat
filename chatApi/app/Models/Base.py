@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-17 14:14:28
 @description: 基础模型，封装一些基础方法 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:48:16
+@LastEditors  : hua
+@LastEditTime : 2019-12-30 20:01:42
 '''
 from app import CONST
 import math
@@ -59,13 +59,15 @@ class Base():
             res = dBSession.query(cls_)
         else:   
             res = dBSession.query(cls_).filter(*filters)
-        if limit != 0:
-            res = res.limit(limit)
         orderArr = order.split(' ')
         if orderArr[1] == 'desc':
-            res = res.order_by(desc(orderArr[0])).all()
+            res = res.order_by(desc(orderArr[0]))
         else:
-            res = res.order_by(asc(orderArr[0])).all()
+            res = res.order_by(asc(orderArr[0]))
+        if limit != 0:
+            res = res.limit(limit).all()
+        else:
+            res = res.all()
         if not field:
             res = [c.to_dict() for c in res]
         else:

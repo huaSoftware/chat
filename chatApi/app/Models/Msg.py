@@ -3,7 +3,7 @@
 @Date: 2019-07-25 14:22:49
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2019-12-28 09:58:23
+@LastEditTime : 2019-12-30 19:59:08
 '''
 '''
 @Author: hua
@@ -14,6 +14,7 @@
 '''
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy import desc, asc
+from sqlalchemy import update
 from app.Models.Base import Base
 from app.Models.Model import HtMsg
 from app import dBSession
@@ -65,13 +66,15 @@ class Msg(Base, HtMsg, SerializerMixin):
             res = dBSession.query(Msg)
         else:   
             res = dBSession.query(Msg).filter(*filters)
-        if limit != 0:
-            res = res.limit(limit)
         order = order.split(' ')
         if order[1] == 'desc':
-            res = res.order_by(desc(order[0])).all()
+            res = res.order_by(desc(order[0]))
         else:
-            res = res.order_by(asc(order[0])).all()
+            res = res.order_by(asc(order[0]))
+        if limit != 0:
+            res = res.limit(limit).all()
+        else:
+            res = res.all()
         if not field:
             res = [c.to_dict() for c in res]
         else:
@@ -129,7 +132,9 @@ class Msg(Base, HtMsg, SerializerMixin):
         @return bool
     """
     def editByLimit(self, data, filters, limit):
-        dBSession.query(Msg).filter(*filters).offset(0).limit(limit).order_by(Msg.created_at.desc()).update(data, synchronize_session=False)
+        ids = [ i['id'] for i in self.getAll(filters, 'created_at desc', ("id", ), 10)]
+        dBSession.query(Msg).filter(Msg.id.in_(ids)).update(data, synchronize_session=False)
+        ''' dBSession.execute('update `ht_msg` set `read_status` = 0 order by created_at desc limit 10;') '''
         return True
     
     """

@@ -2,16 +2,26 @@
 @Author: hua
 @Date: 2019-07-01 20:34:43
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-11-07 16:24:03
+@LastEditors  : hua
+@LastEditTime : 2019-12-30 20:00:21
 '''
 from app import app
 from app.Models.Admin import Admin
 from app.Models.Users import Users
 from app.Models.Room import Room
+from app.Vendor.Decorator import transaction
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
+from app.Models.Msg import Msg
 
+@app.route('/api/v2/admin/test')
+@transaction
+def adminTest():
+    filters = {
+        Msg.room_uuid == '5e0569519b56d'
+    }
+    Msg().editByLimit({'read_status':0},filters, 10)
+    return BaseController().successData({})
 @app.route('/api/v2/admin/index', methods=['GET'])
 @UsersAuthJWT.AdminApiAuth
 def adminIndex(user_info):
