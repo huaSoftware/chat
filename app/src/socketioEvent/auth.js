@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-02 21:44:37
+ * @LastEditTime : 2020-01-03 16:28:47
  */
 import store from '../store'
 import router from '../router'
@@ -170,10 +170,9 @@ export default function setupAuthEvent(){
     });
     //监听单聊房间动态消息
     window.apiSocket.on('room', (data) => {
-        console.log(24234234,data)
         response(data).then(res=>{
             console.log(24234235,res)
-            let data = res.data
+            let data = res.data.list
             if(data != null){
                 //app消息通知
                 if(window.plus && store.getters.isPaused && data[0].is_alert){

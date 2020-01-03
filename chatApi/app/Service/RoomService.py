@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2020-01-02 21:37:14
+@LastEditTime : 2020-01-03 16:28:30
 '''
 from app import CONST
 from app import socketio
@@ -45,7 +45,7 @@ class RoomService:
             }
             Room().delete(filters)
             for item in address_book_data:
-                roomList = AddressBook.getRoomList(item['be_focused_user_id'])['list']
+                roomList = AddressBook.getRoomList(item['be_focused_user_id'])
                 socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['be_focused_user_id']))
                 """  roomList = AddressBook.getRoomList(item['focused_user_id'])['list']
                 socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['focused_user_id'])) """
