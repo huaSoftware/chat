@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
- * @LastEditors: hua
- * @LastEditTime: 2019-12-13 10:29:28
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-04 14:38:02
  -->
 <template>
   <yd-layout>
@@ -62,110 +62,114 @@ export default {
     this.setHtmlFontSizeToVuex()
     //注册socketio
     setup()
-    //每2秒检测是否监听断开
-    setInterval(()=>{
-      if(window.apiSocket !== undefined){
-        if( window.apiSocket._callbacks.$beg == undefined ||
-            window.apiSocket._callbacks.$chat == undefined ||
-            window.apiSocket._callbacks.$connect == undefined ||
-            window.apiSocket._callbacks.$connecting == undefined ||
-            window.apiSocket._callbacks.$disconnect == undefined ||
-            window.apiSocket._callbacks.$groupRoom == undefined ||
-            window.apiSocket._callbacks.$join == undefined ||
-            window.apiSocket._callbacks.$leave == undefined ||
-            window.apiSocket._callbacks.$room == undefined ||
-            window.apiSocket._callbacks.$send == undefined
-        ){setupListen()}
-      }
-    },5000)
-    document.addEventListener('visibilitychange',()=> {
-      if(document.visibilityState=='hidden') {
-        this.hiddenTime = new Date().getTime()	//记录页面隐藏时间
-      }else{
-        let visibleTime = new Date().getTime();
-        if((visibleTime-this.hiddenTime)/1000>10){	//页面再次可见的时间-隐藏时间>10S,重连
-          setDown()
-          console.log('主动关闭连接后重连');
-          setTimeout(()=> {
-            setup()    //打开连接，使用的vuejs，这是socketio的连接方法
-          },1500);    //1.5S后重连
-        }else{
-          console.log('还没有到断开的时间')
-        }
-      }
-    });
-    //app的监听事件
-    document.addEventListener('plusready',function(){
-      //运行环境从前台切换到后台事件
-      document.addEventListener("pause", onAppPause, false);
-      //运行环境从后台切换到前台事件
-      document.addEventListener("resume", onAppReume, false);
-      //应用切换到后台运行事件
-      document.addEventListener("background", onAppBackground, false);
-      //应用切换到前台运行事件
-      document.addEventListener("foreground", onAppForeground, false);
-      //应用需要清理内存事件
-      document.addEventListener("trimmemory", onAppTrimMemory, false); 
-    },false);   
-    function onAppPause(){
-      console.log("Application paused!"); 
-      that.$store.commit('updateIsPaused', true)
-    }
-    function onAppReume(){
-      console.log("Application resumed!"); 
-      that.$store.commit('updateIsPaused', false)
-    }
-    function onAppBackground(){
-      console.log("Application background!"); 
-    }
-    function onAppForeground(e){
-    }
-    function onAppTrimMemory(){
-      console.log("Trim Memory!"); 
-    }
     //拉取配置常量
     getConst().then(res=>{
       console.log(res)
-      this.$store.commit('updateChat',res.data.CHAT)
+      this.$store.commit('updateState', res.data)
+      //检测是否监听断开
+      setInterval(()=>{
+        if(window.apiSocket !== undefined){
+          if( window.apiSocket._callbacks.$beg == undefined ||
+              window.apiSocket._callbacks.$chat == undefined ||
+              window.apiSocket._callbacks.$connect == undefined ||
+              window.apiSocket._callbacks.$connecting == undefined ||
+              window.apiSocket._callbacks.$disconnect == undefined ||
+              window.apiSocket._callbacks.$groupRoom == undefined ||
+              window.apiSocket._callbacks.$join == undefined ||
+              window.apiSocket._callbacks.$leave == undefined ||
+              window.apiSocket._callbacks.$room == undefined ||
+              window.apiSocket._callbacks.$send == undefined
+          ){setupListen()}
+        }
+      },res.data.TIME.TIME_OUT.value)//超时时间动态设置
+      document.addEventListener('visibilitychange',()=> {
+        if(document.visibilityState=='hidden') {
+          this.hiddenTime = new Date().getTime()	//记录页面隐藏时间
+        }else{
+          let visibleTime = new Date().getTime();
+          if((visibleTime-this.hiddenTime)/1000>10){	//页面再次可见的时间-隐藏时间>10S,重连
+            setDown()
+            console.log('主动关闭连接后重连');
+            setTimeout(()=> {
+              setup()    //打开连接，使用的vuejs，这是socketio的连接方法
+            },1500);    //1.5S后重连
+          }else{
+            console.log('还没有到断开的时间')
+          }
+        }
+      });
+      //app的监听事件
+      document.addEventListener('plusready',function(){
+        //运行环境从前台切换到后台事件
+        document.addEventListener("pause", onAppPause, false);
+        //运行环境从后台切换到前台事件
+        document.addEventListener("resume", onAppReume, false);
+        //应用切换到后台运行事件
+        document.addEventListener("background", onAppBackground, false);
+        //应用切换到前台运行事件
+        document.addEventListener("foreground", onAppForeground, false);
+        //应用需要清理内存事件
+        document.addEventListener("trimmemory", onAppTrimMemory, false); 
+      },false);   
+      function onAppPause(){
+        console.log("Application paused!"); 
+        that.$store.commit('updateIsPaused', true)
+      }
+      function onAppReume(){
+        console.log("Application resumed!"); 
+        that.$store.commit('updateIsPaused', false)
+      }
+      function onAppBackground(){
+        console.log("Application background!"); 
+      }
+      function onAppForeground(e){
+      }
+      function onAppTrimMemory(){
+        console.log("Trim Memory!"); 
+      }
+      /* this.$store.commit('updateChat',res.data.CHAT)
       this.$store.commit('updateLog',res.data.LOG)
       this.$store.commit('updateRoom',res.data.ROOM)
       this.$store.commit('updateSave',res.data.SAVE)
       this.$store.commit('updateStatus',res.data.STATUS)
-      this.$store.commit('updateAddFriend',res.data.ADDFRIEND)
-    })
-    if(this.user.token){
-      addressBookBegCache().then(res=>{
-        let data = res.data
-        if(JSON.stringify(data) !== "{}"){
-          // 复制原来的值
-          data['data']['user_id'] = data['data']['id'];
-          // 删除原来的键
-          delete data['data']['id'];
-          // 增加状态,0申请，1通过，2拒绝
-          data['data']['status'] = 0
-          Toast({ mes: `${data.data.nick_name}申请加你好友` });
-          addAddressBookBeg(data['data']).then(res=>{
-            getAddressBookBeg().then(res=>{
-              let newFriendAlertNumber = 0
-              console.log("通讯录地址"+res)
-              if(!res)return
-              if(res.length>0){
-                res.forEach((item)=>{
-                  if(item.status==0){
-                    newFriendAlertNumber++
-                  }
-                })
-              }
-              store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+      this.$store.commit('updateAddFriend',res.data.ADDFRIEND) */
+      if(this.user.token){
+        addressBookBegCache().then(res=>{
+          let data = res.data
+          if(JSON.stringify(data) !== "{}"){
+            // 复制原来的值
+            data['data']['user_id'] = data['data']['id'];
+            // 删除原来的键
+            delete data['data']['id'];
+            // 增加状态,0申请，1通过，2拒绝
+            data['data']['status'] = 0
+            Toast({ mes: `${data.data.nick_name}申请加你好友` });
+            addAddressBookBeg(data['data']).then(res=>{
+              getAddressBookBeg().then(res=>{
+                let newFriendAlertNumber = 0
+                console.log("通讯录地址"+res)
+                if(!res)return
+                if(res.length>0){
+                  res.forEach((item)=>{
+                    if(item.status==0){
+                      newFriendAlertNumber++
+                    }
+                  })
+                }
+                store.commit('updateNewFriendAlertNumber', newFriendAlertNumber)
+              })
             })
-          })
-        }
-      })
-    }
+          }
+        })
+      }
+    })
   },
   mounted() {
   },
   methods: {
+    ...mapGetters([
+      "TIME"
+    ]),
     ...mapMutations({
       updateMsgList:'updateMsgList',
       updateRoomList: 'updateRoomList',

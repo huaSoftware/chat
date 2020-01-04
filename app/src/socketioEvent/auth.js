@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-03 16:28:47
+ * @LastEditTime : 2020-01-04 13:46:47
  */
 import store from '../store'
 import router from '../router'
@@ -89,7 +89,7 @@ export default function setupAuthEvent(){
     if(!window.loginConnectInterval){
         window.loginConnectInterval = setInterval(()=>{
             send('loginConnect',{},'loginConnect')
-        },5000)
+        },store.state.codeData.TIME.TIME_OUT.value)//超时时间动态设置
     }
     //如果当前存在房间则进入
     if(store.getters.currentRoomUuid !== ''&& store.getters.currentRoomName !== ''){

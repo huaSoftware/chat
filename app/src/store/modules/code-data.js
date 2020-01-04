@@ -91,9 +91,59 @@ export default {
           "text":"拒绝",
           "value": 2
         }
+      },
+      "CODE":{
+        "SUCCESS":{
+            "text":"成功",
+            "value": 200
+        },
+        "BAD_REQUEST":{
+            "text":"错误请求(客户端)",
+            "value": 400
+        },
+        "NOT_FOUND":{
+            "text":"未找到路由",
+            "value": 404
+        },
+        "ERROR":{
+            "text":"服务器错误",
+            "value": 500
+        },
+        "ERROR_AUTH_CHECK_TOKEN_FAIL":{
+            "text":"权限验证令牌失败",
+            "value": 10001
+        },
+        "ERROR_AUTH_CHECK_TOKEN_TIMEOUT":{
+            "text":"权限验证令牌超时",
+            "value": 10002
+        },
+        "ERROR_AUTH_TOKEN":{
+            "text":"权限验证令牌错误",
+            "value": 10003
+        },
+        "ERROR_AUTH":{
+            "text":"权限验证错误",
+            "value": 10004
+        },
+        "ROOM_NO_EXIST":{
+            "text":"房间不存在",
+            "value": 20000
+        }
+      },
+      "TIME":{
+        "TIME_OUT":{
+          "text":"超时时间",
+          "value":15000
+        }
       }
     },
     getters:{
+      CODE(state){
+        return state.CODE
+      },
+      TIME(state){
+        return state.TIME
+      },
       APPLY(state){
         return state.ADDFRIEND.APPLY.value
       },
@@ -145,23 +195,8 @@ export default {
     },
     mutations: {
       //修改仓库值
-      updateChat(state, chat){
-        state.CHAT = chat
-      },
-      updateLog(state, log){
-        state.log =  log
-      },
-      updateRoom(state, room){
-        state.room = room
-      },
-      updateSave(state, save){
-        state.save =  save
-      },
-      updateStatus(state, status){
-        state.status = status
-      },
-      updateAddFriend(state, addFriend){
-        state.ADDFRIEND = addFriend
+      updateState(state, e){
+        state = e
       }
     }
 }  

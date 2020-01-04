@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:35
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 21:01:01
+ * @LastEditTime : 2020-01-04 14:11:42
  */
 import store from '../store'
 import router from '../router'
@@ -18,21 +18,21 @@ export default function api(data, method){
                 name: 'connectLose',
                 query: {text:"接口已断开链接，请重启"}
             })
-        },5000)
+        },store.state.codeData.TIME.TIME_OUT.value)//超时时间动态设置
         window.apiSocket.emit(method, encryptStr, (res)=>{
             clearTimeout(timeOut)
             console.log(res)
-            if (res.error_code === 200) {
+            if (res.error_code === store.getters.CODE.SUCCESS.value) {
                 resolve(res)
             }
-            if (res.error_code === 400 || res.error_code === 500) {
+            if (res.error_code === store.getters.CODE.BAD_REQUEST.value || res.error_code === store.getters.CODE.ERROR.value) {
                 if(res.show == true){
                     Toast({mes:res.msg,icon: 'error'})
                 }
                 Loading.close()
                 reject('error')
             }
-            if (res.error_code === 401 || res.error_code === 10001) {
+            if (res.error_code === store.getters.CODE.ERROR_AUTH_CHECK_TOKEN_FAIL.value) {
                 clearTimeout(window.sendTimeOut)
                 clearTimeout(window.broadcastTimeOut)
                 Loading.close()

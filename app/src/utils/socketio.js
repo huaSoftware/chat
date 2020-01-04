@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 21:01:36
+ * @LastEditTime : 2020-01-04 14:24:14
  */
 
 import store from '../store'
@@ -99,17 +99,17 @@ export function response(res){
 		/**
 		* error为true时 显示msg提示信息
 		*/
-		if (res.error_code === 200) {
+		if (res.error_code === store.getters.CODE.SUCCESS.value) {
 			resolve(res)
 		}
-		if (res.error_code === 400 || res.error_code === 500) {
+		if (res.error_code === store.getters.CODE.BAD_REQUEST.value || res.error_code === store.getters.CODE.ERROR.value) {
 			if(res.show == true){
 				Toast({mes:res.msg,icon: 'error'})
 			}
 			Loading.close()
 			reject(res)
 		}
-		if (res.error_code === 401|| res.error_code === 10001) {
+		if (res.error_code === store.getters.CODE.ERROR_AUTH_CHECK_TOKEN_FAIL.value) {
 			clearTimeout(window.sendTimeOut)
 			clearTimeout(window.broadcastTimeOut)
 			Loading.close()
