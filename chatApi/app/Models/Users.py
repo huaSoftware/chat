@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors  : hua
-@LastEditTime : 2020-01-03 16:46:43
+@LastEditTime : 2020-01-09 20:49:26
 '''
 import math
 from sqlalchemy_serializer import SerializerMixin
@@ -163,5 +163,15 @@ class Users(Base, HtUser, SerializerMixin):
     
     #获取一周数据
     def getWeekData(self):
-        result = [item['c'] for item in Utils.db_t_d(dBSession.execute("SELECT count(*) as c FROM ht_users WHERE YEARWEEK(date_format(from_unixtime(created_at),'%Y-%m-%d'),1) = YEARWEEK(now(),1) GROUP BY date_format(from_unixtime(created_at),'%Y-%m-%d');").fetchall())]
+        result = []
+        dataList = Utils.db_t_d(dBSession.execute("SELECT count(id) as c, date_format(from_unixtime(created_at),'%Y-%m-%d') as d FROM ht_users WHERE YEARWEEK(date_format(from_unixtime(created_at),'%Y-%m-%d'),1) = YEARWEEK(now(),1) GROUP BY date_format(from_unixtime(created_at),'%Y-%m-%d');").fetchall())
+        week_list = Utils.getWeekList()
+        for i, week in enumerate(week_list):
+            for data in dataList:
+                if data['d'] == week:
+                    result.append(data['c'])
+                    dataList.remove(data)
+                    break 
+            if (len(result)) <= i:
+                result.append(0)
         return result

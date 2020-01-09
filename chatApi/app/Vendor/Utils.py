@@ -3,17 +3,26 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors  : hua
-@LastEditTime : 2019-12-19 09:16:02
+@LastEditTime : 2020-01-09 16:37:06
 '''
 from app import CONST
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import  PKCS1_v1_5
 from app.env import ALLOWED_EXTENSIONS
 from app.Lang.zh_CN.validation import validation
-import time,os,json,base64
-
+from datetime import timedelta
+import time,os,json,base64, datetime
 
 class Utils:
+    @staticmethod
+    def getWeekList():
+        week_list = []
+        now = datetime.datetime.now()
+        for i in range(7):
+            this_week_start = now - timedelta(days=now.weekday()-i)
+            week_list.append(this_week_start.strftime('%Y-%m-%d'))
+        return week_list
+
     @staticmethod
     def getColumn(name, data):
         """ 
