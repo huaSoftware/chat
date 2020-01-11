@@ -15,7 +15,7 @@
 
 import Table from './components/Table'
 export default {
-  name: 'config',
+  name: 'constConfig',
   components: {Table}
 }
 </script>

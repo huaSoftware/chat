@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-11-21 16:51:53
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:48:34
+@LastEditors  : hua
+@LastEditTime : 2020-01-11 14:48:28
 '''
 
 
@@ -13,7 +13,7 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Models.Config import Config
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
-import time
+import json, os
 
 @app.route('/api/v2/config/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)
@@ -75,3 +75,29 @@ def configEdit(*args, **kwargs):
     }
     Config().edit(params, filters)
     return BaseController().successData()
+
+
+@app.route('/api/v2/configConstJson', methods=['POST'])
+@UsersAuthJWT.AdminApiAuth
+def configConstJson(*args, **kwargs):
+    """ 获取JSON配置列表 """
+    with open(os.getcwd()+'/app/const.json', "rb") as f:
+        CONST = json.loads(f.read(), encoding='utf-8')
+    return BaseController().successData(CONST)
+
+@app.route('/api/v2/configConstJson/edit', methods=['POST'])
+@validator(name="ADDFRIEND",rules={'required': True})
+@validator(name="CHAT",rules={'required': True})
+@validator(name="CODE",rules={'required': True})
+@validator(name="LOG",rules={'required': True})
+@validator(name="ROOM",rules={'required': True})
+@validator(name="SAVE",rules={'required': True})
+@validator(name="STATUS",rules={'required': True})
+@validator(name="TIME",rules={'required': True})
+@UsersAuthJWT.AdminApiAuth
+def configConstJsonEdit(*args, **kwargs):
+    params = kwargs['params']
+    """ 修改JSON配置列表 """
+    with open(os.getcwd()+'/app/const.json', "w", encoding='utf-8') as f:
+        f.write(json.dumps(params,ensure_ascii=False))
+    return BaseController().successData("修改成功")

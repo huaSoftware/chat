@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-11-21 17:20:24
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-22 11:16:06
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-11 14:27:41
  */
 import request from '@/utils/request'
 
@@ -42,3 +42,22 @@ export function configAdd(data) {
     data
   })
 }
+
+/* 获取JSON配置列表 */
+export function configConstJson(data) {
+  return request({
+    url: '/api/v2/configConstJson',
+    method: 'post'
+  })
+}
+
+
+/* 修改JSON配置列表 */
+export function configConstJsonEdit(data) {
+  return request({
+    url: '/api/v2/configConstJson/edit',
+    method: 'post',
+    data
+  })
+}
+

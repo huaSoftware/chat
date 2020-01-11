@@ -151,7 +151,19 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/config/index'),
         name: 'Config',
-        meta: { title: '配置管理', icon: 'nested' }
+        meta: { title: '系统配置管理', icon: 'nested' }
+      }
+    ]
+  },
+  {
+    path: '/constConfig',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/constConfig/index'),
+        name: 'constConfig',
+        meta: { title: '常量配置管理', icon: 'nested' }
       }
     ]
   }
