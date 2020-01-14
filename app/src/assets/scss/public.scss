@@ -1,0 +1,43 @@
+/* 定义一些公共的属性 */
+.primary_color{
+    color:$color-primary!important;
+}
+.price_color{
+    color:$color-price!important;
+}
+.weak_color{
+    color:$color-weak!important;
+}
+.loading_color{
+    color:$color-loading!important;
+}
+.color_danger{
+    color:$color-danger!important;
+}
+.primary_bk{
+    background-color:$color-primary!important;
+}
+.font10{
+    font-size:$text-xxxs;
+}
+.font12{
+    font-size:$text-xs;
+}
+.font13{
+    font-size:$text-sm;
+}
+.font14{
+    font-size:$text-nm;
+}
+.font15{
+    font-size:$text-lg;
+}
+.font17{
+    font-size:$text-xxl;
+}
+.font18{
+    font-size:$text-xxxl;
+}
+.center{
+    text-align: center;
+}
