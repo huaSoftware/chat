@@ -3,10 +3,11 @@
 @Date: 2019-06-10 10:02:46
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2020-01-11 13:04:59
+@LastEditTime : 2020-01-09 21:21:54
 '''
 
 from app import app
+from app import cache
 from flask import make_response
 from app.Vendor.Decorator import validator
 from app.Vendor.Captcha import validate_picture

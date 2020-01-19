@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 无权限socketio监听事件
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 20:29:52
+ * @LastEditTime : 2020-01-19 15:24:33
  */
 import router from '../router'
 /* 
@@ -30,10 +30,10 @@ export default function setupUnAuthEvent(){
     window.apiSocket.on('error', (data) => {
         //逻辑处理
         console.log("错误发生，并且无法被其他事件类型所处理")
-        router.push({
+        /*暂时注释 router.push({
             name: 'connectLose',
             query: {text:"链接已经断开"}
-        })
+        }) */
     });
     window.apiSocket.on('reconnect', (data) => {
         //逻辑处理

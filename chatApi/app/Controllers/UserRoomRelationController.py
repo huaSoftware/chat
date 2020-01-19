@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-05 14:54:18
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:48:51
+@LastEditors  : hua
+@LastEditTime : 2020-01-19 14:28:41
 '''
 from app import app
 from app import socketio
@@ -27,7 +27,7 @@ def groupChatCreate(user_info, params):
         #添加后同步房间
         user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(data['room_uuid']))
         for item in user_room_relation_data:
-            roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
+            roomList = UserRoomRelation.getRoomList(item['user_id'])
             socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
         return BaseController().successData(data, msg='创建成功')
     return BaseController().error(msg='创建失败')

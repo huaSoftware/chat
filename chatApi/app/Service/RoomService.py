@@ -3,7 +3,7 @@
 @Date: 2019-09-29 12:03:29
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2020-01-03 16:28:30
+@LastEditTime : 2020-01-19 14:28:58
 '''
 from app import CONST
 from app import socketio
@@ -65,7 +65,7 @@ class RoomService:
             }
             UserRoomRelation().delete(filters)
             for item in user_room_relation_data:
-                roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
+                roomList = UserRoomRelation.getRoomList(item['user_id'])
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
         return  Utils.formatBody({},msg='删除成功')
     

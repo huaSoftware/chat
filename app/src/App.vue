@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-04 14:38:02
+ * @LastEditTime : 2020-01-19 15:04:50
  -->
 <template>
   <yd-layout>
@@ -49,11 +49,13 @@ import {getConst} from '@/socketioApi/config'
 import utils from '@/utils/utils'
 import router from './router'
 import navMenu from '@/components/nav-menu/nav-menu';
+import eruda from "eruda";
 
 export default {
   components: {navMenu},
   name: "app",
   created() {
+    eruda.init()
     let that  = this
     //刷新回首页
     this.$router.push('/');
@@ -127,12 +129,6 @@ export default {
       function onAppTrimMemory(){
         console.log("Trim Memory!"); 
       }
-      /* this.$store.commit('updateChat',res.data.CHAT)
-      this.$store.commit('updateLog',res.data.LOG)
-      this.$store.commit('updateRoom',res.data.ROOM)
-      this.$store.commit('updateSave',res.data.SAVE)
-      this.$store.commit('updateStatus',res.data.STATUS)
-      this.$store.commit('updateAddFriend',res.data.ADDFRIEND) */
       if(this.user.token){
         addressBookBegCache().then(res=>{
           let data = res.data

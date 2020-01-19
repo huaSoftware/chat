@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-04-02 16:50:55
-@LastEditors: hua
-@LastEditTime: 2019-12-13 14:47:01
+@LastEditors  : hua
+@LastEditTime : 2020-01-19 15:41:54
 '''
 from app import dBSession,CONST
 from functools import wraps
@@ -104,7 +104,7 @@ def transaction(func):
             #print('something after')
             return result
         except  Exception as e:
-            dBSession.rollback()  
+            dBSession.rollback() 
             raise e
     return inner_wrapper 
 

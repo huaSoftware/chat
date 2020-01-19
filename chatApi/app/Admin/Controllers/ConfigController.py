@@ -3,7 +3,7 @@
 @Date: 2019-11-21 16:51:53
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2020-01-11 14:48:28
+@LastEditTime : 2020-01-19 15:15:32
 '''
 
 
@@ -75,7 +75,6 @@ def configEdit(*args, **kwargs):
     }
     Config().edit(params, filters)
     return BaseController().successData()
-
 
 @app.route('/api/v2/configConstJson', methods=['POST'])
 @UsersAuthJWT.AdminApiAuth

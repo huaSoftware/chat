@@ -17,6 +17,7 @@
     "benz-amr-recorder": "^1.0.17",
     "core-js": "^2.6.5",
     "dexie": "^2.0.4",
+    "eruda": "^2.0.2",
     "es6-promise": "^4.2.8",
     "html2canvas": "^1.0.0-rc.3",
     "js-base64": "^2.4.8",

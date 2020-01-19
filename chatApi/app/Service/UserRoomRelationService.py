@@ -28,7 +28,7 @@ class UserRoomRelationService:
             #添加后同步房间
             user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(data['room_uuid']))
             for item in user_room_relation_data:
-                roomList = UserRoomRelation.getRoomList(item['user_id'])['data']
+                roomList = UserRoomRelation.getRoomList(item['user_id'])
                 socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
             return Utils.formatBody(data, msg='创建成功')
         return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='创建失败')
