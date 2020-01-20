@@ -56,7 +56,7 @@ export default function room(data, method){
             });
             modifyMsgStatus(data.data, store.getters.FAIL)
         }
-    },5500)
+    },store.state.codeData.TIME.TIME_OUT.value)
     let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
     window.apiSocket.emit(method, encryptStr, (recv)=>{
         console.log("发送消息后emit回复"+recv)

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:23
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-02 21:22:11
+ * @LastEditTime : 2020-01-20 11:18:32
  */
 import store from '../store'
 import router from '../router'
@@ -60,7 +60,7 @@ export default function broadcast(data, method){
                 })
             }
         }
-    },5500)
+    },store.state.codeData.TIME.TIME_OUT.value)
     data['type'] = store.getters.NOTIFY
     let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
     console.log("广播："+method, "秘钥："+encryptStr)

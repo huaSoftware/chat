@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-04 14:24:14
+ * @LastEditTime : 2020-01-20 11:17:48
  */
 
 import store from '../store'
@@ -120,7 +120,7 @@ export function response(res){
 			router.push({name: 'authLogin'})
 			reject(res)
 		}
-		if (res.error_code === 20000) {
+		if (res.error_code === store.getters.CODE.ROOM_NO_EXIST.value) {
 			if(res.show == true){
 				Toast({mes:res.msg,icon: 'error'})
 			}
