@@ -3,7 +3,7 @@
 @Date: 2019-02-10 09:55:10
 @description: 工具类，封装一些通用方法 
 @LastEditors  : hua
-@LastEditTime : 2020-01-09 16:37:06
+@LastEditTime : 2020-01-21 15:37:52
 '''
 from app import CONST
 from Cryptodome.PublicKey import RSA
@@ -213,7 +213,10 @@ class Utils:
             if len(en) == 127:
                 hex_fixed = '00' + en.hex()
                 en = base64.b16decode(hex_fixed.upper())
-            data +=str(cipher_rsa.decrypt(en, None),"utf8")#chardet.detect(cipher_rsa.decrypt(en, None))['encoding'])#推断字符集
+            try:
+                data +=str(cipher_rsa.decrypt(en, None),"utf8")#chardet.detect(cipher_rsa.decrypt(en, None))['encoding'])#推断字符集
+            except  Exception as e:
+                print(e)
         return json.loads(data, encoding='utf8')
           
     @staticmethod
