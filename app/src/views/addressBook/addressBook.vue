@@ -1,8 +1,8 @@
 <!--
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
- * @LastEditors: hua
- * @LastEditTime: 2019-12-11 16:56:32
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-21 14:54:47
  -->
 
 <template>
@@ -24,7 +24,7 @@
         <!-- 功能栏 -->
 		<yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
         <!-- 群组 -->
-        <yd-accordion style="padding-top:1.8rem"> 
+        <yd-accordion> 
             <yd-accordion-item title="群聊">
                 <div style="padding: .24rem;">
                     <dl>
@@ -49,7 +49,7 @@
                 </dd>
             </dl >
             <dl>
-                <dt ref="#">#</dt>
+                <dt :ref="'#'">#</dt>
                 <dd @click="handleJoinRoom(item)" v-for="(item, index) in adderssBookList" :key="index" v-if="item.users.first_word == '#'"> <!-- 循环 -->
                     <a >
                     <vImg :imgUrl="item.users.head_img"/>{{item.users.nick_name}}
@@ -62,10 +62,10 @@
         <div id="pop-address-book-letter" class="clearfix">
             <ul>
                 <li v-for="num in 26" :key="num" @click="handleScrollToRef(String.fromCharCode(num+64))">
-                    <a  class="activeName">{{String.fromCharCode(num+64)}}</a>
+                    <a :class="activeName==String.fromCharCode(num+64)?'activeName':''">{{String.fromCharCode(num+64)}}</a>
                 </li>
                 <li >
-                    <a  class="activeName">#</a>
+                    <a :class="activeName=='#'?'activeName':''" @click="handleScrollToRef('#')">#</a>
                 </li>
             </ul>
         </div>
@@ -75,6 +75,7 @@
 import {mapGetters, mapMutations} from 'vuex'
 import {addressBookGet} from '@/socketioApi/addressBook'
 import {userRoomRelationGet} from '@/socketioApi/userRoomRelation'
+import {Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import {joinChatSend} from '@/socketIoApi/chat'
 import vImg from '@/components/v-img/v-img'
 export default {
@@ -87,6 +88,7 @@ export default {
             },
             adderssBookList: [],
             defShow: false,
+            activeName:"",
             defs: [
                 {
                     label: '发起群聊',
@@ -105,7 +107,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'groupRoomList'
+            'groupRoomList',
+            'htmlFontSize'
         ])
     },
     methods: {
@@ -128,7 +131,14 @@ export default {
             })
         },
         handleScrollToRef(value){
-            document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop
+            console.log(this.$refs[value])
+            if(value == "#"){
+                document.getElementById('scrollView').scrollTop = this.$refs[value].offsetTop-this.htmlFontSize
+            }else{
+                document.getElementById('scrollView').scrollTop = this.$refs[value][0].offsetTop-this.htmlFontSize
+            }
+            this.activeName = value
+            Toast({mes:value})
         },
         handleScroll () {
         },
@@ -291,5 +301,8 @@ dd a img {
     height: 27.5px;
     width: 27.5px;
     margin-right: 5%;
+}
+.activeName{
+    color: #45BAF4 !important;
 }
 </style>

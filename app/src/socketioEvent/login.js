@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:57
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 13:23:11
+ * @LastEditTime : 2020-01-21 14:08:07
  */
 import store from '../store'
 import router from '../router'
@@ -11,8 +11,7 @@ import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import {rsaEncode} from '@/utils/socketio'
 export default function login(data, method){
     var res = new Promise((resolve, reject)=>{
-        let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
-      
+        let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY) 
         window.apiSocket.emit(method, encryptStr, (res)=>{
             console.log(res)
             if (res.error_code === store.getters.CODE.SUCCESS.value) {
