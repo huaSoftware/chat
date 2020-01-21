@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 11:41:32
+ * @LastEditTime : 2020-01-21 19:56:00
  */
 import store from '../store'
 import router from '../router'
@@ -12,7 +12,7 @@ import {send, rsaEncode, response, modifyMsgStatus} from '@/utils/socketio'
 export default function room(data, method){
     //响应超时
     window.sendTimeOut = setTimeout(()=>{
-        if(method == 'join'){
+        /* if(method == 'join'){
             Loading.open(`房间加入超时,尝试第${window.tryRoomLinkCount+1}次加入...`)
             if(window.tryRoomLinkCount<3){
                 send('join', {
@@ -47,7 +47,7 @@ export default function room(data, method){
                     query: {text:"房间连接已断开"}
                 })
             }
-        }
+        } */
         if(method == 'chat'){
             Toast({
                 mes: '响应超时',

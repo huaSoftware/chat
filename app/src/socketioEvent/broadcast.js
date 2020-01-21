@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:23
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 11:42:10
+ * @LastEditTime : 2020-01-21 19:54:42
  */
 import store from '../store'
 import router from '../router'
@@ -47,7 +47,7 @@ export default function broadcast(data, method){
                 })
             }
         }
-        if(method == 'input'){
+        /* if(method == 'input'){
             if(window.tryBroadcastLinkCount<3){
                 window.tryBroadcastLinkCount++
             }else{
@@ -59,7 +59,7 @@ export default function broadcast(data, method){
                     query: {text:"输入监听连接已断开"}
                 })
             }
-        }
+        } */
     },store.state.codeData.TIME.TIME_OUT.value)
     data['type'] = store.getters.NOTIFY
     let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)

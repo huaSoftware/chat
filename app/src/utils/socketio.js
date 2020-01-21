@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 16:15:51
+ * @LastEditTime : 2020-01-21 19:53:18
  */
 
 import store from '../store'
@@ -144,8 +144,8 @@ export function rsaEncode(data, publicKey){
 	encrypt.setPublicKey(publicKey);
 	let str = JSON.stringify(data)
 	let encryptStr = ""
-	for(let i=0; i<str.length;i+=50){
-		encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+50))+",";
+	for(let i=0; i<str.length;i+=20){
+		encryptStr = encryptStr + encrypt.encrypt(str.substring(i,i+20))+",";
 	}
 	encryptStr = encryptStr.substring(0,encryptStr.length-1);
 	return encryptStr
