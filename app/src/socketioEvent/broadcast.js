@@ -3,12 +3,12 @@
  * @Date: 2019-12-30 20:41:23
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-20 11:18:32
+ * @LastEditTime : 2020-01-21 11:42:10
  */
 import store from '../store'
 import router from '../router'
 import {Loading} from 'vue-ydui/dist/lib.rem/dialog'
-import {rsaEncode, response} from '@/utils/socketio'
+import {send, rsaEncode, response} from '@/utils/socketio'
 export default function broadcast(data, method){
     if(!store.getters.token){
         window.tryBroadcastLinkCount = 0

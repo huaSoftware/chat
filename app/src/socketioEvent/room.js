@@ -3,12 +3,12 @@
  * @Date: 2019-12-30 20:41:03
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 21:06:03
+ * @LastEditTime : 2020-01-21 11:41:32
  */
 import store from '../store'
 import router from '../router'
 import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
-import {rsaEncode, response, modifyMsgStatus} from '@/utils/socketio'
+import {send, rsaEncode, response, modifyMsgStatus} from '@/utils/socketio'
 export default function room(data, method){
     //响应超时
     window.sendTimeOut = setTimeout(()=>{
