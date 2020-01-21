@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:35
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-04 14:11:42
+ * @LastEditTime : 2020-01-21 13:19:12
  */
 import store from '../store'
 import router from '../router'
@@ -12,15 +12,8 @@ import {rsaEncode} from '@/utils/socketio'
 export default function api(data, method){
     var res = new Promise((resolve, reject)=>{
         let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY)
-        //设置超时时间5s
-        let timeOut = setTimeout(()=>{
-            router.push({
-                name: 'connectLose',
-                query: {text:"接口已断开链接，请重启"}
-            })
-        },store.state.codeData.TIME.TIME_OUT.value)//超时时间动态设置
+    
         window.apiSocket.emit(method, encryptStr, (res)=>{
-            clearTimeout(timeOut)
             console.log(res)
             if (res.error_code === store.getters.CODE.SUCCESS.value) {
                 resolve(res)
