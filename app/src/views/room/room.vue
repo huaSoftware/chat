@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-29 14:21:16
+ * @LastEditTime : 2020-01-22 12:36:21
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -323,7 +323,7 @@ export default {
           uploadFile({dataUrl:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
             let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
             let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
-             Loading.close()
+            Loading.close()
             chatSend({
               data: {
                 msg: file,
@@ -332,6 +332,8 @@ export default {
                 save_action:this.currentRoomSaveAction
               }
             });
+          }).catch(e=>{
+            Loading.close()
           });
         }
       }
