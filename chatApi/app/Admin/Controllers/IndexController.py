@@ -22,6 +22,7 @@ def adminTest():
     }
     Msg().editByLimit({'read_status':0},filters, 10)
     return BaseController().successData({})
+    
 @app.route('/api/v2/admin/index', methods=['GET'])
 @UsersAuthJWT.AdminApiAuth
 def adminIndex(user_info):

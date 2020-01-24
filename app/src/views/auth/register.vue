@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-11-15 09:47:10
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-24 16:50:28
  -->
 <template>
 <div>
@@ -17,9 +17,9 @@
                     <span>头像：</span>
                     </div> 
                     <div class="yd-cell-right">
-                    <div class="yd-input" style="flex-direction: row-reverse;">
-                        <vImg class="head_default" :imgUrl="headImg" v-if="headImg" @click="bindFile('header_img_file')"/>
-                        <div class="head_default" @click="bindFile('header_img_file')" v-else>上传</div>
+                    <div class="yd-input" style="flex-direction: row-reverse;"  @click="bindFile('header_img_file')">
+                        <vImg class="head_default" :imgUrl="headImg" v-if="headImg" />
+                        <div class="head_default" v-else>上传</div>
                     </div>
                     <input type="file" id="header_img_file" @change="bindHeaderImg" style="display:none;">
                     </div>
@@ -89,19 +89,18 @@
     position: fixed;
     top: 0px;
     width: 100%;
-    padding-top: 0.4rem !important;
-    height: 1.4rem !important;z-index:99">
+    height: 1rem !important;z-index:99">
         <div  style="height: 1rem;">
             <div class="yd-navbar-center">
-                <span class="yd-navbar-center-title" style="color: rgb(92, 92, 92); font-size: 0.3rem;">拖动框进行裁剪</span>
-                <span  @click="confirmCropper"  style="color: rgb(92, 92, 92);font-size: 0.3rem;padding-right: 12px;line-height: 1rem; position: fixed;right: 0px;top: 19px;">使用</span>
+                <span class="yd-navbar-center-title" style="color: rgb(92, 92, 92); font-size: 0.3rem;line-height: 1rem;">拖动框进行裁剪</span>
+                <span  @click="confirmCropper"  style="color: rgb(92, 92, 92);font-size: 0.3rem;padding-right: 12px;line-height: 1rem; position: fixed;right: 0px;top: 0px;">使用</span>
             </div>
         </div> 
     </header>
     <vueCropper
     v-if="cropperShow"
     ref="cropper_header"
-    style="height:100%;position:fixed;z-index:100000;top:1.4rem "
+    style="height:100%;position:fixed;z-index:100000;top:1rem "
     :img="option.img"
     :outputSize="option.size"
     :outputType="option.outputType"
@@ -129,6 +128,7 @@ import md5 from 'js-md5'
 import { VueCropper } from "vue-cropper"
 import {deleteTables} from '@/utils/indexedDB'
 import {setup} from '@/utils/socketio'
+import lrz from 'lrz'
 export default {
     components: {CrossLine, VueCropper, vImg},
     data() {
@@ -203,14 +203,33 @@ export default {
             btn.click();
         },
         bindHeaderImg() {
-            var reader = new FileReader();
-            if(typeof event.target.files[0] !== 'undefined'){
-                reader.readAsDataURL(event.target.files[0]);
-                reader.onload = () => {
-                    this.option.img = reader.result;
-                    this.cropperShow = true;
-                };
+            let file = event.target.files[0];
+            if (file.type.indexOf("image/") == -1) {
+                Alert({ mes: "请上传图片!" });
+                return;
             }
+            lrz(file,{width:1080,height:1080})
+            .then( (rst) =>{
+                // 处理成功会执行
+                if(rst.filelen > 204800){
+                    Alert({mes: "上传图片不能大于2M"})
+                }else{
+                    this.option.img = rst.base64;
+                    this.cropperShow = true;
+                }
+                console.log(rst)
+                
+            }).catch(function (err) {
+                // 处理失败会执行
+                Toast({
+                    mes: err,
+                    icon: 'error',
+                    timeout: 1500
+                })
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+            });
         },
         confirmCropper() {
             this.$refs.cropper_header.getCropData(data => {
@@ -220,7 +239,7 @@ export default {
                 uploadBase64({ imgDatas: this.option.img})
                 .then(res => {
                     Loading.close()
-                    this.headImg = process.env.VUE_APP_CLIENT_API+res.data.path
+                    this.headImg = process.env.VUE_APP_CLIENT_SOCKET+res.data.path
                 })
                 this.cropperShow = false;
             });

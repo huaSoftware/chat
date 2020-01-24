@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-27 15:27:50
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-01-23 21:50:10
+ */
 import {send} from '@/utils/socketio'
 
 
@@ -16,16 +23,6 @@ export function register(data) {
     let reqData = {
         'c':'UsersService',
         'a':'register',
-        'data':data
-    }
-    return send('send', reqData, 'api')
-}
-
-//上传图片
-export function uploadImgByBase64 (data) {
-    let reqData = {
-        'c':'UploadService',
-        'a':'uploadBase64',
         'data':data
     }
     return send('send', reqData, 'api')

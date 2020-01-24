@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors  : hua
-@LastEditTime : 2019-12-27 14:16:57
+@LastEditTime : 2020-01-23 21:47:46
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -55,7 +55,12 @@ def chat(message, user_info):
 """ 普通交互接口 """
 @socketio.on('send', namespace='/api')
 def send(message):
-    message = Utils.decrypt(message)
+    #这里增加判断文件不加密
+    if isinstance(message,dict):
+        if'UploadService' in message.values():
+            pass
+    else:
+        message = Utils.decrypt(message)
     """ {c:'控制',a:'行为',Authorization:'行为',data:'JSON数据‘} """
     if 'data' in message.keys():
         if 'Authorization' in message.keys():

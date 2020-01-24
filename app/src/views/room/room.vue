@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-22 12:36:21
+ * @LastEditTime : 2020-01-24 16:51:18
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -123,6 +123,7 @@ import {Confirm,Alert,Toast,Notify,Loading} from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from 'axios'
+import lrz from 'lrz'
 export default {
   components: {
     MescrollVue, vImg, icons, def, cropperBox, vEmpty, inputWrapper
@@ -150,7 +151,7 @@ export default {
       clientHeight:0,
       data: [],
       reqImgData: {
-        url: process.env.VUE_APP_CLIENT_API,
+        url: process.env.VUE_APP_CLIENT_SOCKET,
         imgDatas: ""
       },
       mescroll: null, // mescroll实例对象
@@ -321,7 +322,7 @@ export default {
         reader.onload =  (e) =>{
           Loading.open('上传中...')
           uploadFile({dataUrl:e.target.result,name:file.name,size:file.size,type:file.type}).then(res => {
-            let file_path = process.env.VUE_APP_CLIENT_API + res.data.path;
+            let file_path = process.env.VUE_APP_CLIENT_SOCKET + res.data.path;
             let file = `<a href='${file_path}' download='${res.data.name.split('.')[0]}'>${res.data.name.split('.')[0]}[文件]</a>`;
             Loading.close()
             chatSend({
@@ -344,15 +345,28 @@ export default {
         Alert({ mes: "请上传图片!" });
         return;
       }
-      //创建读取文件的对象
-      let reader = new FileReader();
-      //为文件读取成功设置事件
-      reader.onload = (e)=> {
-        this.reqImgData.imgDatas = e.target.result;
-        this.cropperShow = true;
-      };
-      //正式读取文件
-      reader.readAsDataURL(file);
+      lrz(file,{width:1080,height:1080})
+      .then( (rst) =>{
+          // 处理成功会执行
+          if(rst.filelen > 204800){
+            Alert({mes: "上传图片不能大于2M"})
+          }else{
+            this.reqImgData.imgDatas = rst.base64;
+            this.cropperShow = true;
+          }
+          console.log(rst)
+          
+      }).catch(function (err) {
+          // 处理失败会执行
+          Toast({
+              mes: err,
+              icon: 'error',
+              timeout: 1500
+          })
+      })
+      .always(function () {
+          // 不管是成功失败，都会执行
+      });
     },
     // 扩展API加载完毕，现在可以正常调用扩展API
     getCurrentPosition() {
@@ -516,7 +530,7 @@ export default {
                   that.recordingShow = false
                   var BenzAMRRecorder = require('benz-amr-recorder');
                   var amr = new BenzAMRRecorder();
-                  let url = process.env.VUE_APP_CLIENT_API+ res.data.path
+                  let url = process.env.VUE_APP_CLIENT_SOCKET+ res.data.path
                   amr.initWithUrl(url).then(function() {
                     chatSend({
                       data: {

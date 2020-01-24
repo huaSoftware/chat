@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-07-18 08:54:06
  * @description: 
- * @LastEditors: hua
- * @LastEditTime: 2019-10-06 14:27:09
+ * @LastEditors  : hua
+ * @LastEditTime : 2020-01-23 16:38:41
  -->
 <template>
    <!-- 裁剪图 -->
@@ -67,7 +67,7 @@ export default {
             type: Object,
             default () {
                 return { 
-                    url: process.env.VUE_APP_CLIENT_API,
+                    url: process.env.VUE_APP_CLIENT_SOCKET,
                     imgDatas: ""
                 }
             }
@@ -82,7 +82,7 @@ export default {
                 this.$emit('recCropperShow', false)
                 //将剪裁后的图片执行上传
                 uploadBase64(this.reqImgData).then(res => {
-                    let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_API+res.data.path}'>`;
+                    let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_SOCKET+res.data.path}'>`;
                     chatSend({
                         data: {
                         msg: img,
@@ -96,12 +96,11 @@ export default {
             });
         },
         handleOnRawImg() {
-            //this.$emit('recReqImgData', '')
-            Loading.open('上传中...')
             this.$emit('recCropperShow', false)
+            Loading.open('上传中...')
             uploadBase64(this.reqImgData).then(res => {
-                 Loading.close()
-                let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_API+res.data.path}'>`;
+                Loading.close()
+                let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_SOCKET+res.data.path}'>`;
                 chatSend({
                 data: {
                     msg: img,
@@ -111,8 +110,10 @@ export default {
                     save_action:this.currentRoomSaveAction
                 }
                 });
+                this.$emit('recReqImgData', '')
+            }).catch(e=>{
+                this.$emit('recReqImgData', '')
             });
-            this.$emit('recReqImgData', '')
         },
     }
 }
@@ -134,14 +135,14 @@ export default {
     height:100%;
     position:absoloute;
     width:100%;
-    z-index:9999
+    z-index:9
 }
 .btn_wrapper{
     position:fixed;
     width:100%;
     height:40px; 
     bottom: 10px;
-    z-index: 99999;
+    z-index: 9;
 }
 .raw_img{
     float:right;

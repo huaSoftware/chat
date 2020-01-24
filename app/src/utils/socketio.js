@@ -48,7 +48,7 @@ export function setupListen(){
 export function setDown(){
 	clearTimeout(window.timeOut)
 	if(typeof window.apiSocket == 'undefined'){
-		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_API + '/api');
+		window.apiSocket = io.connect(process.env.VUE_APP_CLIENT_SOCKET + '/api');
 	}
 	window.apiSocket.io.disconnect();    //先主动关闭连接
 	//删除所有监听
