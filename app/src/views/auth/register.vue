@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-24 16:50:28
+ * @LastEditTime : 2020-01-24 16:52:11
  -->
 <template>
 <div>
@@ -208,7 +208,7 @@ export default {
                 Alert({ mes: "请上传图片!" });
                 return;
             }
-            lrz(file,{width:1080,height:1080})
+            lrz(file,{width:1080})
             .then( (rst) =>{
                 // 处理成功会执行
                 if(rst.filelen > 204800){

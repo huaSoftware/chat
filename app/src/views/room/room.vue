@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors  : hua
- * @LastEditTime : 2020-01-24 16:51:18
+ * @LastEditTime : 2020-01-24 16:52:20
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -345,7 +345,7 @@ export default {
         Alert({ mes: "请上传图片!" });
         return;
       }
-      lrz(file,{width:1080,height:1080})
+      lrz(file,{width:1080})
       .then( (rst) =>{
           // 处理成功会执行
           if(rst.filelen > 204800){
