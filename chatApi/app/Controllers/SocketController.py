@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors  : hua
-@LastEditTime : 2020-01-23 21:47:46
+@LastEditTime : 2020-01-26 18:59:46
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -110,7 +110,7 @@ def background_thread():
     """启动一个后台线程来处理所有的延时任务
     """
     while True:
-        socketio.sleep(1)
+        socketio.sleep(2)
         #延迟推送
         d_list = delayQueue.consumer()
         for item in d_list:
@@ -120,7 +120,7 @@ def background_thread():
         onlineUsers = delayQueue.client.zrange('onlineUsers',0,-1,withscores = True)
         for onlineUser in onlineUsers:
             nowTime = int(time.time())
-            onlineTime = int(onlineUser[1])+5
+            onlineTime = int(onlineUser[1])+10
             if onlineTime < nowTime:
                 UsersService.edit({'online': 0}, {Users.id == onlineUser[0]})
                 delayQueue.client.zrem('onlineUsers', onlineUser[0])

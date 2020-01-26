@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 15:26:29
+ * @LastEditTime : 2020-01-26 19:06:04
  -->
 <template>
     <div class="room_details">
@@ -140,6 +140,7 @@ export default {
     methods: {
         init(){
             userRoomRelationGetByRoomUuid({room_uuid: this.currentRoomUuid}).then(res=>{
+                console.log('313131',res)
                 this.list = res.data.list
                 this.room = res.data.room.room
                 if(res.data.room.is_alert){
@@ -176,7 +177,7 @@ export default {
         handleDelRoomMsg(){
             Confirm({
                 title: '提示',
-                mes: '确认删除？',
+                mes: '只能删除本地记录，确认删除？',
                 opts: [
                     {
                         txt: '取消',
@@ -192,11 +193,11 @@ export default {
                                 delRoomMsg(this.currentRoomUuid).then(res=>{
                                     Toast({'mes':'删除成功'})
                                 })
-                            }else if(this.currentRoomSaveAction == 1){
+                            }/* else if(this.currentRoomSaveAction == 1){
                                 roomMsgDel({room_uuid:this.currentRoomUuid}).then(res=>{
                                     Toast({'mes':'删除成功'})
                                 })
-                            }
+                            } */
                         }
                     }
                 ]

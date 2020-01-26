@@ -103,7 +103,7 @@ export default {
                     if(item.save_action == 0){
                         let msgData = {
                             msg:data['msg'],
-                            created_at:item.room.updated_at,
+                            created_at:data.created_at,
                             head_img:data['head_img'],
                             name:data['name'],
                             send_status:1,
@@ -137,6 +137,7 @@ export default {
             state.groupRoomList = groupRoomList
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
+            console.log("342342",groupRoomList)
             groupRoomList.forEach((item)=>{
                 if(item.room.last_msg !=''){
                     console.log(item.room.last_msg)
@@ -144,12 +145,12 @@ export default {
                     if(item.save_action == 0){
                         let msgData = {
                             msg:data['msg'],
-                            created_at:item.created_at,
-                            head_img:item.users.head_img,
-                            name:item.users.nick_name,
+                            created_at:data.created_at,
+                            head_img:data.head_img,
+                            name:data.name,
                             send_status:1,
                             type:data['type'],
-                            user_id:item.users.id,
+                            user_id:data.user_id,
                             room_uuid:item.room_uuid
                         }
                         addLocalRoomMsg(msgData)      

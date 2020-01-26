@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors  : hua
-@LastEditTime : 2019-12-27 17:12:13
+@LastEditTime : 2020-01-26 17:51:06
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -36,14 +36,14 @@ class ChatService():
             address_book_data = AddressBook.get(room_uuid)
             #发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
-            #如果是云端存储则记录
-            if save_action == CONST['SAVE']['CLOUD']['value']:
-                res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
-                if res == None:
-                    copy_data = data.copy()
-                    copy_data['msg'] = json.dumps(msg)
-                    copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
-                    Msg().add(copy_data)
+            #如果是云端存储则记录，这边判断不判断都存储
+            #if save_action == CONST['SAVE']['CLOUD']['value']:
+            res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
+            if res == None:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字
@@ -58,13 +58,13 @@ class ChatService():
             #发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
             #如果是云端存储则记录
-            if save_action == CONST['SAVE']['CLOUD']['value']:
-                res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
-                if res == None:
-                    copy_data = data.copy()
-                    copy_data['msg'] = json.dumps(msg)
-                    copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
-                    Msg().add(copy_data)
+            #if save_action == CONST['SAVE']['CLOUD']['value']:
+            res = Msg().getOne({Msg.room_uuid == room_uuid,Msg.created_at == created_at,Msg.user_id==user_data['id']})
+            if res == None:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                Msg().add(copy_data)
             #聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             #更新聊天提示数字
