@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-27 13:38:42
+ * @LastEditors: hua
+ * @LastEditTime: 2020-03-19 15:11:24
  -->
 <template>
 	<div class="content">
@@ -96,7 +96,7 @@
 		computed: {
 			...mapGetters([
 				'navbarTitle','roomList','msgList','groupRoomList',
-				"RECORD","TEXT","IMG","FILE",
+				"RECORD","TEXT","IMG","FILE","CHAT_NOTIFY"
 			])
 		},
 		methods: {
@@ -158,6 +158,9 @@
 					}
 					if(data['type'] == this.TEXT ){
 						return data['msg']
+					}
+					if(data['type'] == this.CHAT_NOTIFY ){
+						return JSON.parse(data['msg'])['msg']
 					}
 					return data['msg']
 				}catch(e){

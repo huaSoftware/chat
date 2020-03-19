@@ -16,6 +16,10 @@ export default {
           "FILE":{
               "text":"文件",
               "value": 3
+          },
+          "NOTIFY":{
+            "text":"通知",
+            "value": 4
           }
       },
       "LOG":{
@@ -176,6 +180,9 @@ export default {
       },
       FILE(state){
         return state.CHAT.FILE.value
+      },
+      CHAT_NOTIFY(state){
+        return state.CHAT.NOTIFY.value
       },
       LOADING(state){
         return state.STATUS.LOADING.value

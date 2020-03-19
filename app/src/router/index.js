@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 09:54:00
+ * @LastEditors: hua
+ * @LastEditTime: 2020-02-27 18:51:35
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -11,6 +11,7 @@ import store from '../store'
 import authRouter from './modules/auth'
 import myRouter from './modules/my'
 import roomRouter from './modules/room'
+import groupRoomRouter from './modules/groupRoom'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 
@@ -21,6 +22,7 @@ const router = new Router({
     ...authRouter,
     ...myRouter,
     ...roomRouter,
+    ...groupRoomRouter,
     // 首页
     {
       path: '/home', // 路径

@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-12-30 20:41:03
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 19:56:00
+ * @LastEditors: hua
+ * @LastEditTime: 2020-02-27 19:00:40
  */
 import store from '../store'
 import router from '../router'
@@ -88,10 +88,19 @@ export default function room(data, method){
                 if(data.name){
                     queryData.name = data.name
                 }
-                router.push({
-                    name: 'room',
-                    query: queryData
-                }).catch(()=>{})
+                console.log('聊天室进入传参',data) 
+                if(data.type == store.getters.ALONE){
+                    router.push({
+                        name: 'room',
+                        query: queryData
+                    }).catch(()=>{})
+                }
+                if(data.type == store.getters.GROUP){
+                    router.push({
+                        name: 'groupRoom',
+                        query: queryData
+                    }).catch(()=>{})
+                }
             }
             Promise.resolve(recv)
         }).catch(e=>{

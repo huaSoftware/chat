@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-19 15:04:50
+ * @LastEditors: hua
+ * @LastEditTime: 2020-03-19 14:27:08
  -->
 <template>
   <yd-layout>
@@ -24,7 +24,9 @@
 		</transition>
 		<transition :name='$store.state.routerStatus.transition' mode="out-in">
 				<router-view v-if="!$route.meta.keepAlive"></router-view>
-		</transition>
+    </transition>
+    <!-- html通知消息 -->
+    <notify></notify>
     <!-- 悬浮 -->
     <navMenu></navMenu>
     <!--公共底部导航-->
@@ -49,10 +51,11 @@ import {getConst} from '@/socketioApi/config'
 import utils from '@/utils/utils'
 import router from './router'
 import navMenu from '@/components/nav-menu/nav-menu';
+import notify from '@/components/notify/notify';
 import eruda from "eruda";
 
 export default {
-  components: {navMenu},
+  components: {navMenu, notify},
   name: "app",
   created() {
     eruda.init()

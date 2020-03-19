@@ -2,13 +2,13 @@
  * @Author: hua
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-04 13:46:47
+ * @LastEditors: hua
+ * @LastEditTime: 2020-03-19 15:26:18
  */
 import store from '../store'
 import router from '../router'
 import { Confirm, Toast } from 'vue-ydui/dist/lib.rem/dialog'
-import {send, response, modifyMsgStatus, modifyMsgReadStatus} from '@/utils/socketio'
+import {send, response, modifyMsgStatus, modifyMsgReadStatus,formatLastMsg} from '@/utils/socketio'
 import { addLocalRoomMsg, addAddressBookBeg, updateLocalRoomMsg, getAddressBookBeg,updateAddressBookBeg, updateReadStatusLocalRoomMsgByRoomIdAndUserId } from "@/utils/indexedDB"
 import { updateCloudRoomMsg, updateReadStatusCloudRoomMsgByRoomIdAndUserId } from "@/socketioApi/room"
 import {addressBookBegCacheDel} from '@/socketioApi/addressBook'
@@ -80,6 +80,16 @@ export default function setupAuthEvent(){
                 updateLocalRoomMsg(reqData)
             }else if(store.getters.currentRoomSaveAction == store.getters.CLOUD){
                 updateCloudRoomMsg(reqData)
+            }
+            //@通知
+            if(data['type'] == store.getters.CHAT_NOTIFY){
+                let msg = formatLastMsg(data['msg']);
+                store.dispatch('updateMsg', data)
+                if(msg['user']['id'] == store.getters.userInfo.id){
+                    //同步信息到vuex
+                    store.dispatch('updateMsg', msg)
+                    plus.push.createMessage(msg['msg'], "LocalMSG", {cover:false,title:msg['user']['nick_name']});
+                }
             }
         })
     });
@@ -188,15 +198,19 @@ export default function setupAuthEvent(){
     //监听群聊房间动态消息
     window.apiSocket.on('groupRoom', (data) => {
         response(data).then(res=>{
+            console.log("groupRoom", res)
             let data = res.data.list
             if(data != null){
-                //app消息通知
-                if(window.plus && store.getters.isPaused && data[0].is_alert){
-                    plus.push.createMessage(formatLastMsg(data[0]['room']['last_msg']), "LocalMSG", {cover:false,title:data[0].users.nick_name});
-                } 
-                console.log(data)
-                store.dispatch('updateGroupRoomList', data)
+                for(let i=0; i<data.length;i++){
+                    let last_msg = formatLastMsg(data[i]['room']['last_msg']);
+                    //app消息通知
+                    if(window.plus && store.getters.isPaused && data[i].is_alert){
+                        plus.push.createMessage(last_msg, "LocalMSG", {cover:false,title:data[i].users.nick_name});
+                    }
+                }
             }
+            console.log(data)
+            store.dispatch('updateGroupRoomList', data)
         })
     });
     //初始化好友邀请消息状态

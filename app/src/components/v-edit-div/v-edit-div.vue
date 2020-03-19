@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-27 13:57:16
+ * @LastEditors: hua
+ * @LastEditTime: 2020-03-19 15:03:27
  -->
 <template>
     <div class="edit-div"
@@ -56,12 +56,12 @@
                 this.$emit('input', this.$el.innerHTML);
             },
             onFocus(){
-                this.isLocked = true
+                //this.isLocked = true
                 console.log('onFocus')
                 this.$emit('onFocus');
             },
             onBlur(){
-                this.isLocked = false
+                //this.isLocked = false
                 console.log('onBlur')
                 this.$emit('onBlur');
             }

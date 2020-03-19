@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-21 19:53:18
+ * @LastEditors: hua
+ * @LastEditTime: 2020-03-19 15:23:42
  */
 
 import store from '../store'
@@ -199,6 +199,9 @@ export function formatLastMsg(last_msg){
 		}
 		if(data['type'] == store.getters.TEXT ){
 			return data['msg']
+		}
+		if(data['type'] == store.getters.CHAT_NOTIFY ){
+			return JSON.parse(data['msg'])
 		}
 		return data['msg']
 	}catch(e){

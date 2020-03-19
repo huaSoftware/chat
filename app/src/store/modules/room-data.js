@@ -17,8 +17,8 @@ export default {
         msgList: [],//聊天数据
         roomList: [],//单聊房间数据 
         groupRoomList: [], //群聊房间数据
-        isPaused:false
-
+        isPaused:false,
+        msg:""
     },
     getters:{
         msgList(state){
@@ -55,7 +55,10 @@ export default {
             return state.newFriendAlertNumber
         },
         isPaused(state){
-        return state.isPaused
+            return state.isPaused
+        },
+        msg(state){
+            return state.msg
         }
     },
 
@@ -85,6 +88,9 @@ export default {
         updateNewFriendAlertNumber({commit}, newFriendAlertNumber){
             commit("updateNewFriendAlertNumber", newFriendAlertNumber);
         },
+        updateMsg({commit}, msg){
+            commit("updateMsg", msg);
+        } 
         
     },
 
@@ -196,6 +202,9 @@ export default {
         },
         updateIsPaused(state, data){
             state.isPaused = data
+        },
+        updateMsg(state, msg){
+            state.msg = msg
         }
     }
 }
