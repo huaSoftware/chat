@@ -18,7 +18,7 @@ export default {
         roomList: [],//单聊房间数据 
         groupRoomList: [], //群聊房间数据
         isPaused:false,
-        msg:""
+        msg:""//@聊天数据
     },
     getters:{
         msgList(state){

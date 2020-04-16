@@ -2,10 +2,10 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors  : hua
-@LastEditTime : 2020-01-21 11:13:21
+@LastEditTime : 2020-01-21 20:23:16
 '''
 #mysql
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root:mysql123@212.64.83.121:8066/chat?charset=utf8'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:1993524@127.0.0.1:3306/chat?charset=utf8'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 #debug
 DEBUG_LOG = True

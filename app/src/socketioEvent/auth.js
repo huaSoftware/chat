@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-03-19 15:26:18
+ * @LastEditTime: 2020-03-26 20:40:41
  */
 import store from '../store'
 import router from '../router'
@@ -84,7 +84,6 @@ export default function setupAuthEvent(){
             //@通知
             if(data['type'] == store.getters.CHAT_NOTIFY){
                 let msg = formatLastMsg(data['msg']);
-                store.dispatch('updateMsg', data)
                 if(msg['user']['id'] == store.getters.userInfo.id){
                     //同步信息到vuex
                     store.dispatch('updateMsg', msg)
