@@ -3,7 +3,7 @@
 @Date: 2019-06-11 14:59:11
 @description: 
 @LastEditors: hua
-@LastEditTime: 2019-11-16 16:14:09
+@LastEditTime: 2020-04-19 09:27:08
 '''
 from app import app
 from app.Vendor.Decorator import validator
@@ -11,6 +11,8 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
+from app.Admin.Service.RoomService import RoomService
+
 
 @app.route('/api/v2/admin/user/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)
@@ -28,8 +30,10 @@ def adminUserList(*args, **kwargs):
         }
     else:
         filters = set()
-    data = Users().getList(filters, params['orderBy']+" "+params['order'],(),params['page_no'], params['per_page'])
+    data = Users().getList(filters,
+                           params['orderBy']+" "+params['order'], (), params['page_no'], params['per_page'])
     return BaseController().successData(data)
+
 
 @app.route('/api/v2/admin/user/delete', methods=['GET'])
 @validator(name="id", rules={'type': 'string'}, default=0)
@@ -44,6 +48,7 @@ def adminUserDelete(*args, **kwargs):
     Users().delete(filters)
     return BaseController().successData()
 
+
 @app.route('/api/v2/admin/user/add', methods=['POST'])
 @validator(name="name", rules={'type': 'string'}, default='')
 @validator(name="pwd", rules={'type': 'string'}, default='')
@@ -51,7 +56,7 @@ def adminUserDelete(*args, **kwargs):
 @transaction
 def adminUserAdd(*args, **kwargs):
     """ 增加用户 to do"""
-  
+
 
 @app.route('/api/v2/admin/user/edit', methods=['POST'])
 @validator(name="id", rules={'type': 'integer'}, default='')
