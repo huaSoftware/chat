@@ -101,6 +101,7 @@ class HtMsg(Base):
     send_status = Column(TINYINT(1), nullable=False, comment='发送状态')
     read_status = Column(TINYINT(1), nullable=False,
                          server_default=text("'0'"), comment='读取状态')
+    user_type = Column(INTEGER(11), nullable=False, comment='类型，0是用户，1是管理员')
 
 
 class HtRoom(Base):

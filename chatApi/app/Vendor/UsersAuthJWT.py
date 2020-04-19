@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2019-12-12 14:25:32
+@LastEditTime: 2020-04-19 16:53:10
 '''
 from app import CONST
 from app.Vendor.Utils import Utils
@@ -11,7 +11,9 @@ from functools import wraps
 from app.env import SECRET_KEY, JWT_LEEWAY
 from app.Models.Users import Users
 from app.Models.Admin import Admin
-import datetime, jwt, time
+import datetime
+import jwt
+import time
 ''' JWT工具函数在这 '''
 
 
@@ -71,18 +73,21 @@ class UsersAuthJWT():
         :param password:
         :return: json
         """
-        userInfo = Users().getOne({Users.email==email}, 'id desc', ('email', 'password', 'id', 'nick_name', 'head_img'))
+        userInfo = Users().getOne({Users.email == email}, 'id desc',
+                                  ('email', 'password', 'id', 'nick_name', 'head_img'))
         if(userInfo is None):
-            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'找不到用户')
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'], '找不到用户')
         else:
             if (Users.check_password(userInfo['password'], password)):
                 updated_at = int(time.time())
-                Users().edit({'updated_at': updated_at}, {Users.email == email})
-                token = UsersAuthJWT.encode_auth_token(userInfo['id'], updated_at)
-                userInfo.pop('password')#删除密码
-                return  Utils.formatBody({'token': token, 'user': userInfo}, '登陆成功')
+                Users().edit({'updated_at': updated_at},
+                             {Users.email == email})
+                token = UsersAuthJWT.encode_auth_token(
+                    userInfo['id'], updated_at)
+                userInfo.pop('password')  # 删除密码
+                return Utils.formatBody({'token': token, 'user': userInfo}, '登陆成功')
             else:
-                return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'密码不正确')
+                return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'], '密码不正确')
 
     def identify(self, auth_header):
         """
@@ -111,7 +116,7 @@ class UsersAuthJWT():
         else:
             return '没有提供认证令牌'
         return result
-    
+
     def adminIdentify(self, auth_header):
         """
         用户鉴权
@@ -155,7 +160,7 @@ class UsersAuthJWT():
                 return make_response(jsonify(Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'])))
             res = func(*args, **kwargs)
             return res
-        return inner_wrappar 
+        return inner_wrappar
 
     """ 
     jwt认证装饰器,用于socketio
@@ -171,10 +176,11 @@ class UsersAuthJWT():
                 return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')
             kwargs['user_info'] = result
             if isinstance(result, str):
-                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')#socketio.emit(name,Utils.formatError(CONST['CODE']['ERROR']['value']_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
+                # socketio.emit(name,Utils.formatError(CONST['CODE']['ERROR']['value']_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
+                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')
             res = func(*args, **kwargs)
             return res
-        return inner_wrappar 
+        return inner_wrappar
 
     """ 
     后台jwt认证装饰器,用于api
@@ -191,4 +197,24 @@ class UsersAuthJWT():
                 return make_response(jsonify(Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], result)))
             res = func(*args, **kwargs)
             return res
-        return inner_wrappar 
+        return inner_wrappar
+
+    """ 
+    jwt认证装饰器,用于socketio
+        @return func|False
+    """
+    @staticmethod
+    def adminSocketAuth(func):
+        @wraps(func)
+        def inner_wrappar(*args, **kwargs):
+            if 'Authorization' in args[0].keys():
+                result = UsersAuthJWT().adminIdentify(args[0]['Authorization'])
+            else:
+                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')
+            kwargs['user_info'] = result
+            if isinstance(result, str):
+                # socketio.emit(name,Utils.formatError(CONST['CODE']['ERROR']['value']_AUTH_CHECK_TOKEN_FAIL, '令牌失效'), room='@api.'+str(request.sid))
+                return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], '令牌失效')
+            res = func(*args, **kwargs)
+            return res
+        return inner_wrappar

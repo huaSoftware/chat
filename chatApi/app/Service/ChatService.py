@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-04-19 10:36:17
+@LastEditTime: 2020-04-19 19:45:43
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -17,12 +17,13 @@ from app.Models.Config import Config
 from app.Vendor.Utils import Utils
 from app import socketio, CONST
 import json
+import time
 
 
 class ChatService():
     @staticmethod
     @transaction
-    def sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, user_data):
+    def sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, user_data, user_type=0):
         data = {
             'msg': msg,
             'name': user_data['nick_name'],
@@ -31,8 +32,8 @@ class ChatService():
             'head_img': user_data['head_img'],
             'room_uuid': room_uuid,
             'created_at': created_at,
-            'read_status': 0
-        }
+            'read_status': 0,
+            'user_type': user_type}
         if room_data != None and (room_type == CONST['ROOM']['ALONE']['value'] or room_type == CONST['ROOM']['ADMIN']['value']):
             address_book_data = AddressBook.get(room_uuid)
             # 发送消息
@@ -89,15 +90,15 @@ class ChatService():
         if isinstance(admin_user_info, str):
             return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], admin_user_info)
         filters = {
-            Room.user_id == admin_user_info['id'],
-            Room.type == CONST['ROOM']['ADMIN']['value']
+            AddressBook.be_focused_user_id == admin_user_info['data']['id'],
+            AddressBook.focused_user_id == message['user_id']
         }
-        roomInfo = Room().getOne(filters)
-        if roomInfo == None:
+        addressBookInfo = AddressBook().getOne(filters)
+        if addressBookInfo == None:
             room_uuid = Utils.unique_id()
             # 建立通讯录关系
             status = AddressBook.adminAddRoomAndAddressBook(
-                room_uuid, message['focused_user_id'], admin_user_info['id'])
+                room_uuid, admin_user_info['data']['id'], message['user_id'])
             if status == False:
                 return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'], msg='添加失败')
             # 添加后同步房间
@@ -110,9 +111,9 @@ class ChatService():
                         roomList), namespace="/api", room='@broadcast.admin.'+str(item.be_focused_user_id))
                 else:
                     socketio.emit('room', Utils.formatBody(
-                        roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
+                        roomList), namespace="/api", room='@broadcast.admin.'+str(item.be_focused_user_id))
         else:
-            room_uuid = roomInfo['room_uuid']
+            room_uuid = addressBookInfo['room_uuid']
         return Utils.formatBody({'room_uuid': room_uuid})
 
     @staticmethod
@@ -128,9 +129,11 @@ class ChatService():
             default_img = 'static/img/about/python.jpg'
         else:
             default_img = default_img_data['config']
-        # admin_user_info['nick_name'] =
+
+        admin_user_info['nick_name'] = '系统管理'  # admin_user_info['name']
         admin_user_info['head_img'] = default_img  # 这里后期改成配置的
-        # admin_user_info['id'] = 0  # 使用0作为系统id
+        # 使用0作为系统id
+        admin_user_info['id'] = admin_user_info['data']['id']
         msg = message['data']['msg']
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']
@@ -138,9 +141,9 @@ class ChatService():
         if room_data == None:
             return Utils.formatError(CONST['CODE']['ROOM_NO_EXIST']['value'], "房间不存在")
         room_type = room_data.type
-        created_at = message['data']['created_at']
+        created_at = int(time.time())
         save_action = message['data']['save_action']
-        return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, admin_user_info)
+        return ChatService.sendChatMessage(msg, room_uuid, Type, room_data, room_type, created_at, save_action, admin_user_info, 1)
 
     @staticmethod
     def chat(message, user_info):

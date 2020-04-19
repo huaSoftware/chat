@@ -2,8 +2,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors  : hua
-@LastEditTime : 2020-01-26 18:59:46
+@LastEditors: hua
+@LastEditTime: 2020-04-19 18:12:23
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -16,8 +16,8 @@ from app.Service.ConfigService import ConfigService
 from app.Service.UsersService import UsersService
 from app.Service.UploadService import UploadService
 from app.Service.AddressBookService import AddressBookService
-from app.Service.RoomService import RoomService
 from app.Service.UserRoomRelationService import UserRoomRelationService
+from app.Service.RoomService import RoomService
 import time
 from app.Models.Users import Users
 
@@ -35,8 +35,9 @@ def join(message, user_info):
         join_room(room_uuid)
     elif message['type'] == CONST['ROOM']['NOTIFY']['value']:
         join_room('@broadcast.'+str(user_info['data']['id']))
-    return  Utils.formatBody({'action':"join"})
-        
+    return Utils.formatBody({'action': "join"})
+
+
 """ 2,3的离开事件是否要写？ """
 @socketio.on('leave', namespace='/api')
 @decryptMessage
@@ -44,19 +45,48 @@ def join(message, user_info):
 def leave(message, user_info):
     room_uuid = message['room_uuid']
     leave_room(room_uuid)
-    return  Utils.formatBody({'action': "leave"})
+    return Utils.formatBody({'action': "leave"})
+
+
+''' 管理员聊天室模式，进入，离开，聊天
+'''
+@socketio.on('adminJoin', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.adminSocketAuth
+def join(message, user_info):
+    if message['type'] == CONST['ROOM']['ALONE']['value']:
+        room_uuid = message['room_uuid']
+        join_room(room_uuid)
+    elif message['type'] == CONST['ROOM']['GROUP']['value']:
+        room_uuid = message['room_uuid']
+        join_room(room_uuid)
+    elif message['type'] == CONST['ROOM']['NOTIFY']['value']:
+        join_room('@broadcast.admin.'+str(user_info['data']['id']))
+    return Utils.formatBody({'action': "join"})
+
+
+""" 2,3的离开事件是否要写？ """
+@socketio.on('adminLeave', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.adminSocketAuth
+def leave(message, user_info):
+    room_uuid = message['room_uuid']
+    leave_room(room_uuid)
+    return Utils.formatBody({'action': "leave"})
+
 
 @socketio.on('chat', namespace='/api')
 @decryptMessage
 @UsersAuthJWT.socketAuth
 def chat(message, user_info):
-    return ChatService().chat(message, user_info) # 客户端回调函数的参数
-    
+    return ChatService().chat(message, user_info)  # 客户端回调函数的参数
+
+
 """ 普通交互接口 """
 @socketio.on('send', namespace='/api')
 def send(message):
-    #这里增加判断文件不加密
-    if isinstance(message,dict):
+    # 这里增加判断文件不加密
+    if isinstance(message, dict):
         if'UploadService' in message.values():
             pass
     else:
@@ -65,27 +95,38 @@ def send(message):
     if 'data' in message.keys():
         if 'Authorization' in message.keys():
             message['data']['Authorization'] = message['Authorization']
-        return getattr(globals()[message['c']],message['a'])(message['data'])
+        return getattr(globals()[message['c']], message['a'])(message['data'])
     else:
-        return getattr(globals()[message['c']],message['a'])(message)
+        return getattr(globals()[message['c']], message['a'])(message)
+
+
+''' 输入事件 '''
+@socketio.on('adminInput', namespace='/api')
+@decryptMessage
+@UsersAuthJWT.adminSocketAuth
+def input(message, user_info):
+    return ChatService().input(message, user_info)  # 客户端回调函数的参数
+
 
 ''' 输入事件 '''
 @socketio.on('input', namespace='/api')
 @decryptMessage
 @UsersAuthJWT.socketAuth
 def input(message, user_info):
-    return ChatService().input(message, user_info) # 客户端回调函数的参数
+    return ChatService().input(message, user_info)  # 客户端回调函数的参数
 
 
 """ 连接事件 """
 @socketio.on('connect', namespace='/api')
 def connect():
-    return  Utils.formatBody({'action': "connect"})
+    return Utils.formatBody({'action': "connect"})
+
 
 """ 断开事件 """
 @socketio.on('disconnect', namespace='/api')
 def disconnect():
-    return  Utils.formatBody({'action': "disconnect"})
+    return Utils.formatBody({'action': "disconnect"})
+
 
 """ 用户登录事件 """
 @socketio.on('loginConnect', namespace='/api')
@@ -94,7 +135,8 @@ def disconnect():
 def loginConnect(message, user_info):
     user_id = user_info['data']['id']
     delayQueue.client.zadd('onlineUsers', {str(user_id): int(time.time())})
-    return  Utils.formatBody({'action': "loginConnect"})
+    return Utils.formatBody({'action': "loginConnect"})
+
 
 """ 用户退出事件 """
 @socketio.on('logoutDisconnect', namespace='/api')
@@ -104,20 +146,23 @@ def logoutDisconnect(message, user_info):
     user_id = user_info['data']['id']
     UsersService.edit({'online': 0}, {Users.id == str(user_id)})
     delayQueue.client.zrem('onlineUsers', str(user_id))
-    return  Utils.formatBody({'action': "logoutDisconnect"})
+    return Utils.formatBody({'action': "logoutDisconnect"})
+
 
 def background_thread():
     """启动一个后台线程来处理所有的延时任务
     """
     while True:
         socketio.sleep(2)
-        #延迟推送
+        # 延迟推送
         d_list = delayQueue.consumer()
         for item in d_list:
             if item["action"] == 'invite':
-                socketio.emit('beg', Utils.formatBody(item), namespace='/api', room='@broadcast.'+str(item["id"]))
-        #查询用户是否在线 
-        onlineUsers = delayQueue.client.zrange('onlineUsers',0,-1,withscores = True)
+                socketio.emit('beg', Utils.formatBody(
+                    item), namespace='/api', room='@broadcast.'+str(item["id"]))
+        # 查询用户是否在线
+        onlineUsers = delayQueue.client.zrange(
+            'onlineUsers', 0, -1, withscores=True)
         for onlineUser in onlineUsers:
             nowTime = int(time.time())
             onlineTime = int(onlineUser[1])+10

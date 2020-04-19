@@ -3,7 +3,7 @@
 @Date: 2019-06-11 14:59:11
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-04-19 09:27:08
+@LastEditTime: 2020-04-19 10:56:17
 '''
 from app import app
 from app.Vendor.Decorator import validator
@@ -11,7 +11,6 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
-from app.Admin.Service.RoomService import RoomService
 
 
 @app.route('/api/v2/admin/user/list', methods=['POST'])
