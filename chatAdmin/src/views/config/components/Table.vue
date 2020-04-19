@@ -2,16 +2,27 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2019-12-09 10:02:43
+ * @LastEditTime: 2020-04-17 23:13:36
  -->
 <template>
   <div class="app-container">
-     <div class="filter-container" style="display:flex;justify-content:space-between;">
-      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="dialogVisible=!dialogVisible">添加</el-button>
+    <div class="filter-container" style="display:flex;justify-content:space-between;">
+      <el-button
+        class="filter-item"
+        type="primary"
+        icon="el-icon-edit"
+        @click="dialogVisible=!dialogVisible"
+      >添加</el-button>
     </div>
     <!-- 添加弹窗 -->
     <el-dialog :visible.sync="dialogVisible" title="添加">
-      <el-form ref="addForm" :model="addForm"  class="add-form" auto-complete="on" label-position="left">
+      <el-form
+        ref="addForm"
+        :model="addForm"
+        class="add-form"
+        auto-complete="on"
+        label-position="left"
+      >
         <el-form-item label="名称" prop="name">
           <el-input
             v-model="addForm.name"
@@ -63,15 +74,23 @@
             <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-button  type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleAdd">
-         确认
-        </el-button>
+        <el-button
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleAdd"
+        >确认</el-button>
       </el-form>
     </el-dialog>
     <!-- 编辑弹窗 -->
     <el-dialog :visible.sync="editDialogVisible" title="编辑">
-      <el-form ref="editForm" :model="editForm"  class="edit-form" auto-complete="on" label-position="left">
-         <el-form-item label="名称" prop="name">
+      <el-form
+        ref="editForm"
+        :model="editForm"
+        class="edit-form"
+        auto-complete="on"
+        label-position="left"
+      >
+        <el-form-item label="名称" prop="name">
           <el-input
             v-model="editForm.name"
             placeholder="请输入名称"
@@ -122,9 +141,11 @@
             <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-button  type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="comfrimEdit">
-         确认
-        </el-button>
+        <el-button
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="comfrimEdit"
+        >确认</el-button>
       </el-form>
     </el-dialog>
     <el-table
@@ -153,31 +174,32 @@
       </el-table-column>
       <el-table-column label="描述" prop="description" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{scope.row.description}}</span> 
+          <span>{{scope.row.description}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="编号"  prop="code" align="center" sortable>
+      <el-table-column label="编号" prop="code" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{scope.row.code}}</span> 
+          <span>{{scope.row.code}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态"  prop="status" align="center" sortable>
+      <el-table-column label="状态" prop="status" align="center" sortable>
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
             :active-value="1"
             :inactive-value="0"
             active-color="#13ce66"
-            inactive-color="#ff4949" disabled>
-          </el-switch>
+            inactive-color="#ff4949"
+            disabled
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="配置" prop="config" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{scope.row.config}}</span> 
+          <span>{{scope.row.config}}</span>
         </template>
       </el-table-column>
-       <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
+      <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created_at)}}</span>
         </template>
@@ -207,8 +229,8 @@
 <script>
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import { getToken } from "@/utils/auth";
-import { configList, configDelete, configAdd, configEdit} from "@/api/config";
-import {parseTime} from "@/utils/index"
+import { configList, configDelete, configAdd, configEdit } from "@/api/config";
+import { parseTime } from "@/utils/index";
 export default {
   data() {
     return {
@@ -220,15 +242,14 @@ export default {
       listQuery: {
         page_no: 1,
         per_page: 10,
-        orderBy:'updated_at',
-        order:'desc'
+        orderBy: "updated_at",
+        order: "desc"
       },
-      dialogVisible:false,
-      addForm:{
-      },
-      editDialogVisible:false,
-      editForm:{
-        id:0
+      dialogVisible: false,
+      addForm: {},
+      editDialogVisible: false,
+      editForm: {
+        id: 0
       }
     };
   },
@@ -241,59 +262,59 @@ export default {
       configList(this.listQuery).then(res => {
         console.log(res);
         this.list = res.data.list;
-        this.total = res.data.page.count
+        this.total = res.data.page.count;
         this.listLoading = false;
       });
     },
     move(id) {
-      /* configDelete({ id: id }).then(res => {
+      configDelete({ id: id }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"
         });
         this.getList();
-      }); */
+      });
     },
-    handleAdd(){
-      /* this.addForm.status = parseInt(this.addForm.status)
-      configAdd(this.addForm).then(res=>{
+    handleAdd() {
+      this.addForm.status = parseInt(this.addForm.status);
+      configAdd(this.addForm).then(res => {
         this.$message({
           message: "新增成功",
           type: "success"
         });
-        this.dialogVisible = false
-        this.getList()
-      }) */
+        this.dialogVisible = false;
+        this.getList();
+      });
     },
-    handleEdit(item){
-      /* this.editForm = JSON.parse(JSON.stringify(item))
-      //this.editForm.status = String(JSON.parse(JSON.stringify(item))['status'])
-      this.editDialogVisible = true */
+    handleEdit(item) {
+      this.editForm = JSON.parse(JSON.stringify(item));
+      this.editForm.status = String(JSON.parse(JSON.stringify(item))["status"]);
+      this.editDialogVisible = true;
     },
-    comfrimEdit(){
-      //this.editForm.status = parseInt(this.editForm.status)
-      /* configEdit(this.editForm).then(res=>{
+    comfrimEdit() {
+      this.editForm.status = parseInt(this.editForm.status);
+      configEdit(this.editForm).then(res => {
         this.$message({
           message: "编辑成功",
           type: "success"
         });
-        this.editDialogVisible = false
-        this.getList()
-      }) */
+        this.editDialogVisible = false;
+        this.getList();
+      });
     },
-    handleSort({ column, prop, order }){
-      if(!prop)return
-      if(order == 'descending'){
-          this.listQuery['order'] = 'desc';
-          this.listQuery['orderBy'] = prop;
-      }else{
-          this.listQuery['order'] = 'asc';
-          this.listQuery['orderBy'] = prop;
+    handleSort({ column, prop, order }) {
+      if (!prop) return;
+      if (order == "descending") {
+        this.listQuery["order"] = "desc";
+        this.listQuery["orderBy"] = prop;
+      } else {
+        this.listQuery["order"] = "asc";
+        this.listQuery["orderBy"] = prop;
       }
       this.getList();
     },
-    parseTime(time){
-      return parseTime(time)
+    parseTime(time) {
+      return parseTime(time);
     }
   },
   created: function() {
@@ -303,12 +324,9 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-
-
 table i {
   color: #409eff;
   margin-left: 10px;
   cursor: pointer;
 }
-
 </style>

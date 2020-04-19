@@ -1,63 +1,209 @@
 export default {
-    state: {
-        // 房间类型
-        ALONECHAT: 0, //单聊
-        GROUPCHAT:1,//群聊
-        NOTIFICATION:2,//通知
-        // 聊天类型
-        RECORD:0,//录音
-        TEXT:1,//文字
-        RESEND:2,//重发
-        IMG:3,//图片
-        FILE:4,//文件
-        // 发送状态
-        LOADING: 0,//发送中
-        SUCCESS:1, //成功
-        FAIL:2, //失败
-        //保存聊天方式
-        LOCALSAVE:0,//本地保存
-        CLOUDSAVE:1//远端保存
-  
+  state: {
+    CHAT: {
+      RECORD: {
+        text: "录音",
+        value: 0
+      },
+      TEXT: {
+        text: "文字",
+        value: 1
+      },
+      IMG: {
+        text: "图片",
+        value: 2
+      },
+      FILE: {
+        text: "文件",
+        value: 3
+      },
+      NOTIFY: {
+        text: "通知",
+        value: 4
+      }
     },
-    getters:{
-      ALONECHAT(state){
-        return state.ALONECHAT
+    LOG: {
+      NORMAL: {
+        text: "普通日志",
+        value: 0
       },
-      GROUPCHAT(state){
-        return state.GROUPCHAT
+      DEBUG: {
+        text: "调试日志",
+        value: 1
       },
-      NOTIFICATION(state){
-        return state.NOTIFICATION
+      WARN: {
+        text: "警告日志",
+        value: 2
       },
-      RECORD(state){
-        return state.RECORD
+      ERROR: {
+        text: "错误日志",
+        value: 3
+      }
+    },
+    ROOM: {
+      ALONE: {
+        text: "单聊",
+        value: 0
       },
-      TEXT(state){
-        return state.TEXT
+      GROUP: {
+        text: "群聊",
+        value: 1
       },
-      RESEND(state){
-        return state.RESEND
+      NOTIFY: {
+        text: "通知",
+        value: 2
+      }
+    },
+    SAVE: {
+      LOCAL: {
+        text: "本地存储",
+        value: 0
       },
-      IMG(state){
-        return state.IMG
+      CLOUD: {
+        text: "远端存储",
+        value: 1
+      }
+    },
+    STATUS: {
+      LOADING: {
+        text: "发送中",
+        value: 0
       },
-      FILE(state){
-        return state.FILE
+      SUCCESS: {
+        text: "发送成功",
+        value: 1
       },
-      LOADING(state){
-        return state.LOADING
+      FAIL: {
+        text: "发送失败",
+        value: 2
       },
-      SUCCESS(state){
-        return state.SUCCESS
+      RESEND: {
+        text: "重新发送",
+        value: 3
+      }
+    },
+    ADDFRIEND: {
+      APPLY: {
+        text: "申请",
+        value: 0
       },
-      FAIL(state){
-        return state.FAIL
+      PASS: {
+        text: "通过",
+        value: 1
       },
-      LOCALSAVE(state){
-        return state.LOCALSAVE
+      REFUSE: {
+        text: "拒绝",
+        value: 2
+      }
+    },
+    CODE: {
+      SUCCESS: {
+        text: "成功",
+        value: 200
       },
-      CLOUDSAVE(state){
-        return state.CLOUDSAVE
+      BAD_REQUEST: {
+        text: "错误请求(客户端)",
+        value: 400
+      },
+      NOT_FOUND: {
+        text: "未找到路由",
+        value: 404
+      },
+      ERROR: {
+        text: "服务器错误",
+        value: 500
+      },
+      ERROR_AUTH_CHECK_TOKEN_FAIL: {
+        text: "权限验证令牌失败",
+        value: 10001
+      },
+      ERROR_AUTH_CHECK_TOKEN_TIMEOUT: {
+        text: "权限验证令牌超时",
+        value: 10002
+      },
+      ERROR_AUTH_TOKEN: {
+        text: "权限验证令牌错误",
+        value: 10003
+      },
+      ERROR_AUTH: {
+        text: "权限验证错误",
+        value: 10004
+      },
+      ROOM_NO_EXIST: {
+        text: "房间不存在",
+        value: 20000
+      }
+    },
+    TIME: {
+      TIME_OUT: {
+        text: "超时时间",
+        value: 15000
       }
     }
-}  
+  },
+  getters: {
+    CODE(state) {
+      return state.CODE;
+    },
+    TIME(state) {
+      return state.TIME;
+    },
+    APPLY(state) {
+      return state.ADDFRIEND.APPLY.value;
+    },
+    PASS(state) {
+      return state.ADDFRIEND.PASS.value;
+    },
+    REFUSE(state) {
+      return state.ADDFRIEND.REFUSE.value;
+    },
+    ALONE(state) {
+      return state.ROOM.ALONE.value;
+    },
+    GROUP(state) {
+      return state.ROOM.GROUP.value;
+    },
+    NOTIFY(state) {
+      return state.ROOM.NOTIFY.value;
+    },
+    RECORD(state) {
+      return state.CHAT.RECORD.value;
+    },
+    TEXT(state) {
+      return state.CHAT.TEXT.value;
+    },
+    RESEND(state) {
+      return state.STATUS.RESEND.value;
+    },
+    IMG(state) {
+      return state.CHAT.IMG.value;
+    },
+    FILE(state) {
+      return state.CHAT.FILE.value;
+    },
+    CHAT_NOTIFY(state) {
+      return state.CHAT.NOTIFY.value;
+    },
+    LOADING(state) {
+      return state.STATUS.LOADING.value;
+    },
+    SUCCESS(state) {
+      return state.STATUS.SUCCESS.value;
+    },
+    FAIL(state) {
+      return state.STATUS.FAIL.value;
+    },
+    LOCAL(state) {
+      return state.SAVE.LOCAL.value;
+    },
+    CLOUD(state) {
+      return state.SAVE.CLOUD.value;
+    }
+  },
+  mutations: {
+    //修改仓库值
+    updateState(state, e) {
+      state = e;
+    }
+  }
+};

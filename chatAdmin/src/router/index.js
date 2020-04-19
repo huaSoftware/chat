@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /* Router Modules */
 /* import componentsRouter from './modules/components'
@@ -40,134 +40,135 @@ import nestedRouter from './modules/nested' */
  */
 export const constantRoutes = [
   {
-    path: '/redirect',
+    path: "/redirect",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
+        path: "/redirect/:path*",
+        component: () => import("@/views/redirect/index")
       }
     ]
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/login/index"),
     hidden: true
   },
   {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
+    path: "/auth-redirect",
+    component: () => import("@/views/login/auth-redirect"),
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
+    path: "/404",
+    component: () => import("@/views/error-page/404"),
     hidden: true
   },
   {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
+    path: "/401",
+    component: () => import("@/views/error-page/401"),
     hidden: true
   },
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: '/dashboard',
+    redirect: "/dashboard",
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        path: "dashboard",
+        component: () => import("@/views/dashboard/index"),
+        name: "Dashboard",
+        meta: { title: "首页", icon: "dashboard", affix: true }
       }
     ]
   },
   {
-    path: '/room',
+    path: "/room",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/room/index'),
-        name: 'Room',
-        meta: { title: '房间管理', icon: 'table' }
+        path: "index",
+        component: () => import("@/views/room/index"),
+        name: "Room",
+        meta: { title: "房间管理", icon: "table" }
       }
     ]
   },
   {
-    path: '/addressBook',
+    path: "/addressBook",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/addressBook/index'),
-        name: 'AddressBook',
-        meta: { title: '通讯录管理', icon: 'message' }
+        path: "index",
+        component: () => import("@/views/addressBook/index"),
+        name: "AddressBook",
+        meta: { title: "通讯录管理", icon: "message" }
       }
     ]
   },
   {
-    path: '/users',
+    path: "/users",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/users/index'),
-        name: 'Users',
-        meta: { title: '用户管理', icon: 'people' }
+        path: "index",
+        component: () => import("@/views/users/index"),
+        name: "Users",
+        meta: { title: "用户管理", icon: "people" }
       }
     ]
   },
   {
-    path: '/admin',
+    path: "/admin",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/admin/index'),
-        name: 'Admin',
-        meta: { title: '管理员管理', icon: 'peoples' }
+        path: "index",
+        component: () => import("@/views/admin/index"),
+        name: "Admin",
+        meta: { title: "管理员管理", icon: "peoples" }
       }
     ]
   },
   {
-    path: '/log',
+    path: "/log",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/log/index'),
-        name: 'Log',
-        meta: { title: '日志管理', icon: 'edit' }
+        path: "index",
+        component: () => import("@/views/log/index"),
+        name: "Log",
+        meta: { title: "日志管理", icon: "edit" }
       }
     ]
   },
   {
-    path: '/config',
+    path: "/config",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/config/index'),
-        name: 'Config',
-        meta: { title: '系统配置管理', icon: 'nested' }
+        path: "index",
+        component: () => import("@/views/config/index"),
+        name: "Config",
+        meta: { title: "系统配置管理", icon: "nested" }
       }
     ]
   },
   {
-    path: '/constConfig',
+    path: "/constConfig",
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/constConfig/index'),
-        name: 'constConfig',
-        meta: { title: '常量配置管理', icon: 'nested' }
+        path: "index",
+        component: () => import("@/views/constConfig/index"),
+        name: "constConfig",
+        meta: { title: "常量配置管理", icon: "nested" }
       }
     ]
   }
-]
+];
 
 /**
  * asyncRoutes
@@ -175,21 +176,22 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  { path: "*", redirect: "/404", hidden: true }
+];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;
