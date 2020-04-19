@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-04-19 10:10:48
+@LastEditTime: 2020-04-19 10:36:17
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -83,18 +83,17 @@ class ChatService():
 
     @staticmethod
     @transaction
-    def adminCreateRoomAndChat(message):
-        """ 
-        创建管理员房间并回复消息
-        @param dict 注册数据
-        @return dict 返回格式化结果
-        """
+    def adminCreateRoom(message):
         admin_user_info = UsersAuthJWT().adminIdentify(
             message['Authorization'])
         if isinstance(admin_user_info, str):
             return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], admin_user_info)
-        room_uuid = message['room_uuid']
-        if message['room_uuid'] == '':
+        filters = {
+            Room.user_id == admin_user_info['id'],
+            Room.type == CONST['ROOM']['ADMIN']['value']
+        }
+        roomInfo = Room().getOne(filters)
+        if roomInfo == None:
             room_uuid = Utils.unique_id()
             # 建立通讯录关系
             status = AddressBook.adminAddRoomAndAddressBook(
@@ -112,7 +111,9 @@ class ChatService():
                 else:
                     socketio.emit('room', Utils.formatBody(
                         roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
-        return ChatService.sendChatMessage(message)
+        else:
+            room_uuid = roomInfo['room_uuid']
+        return Utils.formatBody({'room_uuid': room_uuid})
 
     @staticmethod
     def adminChat(message: dict) -> dict:
