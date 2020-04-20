@@ -37,7 +37,7 @@
     "ALONE": { "text": "单聊", "value": 0 },
     "GROUP": { "text": "群聊", "value": 1 },
     "NOTIFY": { "text": "通知", "value": 2 },
-    "ADMIN": { "text": "管理员聊天", "value": 2 }
+    "ADMIN": { "text": "管理员聊天", "value": 3 }
   },
   "ADDRESSBOOK": {
     "CUSTOMER": { "text": "用户", "value": 0 },

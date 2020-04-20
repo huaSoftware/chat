@@ -11,6 +11,9 @@ import router from "../router";
 import setupUnAuthEvent from "@/socketioEvent/unAuth";
 import setupAuthEvent from "@/socketioEvent/auth";
 import { MessageBox, Message } from "element-ui";
+import broadcast from '@/socketioEvent/broadcast'
+import login from '../socketioEvent/login'
+import room from '@/socketioEvent/room'
 import utils from "@/utils/utils";
 /* 注册socketio */
 export function setup() {
@@ -72,6 +75,15 @@ export function send(method, data, type = "room") {
     if (token) {
       data["Authorization"] = "JWT " + token;
     }
+    if (type == 'room') {
+			room(data, method);
+		}
+		if (type == 'broadcast') {
+			broadcast(data, method);
+    }
+    if(type == 'loginConnect' || type == 'logoutDisconnect'){
+			return login(data, method);
+		}
     if (type == "api") {
       var res = new Promise((resolve, reject) => {
         let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);

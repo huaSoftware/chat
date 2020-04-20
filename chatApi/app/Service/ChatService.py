@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-04-19 19:45:43
+@LastEditTime: 2020-04-20 19:47:16
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -14,6 +14,7 @@ from app.Models.Users import Users
 from app.Models.Room import Room
 from app.Models.Msg import Msg
 from app.Models.Config import Config
+from app.Models.Admin import Admin
 from app.Vendor.Utils import Utils
 from app import socketio, CONST
 import json
@@ -34,7 +35,35 @@ class ChatService():
             'created_at': created_at,
             'read_status': 0,
             'user_type': user_type}
-        if room_data != None and (room_type == CONST['ROOM']['ALONE']['value'] or room_type == CONST['ROOM']['ADMIN']['value']):
+        if room_data != None and room_type == CONST['ROOM']['ADMIN']['value']:
+            address_book_data = AddressBook.get(room_uuid)
+            # 发送消息
+            socketio.emit('chat',  Utils.formatBody(data),
+                          namespace='/api', room=room_uuid)
+            # 如果是云端存储则记录，这边判断不判断都存储
+            # if save_action == CONST['SAVE']['CLOUD']['value']:
+            res = Msg().getOne({Msg.room_uuid == room_uuid, Msg.created_at ==
+                                created_at, Msg.user_id == user_data['id']})
+            if res == None:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                Msg().add(copy_data)
+            # 聊天时同步房间信息
+            Room.updateLastMsgRoom(room_uuid, data, created_at)
+            # 更新聊天提示数字
+            if "uuid" in user_data:
+                AddressBook.updateUnreadNumber(room_uuid, user_data['uuid'])
+                AddressBook.cleanUnreadNumber(room_uuid, user_data['uuid'])
+            else:
+                AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
+                AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
+            # 更新客户端房间信息
+            for item in address_book_data:
+                roomList = AddressBook.getRoomList(item.be_focused_user_id)
+                socketio.emit('room', Utils.formatBody(
+                    roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
+        if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
             # 发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
@@ -90,15 +119,19 @@ class ChatService():
         if isinstance(admin_user_info, str):
             return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], admin_user_info)
         filters = {
-            AddressBook.be_focused_user_id == admin_user_info['data']['id'],
-            AddressBook.focused_user_id == message['user_id']
+            Admin.id == admin_user_info['data']['id'],
+        }
+        admin_user_info = Admin().getOne(filters)
+        filters = {
+            AddressBook.be_focused_user_id == message['user_id'],
+            AddressBook.focused_user_id == admin_user_info['uuid']
         }
         addressBookInfo = AddressBook().getOne(filters)
         if addressBookInfo == None:
             room_uuid = Utils.unique_id()
             # 建立通讯录关系
             status = AddressBook.adminAddRoomAndAddressBook(
-                room_uuid, admin_user_info['data']['id'], message['user_id'])
+                room_uuid, admin_user_info, message['user_id'])
             if status == False:
                 return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'], msg='添加失败')
             # 添加后同步房间
@@ -108,10 +141,10 @@ class ChatService():
                     item.be_focused_user_id)['list']
                 if item.type == CONST['ADDRESSBOOK']['ADMIN']['value']:
                     socketio.emit('room', Utils.formatBody(
-                        roomList), namespace="/api", room='@broadcast.admin.'+str(item.be_focused_user_id))
+                        roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
                 else:
                     socketio.emit('room', Utils.formatBody(
-                        roomList), namespace="/api", room='@broadcast.admin.'+str(item.be_focused_user_id))
+                        roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
         else:
             room_uuid = addressBookInfo['room_uuid']
         return Utils.formatBody({'room_uuid': room_uuid})
@@ -123,6 +156,10 @@ class ChatService():
         if isinstance(admin_user_info, str):
             return Utils.formatError(CONST['CODE']['ERROR_AUTH_CHECK_TOKEN_FAIL']['value'], admin_user_info)
         # 整合数据信息
+        filters = {
+            Admin.id == admin_user_info['data']['id'],
+        }
+        admin_user_info = Admin().getOne(filters)
         default_img_data = Config().getOne(
             {Config.type == 'img', Config.code == 'default.img', Config.status == 1})
         if default_img_data == None:
@@ -130,10 +167,9 @@ class ChatService():
         else:
             default_img = default_img_data['config']
 
-        admin_user_info['nick_name'] = '系统管理'  # admin_user_info['name']
+        admin_user_info['nick_name'] = '系统管理-'+admin_user_info['nick_name']
         admin_user_info['head_img'] = default_img  # 这里后期改成配置的
         # 使用0作为系统id
-        admin_user_info['id'] = admin_user_info['data']['id']
         msg = message['data']['msg']
         room_uuid = message['data']['room_uuid']
         Type = message['data']['type']

@@ -11,10 +11,9 @@ class HtAddressBook(Base):
     __tablename__ = 'ht_address_book'
 
     id = Column(INTEGER(11), primary_key=True, comment='编号')
-    be_focused_user_id = Column(
-        INTEGER(11), nullable=False, comment='被关注者用户编号')
-    focused_user_id = Column(INTEGER(11), nullable=False,
-                             index=True, comment='关注者用户编号')
+    be_focused_user_id = Column(String(32), nullable=False, comment='被关注者用户编号')
+    focused_user_id = Column(VARCHAR(
+        32), nullable=False, index=True, server_default=text("''"), comment='关注者用户编号')
     created_at = Column(INTEGER(11), nullable=False, comment='创建时间')
     updated_at = Column(INTEGER(11), nullable=False, comment='更新时间')
     room_uuid = Column(VARCHAR(255), nullable=False,
@@ -26,7 +25,8 @@ class HtAddressBook(Base):
                            server_default=text("'0'"), comment='未读取信息次数')
     is_input = Column(TINYINT(1), nullable=False,
                       server_default=text("'0'"), comment='是否在输入')
-    type = Column(INTEGER(11), nullable=False, comment='类型，0是普通用户，1是后台用户')
+    type = Column(INTEGER(11), nullable=False,
+                  server_default=text("'0'"), comment='0是普通用户，1是后台用户')
 
 
 class HtAdmin(Base):
@@ -55,6 +55,10 @@ class HtAdmin(Base):
                          server_default=text("'0'"), comment='更新时间')
     delete_time = Column(INTEGER(11), nullable=False,
                          server_default=text("'0'"), comment='删除时间')
+    nick_name = Column(String(255), nullable=False,
+                       server_default=text("''"), comment='昵称')
+    uuid = Column(String(32), nullable=False, unique=True,
+                  server_default=text("''"), comment='唯一编号')
 
 
 class HtConfig(Base):
@@ -101,7 +105,8 @@ class HtMsg(Base):
     send_status = Column(TINYINT(1), nullable=False, comment='发送状态')
     read_status = Column(TINYINT(1), nullable=False,
                          server_default=text("'0'"), comment='读取状态')
-    user_type = Column(INTEGER(11), nullable=False, comment='类型，0是用户，1是管理员')
+    user_type = Column(INTEGER(11), nullable=False,
+                       server_default=text("'0'"), comment='0是普通用户，1是管理员')
 
 
 class HtRoom(Base):

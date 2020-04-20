@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 19:03:26
+ * @LastEditTime: 2020-04-20 19:51:44
  -->
 <template>
   <div class="app-container">
@@ -179,12 +179,12 @@ export default {
         joinChatSend({
           name: "系统会话",
           room_uuid: room_uuid,
-          type: 0,
+          type: 3,
           save_action: 1
         });
         this.$store.commit("updateCurrentRoomUuid", room_uuid);
         this.$store.commit("updateCurrentRoomName", "系统会话");
-        this.$store.commit("updateCurrentRoomType", 0);
+        this.$store.commit("updateCurrentRoomType", 3);
         this.$store.commit("updateCurrentRoomSaveAction", 1);
         this.handleMsgGet(room_uuid, user_id, 1, 4);
       });

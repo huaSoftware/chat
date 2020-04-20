@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2020-04-19 20:16:20
+@LastEditTime: 2020-04-20 20:08:02
 '''
 import time
 import math
@@ -24,7 +24,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     users = relationship('Users', uselist=False, primaryjoin=foreign(
         HtAddressBook.focused_user_id) == remote(Users.id))
     adminUsers = relationship('Admin', uselist=False, primaryjoin=foreign(
-        HtAddressBook.focused_user_id) == remote(Admin.id))
+        HtAddressBook.focused_user_id) == remote(Admin.uuid))
     room = relationship('Room', uselist=False, primaryjoin=foreign(
         HtAddressBook.room_uuid) == remote(Room.room_uuid))
     be_users = relationship('Users', uselist=False, primaryjoin=foreign(
@@ -187,7 +187,8 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         roomData = {
             'room_uuid': room_uuid,
             'last_msg': '',
-            'user_id': focused_user_id
+            'user_id': focused_user_id,
+            'type': 0
         }
         Room.insertRoomData(roomData)
         addressBook = AddressBook(
@@ -210,16 +211,17 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
 
     # 后台增加用户
     @staticmethod
-    def adminAddRoomAndAddressBook(room_uuid, focused_user_id, be_focused_user_id):
+    def adminAddRoomAndAddressBook(room_uuid, admin_user_info, be_focused_user_id):
         roomData = {
             'room_uuid': room_uuid,
             'last_msg': '',
-            'user_id': focused_user_id,
-            'type': CONST['ROOM']['ADMIN']['value']
+            'user_id': admin_user_info['id'],
+            'type': CONST['ROOM']['ADMIN']['value'],
+            'name': '系统管理-'+admin_user_info['nick_name']
         }
-        Room.insertRoomData(roomData)
+        Room.insertAdminRoomData(roomData)
         addressBook = AddressBook(
-            focused_user_id=focused_user_id,
+            focused_user_id=admin_user_info['uuid'],
             be_focused_user_id=be_focused_user_id,
             room_uuid=room_uuid,
             unread_number=0,
@@ -230,7 +232,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         dBSession.add(addressBook)
         addressBook = AddressBook(
             focused_user_id=be_focused_user_id,
-            be_focused_user_id=focused_user_id,
+            be_focused_user_id=admin_user_info['uuid'],
             room_uuid=room_uuid,
             unread_number=0,
             is_alert=1,
@@ -248,7 +250,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def rawGetList(page_no, per_page, filters):
         dataObj = dBSession.query(AddressBook).order_by(
-            AddressBook.created_at.desc()).filter(*filters).group_by(AddressBook.room_uuid).all()
+            AddressBook.created_at.desc()).filter(*filters).all()
         data = {"addressBookList":  Utils.db_l_to_d(dataObj)}
         return data
 
@@ -259,12 +261,12 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             AddressBook.be_focused_user_id == user_id
         }
         res = dBSession.query(AddressBook).order_by(
-            AddressBook.updated_at.desc()).filter(*filters).group_by(AddressBook.room_uuid).all()
+            AddressBook.updated_at.desc()).filter(*filters).all()
 
         data = {"list": Utils.db_l_to_d(res)}
         return data
 
-     # 更新关注者未读消息
+    # 更新关注者未读消息
     @staticmethod
     def updateUnreadNumber(room_uuid, user_id):
         filter = {

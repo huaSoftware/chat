@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2020-04-19 18:12:23
+@LastEditTime: 2020-04-20 19:50:44
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -18,6 +18,7 @@ from app.Service.UploadService import UploadService
 from app.Service.AddressBookService import AddressBookService
 from app.Service.UserRoomRelationService import UserRoomRelationService
 from app.Service.RoomService import RoomService
+from app.Models.Admin import Admin
 import time
 from app.Models.Users import Users
 
@@ -31,6 +32,9 @@ def join(message, user_info):
         room_uuid = message['room_uuid']
         join_room(room_uuid)
     elif message['type'] == CONST['ROOM']['GROUP']['value']:
+        room_uuid = message['room_uuid']
+        join_room(room_uuid)
+    elif message['type'] == CONST['ROOM']['ADMIN']['value']:
         room_uuid = message['room_uuid']
         join_room(room_uuid)
     elif message['type'] == CONST['ROOM']['NOTIFY']['value']:
@@ -60,8 +64,15 @@ def join(message, user_info):
     elif message['type'] == CONST['ROOM']['GROUP']['value']:
         room_uuid = message['room_uuid']
         join_room(room_uuid)
+    elif message['type'] == CONST['ROOM']['ADMIN']['value']:
+        room_uuid = message['room_uuid']
+        join_room(room_uuid)
     elif message['type'] == CONST['ROOM']['NOTIFY']['value']:
-        join_room('@broadcast.admin.'+str(user_info['data']['id']))
+        filters = {
+            Admin.id == user_info['data']['id'],
+        }
+        user_info = Admin().getOne(filters)
+        join_room('@broadcast.'+str(user_info['uuid']))
     return Utils.formatBody({'action': "join"})
 
 
