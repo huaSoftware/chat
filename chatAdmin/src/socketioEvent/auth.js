@@ -3,10 +3,11 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 15:01:44
+ * @LastEditTime: 2020-04-21 12:30:52
  */
 import store from "../store";
 import router from "../router";
+import { MessageBox, Message } from "element-ui";
 import {
   send,
   response,
@@ -114,10 +115,10 @@ export default function setupAuthEvent() {
         if (msg["user"]["id"] == store.getters.userInfo.id) {
           //同步信息到vuex
           store.dispatch("updateMsg", msg);
-          plus.push.createMessage(msg["msg"], "LocalMSG", {
+          /* plus.push.createMessage(msg["msg"], "LocalMSG", {
             cover: false,
             title: msg["user"]["nick_name"]
-          });
+          }); */
         }
       }
     });
@@ -157,7 +158,19 @@ export default function setupAuthEvent() {
               "LocalMSG",
               { cover: false, title: data[0].users.nick_name }
             ); */
-            alert(title);
+            if (window.webkitNotifications.checkPermission() == 0) {
+              window.webkitNotifications.createNotification(
+                "", //icon
+                "您有一条新消息",
+                data[0].users.nick_name
+              );
+            } else {
+              Message({
+                message: "您有一条新消息",
+                type: "info",
+                duration: 5 * 1000
+              });
+            }
           }
           console.log(24234234, data);
           store.dispatch("updateRoomList", data);
