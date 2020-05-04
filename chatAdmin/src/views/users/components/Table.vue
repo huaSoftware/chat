@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 19:51:44
+ * @LastEditTime: 2020-05-01 09:46:22
  -->
 <template>
   <div class="app-container">
@@ -11,9 +11,9 @@
       v-loading="listLoading"
       :data="list"
       fit
-      @sort-change="handleSort"
       highlight-current-row
       style="width: 100%;border: 1px solid #ebeef5;"
+      @sort-change="handleSort"
     >
       <el-table-column label="ID" prop="id" sortable align="center" width="65">
         <template slot-scope="scope">
@@ -28,7 +28,7 @@
       <el-table-column label="头像" prop="head_img" sortable height="50px" align="center">
         <template slot-scope="scope">
           <span>
-            <Vimg style="width:50px;height:50px" :imgUrl="scope.row.head_img" />
+            <Vimg style="width:50px;height:50px" :img-url="scope.row.head_img" />
           </span>
         </template>
       </el-table-column>
@@ -74,9 +74,9 @@
     >
       <div>
         <el-form>
-          <chat-item :msgList="msgList" :user_id="user_id"></chat-item>
+          <chat-item :msg-list="msgList" :user_id="user_id" />
           <el-form-item label="回复内容">
-            <el-input type="textarea" v-model="content" @blur="handleOnblur" @focus="handleOnFocus"></el-input>
+            <el-input v-model="content" type="textarea" @blur="handleOnblur" @focus="handleOnFocus" />
           </el-form-item>
           <el-form-item>
             <el-button size="mini" @click="addReqVisible = false">取消</el-button>
@@ -96,116 +96,116 @@
 </template>
 
 <script>
-import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
-import { mapGetters, mapMutations } from "vuex";
-import Vimg from "@/components/Vimg";
-import { getToken } from "@/utils/auth";
-import { userList, userDelete } from "@/api/user";
-import { parseTime } from "@/utils/index";
-import { roomList, msgGet } from "@/api/room";
-import ChatItem from "@/components/ChatItem/index";
-import { recOpen, recStart, recStop } from "@/utils/recorder";
-import { adminCreateRoom, chatSend } from "@/socketioApi/chat";
-import { uploadFile } from "@/socketioApi/common";
-import { joinChatSend } from "@/socketioApi/chat";
-import { send } from "@/utils/socketio";
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { mapGetters, mapMutations } from 'vuex'
+import Vimg from '@/components/Vimg'
+import { getToken } from '@/utils/auth'
+import { userList, userDelete } from '@/api/user'
+import { parseTime } from '@/utils/index'
+import { roomList, msgGet } from '@/api/room'
+import ChatItem from '@/components/ChatItem/index'
+import { recOpen, recStart, recStop } from '@/utils/recorder'
+import { adminCreateRoom, chatSend } from '@/socketioApi/chat'
+import { uploadFile } from '@/socketioApi/common'
+import { joinChatSend } from '@/socketioApi/chat'
+import { send } from '@/utils/socketio'
 export default {
-  data() {
-    return {
-      listLoading: false,
-      addReqVisible: false,
-      onFocusLock: false,
-      currentRoomUuid: "",
-      currentUserId: 0,
-      content: "",
-      //表单
-      list: [],
-      user_id: 0,
-      //页码
-      total: 0,
-      listQuery: {
-        page_no: 1,
-        per_page: 10,
-        orderBy: "updated_at",
-        order: "desc"
-      }
-    };
-  },
   components: {
     Pagination,
     Vimg,
     ChatItem
   },
+  data() {
+    return {
+      listLoading: false,
+      addReqVisible: false,
+      onFocusLock: false,
+      currentRoomUuid: '',
+      currentUserId: 0,
+      content: '',
+      // 表单
+      list: [],
+      user_id: 0,
+      // 页码
+      total: 0,
+      listQuery: {
+        page_no: 1,
+        per_page: 10,
+        orderBy: 'updated_at',
+        order: 'desc'
+      }
+    }
+  },
   computed: {
     ...mapGetters([
-      "msgList",
-      "RECORD",
-      "TEXT",
-      "RESEND",
-      "IMG",
-      "FILE",
-      "LOADING",
-      "SUCCESS",
-      "FAIL",
-      "CHAT_NOTIFY"
+      'msgList',
+      'RECORD',
+      'TEXT',
+      'RESEND',
+      'IMG',
+      'FILE',
+      'LOADING',
+      'SUCCESS',
+      'FAIL',
+      'CHAT_NOTIFY'
     ])
   },
   methods: {
     ...mapMutations({
-      updateMsgList: "updateMsgList"
+      updateMsgList: 'updateMsgList'
     }),
     getList() {
-      this.listLoading = true;
+      this.listLoading = true
       userList(this.listQuery).then(res => {
-        console.log(res);
-        this.list = res.data.list;
-        this.total = res.data.page.count;
-        this.listLoading = false;
-      });
+        console.log(res)
+        this.list = res.data.list
+        this.total = res.data.page.count
+        this.listLoading = false
+      })
     },
     move(id) {
       userDelete({ id: id }).then(res => {
         this.$message({
-          message: "删除成功",
-          type: "success"
-        });
-        this.getList();
-      });
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getList()
+      })
     },
     send(user_id) {
-      this.updateMsgList([]);
+      this.updateMsgList([])
       adminCreateRoom({ user_id: user_id }).then(res => {
-        let room_uuid = res.data.room_uuid;
+        const room_uuid = res.data.room_uuid
         joinChatSend({
-          name: "系统会话",
+          name: '系统会话',
           room_uuid: room_uuid,
           type: 3,
           save_action: 1
-        });
-        this.$store.commit("updateCurrentRoomUuid", room_uuid);
-        this.$store.commit("updateCurrentRoomName", "系统会话");
-        this.$store.commit("updateCurrentRoomType", 3);
-        this.$store.commit("updateCurrentRoomSaveAction", 1);
-        this.handleMsgGet(room_uuid, user_id, 1, 4);
-      });
+        })
+        this.$store.commit('updateCurrentRoomUuid', room_uuid)
+        this.$store.commit('updateCurrentRoomName', '系统会话')
+        this.$store.commit('updateCurrentRoomType', 3)
+        this.$store.commit('updateCurrentRoomSaveAction', 1)
+        this.handleMsgGet(room_uuid, user_id, 1, 4)
+      })
     },
     handleOnFocus() {
       if (!this.onFocusLock) {
-        this.onFocusLock = true;
+        this.onFocusLock = true
         send(
-          "adminInput",
-          { room_uuid: this.currentRoomUuid, even: "focus" },
-          "broadcast"
-        );
+          'adminInput',
+          { room_uuid: this.currentRoomUuid, even: 'focus' },
+          'broadcast'
+        )
       }
     },
     handleOnblur() {
-      this.onFocusLock = false;
+      this.onFocusLock = false
       send(
-        "adminInput",
-        { room_uuid: this.currentRoomUuid, even: "blur" },
-        "broadcast"
-      );
+        'adminInput',
+        { room_uuid: this.currentRoomUuid, even: 'blur' },
+        'broadcast'
+      )
     },
     handleMsgGet(room_uuid, user_id, page_no, per_page) {
       msgGet({
@@ -213,10 +213,10 @@ export default {
         page_no: page_no,
         per_page: per_page
       }).then(res => {
-        console.log(res);
-        this.currentRoomUuid = room_uuid;
-        this.currentUserId = user_id;
-        this.addReqVisible = true;
+        console.log(res)
+        this.currentRoomUuid = room_uuid
+        this.currentUserId = user_id
+        this.addReqVisible = true
         /* let msgList = JSON.parse(JSON.stringify(this.rawList));
         msgList = rawList.reverse().concat(msgList)
         this.updateMsgList(msgList);
@@ -227,18 +227,18 @@ export default {
           return item;
         });
         this.msgList = rawList.reverse(); */
-        let rawList = res.data.list.reverse();
+        const rawList = res.data.list.reverse()
         rawList.map(item => {
-          item["msg"] = item["formatMsg"];
-          delete item["formatMsg"];
-          return item;
-        });
-        this.updateMsgList(rawList);
-        this.user_id = user_id;
-      });
+          item['msg'] = item['formatMsg']
+          delete item['formatMsg']
+          return item
+        })
+        this.updateMsgList(rawList)
+        this.user_id = user_id
+      })
     },
     addReq() {
-      console.log(this.content);
+      console.log(this.content)
       chatSend({
         data: {
           msg: this.content,
@@ -248,45 +248,45 @@ export default {
           created_at: parseInt(new Date().getTime() / 1000)
         }
       }).then(res => {
-        //this.addReqVisible = false;
+        // this.addReqVisible = false;
         /* this.$message({
           message: "回复成功",
           type: "success"
         });
         this.handleMsgGet(this.currentRoomUuid, this.currentUserId, 1, 4); */
-        this.content = "";
-      });
+        this.content = ''
+      })
     },
     record() {
       recOpen(function() {
-        recStart();
-      });
+        recStart()
+      })
     },
     recordStop() {
       recStop(blob => {
         // name
-        let filename =
+        const filename =
           this.currentRoomUuid +
           this.currentUserId +
           new Date().getTime() +
-          ".amr";
-        //blob转file
+          '.amr'
+        // blob转file
         var file = new File([blob], filename, {
-          type: "amr",
+          type: 'amr',
           lastModified: Date.now()
-        });
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
+        })
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
         reader.onload = e => {
           uploadFile({
             dataUrl: e.target.result,
             name: filename,
             size: file.size,
-            type: "amr"
+            type: 'amr'
           }).then(res => {
-            var BenzAMRRecorder = require("benz-amr-recorder");
-            var amr = new BenzAMRRecorder();
-            let url = process.env.VUE_APP_CLIENT_SOCKET + res.data.path;
+            var BenzAMRRecorder = require('benz-amr-recorder')
+            var amr = new BenzAMRRecorder()
+            const url = process.env.VUE_APP_CLIENT_SOCKET + res.data.path
             amr
               .initWithUrl(url)
               .then(() => {
@@ -301,35 +301,35 @@ export default {
                     type: this.RECORD,
                     save_action: 1
                   }
-                });
+                })
               })
               .catch(e => {
-                console.log(e);
-              });
-          });
-        };
-      });
+                console.log(e)
+              })
+          })
+        }
+      })
     },
     handleSort({ column, prop, order }) {
-      console.log(column, prop);
-      if (!prop) return;
-      if (order == "descending") {
-        this.listQuery["order"] = "desc";
-        this.listQuery["orderBy"] = prop;
+      console.log(column, prop)
+      if (!prop) return
+      if (order == 'descending') {
+        this.listQuery['order'] = 'desc'
+        this.listQuery['orderBy'] = prop
       } else {
-        this.listQuery["order"] = "asc";
-        this.listQuery["orderBy"] = prop;
+        this.listQuery['order'] = 'asc'
+        this.listQuery['orderBy'] = prop
       }
-      this.getList();
+      this.getList()
     },
     parseTime(time) {
-      return parseTime(time);
+      return parseTime(time)
     }
   },
   created: function() {
-    this.getList();
+    this.getList()
   }
-};
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 19:15:52
+ * @LastEditTime: 2020-05-04 11:30:41
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -63,10 +63,10 @@
                   <yd-icon name="error"></yd-icon>
                 </span>
                 <!-- 消息读取状态键盘输入时更新-->
-               <!--  <span class="read_status" v-if="key.send_status == SUCCESS && currentRoomType == 0">
+                <!--  <span class="read_status" v-if="key.send_status == SUCCESS && currentRoomType == 0">
                   <yd-badge v-if="key.read_status == 0">未读</yd-badge>
                   <yd-badge v-else type="primary">已读</yd-badge>
-                </span> -->
+                </span>-->
               </div>
             </div>
             <div class="chat-item" v-else>
@@ -151,6 +151,7 @@ import cropperBox from "./components/cropperBox/cropperBox";
 import MescrollVue from "mescroll.js/mescroll.vue";
 import { uploadFile } from "@/socketioApi/common";
 import utils from "@/utils/utils";
+import { recOpen, recStart, recStop } from "@/utils/recorder";
 import storage from "@/utils/localstorage";
 import { getLocalRoomMsg } from "@/utils/indexedDB";
 import { getCloudRoomMsg } from "@/socketioApi/room";
@@ -617,7 +618,65 @@ export default {
             this.touched = false;
           }
         );
+      } else {
+        //使用H5录音
+        recOpen(function() {
+          recStart();
+        });
       }
+    },
+    recordStop() {
+      let that = this;
+      recStop(blob => {
+        // name
+        const filename =
+          this.currentRoomUuid +
+          this.userInfo.id +
+          new Date().getTime() +
+          ".amr";
+        // blob转file
+        var file = new File([blob], filename, {
+          type: "amr",
+          lastModified: Date.now()
+        });
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = e => {
+          uploadFile({
+            dataUrl: e.target.result,
+            name: filename,
+            size: file.size,
+            type: "amr"
+          }).then(res => {
+            var BenzAMRRecorder = require("benz-amr-recorder");
+            var amr = new BenzAMRRecorder();
+            const url = process.env.VUE_APP_CLIENT_SOCKET + res.data.path;
+            amr
+              .initWithUrl(url)
+              .then(() => {
+                chatSend({
+                  data: {
+                    msg: JSON.stringify({
+                      url: url,
+                      duration: amr.getDuration(),
+                      status: false
+                    }),
+                    room_uuid: that.currentRoomUuid,
+                    type: that.RECORD,
+                    save_action: that.currentRoomSaveAction
+                  }
+                });
+                that.recordingShow = false;
+                that.touched = false;
+              })
+              .catch(e => {
+                console.log(e);
+                that.recordingShow = false;
+                that.touched = false;
+              });
+          });
+        };
+      });
     },
     /**
      * 录音语音文件转base64字符串
@@ -749,7 +808,10 @@ export default {
     },
     recordShow(newVal, oldVal) {
       if (!newVal) {
-        window.r.stop();
+        if (window.plus) {
+          window.r.stop();
+        }
+        this.recordStop();
       }
     }
   }

@@ -3,11 +3,11 @@
  * @Date: 2019-12-30 20:41:35
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 17:46:55
+ * @LastEditTime: 2020-04-21 17:37:07
  */
 import store from "../store";
 import router from "../router";
-import { Loading, Toast } from "vue-ydui/dist/lib.rem/dialog";
+import { MessageBox, Message } from "element-ui";
 import { rsaEncode } from "@/utils/socketio";
 export default function api(data, method) {
   var res = new Promise((resolve, reject) => {
@@ -27,9 +27,12 @@ export default function api(data, method) {
         res.error_code === store.getters.CODE.ERROR.value
       ) {
         if (res.show == true) {
-          Toast({ mes: res.msg, icon: "error" });
+          Message({
+            message: res.msg,
+            type: "error",
+            duration: 5 * 1000
+          });
         }
-        Loading.close();
         reject("error");
       }
       if (
@@ -37,8 +40,11 @@ export default function api(data, method) {
       ) {
         clearTimeout(window.sendTimeOut);
         clearTimeout(window.broadcastTimeOut);
-        Loading.close();
-        Toast({ mes: res.msg, icon: "error" });
+        Message({
+          message: res.msg,
+          type: "error",
+          duration: 5 * 1000
+        });
         // 这里需要删除token，不然携带错误token无法去登陆
         window.localStorage.removeItem("token");
         store.dispatch("user/resetToken");

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:23
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 20:03:38
+ * @LastEditTime: 2020-04-21 17:41:50
  */
 import store from "../store";
 import router from "../router";
@@ -39,13 +39,15 @@ export default function broadcast(data, method) {
       } else {
         window.tryBroadcastLinkCount = 0;
         clearTimeout(window.broadcastTimeOut);
+        // 这里需要删除token，不然携带错误token无法去登陆
+        window.localStorage.removeItem("token");
+        store.dispatch("user/resetToken");
         router.push({
-          name: "connectLose",
-          query: { text: "广播连接已断开" }
+          name: "login"
         });
       }
     }
-  }, 15000);
+  }, store.getters.TIME.TIME_OUT.value);
   data["type"] = store.getters.NOTIFY;
   let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);
   console.log("广播：" + method, "秘钥：" + encryptStr);
