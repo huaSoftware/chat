@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 19:51:08
+ * @LastEditTime: 2020-05-05 19:48:38
  */
 import store from "../store";
 import router from "../router";
@@ -235,6 +235,16 @@ export default function setupAuthEvent() {
               "LocalMSG",
               { cover: false, title: data[0].users.nick_name }
             );
+          }
+          //H5消息通知
+          if (!window.plus && store.getters.isPaused && data[0].is_alert) {
+            if (window.webkitNotifications.checkPermission() == 0) {
+              window.webkitNotifications.createNotification(
+                "", //icon
+                formatLastMsg(data[0]["room"]["last_msg"]),
+                data[0].users.nick_name
+              );
+            }
           }
           console.log(24234234, data);
           store.dispatch("updateRoomList", data);
