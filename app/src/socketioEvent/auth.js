@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-05-05 19:48:38
+ * @LastEditTime: 2020-05-18 17:19:42
  */
 import store from "../store";
 import router from "../router";
@@ -221,8 +221,29 @@ export default function setupAuthEvent() {
       }
     });
   });
+  window.apiSocket.on("video", (data) => {
+    console.log('视频接收',data.data);
+    var mediaSource = new MediaSource();
+    const remotevideo = document.getElementById("remotevideo");
+    remotevideo.src = URL.createObjectURL(mediaSource);
+    mediaSource.addEventListener('sourceopen', sourceOpen);
+    function sourceOpen () {
+      this.readyState;
+      var mediaSource = this;
+      var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs=opus,vp8');
+    
+      sourceBuffer.addEventListener('updateend', function () {
+        mediaSource.endOfStream();
+        remotevideo.play();
+        console.log(mediaSource.readyState); // ended
+      });
+      sourceBuffer.appendBuffer(data.data.blob);
+    };
+  })
+  //监听视频
   //监听单聊房间动态消息
   window.apiSocket.on("room", (data) => {
+    console.log(24234235, data);
     response(data)
       .then((res) => {
         console.log(24234235, res);

@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-03-19 15:23:42
+ * @LastEditTime: 2020-05-16 09:02:59
  */
 
 import store from '../store'
@@ -110,6 +110,7 @@ export function response(res){
 			reject(res)
 		}
 		if (res.error_code === store.getters.CODE.ERROR_AUTH_CHECK_TOKEN_FAIL.value) {
+			window.tryBroadcastLinkCount = 0
 			clearTimeout(window.sendTimeOut)
 			clearTimeout(window.broadcastTimeOut)
 			Loading.close()

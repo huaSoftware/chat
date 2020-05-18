@@ -1,46 +1,46 @@
 /*
  * @Author: hua
  * @Date: 2019-11-21 17:20:24
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-11 14:27:41
+ * @description:
+ * @LastEditors: hua
+ * @LastEditTime: 2020-05-07 11:47:44
  */
 import request from '@/utils/request'
 
 /* 获取列表 */
 export function configList(data) {
-    return request({
-        url: '/api/v2/config/list',
-        method: 'post',
-        data
-    })
+  return request({
+    url: '/api/v2/config/list',
+    method: 'post',
+    data
+  })
 }
 
 /* 删除 */
 export function configDelete(data) {
-    return request({
-      url: '/api/v2/config/delete',
-      method: 'get',
-      params:data
-    })
+  /*  return request({
+    url: '/api/v2/config/delete',
+    method: 'get',
+    params: data
+  }) */
 }
 
 /* 编辑列表 */
 export function configEdit(data) {
-    return request({
-      url: '/api/v2/config/edit',
-      method: 'post',
-      data
-    })
-  }
-  
+  /*  return request({
+    url: '/api/v2/config/edit',
+    method: 'post',
+    data
+  }) */
+}
+
 /* 添加列表 */
 export function configAdd(data) {
-  return request({
+  /*  return request({
     url: '/api/v2/config/add',
     method: 'post',
     data
-  })
+  }) */
 }
 
 /* 获取JSON配置列表 */
@@ -51,13 +51,12 @@ export function configConstJson(data) {
   })
 }
 
-
 /* 修改JSON配置列表 */
 export function configConstJsonEdit(data) {
-  return request({
+  /*  return request({
     url: '/api/v2/configConstJson/edit',
     method: 'post',
     data
-  })
+  }) */
 }
 

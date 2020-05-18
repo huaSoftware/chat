@@ -11,9 +11,9 @@ export function addressBookList(data) {
 
 /* 删除通讯录 */
 export function addressBookDelete(data) {
-  return request({
+  /*  return request({
     url: '/api/v2/admin/addressBook/delete',
     method: 'get',
     params:data
-  })
+  }) */
 }

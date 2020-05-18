@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 12:44:53
+ * @LastEditTime: 2020-05-14 17:59:36
  -->
 <template>
   <div class="content">
@@ -32,7 +32,7 @@
         :key="index"
       >
         <div class="yd-list-img">
-          <vImg v-if="item.type ==1" :imgUrl="item.adminUsers.avatar" />
+          <vImg v-if="item.type ==1 && item.adminUsers" :imgUrl="item.adminUsers.avatar" />
           <vImg
             v-else
             :style="item.users.online == 1?'':'background: grey;opacity: 0.5'"
@@ -41,7 +41,7 @@
         </div>
         <div class="yd-list-mes">
           <div class="yd-list-title">
-            <span class="title-left" v-if="item.type ==1">{{item.adminUsers.nick_name}}</span>
+            <span class="title-left" v-if="item.type ==1&& item.adminUsers">{{item.adminUsers.nick_name}}</span>
             <span class="title-left" v-if="item.type ==0">{{item.users.nick_name}}</span>
             <span class="title-right">{{formatTime(item.room.updated_at)}}</span>
           </div>

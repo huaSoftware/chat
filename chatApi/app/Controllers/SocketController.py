@@ -3,10 +3,11 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2020-04-20 19:50:44
+@LastEditTime: 2020-05-17 19:48:16
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
+from flask_socketio import emit
 from flask import request
 from app.Vendor.Utils import Utils
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -18,6 +19,7 @@ from app.Service.UploadService import UploadService
 from app.Service.AddressBookService import AddressBookService
 from app.Service.UserRoomRelationService import UserRoomRelationService
 from app.Service.RoomService import RoomService
+from app.Service.LogService import LogService
 from app.Models.Admin import Admin
 import time
 from app.Models.Users import Users
@@ -85,7 +87,14 @@ def leave(message, user_info):
     leave_room(room_uuid)
     return Utils.formatBody({'action': "leave"})
 
+""" 视频 """
+@socketio.on('video', namespace='/api')
+def video(message):
+    room_uuid = message['data']['room_uuid']
+    # 发送消息
+    emit('video',  message, room=room_uuid)
 
+""" 聊天 """
 @socketio.on('chat', namespace='/api')
 @decryptMessage
 @UsersAuthJWT.socketAuth

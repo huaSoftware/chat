@@ -21,10 +21,14 @@
         </div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination"></div>
+        <!-- 视频标签 -->
+        <video id="localvideo" autoplay  style="height:400px;width:400px"/>
+        <video id="remotevideo" autoplay />
       </div>
     </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import vImg from '@/components/v-img/v-img'
 import {Alert} from "vue-ydui/dist/lib.rem/dialog"
 export default {
@@ -49,8 +53,33 @@ export default {
                 name: "位置",
                 router: "position"
                 } */
+                ,
+                {
+                icon: "video",
+                name: "视频",
+                router: "video"
+                }
             ]
         }
+    },
+    computed: {
+        ...mapGetters([
+        "msgList",
+        "currentRoomUuid",
+        "currentRoomName",
+        "currentRoomType",
+        "userInfo",
+        "htmlFontSize",
+        "currentRoomSaveAction",
+        "RECORD",
+        "TEXT",
+        "RESEND",
+        "IMG",
+        "FILE",
+        "LOADING",
+        "SUCCESS",
+        "FAIL"
+        ])
     },
     created(){
 
@@ -58,6 +87,34 @@ export default {
     methods:{
         handleDef(value) {
             let that = this;
+            if (value == "video") {
+                const localVideo = document.getElementById("localvideo");
+                let stream = null;
+                //获取视频流
+                navigator.mediaDevices.getUserMedia({
+                    audio: true, 
+                    video: true
+                }).then((stream)=>{
+                     //localVideo.srcObject = stream;
+                    //记录本地视频流
+                    var MediaStreamRecorder = require('msr');
+                    var mediaRecorder = new MediaStreamRecorder(stream);
+                    mediaRecorder.mimeType = 'video/webm';
+                    mediaRecorder.ondataavailable =  (blob)=> {
+                        // POST/PUT "Blob" using FormData/XHR2
+                        window.apiSocket.emit('video',{data:{blob,room_uuid:this.currentRoomUuid}});
+                    };
+                    mediaRecorder.video = localVideo;
+                    mediaRecorder.onStartedDrawingNonBlankFrames = function() {
+                        // record audio here to fix sync issues
+                        mediaRecorder.clearOldRecordedFrames(); // clear all blank frames
+                       
+                    };
+                    mediaRecorder.start(1000);
+                });
+               
+                            
+            }
             if (value == "img") {
                 document.getElementById("img").click();
             }

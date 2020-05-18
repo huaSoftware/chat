@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-02 11:20:16
+ * @description:
+ * @LastEditors: hua
+ * @LastEditTime: 2020-05-07 11:47:00
+ */
 import request from '@/utils/request'
 
 export function login(data) {
@@ -41,27 +48,27 @@ export function userList(data) {
 }
 /* 删除用户 */
 export function userDelete(data) {
-  return request({
+  /* return request({
     url: '/api/v2/admin/user/delete',
     method: 'get',
     params:data
-  })
+  }) */
 }
 
 export function userEdit(data) {
-  return request({
+  /* return request({
     url: '/api/v2/admin/user/edit',
     method: 'post',
     data
-  })
+  }) */
 }
 
 export function userAdd(data) {
-  return request({
+  /*  return request({
     url: '/api/v2/admin/user/add',
     method: 'post',
     data
-  })
+  }) */
 }
 
 export function index() {
@@ -70,6 +77,4 @@ export function index() {
     method: 'get'
   })
 }
-
-
 

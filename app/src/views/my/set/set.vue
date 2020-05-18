@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-04-18 08:39:01
+ * @LastEditTime: 2020-05-16 09:10:11
  -->
 
 <template>
@@ -77,6 +77,8 @@ export default {
             callback: () => {
               //更新在线状态
               clearInterval(window.loginConnectInterval);
+              clearTimeout(window.sendTimeOut)
+              clearTimeout(window.broadcastTimeOut)
               clearTimeout(window.timeOut);
               send("logoutDisconnect", {}, "logoutDisconnect");
               //监听
