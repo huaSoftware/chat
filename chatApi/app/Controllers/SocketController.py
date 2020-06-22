@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2020-05-17 19:48:16
+@LastEditTime: 2020-06-21 14:23:38
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -87,12 +87,19 @@ def leave(message, user_info):
     leave_room(room_uuid)
     return Utils.formatBody({'action': "leave"})
 
-""" 视频 """
-@socketio.on('video', namespace='/api')
-def video(message):
-    room_uuid = message['data']['room_uuid']
+""" 发起视频请求链接 """
+@socketio.on('messRequest', namespace='/api')
+def messRequest(message):
     # 发送消息
-    emit('video',  message, room=room_uuid)
+    emit("messRequest", message, broadcast=True)
+
+""" 视频 """
+@socketio.on('mess', namespace='/api')
+def message(message):
+    #room_uuid = message['data']['room_uuid']
+    # 发送消息
+    emit("mess", message, broadcast=True)
+    print(message)
 
 """ 聊天 """
 @socketio.on('chat', namespace='/api')

@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors  : hua
-@LastEditTime : 2020-01-21 20:30:10
+@LastEditors: hua
+@LastEditTime: 2020-06-04 13:42:59
 '''
 from flask import Flask
 from apscheduler.schedulers.blocking import BlockingScheduler# type: ignore
@@ -23,7 +23,7 @@ with open(os.getcwd()+'/app/const.json', "rb") as f:
 cache = Cache(maxsize=2560, ttl=86400, timer=time.time, default=None)  # defaults
 # 实例化websocket
 async_mode = 'gevent'
-socketio = SocketIO(app, async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode=async_mode, logger=False, engineio_logger=False,cors_allowed_origins="*")#message_queue="redis://:{}@{}:{}/{}".format(REDIS_PAS,REDIS_IP,REDIS_PORT,REDIS_DB), async_mode=async_mode, logger=True, engineio_logger=True,cors_allowed_origins="*")
 # 配置 sqlalchemy  数据库驱动://数据库用户名:密码@主机地址:端口/数据库?编码
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS

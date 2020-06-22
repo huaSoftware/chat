@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-04-17 13:46:21
 @LastEditors: hua
-@LastEditTime: 2019-11-07 21:34:39
+@LastEditTime: 2020-06-07 20:26:06
 '''
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 import random, os

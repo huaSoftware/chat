@@ -21,6 +21,10 @@ export default {
         text: "通知",
         value: 4,
       },
+      VIDEO: {
+        text: "视频",
+        value: 5,
+      },
     },
     LOG: {
       NORMAL: {
@@ -190,6 +194,9 @@ export default {
     },
     CHAT_NOTIFY(state) {
       return state.CHAT.NOTIFY.value;
+    },
+    CHAT_VIDEO(state) {
+      return state.CHAT.VIDEO.value;
     },
     LOADING(state) {
       return state.STATUS.LOADING.value;

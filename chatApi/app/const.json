@@ -8,7 +8,9 @@
     "FILE": { "text": "文件", "value": 3 },
     "IMG": { "text": "图片", "value": 2 },
     "RECORD": { "text": "录音", "value": 0 },
-    "TEXT": { "text": "文字", "value": 1 }
+    "TEXT": { "text": "文字", "value": 1 },
+    "NOTIFY": {"text": "通知","value": 4},
+    "VIDEO": {"text": "视频","value": 5}
   },
   "CODE": {
     "BAD_REQUEST": { "text": "错误请求(客户端)", "value": 400 },

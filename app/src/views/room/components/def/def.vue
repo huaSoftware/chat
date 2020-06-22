@@ -13,7 +13,8 @@
                 :key="index"
                 @click="handleDef(item.router)"
               >
-                <yd-icon class="yd-grids-icon" slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
+                <yd-icon  v-if="item.icon === 'video'" class="yd-grids-icon" slot="icon" name="video" color="#00C2E6"></yd-icon>
+                <yd-icon v-else class="yd-grids-icon" slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
                 <span class="yd-grids-text" slot="text">{{item.name}}</span>
               </a>
             </div>
@@ -31,6 +32,7 @@
 import { mapGetters, mapMutations } from "vuex";
 import vImg from '@/components/v-img/v-img'
 import {Alert} from "vue-ydui/dist/lib.rem/dialog"
+import {init, startVideo} from "@/utils/webRtc.js"
 export default {
     components: {
         vImg
@@ -88,32 +90,8 @@ export default {
         handleDef(value) {
             let that = this;
             if (value == "video") {
-                const localVideo = document.getElementById("localvideo");
-                let stream = null;
-                //获取视频流
-                navigator.mediaDevices.getUserMedia({
-                    audio: true, 
-                    video: true
-                }).then((stream)=>{
-                     //localVideo.srcObject = stream;
-                    //记录本地视频流
-                    var MediaStreamRecorder = require('msr');
-                    var mediaRecorder = new MediaStreamRecorder(stream);
-                    mediaRecorder.mimeType = 'video/webm';
-                    mediaRecorder.ondataavailable =  (blob)=> {
-                        // POST/PUT "Blob" using FormData/XHR2
-                        window.apiSocket.emit('video',{data:{blob,room_uuid:this.currentRoomUuid}});
-                    };
-                    mediaRecorder.video = localVideo;
-                    mediaRecorder.onStartedDrawingNonBlankFrames = function() {
-                        // record audio here to fix sync issues
-                        mediaRecorder.clearOldRecordedFrames(); // clear all blank frames
-                       
-                    };
-                    mediaRecorder.start(1000);
-                });
-               
-                            
+                init();
+                startVideo();
             }
             if (value == "img") {
                 document.getElementById("img").click();

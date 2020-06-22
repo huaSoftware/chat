@@ -3,10 +3,11 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-05-18 17:19:42
+ * @LastEditTime: 2020-06-21 16:14:50
  */
 import store from "../store";
 import router from "../router";
+import {init, agreeStartVideo, onOffer,onAnswer,onCandidate,stop,connect } from "@/utils/webRtc.js"
 import { Confirm, Toast } from "vue-ydui/dist/lib.rem/dialog";
 import {
   send,
@@ -85,6 +86,31 @@ export default function setupAuthEvent() {
       let data = res.data;
       //逻辑处理,存放indexdDB,存放一份实时的在vuex
       console.log("发送消息监听回复", data);
+      //如果是视频
+      if (data["type"] == store.getters.CHAT_VIDEO) {
+        let evt = JSON.parse(res.data.msg);
+        if(data.user_id !== store.getters.userInfo.id){
+          if (evt.type === 'offer') {
+            console.log("Received offer, set offer, sending answer....")
+            onOffer(evt);
+          } else if (evt.type === 'answer' && peerStarted) {
+            console.log('Received answer, settinng answer SDP');
+            onAnswer(evt);
+          } else if (evt.type === 'candidate' && peerStarted) {
+            console.log('Received ICE candidate...');
+            onCandidate(evt);
+          } else if (evt.type === 'user dissconnected' && peerStarted) {
+            console.log("disconnected");
+            stop();
+          } else if(evt.type === 'start'){
+            //开启视频
+            init();
+            agreeStartVideo();
+          }
+        }
+        return;
+      }
+
       let index = modifyMsgStatus(data, store.getters.SUCCESS);
       let msgList = JSON.parse(JSON.stringify(store.getters.msgList));
       //这边会有发送后接收不到的问题
@@ -221,26 +247,6 @@ export default function setupAuthEvent() {
       }
     });
   });
-  window.apiSocket.on("video", (data) => {
-    console.log('视频接收',data.data);
-    var mediaSource = new MediaSource();
-    const remotevideo = document.getElementById("remotevideo");
-    remotevideo.src = URL.createObjectURL(mediaSource);
-    mediaSource.addEventListener('sourceopen', sourceOpen);
-    function sourceOpen () {
-      this.readyState;
-      var mediaSource = this;
-      var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs=opus,vp8');
-    
-      sourceBuffer.addEventListener('updateend', function () {
-        mediaSource.endOfStream();
-        remotevideo.play();
-        console.log(mediaSource.readyState); // ended
-      });
-      sourceBuffer.appendBuffer(data.data.blob);
-    };
-  })
-  //监听视频
   //监听单聊房间动态消息
   window.apiSocket.on("room", (data) => {
     console.log(24234235, data);
