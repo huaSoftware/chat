@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 14:26:03
+ * @LastEditTime: 2020-06-27 18:39:01
  -->
 <template>
   <yd-layout>
@@ -41,8 +41,10 @@
     <!-- html通知消息 -->
     <notify></notify>
     <!-- 视频标签 -->
-    <video id="localvideo" autoplay />
-    <video id="remotevideo" autoplay />
+    <div class="videoContainor">
+      <video id="localvideo" autoplay />
+      <video id="remotevideo" autoplay />
+    </div>
     <!-- 悬浮 -->
     <navMenu></navMenu>
     <!--公共底部导航-->
@@ -355,20 +357,19 @@ export default {
 .active {
   color: $color-primary !important;
 }
-#localvideo{
-  width:2.5rem;
+.videoContainor{
   position: fixed;
   right:0px;
   top:1.2rem;
   z-index:100;
+}
+#localvideo{
+  width:2.5rem;
     display: none;
 }
 #remotevideo{
   width:2.5rem;
-  position: fixed;
-  right:0px;
-  top:3.2rem;
-  z-index:100;
+  margin-top:0.2rem;
   display: none;
 }
 </style>
