@@ -3,11 +3,12 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-06-21 16:14:50
+ * @LastEditTime: 2020-06-27 16:12:44
  */
 import store from "../store";
 import router from "../router";
-import {init, agreeStartVideo, onOffer,onAnswer,onCandidate,stop,connect } from "@/utils/webRtc.js"
+import { joinChatSend } from "@/socketIoApi/chat";
+import {stopVideo, hangUp,init, agreeStartVideo, onOffer,onAnswer,onCandidate,stop,connect } from "@/utils/webRtc.js"
 import { Confirm, Toast } from "vue-ydui/dist/lib.rem/dialog";
 import {
   send,
@@ -79,13 +80,11 @@ export default function setupAuthEvent() {
       }
     });
   });
-  ///监听回复的消息
-  window.apiSocket.on("chat", (data) => {
+  window.apiSocket.on("video", (data) =>{
     // 回复根据标志分类todo
     response(data).then((res) => {
       let data = res.data;
-      //逻辑处理,存放indexdDB,存放一份实时的在vuex
-      console.log("发送消息监听回复", data);
+      console.log("video回复", data);
       //如果是视频
       if (data["type"] == store.getters.CHAT_VIDEO) {
         let evt = JSON.parse(res.data.msg);
@@ -104,13 +103,39 @@ export default function setupAuthEvent() {
             stop();
           } else if(evt.type === 'start'){
             //开启视频
-            init();
-            agreeStartVideo();
+            Confirm({
+              title: "视频邀请",
+              mes: `${data.name}邀请进入聊天`,
+              opts: () => {
+                joinChatSend({
+                  name: data.name,
+                  room_uuid: data.room_uuid,
+                  type: data.room_type,
+                  save_action: store.getters.LOCAL
+                }).then(res=>{
+                  init();
+                  agreeStartVideo();
+                })
+              }
+            });
+          } else if(evt.type === 'end'){
+            stopVideo();
+            hangUp();
           }
         }
+        clearTimeout(window.sendTimeOut)
+        clearTimeout(window.broadcastTimeOut)
         return;
       }
-
+    })
+  })
+  ///监听回复的消息
+  window.apiSocket.on("chat", (data) => {
+    // 回复根据标志分类todo
+    response(data).then((res) => {
+      let data = res.data;
+      //逻辑处理,存放indexdDB,存放一份实时的在vuex
+      console.log("发送消息监听回复", data);
       let index = modifyMsgStatus(data, store.getters.SUCCESS);
       let msgList = JSON.parse(JSON.stringify(store.getters.msgList));
       //这边会有发送后接收不到的问题

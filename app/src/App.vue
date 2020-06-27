@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-06-21 15:18:16
+ * @LastEditTime: 2020-06-27 14:26:03
  -->
 <template>
   <yd-layout>
@@ -40,6 +40,9 @@
     </transition>
     <!-- html通知消息 -->
     <notify></notify>
+    <!-- 视频标签 -->
+    <video id="localvideo" autoplay />
+    <video id="remotevideo" autoplay />
     <!-- 悬浮 -->
     <navMenu></navMenu>
     <!--公共底部导航-->
@@ -186,6 +189,7 @@ export default {
             delete data["data"]["id"];
             // 增加状态,0申请，1通过，2拒绝
             data["data"]["status"] = 0;
+            console.log(data);
             Toast({ mes: `${data.data.nick_name}申请加你好友` });
             addAddressBookBeg(data["data"]).then(res => {
               getAddressBookBeg().then(res => {
@@ -204,7 +208,7 @@ export default {
                   newFriendAlertNumber
                 );
               });
-            });
+            })
           }
         });
       }
@@ -350,5 +354,21 @@ export default {
 /* 底部选中 */
 .active {
   color: $color-primary !important;
+}
+#localvideo{
+  width:2.5rem;
+  position: fixed;
+  right:0px;
+  top:1.2rem;
+  z-index:100;
+    display: none;
+}
+#remotevideo{
+  width:2.5rem;
+  position: fixed;
+  right:0px;
+  top:3.2rem;
+  z-index:100;
+  display: none;
 }
 </style>

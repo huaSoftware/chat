@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-27 16:53:46
+ * @LastEditors: hua
+ * @LastEditTime: 2020-06-25 20:12:39
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
@@ -26,8 +26,10 @@ export function chatSend(data){
     msgInfo['head_img'] = userInfo['head_img']
     msgInfo['created_at'] = parseInt(new Date().getTime()/1000)
     let msgList = JSON.parse(JSON.stringify(store.getters.msgList))
-    msgList = msgList.concat(msgInfo)
-    store.dispatch('updateMsgList', msgList)
+    if(msgInfo.type !== store.getters.CHAT_VIDEO){
+        msgList = msgList.concat(msgInfo)
+        store.dispatch('updateMsgList', msgList)
+    }
     //格式化emoji
     var regStr = /[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF][\u200D|\uFE0F]|[\uD83C|\uD83D|\uD83E][\uDC00-\uDFFF]|[0-9|*|#]\uFE0F\u20E3|[0-9|#]\u20E3|[\u203C-\u3299]\uFE0F\u200D|[\u203C-\u3299]\uFE0F|[\u2122-\u2B55]|\u303D|[\A9|\AE]\u3030|\uA9|\uAE|\u3030/ig;
     let formatData = JSON.parse(JSON.stringify(data))

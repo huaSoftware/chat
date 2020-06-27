@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-05-14 17:59:36
+ * @LastEditTime: 2020-06-26 19:32:18
  -->
 <template>
   <div class="content">
@@ -237,7 +237,7 @@ export default {
   font-weight: normal;
   display: inline-block;
   font-size: 12px;
-  width: 40%;
+  width: 48%;
   overflow: hidden;
   text-align: right;
 }

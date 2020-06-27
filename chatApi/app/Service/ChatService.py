@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-05-17 18:54:50
+@LastEditTime: 2020-06-27 18:16:25
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -34,12 +34,16 @@ class ChatService():
             'room_uuid': room_uuid,
             'created_at': created_at,
             'read_status': 0,
-            'user_type': user_type}
+            'user_type': user_type
+            }
         if room_data != None and room_type == CONST['ROOM']['ADMIN']['value']:
             address_book_data = AddressBook.get(room_uuid)
             # 发送消息
             socketio.emit('chat',  Utils.formatBody(data),
                           namespace='/api', room=room_uuid)
+            # 视频消息则直接返回
+            if Type ==  CONST['CHAT']['VIDEO']['value']:
+                return
             # 如果是云端存储则记录，这边判断不判断都存储
             # if save_action == CONST['SAVE']['CLOUD']['value']:
             res = Msg().getOne({Msg.room_uuid == room_uuid, Msg.created_at ==
@@ -65,6 +69,15 @@ class ChatService():
                     roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
         if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
+            # 视频消息则直接返回
+            if Type ==  CONST['CHAT']['VIDEO']['value']:
+                videoData = data
+                videoData["room_type"] = room_type
+                # 发送消息
+                for item in address_book_data:
+                    if item['be_focused_user_id'] != user_data['id']:
+                        emit('video',  Utils.formatBody(videoData), room='@broadcast.'+str(item['be_focused_user_id']))
+                return 
             # 发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
             # 如果是云端存储则记录，这边判断不判断都存储
@@ -83,9 +96,9 @@ class ChatService():
             AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
             # 更新客户端房间信息
             for item in address_book_data:
-                roomList = AddressBook.getRoomList(item.be_focused_user_id)
+                roomList = AddressBook.getRoomList(item['be_focused_user_id'])
                 socketio.emit('room', Utils.formatBody(
-                    roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
+                    roomList), namespace='/api', room='@broadcast.'+str(item['be_focused_user_id']))
         elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             # 发送消息

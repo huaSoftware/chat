@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-12-30 20:41:35
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-23 21:37:37
+ * @LastEditors: hua
+ * @LastEditTime: 2020-06-26 16:04:08
  */
 import store from '../store'
 import router from '../router'
@@ -19,6 +19,12 @@ export default function api(data, method){
         }
         window.apiSocket.emit(method, encryptStr, (res)=>{
             console.log(res)
+            if(!res){
+                clearTimeout(window.sendTimeOut)
+                clearTimeout(window.broadcastTimeOut)
+                Loading.close()
+                resolve(null)
+            }
             if (res.error_code === store.getters.CODE.SUCCESS.value) {
                 resolve(res)
             }

@@ -25,7 +25,7 @@ export function addAddressBookBeg(value) {
         
 
     }).catch(e => {
-        //console.log(e.stack || e);
+        console.log(e.stack || e);
         return false
     });
     return true

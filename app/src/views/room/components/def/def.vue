@@ -13,7 +13,7 @@
                 :key="index"
                 @click="handleDef(item.router)"
               >
-                <yd-icon  v-if="item.icon === 'video'" class="yd-grids-icon" slot="icon" name="video" color="#00C2E6"></yd-icon>
+                <yd-icon  v-if="item.icon === 'video'" class="yd-grids-icon" custom slot="icon" name="liaotian" color="#00C2E6"></yd-icon>
                 <yd-icon v-else class="yd-grids-icon" slot="icon" :name="item.icon" custom color="#00C2E6"></yd-icon>
                 <span class="yd-grids-text" slot="text">{{item.name}}</span>
               </a>
@@ -22,9 +22,6 @@
         </div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination"></div>
-        <!-- 视频标签 -->
-        <video id="localvideo" autoplay  style="height:400px;width:400px"/>
-        <video id="remotevideo" autoplay />
       </div>
     </div>
 </template>

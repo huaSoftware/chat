@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-05-04 11:30:41
+ * @LastEditTime: 2020-06-27 15:50:44
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -163,6 +163,7 @@ import {
   Loading
 } from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
+import {stopVideo, hangUp} from "@/utils/webRtc.js"
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from "axios";
 import lrz from "lrz";
@@ -192,7 +193,9 @@ export default {
       "FILE",
       "LOADING",
       "SUCCESS",
-      "FAIL"
+      "FAIL",
+      "CHAT_VIDEO",
+      "LOCAL"
     ])
   },
   data() {
@@ -250,6 +253,16 @@ export default {
     if (Vue.prototype.$preview.self) {
       Vue.prototype.$preview.self.close();
     }
+    chatSend({
+      data: {
+        msg: JSON.stringify({type:"end"}),
+        room_uuid: this.currentRoomUuid,
+        type: this.CHAT_VIDEO,
+        save_action: this.LOCAL
+      }
+    });
+    stopVideo();
+    hangUp();
     send("leave", { room_uuid: this.currentRoomUuid });
   },
   activated() {

@@ -3,16 +3,17 @@
  * @Date: 2020-06-21 14:33:32
  * @description: 视频聊天
  * @LastEditors: hua
- * @LastEditTime: 2020-06-21 16:15:01
+ * @LastEditTime: 2020-06-27 17:39:21
  */ 
 import store from "../store";
+import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import { chatSend } from "@/socketIoApi/chat";
 
 export function init(){
   window.debug = true;
   //先定义stun服务器
   window.stun_url = 'stun:stun.l.google.com:19302';
-  navigator.getUserMedia = navigator.getUserMedia|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+  //navigator.getUserMedia = navigator.getUserMedia|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
   window.localVideo = document.getElementById('localvideo');
   window.remoteVideo = document.getElementById('remotevideo');
   window.localStream = null;
@@ -81,8 +82,9 @@ function sendCandidate(candidate) {
 // start local video
 export function startVideo() {
   // navigator.webkitGetUserMedia({video: true, audio: false},
-  navigator.getUserMedia({ video: true, audio: true },
-    function (stream) { // success
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).
+    then(stream=> { // success
+      console.log()
       //d('startVideo localStream = '+stream);
       console.log(localVideo)
       console.log('startVideo success');
@@ -90,6 +92,7 @@ export function startVideo() {
       localVideo.srcObject = stream;
       localVideo.play();
       localVideo.volume = 0;
+      window.localVideo.style.display="block";
       chatSend({
         data: {
           msg: JSON.stringify({type:"start"}),
@@ -97,21 +100,27 @@ export function startVideo() {
           type: store.getters.CHAT_VIDEO,
           save_action: store.getters.LOCAL
         }
-      });
-    },
-    function (error) { // error
+      })
+      window.videoStreamTime = setTimeout(()=>{
+        Loading.close("");
+        Toast({mes:'连接超时',icon: 'error'})
+        stopVideo();
+        hangUp();
+        
+      },store.state.codeData.TIME.TIME_OUT.value)
+      Loading.open("正在连接...");
+    }).catch ((error) =>{ // error
       console.log('startVideo fail ' + error.code);
       console.log('error : ' + JSON.stringify(error));
       console.error('An error occurred: [CODE ' + error.code + ']');
       return;
-    }
-  );
+    })
 }
 
 export function agreeStartVideo() {
-  // navigator.webkitGetUserMedia({video: true, audio: false},
-  navigator.getUserMedia({ video: true, audio: true },
-    function (stream) { // success
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).
+    then(stream=> { // success
+      console.log()
       //d('startVideo localStream = '+stream);
       console.log(localVideo)
       console.log('startVideo success');
@@ -119,22 +128,29 @@ export function agreeStartVideo() {
       localVideo.srcObject = stream;
       localVideo.play();
       localVideo.volume = 0;
+      window.localVideo.style.display="block";
       connect();
-    },
-    function (error) { // error
+      Loading.open("正在连接...");
+  
+    }).catch ((error) =>{ // error
       console.log('startVideo fail ' + error.code);
       console.log('error : ' + JSON.stringify(error));
       console.error('An error occurred: [CODE ' + error.code + ']');
       return;
-    }
-  );
+    })
 }
 
 // stop local video
-function stopVideo() {
+export function stopVideo() {
   console.log(localStream)
-  localStream.stop();
-  localVideo.src = "";
+  localStream.getTracks().forEach(function (track) {
+    track.stop();
+  });
+  //window.localVideo.stop();
+  window.localVideo.src = "";
+  window.localVideo.style.display="none";
+  window.remoteVideo.src = "";
+  window.remoteVideo.style.display="none";
 }
 
 // ---------------------- connection handling -----------------------
@@ -170,11 +186,25 @@ function prepareNewConnection() {
 
   peer.addEventListener("addstream", onRemoteStreamAdded, false);
   peer.addEventListener("removestream", onRemoteStreamRemoved, false)
-
+  peer.oniceconnectionstatechange = function(event) {
+    if (peer.iceConnectionState === "failed" ||
+      peer.iceConnectionState === "disconnected" ||
+      peer.iceConnectionState === "closed") {
+      // Handle the failure
+      Loading.close("");
+      Toast({mes:'短接断开',icon: 'error'})
+      stopVideo();
+      hangUp();
+    }
+  };
   // when remote adds a stream, hand it on to the local video element
   function onRemoteStreamAdded(event) {
+    Loading.close();
+    Toast({mes:'连接成功',icon: 'success', timeout: 3000})
+    clearTimeout(window.videoStreamTime);
     console.log("Added remote stream");
     remoteVideo.srcObject = event.stream;
+    window.remoteVideo.style.display="block";
   }
 
   // when remote removes a stream, remove it from the local video element
@@ -251,13 +281,13 @@ export function connect() {
 }
 
 // stop the connection upon user request
-function hangUp() {
+export function hangUp() {
   console.log("Hang up.");
   stop();
 }
 
 export function stop() {
-  peerConnection.close();
+  //peerConnection.close();
   peerConnection = null;
   peerStarted = false;
 }

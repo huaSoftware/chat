@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 @LastEditors: hua
-@LastEditTime: 2020-06-21 14:23:38
+@LastEditTime: 2020-06-27 14:33:33
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -86,20 +86,6 @@ def leave(message, user_info):
     room_uuid = message['room_uuid']
     leave_room(room_uuid)
     return Utils.formatBody({'action': "leave"})
-
-""" 发起视频请求链接 """
-@socketio.on('messRequest', namespace='/api')
-def messRequest(message):
-    # 发送消息
-    emit("messRequest", message, broadcast=True)
-
-""" 视频 """
-@socketio.on('mess', namespace='/api')
-def message(message):
-    #room_uuid = message['data']['room_uuid']
-    # 发送消息
-    emit("mess", message, broadcast=True)
-    print(message)
 
 """ 聊天 """
 @socketio.on('chat', namespace='/api')

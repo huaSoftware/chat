@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2020-05-14 11:58:45
+@LastEditTime: 2020-06-27 18:13:54
 '''
 import time
 import math
@@ -246,7 +246,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
 
     @staticmethod
     def get(room_uuid):
-        return dBSession.query(AddressBook).filter(AddressBook.room_uuid == room_uuid).all()
+        return Utils.db_l_to_d(dBSession.query(AddressBook).filter(AddressBook.room_uuid == room_uuid).all())
 
     # 获取列表
     @staticmethod

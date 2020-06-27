@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-05-16 09:10:11
+ * @LastEditTime: 2020-06-27 14:30:27
  -->
 
 <template>
@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     go() {
-      alert(1);
     },
     handleClean(name) {
       this.$dialog.confirm({

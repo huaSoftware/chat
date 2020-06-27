@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-05-16 09:02:59
+ * @LastEditTime: 2020-06-27 15:11:49
  */
 
 import store from '../store'
@@ -79,10 +79,10 @@ export function  send(method, data, type = 'room') {
 			data['Authorization'] = 'JWT '+token
 		}
 		if (type == 'room') {
-			room(data, method);
+			return room(data, method);
 		}
 		if (type == 'broadcast') {
-			broadcast(data, method);
+			return broadcast(data, method);
 		}
 		if(type == 'api'){
 			return api(data, method);
@@ -96,10 +96,18 @@ export function  send(method, data, type = 'room') {
 /* 解析返回消息 */
 export function response(res){
 	var res = new Promise((resolve, reject)=>{
+		if(!res){
+			clearTimeout(window.sendTimeOut)
+			clearTimeout(window.broadcastTimeOut)
+			Loading.close()
+			return;
+		}
 		/**
 		* error为true时 显示msg提示信息
 		*/
 		if (res.error_code === store.getters.CODE.SUCCESS.value) {
+			clearTimeout(window.sendTimeOut)
+			clearTimeout(window.broadcastTimeOut)
 			resolve(res)
 		}
 		if (res.error_code === store.getters.CODE.BAD_REQUEST.value || res.error_code === store.getters.CODE.ERROR.value) {
