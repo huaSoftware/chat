@@ -71,6 +71,7 @@ http://doc.zhuhui.store
 - [x] 增加聊天记录云端存储
 - [x] rsa 加密数据
 - [x] H5 语音
+- [x] 视频聊天 2020/06/27 video分支
 
 ### 后台项目功能
 
@@ -88,7 +89,7 @@ http://doc.zhuhui.store
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142449_b130cf60_1588193.png "153}QG8F60OV8HI27ZDMSN6.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142458_11de22a5_1588193.png "C}EI)WI9VH$GD~XK15IH}}5.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142505_7fc25269_1588193.png "K~2G@NU~8WZG7WR0`FGS2]H.png")
-
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0627/185024_08caa957_1588193.jpeg "c1bbc1e2b5df97b377123f95709041d.jpg")
 ### 前端项目安装
 
     cnpm install
