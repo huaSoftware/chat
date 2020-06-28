@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 18:50:37
+ * @LastEditTime: 2020-06-28 10:39:04
  -->
 
 ### 工具鸡-聊天室
@@ -89,7 +89,8 @@ http://doc.zhuhui.store
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142449_b130cf60_1588193.png "153}QG8F60OV8HI27ZDMSN6.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142458_11de22a5_1588193.png "C}EI)WI9VH$GD~XK15IH}}5.png")
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0617/142505_7fc25269_1588193.png "K~2G@NU~8WZG7WR0`FGS2]H.png")
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0627/185024_08caa957_1588193.jpeg "c1bbc1e2b5df97b377123f95709041d.jpg")
+<img src="https://images.gitee.com/uploads/images/2020/0627/185024_08caa957_1588193.jpeg " width="324px" >
+
 
 ### 前端项目安装
 
