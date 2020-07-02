@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-09-29 11:30:28
 @description: 
-@LastEditors  : hua
-@LastEditTime : 2020-01-02 21:13:57
+@LastEditors: hua
+@LastEditTime: 2020-07-02 12:13:48
 '''
 from app import CONST
 from app import cache
@@ -72,8 +72,8 @@ class AddressBookService:
             #添加后同步房间
             addressBookData = AddressBook.get(room_uuid)
             for item in addressBookData:
-                roomList = AddressBook.getRoomList(item.be_focused_user_id)['list']
-                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item.be_focused_user_id))   
+                roomList = AddressBook.getRoomList(item['be_focused_user_id'])['list']
+                socketio.emit('room',Utils.formatBody(roomList), namespace="/api",room='@broadcast.'+str(item['be_focused_user_id']))   
             return Utils.formatBody({},msg='添加成功')
         return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],msg='已添加')
     

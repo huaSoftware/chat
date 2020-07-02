@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-09-29 12:03:29
 @description: 
-@LastEditors  : hua
-@LastEditTime : 2020-01-19 14:28:58
+@LastEditors: hua
+@LastEditTime: 2020-07-02 12:10:31
 '''
 from app import CONST
 from app import socketio
@@ -35,7 +35,7 @@ class RoomService:
         }
         roomData = Room().getOne(filters)
         if roomData['type'] == CONST['ROOM']['ALONE']['value']:
-            address_book_data = Utils.db_l_to_d(AddressBook.get(params['room_uuid']))
+            address_book_data = AddressBook.get(params['room_uuid'])
             filters = {
                 AddressBook.room_uuid == params['room_uuid']
             }

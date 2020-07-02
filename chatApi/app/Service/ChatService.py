@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 @LastEditors: hua
-@LastEditTime: 2020-06-27 18:16:25
+@LastEditTime: 2020-07-02 12:11:35
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -66,7 +66,7 @@ class ChatService():
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)
                 socketio.emit('room', Utils.formatBody(
-                    roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
+                    roomList), namespace='/api', room='@broadcast.'+str(item['be_focused_user_id']))
         if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
             # 视频消息则直接返回
@@ -154,10 +154,10 @@ class ChatService():
                     item.be_focused_user_id)['list']
                 if item.type == CONST['ADDRESSBOOK']['ADMIN']['value']:
                     socketio.emit('room', Utils.formatBody(
-                        roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
+                        roomList), namespace="/api", room='@broadcast.'+str(item['be_focused_user_id']))
                 else:
                     socketio.emit('room', Utils.formatBody(
-                        roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
+                        roomList), namespace="/api", room='@broadcast.'+str(item['be_focused_user_id']))
         else:
             room_uuid = addressBookInfo['room_uuid']
         return Utils.formatBody({'room_uuid': room_uuid})
