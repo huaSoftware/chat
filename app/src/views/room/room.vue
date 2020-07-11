@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 15:50:44
+ * @LastEditTime: 2020-07-02 19:29:57
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">

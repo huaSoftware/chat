@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-06-25 20:12:39
+ * @LastEditTime: 2020-07-02 19:31:05
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
@@ -46,7 +46,7 @@ export function chatSend(data){
             formatMsgInfo.msg = formatMsgInfo.msg.replace(v, escape(v).replace(/%/g,"\\"))
         });
     }
-    if(data['data']['save_action'] == 0){
+    if(data['data']['save_action'] == 0 && data['data']['type'] !== store.getters.CHAT_VIDEO){
         addLocalRoomMsg(msgInfo)
     }/* else if(data['data']['save_action'] == 1){
         //delete data.data.save_action;

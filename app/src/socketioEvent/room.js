@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 15:20:07
+ * @LastEditTime: 2020-07-02 21:58:24
  */
 import store from "../store";
 import router from "../router";
@@ -62,6 +62,17 @@ export default function room(data, method) {
       modifyMsgStatus(data.data, store.getters.FAIL);
     }
   }, store.state.codeData.TIME.TIME_OUT.value);
+  if (method === "leave") {
+    clearTimeout(window.sendTimeOut);
+    Loading.close();
+    //如果不在room路由下
+    if (router.history.current.fullPath.indexOf("room") === -1) {
+      store.commit("updateCurrentRoomUuid", "");
+      store.commit("updateCurrentRoomName", "");
+      store.commit("updateCurrentRoomType", store.getters.ALONE);
+      store.commit("updateCurrentRoomSaveAction", store.getters.LOCAL);
+    }
+  }
   var res = new Promise((resolve, reject)=>{
     let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);
     window.apiSocket.emit(method, encryptStr, (recv) => {
@@ -75,22 +86,11 @@ export default function room(data, method) {
       //未加入房间的时候对方收不到消息
       response(recv)
         .then((res) => {
-          if (res.data.action == "chat") {
+          if (res.data.action === "chat") {
             clearTimeout(window.sendTimeOut);
             modifyMsgStatus(data.data, store.getters.SUCCESS);
           }
-          if (res.data.action == "leave") {
-            clearTimeout(window.sendTimeOut);
-            Loading.close();
-            //如果不在room路由下
-            if (router.history.current.fullPath.indexOf("room") == -1) {
-              store.commit("updateCurrentRoomUuid", "");
-              store.commit("updateCurrentRoomName", "");
-              store.commit("updateCurrentRoomType", store.getters.ALONE);
-              store.commit("updateCurrentRoomSaveAction", store.getters.LOCAL);
-            }
-          }
-          if (res.data.action == "join") {
+          if (res.data.action === "join") {
             clearTimeout(window.sendTimeOut);
             Loading.close();
             let queryData = {};

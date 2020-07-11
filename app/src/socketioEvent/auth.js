@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 16:12:44
+ * @LastEditTime: 2020-07-02 22:02:29
  */
 import store from "../store";
 import router from "../router";
@@ -279,8 +279,9 @@ export default function setupAuthEvent() {
       .then((res) => {
         console.log(24234235, res);
         let data = res.data.list;
-        if (data != null) {
+        if (data) {
           //app消息通知
+          console.log("app消息通知", store.getters.isPaused, data[0].is_alert)
           if (window.plus && store.getters.isPaused && data[0].is_alert) {
             plus.push.createMessage(
               formatLastMsg(data[0]["room"]["last_msg"]),

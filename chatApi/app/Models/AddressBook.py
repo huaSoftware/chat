@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 @LastEditors: hua
-@LastEditTime: 2020-06-27 18:13:54
+@LastEditTime: 2020-07-02 22:17:55
 '''
 import time
 import math
@@ -197,7 +197,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             room_uuid=room_uuid,
             unread_number=0,
             is_alert=1,
-            type=0,
+            type=CONST['SAVE']['CLOUD']['value'],
         )
         dBSession.add(addressBook)
         addressBook = AddressBook(
@@ -206,7 +206,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             room_uuid=room_uuid,
             unread_number=0,
             is_alert=1,
-            type=0,
+            type=CONST['SAVE']['CLOUD']['value'],
         )
         dBSession.add(addressBook)
         return True

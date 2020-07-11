@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 18:39:01
+ * @LastEditTime: 2020-07-02 22:12:23
  -->
 <template>
   <yd-layout>
@@ -150,10 +150,9 @@ export default {
         }
       });
       //app的监听事件
-      document.addEventListener(
-        "plusready",
-        function() {
-          //运行环境从前台切换到后台事件
+      
+      if(window.plus){
+        //运行环境从前台切换到后台事件
           document.addEventListener("pause", onAppPause, false);
           //运行环境从后台切换到前台事件
           document.addEventListener("resume", onAppReume, false);
@@ -163,9 +162,24 @@ export default {
           document.addEventListener("foreground", onAppForeground, false);
           //应用需要清理内存事件
           document.addEventListener("trimmemory", onAppTrimMemory, false);
-        },
-        false
-      );
+      }else{
+        document.addEventListener(
+          "plusready",
+          function() {
+            //运行环境从前台切换到后台事件
+            document.addEventListener("pause", onAppPause, false);
+            //运行环境从后台切换到前台事件
+            document.addEventListener("resume", onAppReume, false);
+            //应用切换到后台运行事件
+            document.addEventListener("background", onAppBackground, false);
+            //应用切换到前台运行事件
+            document.addEventListener("foreground", onAppForeground, false);
+            //应用需要清理内存事件
+            document.addEventListener("trimmemory", onAppTrimMemory, false);
+          },
+          false
+        );
+      }
       function onAppPause() {
         console.log("Application paused!");
         that.$store.commit("updateIsPaused", true);

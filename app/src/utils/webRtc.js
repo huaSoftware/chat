@@ -3,7 +3,7 @@
  * @Date: 2020-06-21 14:33:32
  * @description: 视频聊天
  * @LastEditors: hua
- * @LastEditTime: 2020-06-27 17:39:21
+ * @LastEditTime: 2020-07-02 21:54:29
  */ 
 import store from "../store";
 import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
@@ -143,9 +143,11 @@ export function agreeStartVideo() {
 // stop local video
 export function stopVideo() {
   console.log(localStream)
-  localStream.getTracks().forEach(function (track) {
-    track.stop();
-  });
+  if(localStream){
+    localStream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+  }
   //window.localVideo.stop();
   window.localVideo.src = "";
   window.localVideo.style.display="none";
