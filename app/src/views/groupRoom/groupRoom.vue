@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-05-04 11:36:18
+ * @LastEditTime: 2020-07-11 10:46:46
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -20,7 +20,7 @@
               class="format_time"
               v-if="index>0 && key.created_at> parseInt(msgList[index-1].created_at)+60"
             >{{formatTime(key.created_at)}}</div>
-            <div class="chat-item" v-if="(key.user_id == userInfo.id) && (key.user_type==0)">
+            <div class="chat-item" v-if="(key.user_id == userInfo.id) ">
               <div class="mychat">
                 <vImg :imgUrl="key.head_img" class="img" />
                 <div class="nt">
@@ -575,7 +575,15 @@ export default {
       this.isPartChatPage = false;
       this.handleHeightToBottom();
     },
-    handleSendShow(newVal, oldVal) {
+    handleSendShow() {
+      if (this.content.length >= 1) {
+        this.sendShow = true;
+      } else {
+        this.sendShow = false;
+      }
+     
+    },
+    handleWatchSendShow(newVal, oldVal) {
       if (this.content.length >= 1) {
         this.sendShow = true;
       } else {
@@ -871,8 +879,8 @@ export default {
   },
   watch: {
     //监听聊天数据变动
-    content: "handleSendShow",
-    data: "handleSendShow",
+    content: "handleWatchSendShow",
+    data: "handleWatchSendShow",
     msgList: {
       handler() {
         this.handleMsgListToBottom(100);
