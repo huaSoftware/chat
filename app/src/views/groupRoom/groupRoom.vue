@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-07-11 10:46:46
+ * @LastEditTime: 2020-07-11 11:25:05
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -20,7 +20,7 @@
               class="format_time"
               v-if="index>0 && key.created_at> parseInt(msgList[index-1].created_at)+60"
             >{{formatTime(key.created_at)}}</div>
-            <div class="chat-item" v-if="(key.user_id == userInfo.id) ">
+            <div class="chat-item" v-if="(key.user_id == userInfo.id)&& (key.user_type!=1) ">
               <div class="mychat">
                 <vImg :imgUrl="key.head_img" class="img" />
                 <div class="nt">

@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-11 17:10:22
+ * @LastEditTime: 2020-07-11 11:38:25
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -42,7 +42,7 @@ export default {
         "currentRoomName",
         "currentRoomType",
         "currentRoomSaveAction",
-        "RECORD","TEXT","IMG","FILE"
+        "RECORD","TEXT","IMG","FILE","CHAT_NOTIFY"
       ])
     },
   data() {
@@ -152,6 +152,9 @@ export default {
         }
         if(data['type'] == this.TEXT ){
           return data['msg']
+        }
+         if(data['type'] == this.CHAT_NOTIFY ){
+          return JSON.parse(data['msg'])['msg']
         }
         return data['msg']
       }catch(e){
