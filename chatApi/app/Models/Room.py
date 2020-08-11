@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-26 09:54:21
-@LastEditors: hua
-@LastEditTime: 2020-04-20 19:20:25
+LastEditors: hua
+LastEditTime: 2020-08-05 23:02:28
 '''
 import time
 import math
@@ -186,7 +186,7 @@ class Room(Base, HtRoom, SerializerMixin):
             room_uuid=message['room_uuid'],
             last_msg=message['last_msg'],
             type=message['type'],
-            name='',
+            name="",
             user_id=message['user_id']
         )
         # 实例化后orm添加
