@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-07-02 22:12:23
+ * @LastEditTime: 2020-08-05 22:20:49
  -->
 <template>
   <yd-layout>
@@ -150,19 +150,19 @@ export default {
         }
       });
       //app的监听事件
-      
-      if(window.plus){
+
+      if (window.plus) {
         //运行环境从前台切换到后台事件
-          document.addEventListener("pause", onAppPause, false);
-          //运行环境从后台切换到前台事件
-          document.addEventListener("resume", onAppReume, false);
-          //应用切换到后台运行事件
-          document.addEventListener("background", onAppBackground, false);
-          //应用切换到前台运行事件
-          document.addEventListener("foreground", onAppForeground, false);
-          //应用需要清理内存事件
-          document.addEventListener("trimmemory", onAppTrimMemory, false);
-      }else{
+        document.addEventListener("pause", onAppPause, false);
+        //运行环境从后台切换到前台事件
+        document.addEventListener("resume", onAppReume, false);
+        //应用切换到后台运行事件
+        document.addEventListener("background", onAppBackground, false);
+        //应用切换到前台运行事件
+        document.addEventListener("foreground", onAppForeground, false);
+        //应用需要清理内存事件
+        document.addEventListener("trimmemory", onAppTrimMemory, false);
+      } else {
         document.addEventListener(
           "plusready",
           function() {
@@ -207,24 +207,20 @@ export default {
             data["data"]["status"] = 0;
             console.log(data);
             Toast({ mes: `${data.data.nick_name}申请加你好友` });
-            addAddressBookBeg(data["data"]).then(res => {
-              getAddressBookBeg().then(res => {
-                let newFriendAlertNumber = 0;
-                console.log("通讯录地址" + res);
-                if (!res) return;
-                if (res.length > 0) {
-                  res.forEach(item => {
-                    if (item.status == 0) {
-                      newFriendAlertNumber++;
-                    }
-                  });
-                }
-                store.commit(
-                  "updateNewFriendAlertNumber",
-                  newFriendAlertNumber
-                );
-              });
-            })
+            addAddressBookBeg(data["data"]);
+            getAddressBookBeg().then(res => {
+              let newFriendAlertNumber = 0;
+              console.log("通讯录地址" + res);
+              if (!res) return;
+              if (res.length > 0) {
+                res.forEach(item => {
+                  if (item.status == 0) {
+                    newFriendAlertNumber++;
+                  }
+                });
+              }
+              store.commit("updateNewFriendAlertNumber", newFriendAlertNumber);
+            });
           }
         });
       }
@@ -371,19 +367,19 @@ export default {
 .active {
   color: $color-primary !important;
 }
-.videoContainor{
+.videoContainor {
   position: fixed;
-  right:0px;
-  top:1.2rem;
-  z-index:100;
+  right: 0px;
+  top: 1.2rem;
+  z-index: 100;
 }
-#localvideo{
-  width:2.5rem;
-    display: none;
+#localvideo {
+  width: 2.5rem;
+  display: none;
 }
-#remotevideo{
-  width:2.5rem;
-  margin-top:0.2rem;
+#remotevideo {
+  width: 2.5rem;
+  margin-top: 0.2rem;
   display: none;
 }
 </style>

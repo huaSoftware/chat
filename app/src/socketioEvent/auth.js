@@ -3,12 +3,12 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-07-02 22:02:29
+ * @LastEditTime: 2020-08-05 22:47:10
  */
 import store from "../store";
 import router from "../router";
 import { joinChatSend } from "@/socketIoApi/chat";
-import {stopVideo, hangUp,init, agreeStartVideo, onOffer,onAnswer,onCandidate,stop,connect } from "@/utils/webRtc.js"
+import { stopVideo, hangUp, init, agreeStartVideo, onOffer, onAnswer, onCandidate, stop, connect } from "@/utils/webRtc.js"
 import { Confirm, Toast } from "vue-ydui/dist/lib.rem/dialog";
 import {
   send,
@@ -80,7 +80,7 @@ export default function setupAuthEvent() {
       }
     });
   });
-  window.apiSocket.on("video", (data) =>{
+  window.apiSocket.on("video", (data) => {
     // 回复根据标志分类todo
     response(data).then((res) => {
       let data = res.data;
@@ -88,7 +88,7 @@ export default function setupAuthEvent() {
       //如果是视频
       if (data["type"] == store.getters.CHAT_VIDEO) {
         let evt = JSON.parse(res.data.msg);
-        if(data.user_id !== store.getters.userInfo.id){
+        if (data.user_id !== store.getters.userInfo.id) {
           if (evt.type === 'offer') {
             console.log("Received offer, set offer, sending answer....")
             onOffer(evt);
@@ -101,7 +101,7 @@ export default function setupAuthEvent() {
           } else if (evt.type === 'user dissconnected' && peerStarted) {
             console.log("disconnected");
             stop();
-          } else if(evt.type === 'start'){
+          } else if (evt.type === 'start') {
             //开启视频
             Confirm({
               title: "视频邀请",
@@ -112,13 +112,13 @@ export default function setupAuthEvent() {
                   room_uuid: data.room_uuid,
                   type: data.room_type,
                   save_action: store.getters.LOCAL
-                }).then(res=>{
+                }).then(res => {
                   init();
                   agreeStartVideo();
                 })
               }
             });
-          } else if(evt.type === 'end'){
+          } else if (evt.type === 'end') {
             stopVideo();
             hangUp();
           }
@@ -178,7 +178,9 @@ export default function setupAuthEvent() {
     });
   });
   //监听
-  send("join", {}, "broadcast");
+  send("join", {
+    type: store.getters.NOTIFY,
+  });
   //更新在线状态
   if (!window.loginConnectInterval) {
     window.loginConnectInterval = setInterval(() => {
@@ -199,6 +201,7 @@ export default function setupAuthEvent() {
   }
   //监听好友请求
   window.apiSocket.on("beg", (data) => {
+    alert(1)
     response(data).then((res) => {
       let data = res.data;
       if (data["action"] == "beg_add") {
@@ -250,7 +253,7 @@ export default function setupAuthEvent() {
             {
               txt: "取消",
               color: false,
-              callback: () => {},
+              callback: () => { },
             },
             {
               txt: "确定",
