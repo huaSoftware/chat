@@ -3,13 +3,13 @@
  * @Date: 2020-06-21 14:33:32
  * @description: 视频聊天
  * @LastEditors: hua
- * @LastEditTime: 2020-07-02 21:54:29
- */ 
+ * @LastEditTime: 2020-08-11 21:44:48
+ */
 import store from "../store";
-import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
+import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import { chatSend } from "@/socketIoApi/chat";
 
-export function init(){
+export function init() {
   window.debug = true;
   //先定义stun服务器
   window.stun_url = 'stun:stun.l.google.com:19302';
@@ -83,7 +83,7 @@ function sendCandidate(candidate) {
 export function startVideo() {
   // navigator.webkitGetUserMedia({video: true, audio: false},
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).
-    then(stream=> { // success
+    then(stream => { // success
       console.log()
       //d('startVideo localStream = '+stream);
       console.log(localVideo)
@@ -92,24 +92,24 @@ export function startVideo() {
       localVideo.srcObject = stream;
       localVideo.play();
       localVideo.volume = 0;
-      window.localVideo.style.display="block";
+      window.localVideo.style.display = "block";
       chatSend({
         data: {
-          msg: JSON.stringify({type:"start"}),
+          msg: JSON.stringify({ type: "start" }),
           room_uuid: store.getters.currentRoomUuid,
           type: store.getters.CHAT_VIDEO,
           save_action: store.getters.LOCAL
         }
       })
-      window.videoStreamTime = setTimeout(()=>{
+      window.videoStreamTime = setTimeout(() => {
         Loading.close("");
-        Toast({mes:'连接超时',icon: 'error'})
+        Toast({ mes: '连接超时', icon: 'error' })
         stopVideo();
         hangUp();
-        
-      },store.state.codeData.TIME.TIME_OUT.value)
+
+      }, store.state.codeData.TIME.TIME_OUT.value)
       Loading.open("正在连接...");
-    }).catch ((error) =>{ // error
+    }).catch((error) => { // error
       console.log('startVideo fail ' + error.code);
       console.log('error : ' + JSON.stringify(error));
       console.error('An error occurred: [CODE ' + error.code + ']');
@@ -119,7 +119,7 @@ export function startVideo() {
 
 export function agreeStartVideo() {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).
-    then(stream=> { // success
+    then(stream => { // success
       console.log()
       //d('startVideo localStream = '+stream);
       console.log(localVideo)
@@ -128,11 +128,11 @@ export function agreeStartVideo() {
       localVideo.srcObject = stream;
       localVideo.play();
       localVideo.volume = 0;
-      window.localVideo.style.display="block";
+      window.localVideo.style.display = "block";
       connect();
       Loading.open("正在连接...");
-  
-    }).catch ((error) =>{ // error
+
+    }).catch((error) => { // error
       console.log('startVideo fail ' + error.code);
       console.log('error : ' + JSON.stringify(error));
       console.error('An error occurred: [CODE ' + error.code + ']');
@@ -142,17 +142,17 @@ export function agreeStartVideo() {
 
 // stop local video
 export function stopVideo() {
-  console.log(localStream)
-  if(localStream){
+  if (typeof localStream !== 'undefined') {
     localStream.getTracks().forEach(function (track) {
       track.stop();
     });
+    //window.localVideo.stop();
+    window.localVideo.src = "";
+    window.localVideo.style.display = "none";
+    window.remoteVideo.src = "";
+    window.remoteVideo.style.display = "none";
   }
-  //window.localVideo.stop();
-  window.localVideo.src = "";
-  window.localVideo.style.display="none";
-  window.remoteVideo.src = "";
-  window.remoteVideo.style.display="none";
+
 }
 
 // ---------------------- connection handling -----------------------
@@ -188,13 +188,13 @@ function prepareNewConnection() {
 
   peer.addEventListener("addstream", onRemoteStreamAdded, false);
   peer.addEventListener("removestream", onRemoteStreamRemoved, false)
-  peer.oniceconnectionstatechange = function(event) {
+  peer.oniceconnectionstatechange = function (event) {
     if (peer.iceConnectionState === "failed" ||
       peer.iceConnectionState === "disconnected" ||
       peer.iceConnectionState === "closed") {
       // Handle the failure
       Loading.close("");
-      Toast({mes:'短接断开',icon: 'error'})
+      Toast({ mes: '短接断开', icon: 'error' })
       stopVideo();
       hangUp();
     }
@@ -202,11 +202,11 @@ function prepareNewConnection() {
   // when remote adds a stream, hand it on to the local video element
   function onRemoteStreamAdded(event) {
     Loading.close();
-    Toast({mes:'连接成功',icon: 'success', timeout: 3000})
+    Toast({ mes: '连接成功', icon: 'success', timeout: 3000 })
     clearTimeout(window.videoStreamTime);
     console.log("Added remote stream");
     remoteVideo.srcObject = event.stream;
-    window.remoteVideo.style.display="block";
+    window.remoteVideo.style.display = "block";
   }
 
   // when remote removes a stream, remove it from the local video element
@@ -271,12 +271,12 @@ export function connect() {
   console.log('try connect. peerStarted:' + peerStarted + ' localStream:' + localStream);
   console.log(!peerStarted, localStream)
   console.log(Boolean(localStream));
-  
+
   //if (!peerStarted && localStream && socketReady) { // **
-    //if (!peerStarted && localStream) { // --
-    console.log('try sendOffer.');
-    sendOffer();
-    peerStarted = true;
+  //if (!peerStarted && localStream) { // --
+  console.log('try sendOffer.');
+  sendOffer();
+  peerStarted = true;
   //} else {
   //  alert("Local stream not running yet - try again.");
   //}
@@ -290,6 +290,9 @@ export function hangUp() {
 
 export function stop() {
   //peerConnection.close();
-  peerConnection = null;
-  peerStarted = false;
+  if (typeof peerConnection != 'undefined') {
+    peerConnection = null;
+    peerStarted = false;
+  }
+
 }

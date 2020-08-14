@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-07-11 11:24:43
+ * @LastEditTime: 2020-08-11 22:00:04
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -40,7 +40,12 @@
                   <i class="vioce_stop_left" v-show="!JSON.parse(key.msg)['status']"></i>
                   <span class="vioce_second">{{JSON.parse(key.msg)['duration']}}s</span>
                 </div>
-                <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div
+                  v-on:click="handleDefsForSelf(key)"
+                  v-else-if="key.type == TEXT"
+                  class="rawMsg"
+                  v-html="key.msg"
+                >{{key.msg}}</div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div
                   v-else-if="key.type == FILE"
@@ -163,7 +168,7 @@ import {
   Loading
 } from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
-import {stopVideo, hangUp} from "@/utils/webRtc.js"
+import { stopVideo, hangUp } from "@/utils/webRtc.js";
 import { chatSend, reChatSend } from "@/socketIoApi/chat";
 import axios from "axios";
 import lrz from "lrz";
@@ -255,7 +260,7 @@ export default {
     }
     chatSend({
       data: {
-        msg: JSON.stringify({type:"end"}),
+        msg: JSON.stringify({ type: "end" }),
         room_uuid: this.currentRoomUuid,
         type: this.CHAT_VIDEO,
         save_action: this.LOCAL
@@ -314,6 +319,9 @@ export default {
           this.handleSendShow();
         }
       };
+    },
+    handleDefsForSelf(item) {
+      console.log(item);
     },
     handleOnFocus() {
       if (!this.onFocusLock) {
