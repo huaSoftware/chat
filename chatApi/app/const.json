@@ -55,5 +55,8 @@
     "RESEND": { "text": "重新发送", "value": 3 },
     "SUCCESS": { "text": "发送成功", "value": 1 }
   },
-  "TIME": { "TIME_OUT": { "text": "超时时间", "value": 15000 } }
+  "TIME": { 
+    "TIME_OUT": { "text": "超时时间", "value": 15000 },
+    "TIME_ONLINE_INTERVAL": { "text": "在线检查间隔","value": 5000 } 
+  }
 }

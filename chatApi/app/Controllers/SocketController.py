@@ -2,8 +2,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors: hua
-@LastEditTime: 2020-06-27 14:33:33
+LastEditors: hua
+LastEditTime: 2020-08-15 22:31:19
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -166,7 +166,7 @@ def background_thread():
     """启动一个后台线程来处理所有的延时任务
     """
     while True:
-        socketio.sleep(2)
+        socketio.sleep(int(CONST['TIME']['TIME_ONLINE_INTERVAL']['value']/1000))
         # 延迟推送
         d_list = delayQueue.consumer()
         for item in d_list:
