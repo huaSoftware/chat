@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:12:17
+ * @LastEditTime: 2020-08-15 12:20:21
  -->
 <template>
   <div class="app-container">
@@ -22,59 +22,32 @@
       </el-table-column>
       <el-table-column label="关注者" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.users.nick_name }}</span>
+          <span v-if="scope.row.users">{{ scope.row.users.nick_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="房间编号"
-        prop="room_uuid"
-        align="center"
-        sortable
-      >
+      <el-table-column label="房间编号" prop="room_uuid" align="center" sortable>
         <template slot-scope="scope">
           <span>{{ scope.row.room_uuid }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="被关注者"
-        prop="nick_name"
-        align="center"
-        sortable
-      >
+      <el-table-column label="被关注者" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.be_users.nick_name }}</span>
+          <span v-if="scope.row.be_users">{{ scope.row.be_users.nick_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="创建时间"
-        prop="created_at"
-        class-name="status-col"
-        sortable
-      >
+      <el-table-column label="创建时间" prop="created_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.created_at) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="更新时间"
-        prop="updated_at"
-        class-name="status-col"
-        sortable
-      >
+      <el-table-column label="更新时间" prop="updated_at" class-name="status-col" sortable>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updated_at) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        width="230"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" plain @click="move(scope.row.id)"
-            >删除</el-button
-          >
+          <el-button size="mini" type="danger" plain @click="move(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,17 +78,17 @@ export default {
         page_no: 1,
         per_page: 10,
         orderBy: "updated_at",
-        order: "desc"
-      }
+        order: "desc",
+      },
     };
   },
   components: {
-    Pagination
+    Pagination,
   },
   methods: {
     getList() {
       this.listLoading = true;
-      addressBookList(this.listQuery).then(res => {
+      addressBookList(this.listQuery).then((res) => {
         console.log(res);
         this.list = res.data.list;
         this.total = res.data.page.count;
@@ -123,10 +96,10 @@ export default {
       });
     },
     move(id) {
-      addressBookDelete({ id: id }).then(res => {
+      addressBookDelete({ id: id }).then((res) => {
         this.$message({
           message: "删除成功",
-          type: "success"
+          type: "success",
         });
         this.getList();
       });
@@ -144,11 +117,11 @@ export default {
     },
     parseTime(time) {
       return parseTime(time);
-    }
+    },
   },
-  created: function() {
+  created: function () {
     this.getList();
-  }
+  },
 };
 </script>
 
