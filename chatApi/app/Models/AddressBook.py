@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 LastEditors: hua
-LastEditTime: 2020-08-05 23:01:12
+LastEditTime: 2020-08-16 20:49:13
 '''
 import time
 import math
@@ -225,7 +225,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         }
         Room.insertAdminRoomData(roomData)
         addressBook = AddressBook(
-            focused_user_id=admin_user_info['uuid'],
+            focused_user_id=admin_user_info['id'],
             be_focused_user_id=be_focused_user_id,
             room_uuid=room_uuid,
             unread_number=0,
@@ -236,7 +236,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         dBSession.add(addressBook)
         addressBook = AddressBook(
             focused_user_id=be_focused_user_id,
-            be_focused_user_id=admin_user_info['uuid'],
+            be_focused_user_id=admin_user_info['id'],
             room_uuid=room_uuid,
             unread_number=0,
             is_alert=1,
@@ -279,7 +279,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         }
         dBSession.query(AddressBook).filter(*filter).update({
             AddressBook.unread_number: AddressBook.unread_number+1,
-            AddressBook.updated_at: time.time()
+            AddressBook.updated_at: int(time.time())
         })
 
     # 清除关注者未读消息次数
@@ -290,4 +290,4 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             AddressBook.room_uuid == room_uuid
         }
         dBSession.query(AddressBook).filter(
-            *filter).update({'unread_number': 0, 'updated_at': time.time()})
+            *filter).update({'unread_number': 0, 'updated_at': int(time.time())})

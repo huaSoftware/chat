@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-05-01 09:46:22
+ * @LastEditTime: 2020-08-16 20:27:55
  -->
 <template>
   <div class="app-container">
@@ -55,7 +55,7 @@
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" plain @click="move(scope.row.id)">删除</el-button>
-          <el-button size="mini" type="primary" plain @click="send(scope.row.id)">聊天</el-button>
+          <el-button size="mini" type="primary" plain @click="sendMessage(scope.row.id)">聊天</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -172,7 +172,8 @@ export default {
         this.getList()
       })
     },
-    send(user_id) {
+    sendMessage(user_id) {
+      this.content ="";
       this.updateMsgList([])
       adminCreateRoom({ user_id: user_id }).then(res => {
         const room_uuid = res.data.room_uuid

@@ -3,7 +3,7 @@
  * @Date: 2019-11-21 10:18:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 19:00:52
+ * @LastEditTime: 2020-08-16 20:27:11
  -->
 <template>
   <div>
@@ -11,7 +11,7 @@
       <li v-for="(key, index) in msgList" :key="index">
         <div class="chat-item" v-if="(key.user_id == user_id)&& (key.user_type==0)">
           <div class="mychat">
-            <img :src="key.head_img" class="img" />
+            <Vimg  class="img" :img-url="key.head_img" />
             <div class="nt">
               <span v-html="key.name"></span>
             </div>
@@ -41,7 +41,7 @@
         </div>
         <div class="chat-item" v-else>
           <div class="otherchat">
-            <img class="img" :src="key.head_img" />
+            <Vimg  class="img" :img-url="key.head_img" />
             <div class="nt">
               <span v-html="key.name"></span>
             </div>
@@ -75,7 +75,11 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import Vimg from '@/components/Vimg'
 export default {
+  components: {
+    Vimg,
+  },
   data() {
     return {};
   },

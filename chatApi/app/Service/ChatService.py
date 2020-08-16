@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-01 11:49:33
 @description: 
-@LastEditors: hua
-@LastEditTime: 2020-07-02 12:11:35
+LastEditors: hua
+LastEditTime: 2020-08-16 20:49:40
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -56,15 +56,11 @@ class ChatService():
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
-            if "uuid" in user_data:
-                AddressBook.updateUnreadNumber(room_uuid, user_data['uuid'])
-                AddressBook.cleanUnreadNumber(room_uuid, user_data['uuid'])
-            else:
-                AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
-                AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
+            AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
+            AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
             # 更新客户端房间信息
             for item in address_book_data:
-                roomList = AddressBook.getRoomList(item.be_focused_user_id)
+                roomList = AddressBook.getRoomList(item['be_focused_user_id'])
                 socketio.emit('room', Utils.formatBody(
                     roomList), namespace='/api', room='@broadcast.'+str(item['be_focused_user_id']))
         if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
@@ -151,8 +147,8 @@ class ChatService():
             addressBookData = AddressBook.get(room_uuid)
             for item in addressBookData:
                 roomList = AddressBook.getRoomList(
-                    item.be_focused_user_id)['list']
-                if item.type == CONST['ADDRESSBOOK']['ADMIN']['value']:
+                    item['be_focused_user_id'])['list']
+                if item['type'] == CONST['ADDRESSBOOK']['ADMIN']['value']:
                     socketio.emit('room', Utils.formatBody(
                         roomList), namespace="/api", room='@broadcast.'+str(item['be_focused_user_id']))
                 else:
