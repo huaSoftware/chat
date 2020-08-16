@@ -143,6 +143,10 @@ export default {
         text: "超时时间",
         value: 15000,
       },
+      TIME_ONLINE_INTERVAL: {
+        text: "在线检查间隔",
+        value: 5000,
+      },
     },
   },
   getters: {
