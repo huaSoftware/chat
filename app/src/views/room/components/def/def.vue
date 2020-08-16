@@ -53,12 +53,12 @@ export default {
                 name: "位置",
                 router: "position"
                 } */
-                ,
+                /* ,
                 {
                 icon: "video",
                 name: "视频",
                 router: "video"
-                }
+                } */
             ]
         }
     },
