@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:23
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-21 17:41:50
+ * @LastEditTime: 2020-08-16 12:29:06
  */
 import store from "../store";
 import router from "../router";
@@ -23,10 +23,10 @@ export default function broadcast(data, method) {
       } else {
         window.tryBroadcastLinkCount = 0;
         clearTimeout(window.broadcastTimeOut);
-        router.push({
+        /* router.push({
           name: "connectLose",
           query: { text: "广播连接已断开" }
-        });
+        }); */
       }
     }
     if (method == "leave") {
@@ -40,11 +40,11 @@ export default function broadcast(data, method) {
         window.tryBroadcastLinkCount = 0;
         clearTimeout(window.broadcastTimeOut);
         // 这里需要删除token，不然携带错误token无法去登陆
-        window.localStorage.removeItem("token");
+        /* window.localStorage.removeItem("token");
         store.dispatch("user/resetToken");
         router.push({
           name: "login"
-        });
+        }); */
       }
     }
   }, store.getters.TIME.TIME_OUT.value);
