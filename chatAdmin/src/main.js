@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:26:59
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-18 18:28:40
+ * @LastEditTime: 2020-08-17 20:12:02
  */
 import Vue from "vue";
 
@@ -12,14 +12,14 @@ import Cookies from "js-cookie";
 import "normalize.css/normalize.css"; // a modern alternative to CSS resets
 
 import Element from "element-ui";
-import "./styles/element-variables.scss";
+import 'element-ui/lib/theme-chalk/index.css'
+/* import "./styles/element-variables.scss"; */
 
 import "@/styles/index.scss"; // global css
-
 import App from "./App";
 import store from "./store";
 import router from "./router";
-
+import '@/styles/theme/index.css'
 import "./icons"; // icon
 import "./permission"; // permission control
 import "./utils/error-log"; // error log

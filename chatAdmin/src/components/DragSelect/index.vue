@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-06-10 16:27:00
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-08-17 20:29:45
+-->
 <template>
   <el-select ref="dragSelect" v-model="selectVal" v-bind="$attrs" class="drag-select" multiple v-on="$listeners">
     <slot />
@@ -52,7 +59,7 @@ export default {
 .drag-select >>> .sortable-ghost {
   opacity: .8;
   color: #fff!important;
-  background: #42b983!important;
+  background: #FF9C00!important;
 }
 
 .drag-select >>> .el-tag {

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-04-21 12:30:52
+ * @LastEditTime: 2020-08-17 21:07:57
  */
 import store from "../store";
 import router from "../router";
@@ -76,7 +76,6 @@ export default function setupAuthEvent() {
   }); */
   ///监听回复的消息
   window.apiSocket.on("chat", data => {
-    console.log(234234244242423);
     // 回复根据标志分类todo
     response(data).then(res => {
       let data = res.data;
@@ -126,11 +125,11 @@ export default function setupAuthEvent() {
   //监听
   send("adminJoin", {}, "broadcast");
   //更新在线状态
-  if (!window.loginConnectInterval) {
+  /* if (!window.loginConnectInterval) {
     window.loginConnectInterval = setInterval(() => {
       send("loginConnect", {}, "loginConnect");
     }, store.getters.TIME.TIME_OUT.value); //超时时间动态设置
-  }
+  } */
   //如果当前存在房间则进入
   if (
     store.getters.currentRoomUuid !== "" &&

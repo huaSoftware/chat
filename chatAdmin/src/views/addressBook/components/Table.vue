@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:12:17
+ * @LastEditTime: 2020-08-16 20:53:07
  -->
 <template>
   <div class="app-container">
@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label="关注者" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.users.nick_name }}</span>
+          <span v-if="scope.row.users">{{ scope.row.users.nick_name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -32,7 +32,7 @@
         sortable
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.room_uuid }}</span>
+          <span >{{ scope.row.room_uuid }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -42,7 +42,7 @@
         sortable
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.be_users.nick_name }}</span>
+          <span v-if="scope.row.be_users">{{ scope.row.be_users.nick_name }}</span>
         </template>
       </el-table-column>
       <el-table-column

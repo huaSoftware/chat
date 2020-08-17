@@ -218,10 +218,10 @@ export default {
       &:last-of-type {
         margin-right: 15px;
       }
-      &.active {
-        background-color: #42b983;
+      &.active {  
+        background-color: #FF9C00;
         color: #fff;
-        border-color: #42b983;
+        border-color: #FF9C00;
         &::before {
           content: '';
           background: #fff;

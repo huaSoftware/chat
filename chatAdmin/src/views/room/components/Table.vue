@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 15:43:15
+ * @LastEditTime: 2020-08-17 20:01:27
  -->
 <template>
   <div class="app-container">
@@ -74,7 +74,7 @@
             size="mini"
             type="primary"
             plain
-            @click="send(scope.row.room_uuid, scope.row.user_id)"
+            @click="sendMessage(scope.row.room_uuid, scope.row.user_id)"
           >聊天</el-button>
           <el-button size="mini" type="danger" plain @click="move(scope.row.room_uuid)">删除</el-button>
         </template>
@@ -125,7 +125,6 @@ export default {
       currentRoomUuid: "",
       //表单
       list: [],
-      msgList: [],
       user_id: 0,
       //页码
       total: 0,
@@ -144,9 +143,12 @@ export default {
     ChatItem
   },
   computed: {
-    ...mapGetters(["RECORD", "TEXT", "IMG", "FILE"])
+    ...mapGetters(['msgList',"RECORD", "TEXT", "IMG", "FILE"])
   },
   methods: {
+    ...mapMutations({
+      updateMsgList: 'updateMsgList'
+    }),
     getList() {
       this.listLoading = true;
       roomList(this.listQuery).then(res => {
@@ -178,7 +180,8 @@ export default {
     parseTime(time) {
       return parseTime(time);
     },
-    send(room_uuid, user_id) {
+    sendMessage(room_uuid, user_id) {
+      this.updateMsgList([])
       msgGet({ room_uuid: room_uuid, page_no: 1, per_page: 4 }).then(res => {
         this.currentRoomUuid = room_uuid;
         this.addReqVisible = true;
@@ -188,7 +191,7 @@ export default {
           delete item["formatMsg"];
           return item;
         });
-        this.msgList = rawList.reverse();
+        this.updateMsgList( rawList.reverse())
         this.user_id = user_id;
       });
     },
@@ -202,12 +205,11 @@ export default {
           created_at: parseInt(new Date().getTime() / 1000)
         }
       }).then(res => {
-        this.addReqVisible = false;
-        this.$message({
+        /* this.$message({
           message: "回复成功",
           type: "success"
         });
-        this.getList();
+        this.getList(); */
         this.content = "";
       });
     }

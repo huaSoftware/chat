@@ -36,7 +36,7 @@ export default function login(data, method) {
       ) {
         clearTimeout(window.sendTimeOut);
         clearTimeout(window.broadcastTimeOut);
-        clearInterval(window.loginConnectInterval);
+        /* clearInterval(window.loginConnectInterval); */
         Message({
           message: res.msg || "Error",
           type: "error",

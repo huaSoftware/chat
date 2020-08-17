@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:23
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-08-16 19:33:44
+ * @LastEditTime: 2020-08-17 20:58:27
  */
 import store from "../store";
 import router from "../router";
@@ -49,15 +49,16 @@ export default function broadcast(data, method) {
     }
   }, store.getters.TIME.TIME_OUT.value);
   data["type"] = store.getters.NOTIFY;
+  console.log(data)
   let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);
   console.log("广播：" + method, "秘钥：" + encryptStr);
   window.apiSocket.emit(method, encryptStr, recv => {
     response(recv)
       .then(res => {
-        if (res.data.action == "adminLeave") {
+        if (res.data.action == "leave") {
           clearTimeout(window.broadcastTimeOut);
         }
-        if (res.data.action == "adminJoin") {
+        if (res.data.action == "join") {
           clearTimeout(window.broadcastTimeOut);
         }
         if (res.data.action == "input") {
