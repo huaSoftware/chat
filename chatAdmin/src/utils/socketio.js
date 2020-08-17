@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 17:45:37
+ * @LastEditTime: 2020-08-17 21:13:20
  */
 
 import store from "../store";
@@ -81,9 +81,9 @@ export function send(method, data, type = "room") {
 		if (type == 'broadcast') {
 			broadcast(data, method);
     }
-    if(type == 'loginConnect' || type == 'logoutDisconnect'){
+    /* if(type == 'loginConnect' || type == 'logoutDisconnect'){
 			return login(data, method);
-		}
+		} */
     if (type == "api") {
       var res = new Promise((resolve, reject) => {
         let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);

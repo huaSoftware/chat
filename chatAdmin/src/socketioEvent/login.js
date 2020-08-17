@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:57
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 20:07:00
+ * @LastEditTime: 2020-08-17 21:14:00
  */
 import store from "../store";
 import router from "../router";
@@ -36,7 +36,7 @@ export default function login(data, method) {
       ) {
         clearTimeout(window.sendTimeOut);
         clearTimeout(window.broadcastTimeOut);
-        clearInterval(window.loginConnectInterval);
+        /* clearInterval(window.loginConnectInterval); */
         Message({
           message: res.msg || "Error",
           type: "error",
