@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-17 20:01:27
+ * @LastEditTime: 2020-08-18 21:48:48
  -->
 <template>
   <div class="app-container">
@@ -117,6 +117,7 @@ import { getToken } from "@/utils/auth";
 import { roomList, roomDelete, msgGet } from "@/api/room";
 import { chatSend } from "@/socketioApi/chat";
 import { parseTime } from "@/utils/index";
+import { joinChatSend } from '@/socketioApi/chat'
 export default {
   data() {
     return {
@@ -181,7 +182,18 @@ export default {
       return parseTime(time);
     },
     sendMessage(room_uuid, user_id) {
-      this.updateMsgList([])
+     this.content ="";
+     this.updateMsgList([])
+       joinChatSend({
+          name: '系统会话',
+          room_uuid: room_uuid,
+          type: 3,
+          save_action: 1
+        })
+        this.$store.commit('updateCurrentRoomUuid', room_uuid)
+        this.$store.commit('updateCurrentRoomName', '系统会话')
+        this.$store.commit('updateCurrentRoomType', 3)
+        this.$store.commit('updateCurrentRoomSaveAction', 1)
       msgGet({ room_uuid: room_uuid, page_no: 1, per_page: 4 }).then(res => {
         this.currentRoomUuid = room_uuid;
         this.addReqVisible = true;

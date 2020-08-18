@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 LastEditors: hua
-LastEditTime: 2020-08-16 20:49:13
+LastEditTime: 2020-08-18 21:19:23
 '''
 import time
 import math
@@ -24,7 +24,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     users = relationship('Users', uselist=False, primaryjoin=foreign(
         HtAddressBook.focused_user_id) == remote(Users.id))
     adminUsers = relationship('Admin', uselist=False, primaryjoin=foreign(
-        HtAddressBook.focused_user_id) == remote(Admin.uuid))
+        HtAddressBook.focused_user_id) == remote(Admin.id))
     room = relationship('Room', uselist=False, primaryjoin=foreign(
         HtAddressBook.room_uuid) == remote(Room.room_uuid))
     be_users = relationship('Users', uselist=False, primaryjoin=foreign(
@@ -254,7 +254,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def rawGetList(page_no, per_page, filters):
         dataObj = dBSession.query(AddressBook).order_by(
-            AddressBook.created_at.desc()).filter(*filters).all()
+            AddressBook.created_at.desc()).filter(*filters).group_by(AddressBook.room_uuid).all()
         data = {"addressBookList":  Utils.db_l_to_d(dataObj)}
         return data
 
@@ -265,7 +265,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             AddressBook.be_focused_user_id == user_id
         }
         res = dBSession.query(AddressBook).order_by(
-            AddressBook.updated_at.desc()).filter(*filters).all()
+            AddressBook.updated_at.desc()).filter(*filters).group_by(AddressBook.room_uuid).all()
 
         data = {"list": Utils.db_l_to_d(res)}
         return data

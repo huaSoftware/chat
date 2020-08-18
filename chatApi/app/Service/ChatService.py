@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-16 20:49:40
+LastEditTime: 2020-08-18 20:57:18
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -133,7 +133,8 @@ class ChatService():
         admin_user_info = Admin().getOne(filters)
         filters = {
             AddressBook.be_focused_user_id == message['user_id'],
-            AddressBook.focused_user_id == admin_user_info['uuid']
+            AddressBook.focused_user_id == admin_user_info['id'],
+            AddressBook.type == 1
         }
         addressBookInfo = AddressBook().getOne(filters)
         if addressBookInfo == None:

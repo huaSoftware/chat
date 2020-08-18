@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 19:59:54
+ * @LastEditTime: 2020-08-18 21:42:03
  */
 import store from "../store";
 import router from "../router";
@@ -20,7 +20,7 @@ export default function room(data, method) {
       });
       modifyMsgStatus(data.data, store.getters.FAIL);
     }
-  }, store.state.codeData.TIME.TIME_OUT.value);
+  }, store.getters.TIME.TIME_OUT.value);
   let encryptStr = rsaEncode(data, process.env.VUE_APP_PUBLIC_KEY);
   window.apiSocket.emit(method, encryptStr, recv => {
     console.log("发送消息后emit回复" + recv);
