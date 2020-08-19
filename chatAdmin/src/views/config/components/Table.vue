@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:13:36
+ * @LastEditTime: 2020-08-19 20:46:42
  -->
 <template>
   <div class="app-container">
@@ -21,7 +21,8 @@
         :model="addForm"
         class="add-form"
         auto-complete="on"
-        label-position="left"
+         label-position="top"
+        label-width="80px"
       >
         <el-form-item label="名称" prop="name">
           <el-input
@@ -74,11 +75,11 @@
             <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-button
-          type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleAdd"
+        <el-form-item style="display: flex;flex-direction: row;justify-content: flex-end;">
+          <el-button type="primary" @click.native.prevent="handleAdd"
         >确认</el-button>
+          <el-button @click="dialogVisible=false">取消</el-button>
+        </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 编辑弹窗 -->
@@ -88,7 +89,8 @@
         :model="editForm"
         class="edit-form"
         auto-complete="on"
-        label-position="left"
+        label-position="top"
+        label-width="80px"
       >
         <el-form-item label="名称" prop="name">
           <el-input
@@ -137,15 +139,15 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="editForm.status" clearable placeholder="请选择状态">
-            <el-option label="启用" :value="1"></el-option>
-            <el-option label="禁用" :value="0"></el-option>
+            <el-option label="启用" :value="'1'"></el-option>
+            <el-option label="禁用" :value="'0'"></el-option>
           </el-select>
         </el-form-item>
-        <el-button
-          type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="comfrimEdit"
+        <el-form-item style="display: flex;flex-direction: row;justify-content: flex-end;">
+          <el-button type="primary" @click.native.prevent="comfrimEdit"
         >确认</el-button>
+          <el-button @click="editDialogVisible=false">取消</el-button>
+        </el-form-item>
       </el-form>
     </el-dialog>
     <el-table

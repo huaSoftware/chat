@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-18 21:48:48
+ * @LastEditTime: 2020-08-19 20:13:30
  -->
 <template>
   <div class="app-container">
@@ -10,7 +10,7 @@
       <div>
         <el-input
           v-model="listQuery.keyword"
-          placeholder="关键字"
+          placeholder="房间名/房间编号关键字"
           style="width: 200px;"
           class="filter-item"
         />

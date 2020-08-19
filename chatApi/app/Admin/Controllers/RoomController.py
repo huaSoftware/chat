@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-11 14:59:11
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-11-21 14:52:41
+LastEditors: hua
+LastEditTime: 2020-08-19 20:09:05
 '''
 from app import app
 from app.Vendor.Decorator import validator
@@ -14,6 +14,7 @@ from app.Models.Room import Room
 from app.Models.UserRoomRelation import UserRoomRelation
 from app.Models.Msg import Msg
 from app.Vendor.Utils import Utils
+from sqlalchemy import or_
 
 @app.route('/api/v2/admin/room/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)
@@ -26,7 +27,7 @@ def adminRoomList(*args, **kwargs):
     """ 获取房间列表 """
     params = kwargs['params']
     filters = {
-        Room.name.like('%'+params['keyword']+'%')
+        or_(Room.name.like('%'+params['keyword']+'%'),Room.room_uuid.like('%'+params['keyword']+'%'))
     }
     data = Room().getList(filters, params['orderBy']+" "+params['order'], (), params['page_no'], params['per_page'])
     return BaseController().successData(data)

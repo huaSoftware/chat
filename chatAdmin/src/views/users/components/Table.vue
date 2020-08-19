@@ -2,10 +2,21 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-16 20:27:55
+ * @LastEditTime: 2020-08-19 20:14:14
  -->
 <template>
   <div class="app-container">
+    <div class="filter-container" style="display:flex;justify-content:space-between;">
+      <div>
+        <el-input
+          v-model="listQuery.keyword"
+          placeholder="用户昵称/邮箱关键字"
+          style="width: 200px;"
+          class="filter-item"
+        />
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getList">搜索</el-button>
+      </div>
+    </div>
     <el-table
       key="tableKey"
       v-loading="listLoading"

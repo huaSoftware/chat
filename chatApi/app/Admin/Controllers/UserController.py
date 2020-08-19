@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-11 14:59:11
 @description: 
-@LastEditors: hua
-@LastEditTime: 2020-04-20 14:48:56
+LastEditors: hua
+LastEditTime: 2020-08-19 20:09:59
 '''
 from app import app
 from app.Vendor.Decorator import validator
@@ -11,7 +11,7 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
 from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
-
+from sqlalchemy import or_
 
 @app.route('/api/v2/admin/user/list', methods=['POST'])
 @validator(name="page_no", rules={'type': 'integer'}, default=0)
@@ -25,7 +25,7 @@ def adminUserList(*args, **kwargs):
     params = kwargs['params']
     if params['keyword'] != '':
         filters = {
-            Users.nick_name.like('%'+params['keyword']+'%')
+            or_(Users.nick_name.like('%'+params['keyword']+'%'),Users.email.like('%'+params['keyword']+'%'))
         }
     else:
         filters = set()

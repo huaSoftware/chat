@@ -1,14 +1,14 @@
 <!--
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-11 14:34:38
+ * @LastEditors: hua
+ * @LastEditTime: 2020-08-19 20:37:20
  -->
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="聊天内容类型" name="CHAT">
-        <el-form  :model="data" label-width="80px">
+        <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.CHAT.RECORD.text">
              <el-input type="text" v-model="data.CHAT.RECORD.value"></el-input>
           </el-form-item>
@@ -28,7 +28,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="日志模式" name="LOG">
-        <el-form  :model="data" label-width="80px">
+        <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.LOG.NORMAL.text">
              <el-input type="text" v-model="data.LOG.NORMAL.value"></el-input>
           </el-form-item>
@@ -48,7 +48,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="房间类型" name="ROOM">
-        <el-form  :model="data" label-width="80px">
+        <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.ROOM.ALONE.text">
              <el-input type="text" v-model="data.ROOM.ALONE.value"></el-input>
           </el-form-item>
@@ -65,7 +65,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="存储类型" name="SAVE">
-        <el-form  :model="data" label-width="80px">
+        <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.SAVE.LOCAL.text">
              <el-input type="text" v-model="data.SAVE.LOCAL.value"></el-input>
           </el-form-item>
@@ -79,7 +79,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="发送类型" name="STATUS">
-        <el-form  :model="data" label-width="80px">
+        <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.STATUS.LOADING.text">
              <el-input type="text" v-model="data.STATUS.LOADING.value"></el-input>
           </el-form-item>
@@ -99,7 +99,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="申请好友类型" name="ADDFRIEND">
-         <el-form  :model="data" label-width="80px">
+         <el-form  :model="data" label-width="80px" label-position="top">
           <el-form-item :label="data.ADDFRIEND.APPLY.text">
              <el-input type="text" v-model="data.ADDFRIEND.APPLY.value"></el-input>
           </el-form-item>
@@ -116,7 +116,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="编码类型" name="CODE">
-        <el-form  :model="data" label-width="140px">
+        <el-form  :model="data" label-width="140px" label-position="top">
           <el-form-item :label="data.CODE.SUCCESS.text">
              <el-input type="text" v-model="data.CODE.SUCCESS.value"></el-input>
           </el-form-item>

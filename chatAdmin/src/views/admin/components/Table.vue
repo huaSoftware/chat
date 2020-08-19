@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:12:40
+ * @LastEditTime: 2020-08-19 20:40:29
  -->
 <template>
   <div class="app-container">
@@ -10,7 +10,7 @@
       <div>
         <el-input
           v-model="listQuery.keyword"
-          placeholder="关键字"
+          placeholder="用户名/邮箱关键字"
           style="width: 200px;"
           class="filter-item"
         />
@@ -24,16 +24,17 @@
       >添加</el-button>
     </div>
     <!-- 添加弹窗 -->
-    <el-dialog :visible.sync="dialogVisible" title="添加管理员">
+    <el-dialog :width="'500px'" :visible.sync="dialogVisible" title="添加管理员">
       <el-form
         ref="addForm"
         :model="addForm"
         :rules="addRules"
-        class="add-form"
+        class="dialog_width"
         auto-complete="on"
-        label-position="left"
+        label-position="top"
+        label-width="80px"
       >
-        <el-form-item prop="name">
+        <el-form-item prop="name" label="用户名">
           <el-input
             v-model="addForm.name"
             placeholder="请输入用户名"
@@ -43,7 +44,7 @@
           />
         </el-form-item>
 
-        <el-form-item prop="pwd">
+        <el-form-item prop="pwd" label="密码">
           <el-input
             v-model="addForm.pwd"
             type="password"
@@ -52,24 +53,24 @@
             auto-complete="on"
           />
         </el-form-item>
-        <el-button
-          type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleAdd"
+        <el-form-item style="display: flex;flex-direction: row;justify-content: flex-end;">
+          <el-button type="primary" @click.native.prevent="handleAdd"
         >确认</el-button>
+          <el-button @click="dialogVisible=false">取消</el-button>
+        </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 编辑弹窗 -->
-    <el-dialog :visible.sync="editDialogVisible" title="编辑管理员">
+    <el-dialog :width="'500px'" :visible.sync="editDialogVisible" title="编辑管理员">
       <el-form
         ref="editForm"
         :model="editForm"
         :rules="editRules"
-        class="edit-form"
         auto-complete="on"
-        label-position="left"
+        label-position="top"
+        label-width="80px"
       >
-        <el-form-item prop="name">
+        <el-form-item prop="name" label="用户名">
           <el-input
             v-model="editForm.name"
             placeholder="请输入用户名"
@@ -80,7 +81,7 @@
           />
         </el-form-item>
 
-        <el-form-item prop="pwd">
+        <el-form-item prop="pwd" label="密码">
           <el-input
             v-model="editForm.pwd"
             type="password"
@@ -89,11 +90,12 @@
             auto-complete="on"
           />
         </el-form-item>
-        <el-button
-          type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="comfrimEdit"
+        <el-form-item style="display: flex;flex-direction: row;justify-content: flex-end;">
+          <el-button type="primary" @click.native.prevent="comfrimEdit"
         >确认</el-button>
+          <el-button @click="editDialogVisible=false">取消</el-button>
+        </el-form-item>
+      
       </el-form>
     </el-dialog>
     <el-table

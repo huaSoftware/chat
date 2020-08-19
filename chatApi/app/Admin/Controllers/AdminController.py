@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-11 14:59:11
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:37:09
+LastEditors: hua
+LastEditTime: 2020-08-19 19:59:59
 '''
 from app import app,CONST
 from app.Vendor.Decorator import validator
@@ -25,9 +25,7 @@ def adminList(*args, **kwargs):
     """ 获取管理员列表 """
     params = kwargs['params']
     filters = {
-        Admin.name.like('%'+params['keyword']+'%'),
-        or_(Admin.mobile.like('%'+params['keyword']+'%')),
-        or_(Admin.email.like('%'+params['keyword']+'%'))
+        or_(Admin.name.like('%'+params['keyword']+'%'),Admin.mobile.like('%'+params['keyword']+'%'),Admin.email.like('%'+params['keyword']+'%')),
     }
     data = Admin().getList(filters,params['orderBy']+" "+params['order'],(),params['page_no'], params['per_page'])
     return BaseController().successData(data)
