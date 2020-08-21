@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-05-24 14:13:23
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:39:58
+LastEditors: hua
+LastEditTime: 2020-08-21 21:13:54
 '''
 import re
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -45,5 +45,4 @@ class UsersService():
             else:
                 result = UsersAuthJWT.authenticate(params['email'], params['password'])
                 return result
-            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'注册失败')
-        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'账号已注册')
+        return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'邮箱已注册')

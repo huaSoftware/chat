@@ -3,11 +3,12 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-08-17 19:50:07
+ * @LastEditTime: 2020-08-21 22:03:19
  -->
 <template>
-  <div class="login-container" :style='"background-image:url(" + require("@/assets/img/bg@2x.png") + ")"'>
-    <div class="container">
+  <div class="login-container">
+    <Vimg :img-url="require('@/assets/img/bg@2x.png')" style="width:100%;height:100%;position:fixed;z-index:1;"/>
+   <div class="container">
       <Vimg :img-url="require('@/assets/img/portrait@2x.png')" style="width:90px;height:90px;position:absolute;left:50%;margin-left:-45px;margin-top:-60px"/>
       <div class="title">聊天室后台</div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
