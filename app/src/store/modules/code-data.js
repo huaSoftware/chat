@@ -25,6 +25,10 @@ export default {
         text: "视频",
         value: 5,
       },
+      RECALL:{
+        text:"撤回",
+        value:6
+      }
     },
     LOG: {
       NORMAL: {
@@ -85,10 +89,10 @@ export default {
         text: "发送失败",
         value: 2,
       },
-      RESEND: {
+      /* RESEND: {
         text: "重新发送",
         value: 3,
-      },
+      }, */
     },
     ADDFRIEND: {
       APPLY: {
@@ -184,12 +188,15 @@ export default {
     RECORD(state) {
       return state.CHAT.RECORD.value;
     },
+    RECALL(state) {
+      return state.CHAT.RECALL.value;
+    },
     TEXT(state) {
       return state.CHAT.TEXT.value;
     },
-    RESEND(state) {
+    /* RESEND(state) {
       return state.STATUS.RESEND.value;
-    },
+    }, */
     IMG(state) {
       return state.CHAT.IMG.value;
     },

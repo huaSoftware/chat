@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-08-15 22:29:25
+ * @LastEditTime: 2020-08-22 18:07:31
  */
 import store from "../store";
 import router from "../router";
@@ -141,6 +141,7 @@ export default function setupAuthEvent() {
       //这边会有发送后接收不到的问题
       if (typeof index !== "undefined") {
         msgList[index]["send_status"] = store.getters.SUCCESS;
+        
         //他人发送的需要根据设置的房间状态去同步聊天数据
         delete msgList[index]["id"];
         console.log("消息列表", msgList[index]);

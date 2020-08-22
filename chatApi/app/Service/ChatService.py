@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-18 20:57:18
+LastEditTime: 2020-08-22 19:47:14
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -53,6 +53,16 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
@@ -85,6 +95,16 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
@@ -108,6 +128,16 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字

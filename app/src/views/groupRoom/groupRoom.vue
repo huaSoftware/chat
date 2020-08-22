@@ -3,10 +3,23 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-07-11 11:25:05
+ * @LastEditTime: 2020-08-22 19:53:52
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
+    <div v-if="menuVisible" class="menu_container" :style="'top:'+menuTop+'px;right:1.4rem'">
+       <yd-grids-group :rows="3">
+          <yd-grids-item @click.native="handleCopy">
+              <span slot="text">复制</span>
+          </yd-grids-item>
+          <yd-grids-item @click.native="handleCallBackMsg">
+              <span slot="text">撤回</span>
+          </yd-grids-item>
+          <yd-grids-item @click.native="handleResetSend">
+              <span slot="text">重发</span>
+          </yd-grids-item>
+      </yd-grids-group>
+    </div>
     <!-- 内容 -->
     <mescroll-vue :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
       <div class="mscroll-container">
@@ -22,6 +35,20 @@
             >{{formatTime(key.created_at)}}</div>
             <div class="chat-item" v-if="(key.user_id == userInfo.id)&& (key.user_type!=1) ">
               <div class="mychat">
+                <!-- 消息送达状态 -->
+                <span
+                  v-if="key.send_status == LOADING "
+                  class="send_status loading_color rotate_loading"
+                >
+                  <yd-icon name="refresh"></yd-icon>
+                </span>
+                <span
+                  @click="reSendMsg(key)"
+                  v-if="key.send_status == FAIL"
+                  class="send_status color_danger"
+                >
+                  <yd-icon name="error"></yd-icon>
+                </span>
                 <vImg :imgUrl="key.head_img" class="img" />
                 <div class="nt">
                   <span v-html="key.name"></span>
@@ -40,7 +67,7 @@
                   <i class="vioce_stop_left" v-show="!JSON.parse(key.msg)['status']"></i>
                   <span class="vioce_second">{{JSON.parse(key.msg)['duration']}}s</span>
                 </div>
-                <div v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
+                <div  v-on:click="handleDefsForSelf(key)" v-else-if="key.type == TEXT" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div v-else-if="key.type == IMG" class="rawMsg" v-html="key.msg">{{key.msg}}</div>
                 <div
                   v-else-if="key.type == FILE"
@@ -48,24 +75,15 @@
                   @click="handleDefMsg(key.msg)"
                 >[文件]{{formatFileName(key.msg)}}</div>
                 <div
+                  v-else-if="key.type == RECALL"
+                   class="format_recall"
+                 
+                >{{key.msg}}</div>
+                <div
                   v-else-if="key.type == CHAT_NOTIFY"
                   class="rawMsg"
                 >{{JSON.parse(key.msg)['msg']}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
-                <!-- 消息送达状态 -->
-                <span
-                  v-if="key.send_status == LOADING "
-                  class="send_status loading_color rotate_loading"
-                >
-                  <yd-icon name="refresh"></yd-icon>
-                </span>
-                <span
-                  @click="reSendMsg(key)"
-                  v-if="key.send_status == FAIL"
-                  class="send_status color_danger"
-                >
-                  <yd-icon name="error"></yd-icon>
-                </span>
                 <!-- 消息读取状态键盘输入时更新-->
                 <span class="read_status" v-if="key.send_status == SUCCESS && currentRoomType == 0">
                   <yd-badge v-if="key.read_status == 0">未读</yd-badge>
@@ -225,8 +243,9 @@ export default {
       "htmlFontSize",
       "currentRoomSaveAction",
       "RECORD",
+      "RECALL",
       "TEXT",
-      "RESEND",
+      /* "RESEND", */
       "IMG",
       "FILE",
       "LOADING",
@@ -237,6 +256,9 @@ export default {
   },
   data() {
     return {
+      menuTop:0,
+      menuVisible:false,
+      currentKey:{},
       uuidVal: "",
       scroll: "",
       content: "",
@@ -347,6 +369,48 @@ export default {
           this.handleSendShow();
         }
       };
+    },
+    handleOnScroll(){
+      this.menuVisible = false;
+    },
+    handleCallBackMsg(){
+      Confirm({
+        title: '提示',
+        mes: '只能撤回远端记录，确认撤回？',
+        opts: [
+            {
+                txt: '取消',
+                color: false,
+                callback: () => {
+                  this.menuVisible = false;
+                }
+            },
+            {
+                txt: '确定',
+                color: true,
+                callback: () => {
+                  let data = JSON.parse(JSON.stringify(this.currentKey));
+                  data['type'] = this.RECALL;
+                  data['msg'] = "您撤回了一条消息";
+                  this.reSendMsg(data);
+                  this.menuVisible = false;
+                }
+            }
+        ]
+      });
+    },
+    handleCopy(){
+     this.content = this.currentKey.msg;
+    },
+    handleResetSend(){
+      this.menuVisible = false;
+      this.reSendMsg(this.currentKey);
+    },
+    handleDefsForSelf(item) {
+      console.log(event,item);
+      this.menuVisible = true;
+      this.menuTop = event.clientY;
+      this.currentKey = item;
     },
     handleOnFocus() {
       if (!this.onFocusLock) {
@@ -550,7 +614,7 @@ export default {
       reChatSend({
         data: {
           room_uuid: this.currentRoomUuid,
-          type: this.RESEND,
+          type: key.type,
           created_at: key.created_at,
           user_id: key.user_id,
           msg: key.msg,

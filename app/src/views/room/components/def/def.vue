@@ -72,7 +72,7 @@ export default {
         "currentRoomSaveAction",
         "RECORD",
         "TEXT",
-        "RESEND",
+        /* "RESEND", */
         "IMG",
         "FILE",
         "LOADING",

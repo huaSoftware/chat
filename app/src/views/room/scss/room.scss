@@ -102,14 +102,20 @@ ul {
     width: 100%;
 }
 .format_time{
-    widows: 100%;
+    width: 100%;
     text-align: center;
     font-size:14px;
     height:30px;
 }
+.format_recall{
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    height: 30px;
+    color: #888888;
+}
 .mscroll-container ul li {
-    padding: 0;
-    margin-top: 20px;
+    padding: 20px 0px 0px 0px;
 }
 li {
     display: list-item;
@@ -118,11 +124,14 @@ li {
 .chat-item {
     width: 100%;
     margin: 14px 0;
-    height: 0px;
+    /* height: 0px; */
 }
 .chat-item .otherchat {
     width: 100%;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 .chat-item .otherchat .img {
     width: 39px;
@@ -149,7 +158,6 @@ li {
     font-size: 12px;
 }
 .chat-item .otherchat .msg {
-    float: left;
     min-height: 21px;
     max-width: 60% !important;
     margin-left: 50px;
@@ -160,7 +168,6 @@ li {
     background-color: #fff;
 }
 .chat-item .otherchat .rawMsg {
-    float: left;
     min-height: 21px;
     max-width: 60% !important;
     margin-left: 45px;
@@ -191,6 +198,9 @@ li {
 .chat-item .mychat {
     width: 100%;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 .chat-item .mychat .img {
     width: 39px;
@@ -210,7 +220,7 @@ li {
     color: #686868;
 }
 .chat-item .mychat .msg {
-    float: right;
+    /* float: right; */
     max-width: 60%;
     margin-right: 50px;
     padding: 6px;
@@ -221,7 +231,7 @@ li {
     word-wrap: break-word;
 }
 .chat-item .mychat .rawMsg {
-    float: right;
+    /* float: right; */
     max-width: 60%;
     margin-right: 50px;
     padding: 6px;
@@ -388,4 +398,25 @@ li {
     top: 3px;
     min-height: 21px;
     padding:6px;
+}
+.menu_container{
+    position: absolute;
+    background:#fff;
+    z-index: 2;
+    margin-top: -0.4rem;
+}
+
+.menu_container::before {
+    content: "";
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border-width: 10px;
+    border-style: solid dashed dashed dashed;
+    border-color: transparent transparent #fff transparent;
+    position: absolute;
+    top: -20px;
+    right: 0px;
 }

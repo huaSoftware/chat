@@ -3,12 +3,25 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-11 22:00:04
+ * @LastEditTime: 2020-08-22 19:56:45
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
+    <div v-if="menuVisible" class="menu_container" :style="'top:'+menuTop+'px;right:1.4rem'">
+       <yd-grids-group :rows="3">
+          <yd-grids-item @click.native="handleCopy">
+              <span slot="text">复制</span>
+          </yd-grids-item>
+          <yd-grids-item @click.native="handleCallBackMsg">
+              <span slot="text">撤回</span>
+          </yd-grids-item>
+          <yd-grids-item @click.native="handleResetSend">
+              <span slot="text">重发</span>
+          </yd-grids-item>
+      </yd-grids-group>
+    </div>
     <!-- 内容 -->
-    <mescroll-vue :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
+    <mescroll-vue :up="mescrollUp" :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
       <div class="mscroll-container">
         <div v-show="moreInfoShow" class="more_info" @click="$router.push({name: 'roomMsgList'})">
           更多消息，请
@@ -22,6 +35,20 @@
             >{{formatTime(key.created_at)}}</div>
             <div class="chat-item" v-if="(key.user_id == userInfo.id) && (key.user_type!=1)">
               <div class="mychat">
+                 <!-- 消息送达状态 -->
+                <span
+                  v-if="key.send_status == LOADING "
+                  class="send_status loading_color rotate_loading"
+                >
+                  <yd-icon name="refresh"></yd-icon>
+                </span>
+                <span
+                  @click="reSendMsg(key)"
+                  v-if="key.send_status == FAIL"
+                  class="send_status color_danger"
+                >
+                  <yd-icon name="error"></yd-icon>
+                </span>
                 <vImg :imgUrl="key.head_img" class="img" />
                 <div class="nt">
                   <span v-html="key.name"></span>
@@ -52,21 +79,12 @@
                   class="rawMsg"
                   @click="handleDefMsg(key.msg)"
                 >[文件]{{formatFileName(key.msg)}}</div>
+                <div
+                  v-else-if="key.type == RECALL"
+                   class="format_recall"
+                 
+                >{{key.msg}}</div>
                 <div v-else class="msg" v-html="key.msg"></div>
-                <!-- 消息送达状态 -->
-                <span
-                  v-if="key.send_status == LOADING "
-                  class="send_status loading_color rotate_loading"
-                >
-                  <yd-icon name="refresh"></yd-icon>
-                </span>
-                <span
-                  @click="reSendMsg(key)"
-                  v-if="key.send_status == FAIL"
-                  class="send_status color_danger"
-                >
-                  <yd-icon name="error"></yd-icon>
-                </span>
                 <!-- 消息读取状态键盘输入时更新-->
                 <!--  <span class="read_status" v-if="key.send_status == SUCCESS && currentRoomType == 0">
                   <yd-badge v-if="key.read_status == 0">未读</yd-badge>
@@ -192,8 +210,9 @@ export default {
       "htmlFontSize",
       "currentRoomSaveAction",
       "RECORD",
+      "RECALL",
       "TEXT",
-      "RESEND",
+      /* "RESEND", */
       "IMG",
       "FILE",
       "LOADING",
@@ -205,6 +224,9 @@ export default {
   },
   data() {
     return {
+      menuTop:0,
+      menuVisible:false,
+      currentKey:{},
       uuidVal: "",
       scroll: "",
       content: "",
@@ -228,6 +250,9 @@ export default {
       },
       mescroll: null, // mescroll实例对象
       mescrollDom: null,
+      mescrollUp:{
+        onScroll:this.handleOnScroll,
+      },
       mescrollDown: {
         callback: this.downCallback,
         page: {
@@ -320,8 +345,47 @@ export default {
         }
       };
     },
+    handleOnScroll(){
+      this.menuVisible = false;
+    },
+    handleCallBackMsg(){
+      Confirm({
+        title: '提示',
+        mes: '只能撤回远端记录，确认撤回？',
+        opts: [
+            {
+                txt: '取消',
+                color: false,
+                callback: () => {
+                  this.menuVisible = false;
+                }
+            },
+            {
+                txt: '确定',
+                color: true,
+                callback: () => {
+                  let data = JSON.parse(JSON.stringify(this.currentKey));
+                  data['type'] = this.RECALL;
+                  data['msg'] = "您撤回了一条消息";
+                  this.reSendMsg(data);
+                  this.menuVisible = false;
+                }
+            }
+        ]
+      });
+    },
+    handleCopy(){
+     this.content = this.currentKey.msg;
+    },
+    handleResetSend(){
+      this.menuVisible = false;
+      this.reSendMsg(this.currentKey);
+    },
     handleDefsForSelf(item) {
-      console.log(item);
+      console.log(event,item);
+      this.menuVisible = true;
+      this.menuTop = event.clientY;
+      this.currentKey = item;
     },
     handleOnFocus() {
       if (!this.onFocusLock) {
@@ -352,6 +416,7 @@ export default {
         this.mescrollDom.style.height =
           document.body.clientHeight - this.htmlFontSize * 2 - 200 + "px";
       }
+      this.menuVisible = false;
       this.handleMsgListToBottom(100);
     },
     mescrollInit(mescroll) {
@@ -525,7 +590,7 @@ export default {
       reChatSend({
         data: {
           room_uuid: this.currentRoomUuid,
-          type: this.RESEND,
+          type: key.type,
           created_at: key.created_at,
           user_id: key.user_id,
           msg: key.msg,
@@ -823,8 +888,10 @@ export default {
     content: "handleSendShow",
     data: "handleSendShow",
     msgList: {
-      handler() {
-        this.handleMsgListToBottom(100);
+      handler(newValue, oldValue) {
+        if(newValue.length !== oldValue.length){
+          this.handleMsgListToBottom(100);
+        }
       }
     },
     recordShow(newVal, oldVal) {
