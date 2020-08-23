@@ -3,10 +3,19 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-05 22:20:49
+ * @LastEditTime: 2020-08-23 16:00:38
  -->
 <template>
   <yd-layout>
+     <!-- 视频标签 -->
+    <!-- <div class="videoContainor"> -->
+      <video id="localvideo" autoplay @click="switchSize('localvideo')"   @mousedown="down('localvideo')" @touchstart="down('localvideo')"
+          @mousemove="move('localvideo')" @touchmove.prevent="move('localvideo')"   
+          @mouseup="end" @touchend="end" />
+      <video id="remotevideo" autoplay @click="switchSize('remotevideo')" @mousedown="down('remotevideo')" @touchstart="down('remotevideo')"
+          @mousemove="move('remotevideo')" @touchmove.prevent="move('remotevideo')"   
+          @mouseup="end" @touchend="end"/>
+    <!-- </div> -->
     <!-- 公共头部导航  todo 修改头-->
     <yd-navbar slot="navbar" :title="this.$route.meta.title" v-if="this.$route.meta.isShowHead">
       <a href="javascript:;" @click="goHref" slot="left" v-if="this.$route.meta.isShowBack">
@@ -40,11 +49,6 @@
     </transition>
     <!-- html通知消息 -->
     <notify></notify>
-    <!-- 视频标签 -->
-    <div class="videoContainor">
-      <video id="localvideo" autoplay />
-      <video id="remotevideo" autoplay />
-    </div>
     <!-- 悬浮 -->
     <navMenu></navMenu>
     <!--公共底部导航-->
@@ -257,6 +261,100 @@ export default {
     setHtmlFontSizeToVuex() {
       let fontSize = document.getElementsByTagName("html")[0].style.fontSize;
       this.updateHtmlFontSize(fontSize.slice(0, fontSize.length - 2));
+    },
+    // 实现移动端拖拽
+    down(valName){
+      if(valName === 'localvideo' && this.localVideoLock){
+        return 
+      }
+      if(valName === 'remotevideo' && this.remotevideoLock){
+        return 
+      }
+      let moveDiv = document.getElementById(valName);
+      this.flags = true;
+      var touch;
+      if(event.touches){
+          touch = event.touches[0];
+      }else {
+          touch = event;
+      }
+      this.position.x = touch.clientX;
+      this.position.y = touch.clientY;
+      this.dx = moveDiv.offsetLeft;
+      this.dy = moveDiv.offsetTop;
+    },
+    move(valName){
+      if(valName === 'localvideo' && this.localVideoLock){
+        return 
+      }
+      if(valName === 'remotevideo' && this.remotevideoLock){
+        return 
+      }
+
+      let moveDiv = document.getElementById(valName);
+      if(this.flags){
+        var touch ;
+        if(event.touches){
+            touch = event.touches[0];
+        }else {
+            touch = event;
+        }
+        this.nx = touch.clientX - this.position.x;
+        this.ny = touch.clientY - this.position.y;
+        this.xPum = this.dx+this.nx;
+        this.yPum = this.dy+this.ny;
+        moveDiv.style.left = this.xPum+"px";
+        moveDiv.style.top = this.yPum +"px";
+        //阻止页面的滑动默认事件；如果碰到滑动问题，1.2 请注意是否获取到 touchmove
+        document.addEventListener("touchmove",function(){
+            event.preventDefault();
+        },false);
+      }
+    },
+  //鼠标释放时候的函数
+    end(){
+      this.flags = false;
+    },
+    switchSize(valName){
+      if(valName === 'localvideo'){
+        if(this.remotevideoLock){
+          return;
+        }
+        let localVideo = document.getElementById(valName);
+        if(localVideo.style.width !== document.body.clientWidth+"px"){
+          localVideo.style.width = document.body.clientWidth+"px";
+          localVideo.style.zIndex = 1;
+          this.videoLock = true;
+          this.localVideoLock = true;
+          localVideo.style.left ="0px";
+          localVideo.style.top = "0px";
+        }else{
+          localVideo.style.width = "2.5rem";
+          localVideo.style.zIndex = 10;
+          this.videoLock = false;
+          this.localVideoLock = false;
+        }
+      }else{
+        if(this.localVideoLock){
+          return;
+        }
+        let remotevideo = document.getElementById(valName);
+        if(remotevideo.style.width !== document.body.clientWidth+"px"){
+          remotevideo.style.marginTop ="0rem";
+          remotevideo.style.width = document.body.clientWidth+"px";
+          remotevideo.style.zIndex = 1;
+          this.videoLock = true;
+          this.remotevideoLock = true;
+          remotevideo.style.left ="0px";
+          remotevideo.style.top = "0px";
+        }else{
+          remotevideo.style.top = "2.2rem";
+          remotevideo.style.width = "2.5rem";
+          remotevideo.style.zIndex = 10;
+          this.videoLock = false;
+          this.remotevideoLock = false;
+        }
+      }
     }
   },
   watch: {},
@@ -275,6 +373,12 @@ export default {
   },
   data() {
     return {
+      remotevideoLock:false,
+      localVideoLock:false,
+      videoLock: false,
+      flags: false,
+      position: { x: 0, y: 0 },
+      nx: '', ny: '', dx: '', dy: '', xPum: '', yPum: '',
       hiddenTime: 0,
       footerMenu: [
         {
@@ -376,10 +480,15 @@ export default {
 #localvideo {
   width: 2.5rem;
   display: none;
+  position: absolute;
+  z-index: 10;
+  margin-top: 0rem;
 }
 #remotevideo {
   width: 2.5rem;
-  margin-top: 0.2rem;
+  top: 2.2rem;
   display: none;
+  position: absolute;
+  z-index: 10;
 }
 </style>

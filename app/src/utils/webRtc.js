@@ -3,7 +3,7 @@
  * @Date: 2020-06-21 14:33:32
  * @description: 视频聊天
  * @LastEditors: hua
- * @LastEditTime: 2020-08-20 21:45:39
+ * @LastEditTime: 2020-08-23 14:44:23
  */
 import store from "../store";
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'
@@ -194,7 +194,7 @@ function prepareNewConnection() {
       peer.iceConnectionState === "closed") {
       // Handle the failure
       Loading.close("");
-      Toast({ mes: '连接断开', icon: 'error' })
+      //Toast({ mes: '连接断开', icon: 'error' })
       stopVideo();
       hangUp();
     }
