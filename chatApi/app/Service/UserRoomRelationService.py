@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-09-29 13:15:06
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:43:39
+LastEditors: hua
+LastEditTime: 2020-08-24 21:04:58
 '''
 from app import CONST
 from app import socketio
@@ -56,11 +56,11 @@ class UserRoomRelationService:
             filters = {
                 AddressBook.room_uuid == params['room_uuid']
             }
-            data = AddressBook().getList( filters, 'updated_at desc')
+            data = AddressBook().getList(filters, 'updated_at desc')
             filters.add(
                 AddressBook.be_focused_user_id == user_info['data']['id']
             )
-            data['room'] = AddressBook().getOne( filters)
+            data['room'] = AddressBook().getOne(filters)
         else:
             filters = {
                 UserRoomRelation.room_uuid == params['room_uuid']
@@ -69,7 +69,7 @@ class UserRoomRelationService:
             filters.add(
                 UserRoomRelation.user_id == user_info['data']['id']
             )
-            data['room'] = UserRoomRelation().getOne( filters)
+            data['room'] = UserRoomRelation().getOne(filters)
         return Utils.formatBody(data)
     
     @staticmethod
@@ -133,3 +133,5 @@ class UserRoomRelationService:
             status = UserRoomRelation().edit(data, filters)
         if status:
             return Utils.formatBody()
+
+    

@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-10-12 17:11:53
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 11:17:47
+ * @LastEditors: hua
+ * @LastEditTime: 2020-08-24 20:17:41
  -->
 <template>
   <div>
@@ -15,9 +15,10 @@
       @touchmove="touchmove($event)"
     >
       <div  :class="homeActive === true ? 'on homeCon bg-color-red' : 'openHomeCon bg-color-red'">
-        <img style="width:70%;"  @click="handleOpenQQ" :src="require('@/assets/img/qq.png')"/>
-        <img  style="margin-top: 0.4rem;width:70%;"  v-if="!isFullscreen" @click="openFullscreen" :src="require('@/assets/img/full.png')"/>
-        <img  style="margin-top: 0.4rem;width:70%;"  v-if="isFullscreen" @click="exitFullScreen" :src="require('@/assets/img/shrink.png')"/>
+        <img style="width:70%;"  @click="handleOpenTaobao" :src="require('@/assets/img/taobao.jpg')"/>
+        <img style="margin-top: 0.2rem;width:70%;"  @click="handleOpenQQ" :src="require('@/assets/img/qq.png')"/>
+        <img  style="margin-top: 0.2rem;width:70%;"  v-if="!isFullscreen" @click="openFullscreen" :src="require('@/assets/img/full.png')"/>
+        <img  style="margin-top: 0.2rem;width:70%;"  v-if="isFullscreen" @click="exitFullScreen" :src="require('@/assets/img/shrink.png')"/>
       </div>
       <div :class="homeActive?'pictrue':'openPictrue'" @click="open">
         <img
@@ -84,6 +85,13 @@ export default {
         }
         this.isFullscreen = false
     },
+    handleOpenTaobao(){
+      if(window.plus){
+          plus.runtime.openURL('https://item.taobao.com/item.htm?spm=a230r.1.14.16.296e4ea0zEmrdf&id=607024716747&ns=1&abbucket=12#detail')
+      }else{
+          window.open('https://item.taobao.com/item.htm?spm=a230r.1.14.16.296e4ea0zEmrdf&id=607024716747&ns=1&abbucket=12#detail')
+      }
+    },
     handleOpenQQ(){
         if(window.plus){
             plus.runtime.openURL('http://wpa.qq.com/msgrd?v=3&uin=584425439&site=qq&menu=yes')
@@ -101,7 +109,7 @@ export default {
 .home{position: fixed ;top:7.8rem;color: white;text-align: center;z-index:33;right:0.1rem;}
 .home .homeCon{overflow: hidden;width:0.86rem;border-radius:0.5rem;transition:all 0.3s ease-in-out 0s;-webkit-transition:all 0.3s ease-in-out 0s;-moz-transition:all 0.3s ease-in-out 0s;-o-transition:all 0.3s ease-in-out 0s;opacity:0;transform: scale(0);-webkit-transform: scale(0);-ms-transform: scale(0);-moz-transform: scale(0);-o-transform: scale(0);height:0;color:$color-primary;background:#ffffff;}
 .home .openHomeCon{overflow: hidden;width:0.86rem;border-radius:0.5rem;transition:all 0.3s ease-in-out 0s;-webkit-transition:all 0.3s ease-in-out 0s;-moz-transition:all 0.3s ease-in-out 0s;-o-transition:all 0.3s ease-in-out 0s;opacity:0;transform: scale(0);-webkit-transform: scale(0);-ms-transform: scale(0);-moz-transform: scale(0);-o-transform: scale(0);height:0;color:$color-primary;background:$color-primary}
-.home .homeCon.on{box-shadow: 0px 0px 5px #ddd;opacity:1;transform: scale(1);-webkit-transform: scale(1);-ms-transform: scale(1);-moz-transform: scale(1);-o-transform: scale(1);height:2.5rem;padding: 0.34rem 0;margin-bottom: 0.2rem;}
+.home .homeCon.on{box-shadow: 0px 0px 5px #ddd;opacity:1;transform: scale(1);-webkit-transform: scale(1);-ms-transform: scale(1);-moz-transform: scale(1);-o-transform: scale(1);height:3.2rem;padding: 0.34rem 0;margin-bottom: 0.2rem;}
 .home .homeCon .iconfont{font-size:0.48rem;color:#fff;display: inline-block;height: 0.9rem;margin: 0 auto;}
 .home .pictrue{background:#fff;width:0.86rem;height:0.86rem;border-radius:50%;border-radius:50%;box-shadow: 0px 0px 5px #ddd;}
 .home .pictrue .image{width:70%;height:70%;border-radius:50%;margin-top:15%;}

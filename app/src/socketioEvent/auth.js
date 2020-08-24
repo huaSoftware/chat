@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-08-22 18:07:31
+ * @LastEditTime: 2020-08-24 09:39:55
  */
 import store from "../store";
 import router from "../router";
@@ -203,7 +203,6 @@ export default function setupAuthEvent() {
   }
   //监听好友请求
   window.apiSocket.on("beg", (data) => {
-    alert(1)
     response(data).then((res) => {
       let data = res.data;
       if (data["action"] == "beg_add") {

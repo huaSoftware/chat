@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-22 19:47:14
+LastEditTime: 2020-08-24 20:49:24
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -116,6 +116,7 @@ class ChatService():
                 socketio.emit('room', Utils.formatBody(
                     roomList), namespace='/api', room='@broadcast.'+str(item['be_focused_user_id']))
         elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
+            # 获取群组内用户
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             # 发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
