@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-24 21:55:00
+LastEditTime: 2020-08-25 21:08:02
 '''
 from app import CONST
 from app import socketio
@@ -134,10 +134,112 @@ class UserRoomRelationService:
         if status:
             return Utils.formatBody()
 
-    """ 增加管理员  """
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def addManage(params, user_info):
+        """ 增加管理员  """
+        filters = {
+                UserRoomRelation.room_uuid == params['room_uuid'],
+                UserRoomRelation.user_id == params['user_id']
+            }
+        data = {
+            'type': CONST['GROUP']['MANAGE']['value']
+        }
+        status = UserRoomRelation().edit(data, filters)
+        if status:
+            return Utils.formatBody()
+        else:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '添加失败')
 
-    """ 禁言 """
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def blockGroupByUserId(params, user_info):
+        """ 禁言 """
+        filters = {
+                UserRoomRelation.room_uuid == params['room_uuid'],
+                UserRoomRelation.user_id == params['user_id']
+            }
+        data = {
+            'status': CONST['GROUP']['BLOCK']['value']
+        }
+        status = UserRoomRelation().edit(data, filters)
+        if status:
+            return Utils.formatBody()
+        else:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '禁言失败')
 
-    """ 解除禁言 """
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def activeGroupByUserId(params, user_info):
+        """ 解除禁言 """
+        filters = {
+                UserRoomRelation.room_uuid == params['room_uuid'],
+                UserRoomRelation.user_id == params['user_id']
+            }
+        data = {
+            'status': CONST['GROUP']['ACTIVE']['value']
+        }
+        status = UserRoomRelation().edit(data, filters)
+        if status:
+            return Utils.formatBody()
+        else:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '禁言失败')
+
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def deleteGroupByUserId(params, user_info):
+        """ 删除用户 """
+        filters = {
+                UserRoomRelation.room_uuid == params['room_uuid'],
+                UserRoomRelation.user_id == params['user_id']
+            }
+        status = UserRoomRelation().delete(filters)
+        if status:
+            return Utils.formatBody()
+        else:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '删除失败')
+
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def addGroupByUserId(params, user_info):
+        """ 添加用户 """
+        userRoomRelationData = {
+            'user_id': params['user_id'],
+            'room_uuid': params['room_uuid'],
+            'is_alert': 0,
+            'unread_number': 0
+        }
+        UserRoomRelation().add(userRoomRelationData)
+        return Utils.formatBody()
+
+    @staticmethod
+    @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
+    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @UsersAuthJWT.socketAuth
+    @transaction
+    def userRoomRelationByUserId(params, user_info):
+        """ 获取当前用户群聊信息状态 """
+        filters = {
+            UserRoomRelation.user_id == user_info['id'],
+            UserRoomRelation.room_uuid == params['room_uuid']
+        }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        return Utils.formatBody(selfUserRoomRelationData)
+       
 
     

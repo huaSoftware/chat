@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 群聊添加
  * @LastEditors: hua
- * @LastEditTime: 2019-11-01 15:03:30
+ * @LastEditTime: 2020-08-25 19:59:21
  -->
 <style>
 .yd-checkbox-icon{
@@ -142,7 +142,7 @@ export default {
         handleSubmit(){
             let user = storage.get('user')
             let ids = []
-            ids.push(user.id)
+            //ids.push(user.id)
             this.checkedUsers.forEach((key, index)=>{
                 console.log(JSON.parse(key))
                 ids.push(JSON.parse(key)['id'])

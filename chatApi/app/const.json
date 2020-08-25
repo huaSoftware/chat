@@ -59,5 +59,12 @@
   "TIME": { 
     "TIME_OUT": { "text": "超时时间", "value": 15000 },
     "TIME_ONLINE_INTERVAL": { "text": "在线检查间隔","value": 5000 } 
+  },
+  "GROUP":{
+    "MASTER":{"text":"群主","value":2},
+    "MANAGE":{"text":"管理","value":1},
+    "SLAVE":{"text":"群员","value":0},
+    "BLOCK":{"text":"禁言","value":1},
+    "ACTIVE":{"text":"活动","value":0}
   }
 }

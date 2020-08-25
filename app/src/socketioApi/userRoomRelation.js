@@ -3,7 +3,7 @@
  * @Date: 2019-09-29 14:25:37
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 11:14:16
+ * @LastEditTime: 2020-08-25 21:09:58
  */
 import {send} from '@/utils/socketio'
 
@@ -52,6 +52,66 @@ export function groupChatCreate (data) {
     let reqData = {
         'c':'UserRoomRelationService',
         'a':'create',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 添加管理员
+export function addManage (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'addManage',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 禁言
+export function blockGroupByUserId (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'blockGroupByUserId',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 解除禁言
+export function activeGroupByUserId (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'activeGroupByUserId',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 删除用户
+export function deleteGroupByUserId (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'deleteGroupByUserId',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 添加用户
+export function addGroupByUserId (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'addGroupByUserId',
+        'data':data
+    }
+    return send('send', reqData, 'api')
+}
+
+// 获取当前用户群聊信息状态
+export function userRoomRelationByUserId (data) {
+    let reqData = {
+        'c':'UserRoomRelationService',
+        'a':'userRoomRelationByUserId',
         'data':data
     }
     return send('send', reqData, 'api')

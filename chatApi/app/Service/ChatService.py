@@ -116,6 +116,14 @@ class ChatService():
                 socketio.emit('room', Utils.formatBody(
                     roomList), namespace='/api', room='@broadcast.'+str(item['be_focused_user_id']))
         elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
+            # 获取用户的权限，如果禁言状态返回错误
+            filters = {
+                UserRoomRelation.user_id == user_data['id'],
+                UserRoomRelation.room_uuid == room_uuid
+            }
+            selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+            if selfUserRoomRelationData['status'] == CONST['GROUP']['BLOCK']['value']:
+                return Utils.formatError(CONST['CODE']['ERROR']['value'], '禁言中')
             # 获取群组内用户
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             # 发送消息
@@ -262,6 +270,14 @@ class ChatService():
                 'unread_number': 0
             }
             UserRoomRelation().add(userRoomRelationData)
+        userRoomRelationData = {
+                'user_id': user_info['id'],
+                'room_uuid': room_uuid,
+                'is_alert': 0,
+                'unread_number': 0,
+                'type':CONST['GROUP']['MASTER']['value']
+            }
+        UserRoomRelation().add(userRoomRelationData)
         room_data = {
             'room_uuid': room_uuid,
             'last_msg': '',
