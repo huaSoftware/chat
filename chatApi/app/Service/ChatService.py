@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-24 20:49:24
+LastEditTime: 2020-08-24 21:54:19
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -245,7 +245,7 @@ class ChatService():
     @transaction
     def groupChatCreate(params, user_info):
         """ 
-            创建聊天群组
+            创建聊天群组，userInfo.id是群主
             @Param dict userInfo
             @param dict params
             @return bool

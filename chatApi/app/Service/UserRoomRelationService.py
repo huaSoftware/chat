@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-24 21:04:58
+LastEditTime: 2020-08-24 21:55:00
 '''
 from app import CONST
 from app import socketio
@@ -133,5 +133,11 @@ class UserRoomRelationService:
             status = UserRoomRelation().edit(data, filters)
         if status:
             return Utils.formatBody()
+
+    """ 增加管理员  """
+
+    """ 禁言 """
+
+    """ 解除禁言 """
 
     
