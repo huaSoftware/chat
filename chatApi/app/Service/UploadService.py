@@ -2,13 +2,14 @@
 @Author: hua
 @Date: 2019-09-28 20:50:59
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:40:22
+LastEditors: hua
+LastEditTime: 2020-08-26 20:24:22
 '''
 from app import CONST
 from app.Vendor.Utils import Utils
 from app.Vendor.Decorator import socketValidator
 from werkzeug.utils import secure_filename
+from xpinyin import Pinyin
 import os, base64
 from app.env import UPLOAD_FOLDER
 
@@ -33,7 +34,12 @@ class UploadService():
     
     @staticmethod
     def upload(params):
-        filename = secure_filename(params['name'])
+        p = Pinyin()
+        piyinFileName = p.get_pinyin(params['name'])
+        filename = secure_filename(piyinFileName)
+        fullData = params['dataUrl'].split(',')
+        if len(fullData) != 2:
+            return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'不允许传空文件')
         base64Data = params['dataUrl'].split(',')[1]
         if(base64Data and Utils.allowed_file(filename)):
             file_suffix = params['name'].split('.')[1]

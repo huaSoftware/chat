@@ -3,100 +3,117 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-24 20:53:16
+ * @LastEditTime: 2020-08-25 22:26:48
  -->
 <template>
-    <div class="room_details">
-        <!-- 利用v-if…v-else切换 展开 和 收起 两个画面，template包裹多个元素 -->
-        <template v-if="isHide">
-            <!-- 只显示摘要的画面 -->
-            <div class="hideBg" >
-                <div class="summary">
-                    <ul class="user_header_wrapper">
-                        <li v-for="(item, index) in list" :key="index">
-                            <vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"></vImg>
-                            <span>{{item.users.nick_name}}</span>
-                        </li>
-                    </ul>
+    <div class="room_details" >
+        <div v-if="status">
+            <!-- 利用v-if…v-else切换 展开 和 收起 两个画面，template包裹多个元素 -->
+            <template v-if="isHide">
+                <!-- 只显示摘要的画面 -->
+                <div class="hideBg" >
+                    <div class="summary">
+                        <ul class="user_header_wrapper">
+                            <li  style="width:25%;text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;"v-for="(item, index) in list" :key="index">
+                                <vImg :style="item.users.online?'':'background: grey;opacity: 0.5'" :imgUrl="item.users.head_img"></vImg>
+                                <span>{{item.users.nick_name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="showBtn">
+                        <!-- 绑定点击事件onShow，点击展开全文 -->
+                        <a href="#" @click.stop.prevent="onShow">
+                            展开查看全部&nbsp;
+                            <!-- 向下的角箭头符号，用css画 -->
+                            <span class="downArrow"></span>
+                        </a>
+                    </div>
                 </div>
-                <div class="showBtn">
-                    <!-- 绑定点击事件onShow，点击展开全文 -->
-                    <a href="#" @click.stop.prevent="onShow">
-                        展开查看全部&nbsp;
-                        <!-- 向下的角箭头符号，用css画 -->
-                        <span class="downArrow"></span>
-                    </a>
+            </template>
+            <template v-else>
+                <!-- 显示完整内容的画面 -->
+                <div class="showBg">
+                    <div>
+                        <ul class="user_header_wrapper">
+                            <li style="width:25%;text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;" v-for="(item, index) in list" :key="index">
+                                <vImg :imgUrl="item.users.head_img"></vImg>
+                                <span>{{item.users.nick_name}}</span>
+                            </li>
+                            <li style="width:25%">
+                                <span style="font-size: 0.8rem;" class="icon-custom-jia"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="hideBtn">
+                        <!-- 绑定点击事件onHide，点击收起内容 -->
+                        <a href="#" @click.stop.prevent="onHide">
+                            收起&nbsp;
+                            <!-- 向上的角箭头符号 -->
+                            <span class="upArrow"></span>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </template>
-        <template v-else>
-            <!-- 显示完整内容的画面 -->
-            <div class="showBg">
-                <div>
-                    <ul class="user_header_wrapper">
-                        <li v-for="(item, index) in list" :key="index">
-                            <vImg :imgUrl="item.users.head_img"></vImg>
-                            <span>{{item.users.nick_name}}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="hideBtn">
-                    <!-- 绑定点击事件onHide，点击收起内容 -->
-                    <a href="#" @click.stop.prevent="onHide">
-                        收起&nbsp;
-                        <!-- 向上的角箭头符号 -->
-                        <span class="upArrow"></span>
-                    </a>
-                </div>
-            </div>
-        </template>
-        <!-- 房间名称 -->
-        <yd-cell-item style="background: #fff;" >
-            <span slot="left" style="font-weight: bold">房间名称</span>
-            <span slot="right">{{currentRoomName}}</span>
-        </yd-cell-item>
-        <!--新消息提醒-->
-        <yd-cell-item style="background: #fff;">
-            <span slot="left" style="font-weight: bold">新的消息提醒</span>
-            <span slot="right">
-                <yd-switch v-model="alert">
-                </yd-switch>
-            </span>
-        </yd-cell-item>
-        <!-- 聊天数据离线保存 -->
-        <yd-cell-item style="background: #fff;">
-            <span slot="left" style="font-weight: bold">聊天云端保存</span>
-            <span slot="right">
-                <yd-switch v-model="save_action">
-                </yd-switch>
-            </span>
-        </yd-cell-item>
-        <CrossLine></CrossLine>
-        <!--聊天历史记录-->
-        <yd-cell-item style="background: #fff;" @click.native="$router.push({name: 'roomMsgList'})">
-            <span slot="left" style="font-weight: bold">聊天历史记录</span>
-            <span slot="right">
-                <span class="icon-custom-you icon-right"></span>
-            </span>
-        </yd-cell-item>
-        <CrossLine></CrossLine>
-        <!--清空聊天历史记录-->
-        <yd-cell-item style="background: #fff;" @click.native="handleDelRoomMsg">
-            <span slot="left" style="font-weight: bold">清空聊天历史记录</span>
-            <span slot="right">
-            </span>
-        </yd-cell-item>
-        <!--删除并退出-->
-        <yd-button size="large" type="hollow" @click.native="handleDelRoom">删除并退出</yd-button>
-        <!-- 模态窗 -->
-        <vModal 
-            ref="DelRoomRef"
-            @onConfirm="handleDelRoom"
-            :title="'提示'"
-            :text="'删除房间'"
-            :description="'删除后聊天记录将清空'"
-		>
-		</vModal>
+            </template>
+            <!-- 房间名称 -->
+            <yd-cell-item style="background: #fff;" >
+                <span slot="left" style="font-weight: bold">房间名称</span>
+                <span slot="right">{{currentRoomName}}</span>
+            </yd-cell-item>
+            <!--新消息提醒-->
+            <yd-cell-item style="background: #fff;">
+                <span slot="left" style="font-weight: bold">新的消息提醒</span>
+                <span slot="right">
+                    <yd-switch v-model="alert">
+                    </yd-switch>
+                </span>
+            </yd-cell-item>
+            <!-- 聊天数据离线保存 -->
+            <yd-cell-item style="background: #fff;">
+                <span slot="left" style="font-weight: bold">聊天云端保存</span>
+                <span slot="right">
+                    <yd-switch v-model="save_action">
+                    </yd-switch>
+                </span>
+            </yd-cell-item>
+            <CrossLine></CrossLine>
+            <!--聊天历史记录-->
+            <yd-cell-item style="background: #fff;" @click.native="$router.push({name: 'roomMsgList'})">
+                <span slot="left" style="font-weight: bold">聊天历史记录</span>
+                <span slot="right">
+                    <span class="icon-custom-you icon-right"></span>
+                </span>
+            </yd-cell-item>
+            <CrossLine></CrossLine>
+            <!--清空聊天历史记录-->
+            <yd-cell-item style="background: #fff;" @click.native="handleDelRoomMsg">
+                <span slot="left" style="font-weight: bold">清空聊天历史记录</span>
+                <span slot="right">
+                </span>
+            </yd-cell-item>
+            <!--删除并退出-->
+            <yd-button size="large" type="hollow" @click.native="handleDelRoom">删除并退出</yd-button>
+            <!-- 模态窗 -->
+           <!--  <vModal 
+                ref="DelRoomRef"
+                @onConfirm="handleDelRoom"
+                :title="'提示'"
+                :text="'删除房间'"
+                :description="'删除后聊天记录将清空'"
+            >
+            </vModal> -->
+        </div>
+        <div v-else style="    position: absolute;
+    font-size: 30px;
+    left: 50%;
+    margin-left: -30px;
+    top: 50%;
+    margin-top: -20px;">暂无</div>
     </div>
 </template>
 <script>
@@ -115,12 +132,14 @@ import {userRoomRelationGetByRoomUuid, userRoomRelationUpdateAlert, userRoomRela
 export default {
     data() {
         return {
+            status: true,
             isHide: true, //初始值为true，显示为折叠画面
             alert: true,
             save_action:false,
             list:[],
             room:{
             }
+            ,
         };
     },
     components: {vImg, vModal, CrossLine},
@@ -139,7 +158,12 @@ export default {
     },
     methods: {
         init(){
+            console.log("333333",this.currentRoomUuid)
             userRoomRelationGetByRoomUuid({room_uuid: this.currentRoomUuid}).then(res=>{
+                if(!res.data.room){
+                    this.status = false;
+                    return;
+                }
                 this.list = res.data.list
                 this.room = res.data.room.room
                 if(res.data.room.is_alert){
@@ -160,6 +184,18 @@ export default {
         onHide: function() {
             this.isHide = true; //点击onHide切换为true，显示为折叠画面
         },
+        /* handleDelRoom(){      
+            setTimeout(()=>{
+                roomDel({room_uuid:this.currentRoomUuid}).then(res=>{
+                    Alert({
+                        'mes':'删除并退出成功',
+                        callback:()=>{
+                            this.$router.push({name:'home'})
+                        }
+                    })
+                }) 
+            },500)    
+        }, */
         handleDelRoom(){
             Confirm({
                 title: '提示',

@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-24 20:52:50
+ * @LastEditTime: 2020-08-25 22:13:39
  -->
 <template>
     <div class="room_details" >

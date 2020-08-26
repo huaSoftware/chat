@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-06-26 19:32:18
+ * @LastEditTime: 2020-08-26 20:03:30
  -->
 <template>
   <div class="content">
@@ -152,6 +152,7 @@ export default {
         this.alert = storage.get("alert");
       }
       roomGet().then(res => {
+        console.log("222222",res)
         if (res.data.list != null) {
           this.updateRoomList(res.data.list);
           this.loading = false;

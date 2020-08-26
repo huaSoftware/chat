@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-07-02 21:58:24
+ * @LastEditTime: 2020-08-25 22:22:03
  */
 import store from "../store";
 import router from "../router";
@@ -53,7 +53,6 @@ export default function room(data, method) {
             }
         } */
     if (method == "chat") {
-      console.log("55555555555555555555")
       Toast({
         mes: "响应超时",
         timeout: 1500,
@@ -66,7 +65,8 @@ export default function room(data, method) {
     clearTimeout(window.sendTimeOut);
     Loading.close();
     //如果不在room路由下
-    if (router.history.current.fullPath.indexOf("room") === -1) {
+    if (router.history.current.fullPath.indexOf("oom") === -1) {
+     
       store.commit("updateCurrentRoomUuid", "");
       store.commit("updateCurrentRoomName", "");
       store.commit("updateCurrentRoomType", store.getters.ALONE);

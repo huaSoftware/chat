@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-17 14:14:28
 @description: 
-@LastEditors: hua
-@LastEditTime: 2020-06-25 20:07:14
+LastEditors: hua
+LastEditTime: 2020-08-26 19:52:02
 '''
 import environment
 environment.init("app")
@@ -16,5 +16,5 @@ app = app
 CORS(app, supports_credentials=True)
 if __name__ == '__main__':
     app.debug = False
-    socketio.run(app, host='0.0.0.0', port=501)
+    socketio.run(app, host='0.0.0.0', port=500)
     
