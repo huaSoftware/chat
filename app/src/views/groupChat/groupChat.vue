@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 群聊添加
  * @LastEditors: hua
- * @LastEditTime: 2020-08-25 19:59:21
+ * @LastEditTime: 2020-08-27 22:22:45
  -->
 <style>
 .yd-checkbox-icon{
@@ -17,7 +17,7 @@
 <template>
     <div class="content">
         <!-- 头部开始 -->
-		<header  class="yd-navbar" style="background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
+		<header  class="yd-navbar" style="z-index:10;background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
 			<div class="yd-navbar-item"></div> 
 			<div class="yd-navbar-center-box" style="height: 1rem;">
 				<div class="yd-navbar-center">
@@ -86,9 +86,10 @@
 </template>
 <script>
 import {mapGetters} from 'vuex'
+import {Alert, Toast } from 'vue-ydui/dist/lib.rem/dialog'
 import storage from "@/utils/localstorage"
 import {addressBookGet} from '@/socketioApi/addressBook'
-import {groupChatCreate} from '@/socketioApi/userRoomRelation'
+import {groupChatCreate,addGroupByUserId } from '@/socketioApi/userRoomRelation'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
 import {joinChatSend} from '@/socketIoApi/chat'
 import vImg from '@/components/v-img/v-img'
@@ -104,20 +105,8 @@ export default {
             },
             adderssBookList: [],
             defShow: false,
-            defs: [
-                {
-                    label: '发起群聊',
-                    callback: () => {
-                        this.$dialog.toast({mes: '咔擦，此人太帅！'});
-                    }
-                },
-                {
-                    label: '添加朋友',
-                    callback: () => {
-                        this.$router.push({name:'search'})
-                    }
-                }
-            ]
+            localGroupRoomUuid:"",
+            localRoomName:""
         }
     },
     computed: {
@@ -128,6 +117,11 @@ export default {
     },
     methods: {
         init(){
+            if(typeof this.$route.query.room_uuid !== 'undefined'){
+                console.log(this.localGroupRoomUuid)
+                this.localGroupRoomUuid = this.$route.query.room_uuid;
+                this.localRoomName = this.$route.query.room_name;
+            }
             addressBookGet(this.reqData).then(res=>{
                 this.adderssBookList = res.data.addressBookList
             })
@@ -147,16 +141,31 @@ export default {
                 console.log(JSON.parse(key))
                 ids.push(JSON.parse(key)['id'])
             })
-            groupChatCreate({ids:ids}).then(res=>{      
-                const room_uuid = res.data.room_uuid
-                const name = res.data.name
-                joinChatSend({
-                    name: name,
-                    type: this.GROUP,
-                    room_uuid:room_uuid,
-                    save_action:this.LOCAL
+            if(this.localGroupRoomUuid){
+                //增加用户
+                addGroupByUserId({ids:ids,room_uuid:this.localGroupRoomUuid}).then(res=>{
+                    const name = res.data.name
+                    joinChatSend({
+                        name:  this.localRoomName,
+                        type: this.GROUP,
+                        room_uuid:this.localGroupRoomUuid,
+                        save_action:this.LOCAL
+                    })
+                    Toast({'mes':'添加成功'})
                 })
-            })
+            }else{
+                groupChatCreate({ids:ids}).then(res=>{      
+                    const room_uuid = res.data.room_uuid
+                    const name = res.data.name
+                    joinChatSend({
+                        name: name,
+                        type: this.GROUP,
+                        room_uuid:room_uuid,
+                        save_action:this.LOCAL
+                    })
+                    Toast({'mes':'创建成功'})
+                })
+            }
         }
     },
     created() {

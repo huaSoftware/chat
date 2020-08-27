@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-25 22:26:48
+ * @LastEditTime: 2020-08-27 22:15:39
  -->
 <template>
     <div class="room_details" >
@@ -45,7 +45,7 @@
                                 <vImg :imgUrl="item.users.head_img"></vImg>
                                 <span>{{item.users.nick_name}}</span>
                             </li>
-                            <li style="width:25%">
+                            <li style="width:25%" @click="handleAddCustomer">
                                 <span style="font-size: 0.8rem;" class="icon-custom-jia"></span>
                             </li>
                         </ul>
@@ -252,6 +252,9 @@ export default {
                     }
                 ]
             });
+        },
+        handleAddCustomer(){
+            this.$router.push({ name: "groupChat",query:{ room_uuid: this.currentRoomUuid,room_name:this.currentRoomName} });
         }
     },
     destroyed(){

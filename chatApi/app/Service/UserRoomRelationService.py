@@ -3,8 +3,9 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-25 21:08:02
+LastEditTime: 2020-08-27 22:23:48
 '''
+from sqlalchemy.sql.elements import Null
 from app import CONST
 from app import socketio
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
@@ -213,19 +214,32 @@ class UserRoomRelationService:
 
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
-    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
+    @socketValidator(name='ids', rules={'required': True, 'type': 'list', 'minlength': 1, 'maxlength': 20})
     @UsersAuthJWT.socketAuth
     @transaction
     def addGroupByUserId(params, user_info):
         """ 添加用户 """
-        userRoomRelationData = {
-            'user_id': params['user_id'],
-            'room_uuid': params['room_uuid'],
-            'is_alert': 0,
-            'unread_number': 0
-        }
-        UserRoomRelation().add(userRoomRelationData)
-        return Utils.formatBody()
+        for id in params['ids']:
+            filters = {
+                UserRoomRelation.user_id == id,
+                UserRoomRelation.room_uuid == params['room_uuid']
+            }
+            selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+            if selfUserRoomRelationData != None:
+                continue
+            userRoomRelationData = {
+                'user_id': id,
+                'room_uuid': params['room_uuid'],
+                'is_alert': 0,
+                'unread_number': 0
+            }
+            UserRoomRelation().add(userRoomRelationData)
+        #添加后同步房间
+        user_room_relation_data = Utils.db_l_to_d(UserRoomRelation.get(params['room_uuid']))
+        for item in user_room_relation_data:
+            roomList = UserRoomRelation.getRoomList(item['user_id'])
+            socketio.emit('groupRoom', Utils.formatBody(roomList), namespace='/api', room='@broadcast.'+str(item['user_id']))
+        return Utils.formatBody({}, msg='添加成功')
 
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
@@ -235,7 +249,7 @@ class UserRoomRelationService:
     def userRoomRelationByUserId(params, user_info):
         """ 获取当前用户群聊信息状态 """
         filters = {
-            UserRoomRelation.user_id == user_info['id'],
+            UserRoomRelation.user_id == user_info['data']['id'],
             UserRoomRelation.room_uuid == params['room_uuid']
         }
         selfUserRoomRelationData = UserRoomRelation().getOne(filters)

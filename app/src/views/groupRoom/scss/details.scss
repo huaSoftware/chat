@@ -20,6 +20,11 @@
 .user_header_wrapper li span{
     margin-top:0.1rem;
     font-size:0.24rem;
+    width: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
 }
 
 /* 折叠 */

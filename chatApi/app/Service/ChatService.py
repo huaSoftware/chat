@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-24 21:54:19
+LastEditTime: 2020-08-27 21:54:27
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -271,7 +271,7 @@ class ChatService():
             }
             UserRoomRelation().add(userRoomRelationData)
         userRoomRelationData = {
-                'user_id': user_info['id'],
+                'user_id': user_info['data']['id'],
                 'room_uuid': room_uuid,
                 'is_alert': 0,
                 'unread_number': 0,
