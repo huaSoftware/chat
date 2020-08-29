@@ -3,7 +3,7 @@
  * @Date: 2019-11-01 13:55:09
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-06-21 15:11:51
+ * @LastEditTime: 2020-08-29 17:28:54
  */
 const _import = require("../_import_" + process.env.NODE_ENV);
 
@@ -11,7 +11,7 @@ const authRouter = [
   // 根路径.跳转首页
   {
     path: "/",
-    redirect: "/home",
+    redirect: "/personInfo",
   },
   // 广告
   {

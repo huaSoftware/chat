@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-22 19:53:52
+ * @LastEditTime: 2020-08-29 23:30:28
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -305,7 +305,6 @@ export default {
     this.init();
   },
   beforeRouteEnter(to, from, next) {
-    to.meta.title = to.query.name;
     next(vm => {
       vm.$refs.mescroll && vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
@@ -328,6 +327,8 @@ export default {
       updateMsgList: "updateMsgList"
     }),
     init() {
+      //  console.log("432423432",this.$route.query)
+      //to.meta.title = to.query.name;
       this.clientHeight = document.body.clientHeight;
       this.mescrollDom = document.getElementsByClassName("mescroll")[0];
       this.isPartChatPage = false;

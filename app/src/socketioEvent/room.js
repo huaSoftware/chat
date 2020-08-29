@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-08-25 22:22:03
+ * @LastEditTime: 2020-08-29 21:56:46
  */
 import store from "../store";
 import router from "../router";
@@ -134,7 +134,7 @@ export default function room(data, method) {
           //服务器出错
           clearTimeout(window.sendTimeOut);
           Toast({
-            mes: e.toString(),
+            mes: e.msg.toString(),
             timeout: 1500,
             icon: "error",
           });

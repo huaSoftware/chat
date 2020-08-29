@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-27 22:15:39
+ * @LastEditTime: 2020-08-29 23:25:52
  -->
 <template>
     <div class="room_details" >
@@ -41,12 +41,12 @@
                             <li style="width:25%;text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;" v-for="(item, index) in list" :key="index">
+    align-items: center;" v-for="(item, index) in list" :key="index" @click="handleGoPersonInfo(item)">
                                 <vImg :imgUrl="item.users.head_img"></vImg>
                                 <span>{{item.users.nick_name}}</span>
                             </li>
                             <li style="width:25%" @click="handleAddCustomer">
-                                <span style="font-size: 0.8rem;" class="icon-custom-jia"></span>
+                                <div style="font-size: 0.8rem;" class="icon-custom-jia"></div>
                             </li>
                         </ul>
                     </div>
@@ -196,6 +196,10 @@ export default {
                 }) 
             },500)    
         }, */
+        handleGoPersonInfo(item){
+            console.log(item)
+            this.$router.push({name:'personInfo',query:{item}})
+        },
         handleDelRoom(){
             Confirm({
                 title: '提示',
@@ -260,7 +264,7 @@ export default {
     destroyed(){
     },
     beforeRouteLeave(to, from, next) {
-        if(to.name == 'room'){
+        if(to.name == 'groupRoom'){
             joinChatSend({
                 name: this.currentRoomName,
                 room_uuid: this.currentRoomUuid,

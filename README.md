@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2020-08-22 20:19:48
+ * @LastEditTime: 2020-08-29 23:33:00
  -->
 
 ### 工具鸡-聊天室
@@ -73,6 +73,7 @@ http://doc.zhuhui.store
 - [x] H5 语音
 - [x] 视频聊天 2020/06/27 video分支
 - [x] 聊天撤回，重发，复制
+- [x] 群聊禁言，管理，删除，添加
 
 ### 后台项目功能
 

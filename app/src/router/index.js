@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-02-27 18:51:35
+ * @LastEditTime: 2020-08-29 23:22:00
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -23,6 +23,12 @@ const router = new Router({
     ...myRouter,
     ...roomRouter,
     ...groupRoomRouter,
+    {
+      path: '/personInfo',
+      name: 'personInfo',
+      component: _import('groupRoom/personInfo'),
+      meta: { title: '', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'groupRoomDetails'}
+    },
     // 首页
     {
       path: '/home', // 路径

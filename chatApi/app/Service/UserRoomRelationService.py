@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-27 22:23:48
+LastEditTime: 2020-08-29 22:57:03
 '''
 from sqlalchemy.sql.elements import Null
 from app import CONST
@@ -141,6 +141,13 @@ class UserRoomRelationService:
     @UsersAuthJWT.socketAuth
     @transaction
     def addManage(params, user_info):
+        filters = {
+            UserRoomRelation.user_id == user_info['data']['id'],
+            UserRoomRelation.room_uuid == params['room_uuid']
+        }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        if selfUserRoomRelationData['type'] != CONST['GROUP']['MASTER']['value']:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '无权限')
         """ 增加管理员  """
         filters = {
                 UserRoomRelation.room_uuid == params['room_uuid'],
@@ -161,6 +168,13 @@ class UserRoomRelationService:
     @UsersAuthJWT.socketAuth
     @transaction
     def blockGroupByUserId(params, user_info):
+        filters = {
+            UserRoomRelation.user_id == user_info['data']['id'],
+            UserRoomRelation.room_uuid == params['room_uuid']
+        }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        if selfUserRoomRelationData['type'] == CONST['GROUP']['SLAVE']['value']:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '无权限')
         """ 禁言 """
         filters = {
                 UserRoomRelation.room_uuid == params['room_uuid'],
@@ -181,11 +195,18 @@ class UserRoomRelationService:
     @UsersAuthJWT.socketAuth
     @transaction
     def activeGroupByUserId(params, user_info):
+        filters = {
+            UserRoomRelation.user_id == user_info['data']['id'],
+            UserRoomRelation.room_uuid == params['room_uuid']
+        }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        if selfUserRoomRelationData['type'] == CONST['GROUP']['SLAVE']['value']:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '无权限')
         """ 解除禁言 """
         filters = {
-                UserRoomRelation.room_uuid == params['room_uuid'],
-                UserRoomRelation.user_id == params['user_id']
-            }
+            UserRoomRelation.room_uuid == params['room_uuid'],
+            UserRoomRelation.user_id == params['user_id']
+        }
         data = {
             'status': CONST['GROUP']['ACTIVE']['value']
         }
@@ -202,6 +223,13 @@ class UserRoomRelationService:
     @transaction
     def deleteGroupByUserId(params, user_info):
         """ 删除用户 """
+        filters = {
+                UserRoomRelation.user_id == user_info['data']['id'],
+                UserRoomRelation.room_uuid == params['room_uuid']
+            }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        if selfUserRoomRelationData['type'] == CONST['GROUP']['SLAVE']['value']:
+            return Utils.formatError(CONST['CODE']['ERROR']['value'], '无权限')
         filters = {
                 UserRoomRelation.room_uuid == params['room_uuid'],
                 UserRoomRelation.user_id == params['user_id']
@@ -221,7 +249,7 @@ class UserRoomRelationService:
         """ 添加用户 """
         for id in params['ids']:
             filters = {
-                UserRoomRelation.user_id == id,
+                UserRoomRelation.user_id == user_info['data']['id'],
                 UserRoomRelation.room_uuid == params['room_uuid']
             }
             selfUserRoomRelationData = UserRoomRelation().getOne(filters)
@@ -243,7 +271,6 @@ class UserRoomRelationService:
 
     @staticmethod
     @socketValidator(name='room_uuid', rules={'required': True, 'type': 'string'})
-    @socketValidator(name='user_id', rules={'required': True, 'type': 'integer'})
     @UsersAuthJWT.socketAuth
     @transaction
     def userRoomRelationByUserId(params, user_info):
