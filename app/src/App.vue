@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-23 16:00:38
+ * @LastEditTime: 2020-08-30 17:58:01
  -->
 <template>
   <yd-layout>
@@ -357,7 +357,13 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    $route(to, from) {
+      if(to.query.name){
+        to.meta.title = to.query.name;
+      }
+    }
+  },
   computed: {
     ...mapGetters([
       "msgList",

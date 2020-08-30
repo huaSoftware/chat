@@ -3,7 +3,7 @@
 @Date: 2019-09-29 13:15:06
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-29 22:57:03
+LastEditTime: 2020-08-30 18:06:13
 '''
 from sqlalchemy.sql.elements import Null
 from app import CONST
@@ -247,9 +247,16 @@ class UserRoomRelationService:
     @transaction
     def addGroupByUserId(params, user_info):
         """ 添加用户 """
+        filters = {
+                UserRoomRelation.user_id == user_info['data']['id'],
+                UserRoomRelation.room_uuid == params['room_uuid']
+            }
+        selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+        if selfUserRoomRelationData == None:
+             return Utils.formatError(CONST['CODE']['ERROR']['value'], '房间不存在')
         for id in params['ids']:
             filters = {
-                UserRoomRelation.user_id == user_info['data']['id'],
+                UserRoomRelation.user_id == id,
                 UserRoomRelation.room_uuid == params['room_uuid']
             }
             selfUserRoomRelationData = UserRoomRelation().getOne(filters)

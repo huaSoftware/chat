@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-22 19:56:45
+ * @LastEditTime: 2020-08-30 16:35:20
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -323,6 +323,13 @@ export default {
       this.updateMsgList([]);
       this.handleHeightToBottom();
       window.onresize = () => {
+        /* const activeElement = document.activeElement
+        if (activeElement.tagName === 'DIV') {
+          setTimeout(() => {
+            activeElement.scrollIntoView(false)
+          }, 100)
+        } */
+
         this.isEmpty = false;
         if (document.body.clientHeight < this.clientHeight) {
           /* if(this.iconsShow ==true || this.defsShow ==true){
@@ -387,7 +394,8 @@ export default {
       this.menuTop = event.clientY;
       this.currentKey = item;
     },
-    handleOnFocus() {
+    handleOnFocus(e) {
+      setTimeout(function(){e.target.scrollIntoView(true)},300)
       if (!this.onFocusLock) {
         this.onFocusLock = true;
         send(
@@ -398,6 +406,7 @@ export default {
       }
     },
     handleOnblur() {
+      
       this.onFocusLock = false;
       send(
         "input",

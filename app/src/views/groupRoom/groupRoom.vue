@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-29 23:30:28
+ * @LastEditTime: 2020-08-30 17:57:31
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -300,11 +300,14 @@ export default {
       }
     };
   },
-  created() {},
+  created() {
+   
+  },
   mounted() {
     this.init();
   },
   beforeRouteEnter(to, from, next) {
+    
     next(vm => {
       vm.$refs.mescroll && vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });

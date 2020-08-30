@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-27 21:54:27
+LastEditTime: 2020-08-30 18:11:43
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -260,6 +260,14 @@ class ChatService():
         """
         room_uuid = Utils.unique_id()
         name = ''
+        userRoomRelationData = {
+                'user_id': user_info['data']['id'],
+                'room_uuid': room_uuid,
+                'is_alert': 0,
+                'unread_number': 0,
+                'type':CONST['GROUP']['MASTER']['value']
+            }
+        UserRoomRelation().add(userRoomRelationData)
         for id in params['ids']:
             user_data = Users().getOne({Users.id == id})
             name = name + ',' + user_data['nick_name']
@@ -270,14 +278,6 @@ class ChatService():
                 'unread_number': 0
             }
             UserRoomRelation().add(userRoomRelationData)
-        userRoomRelationData = {
-                'user_id': user_info['data']['id'],
-                'room_uuid': room_uuid,
-                'is_alert': 0,
-                'unread_number': 0,
-                'type':CONST['GROUP']['MASTER']['value']
-            }
-        UserRoomRelation().add(userRoomRelationData)
         room_data = {
             'room_uuid': room_uuid,
             'last_msg': '',

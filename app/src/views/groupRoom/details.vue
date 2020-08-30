@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-29 23:25:52
+ * @LastEditTime: 2020-08-30 18:10:51
  -->
 <template>
     <div class="room_details" >
@@ -46,7 +46,7 @@
                                 <span>{{item.users.nick_name}}</span>
                             </li>
                             <li style="width:25%" @click="handleAddCustomer">
-                                <div style="font-size: 0.8rem;" class="icon-custom-jia"></div>
+                                <div style="font-size: 0.8rem;margin-top:0.3rem" class="icon-custom-jia"></div>
                             </li>
                         </ul>
                     </div>
@@ -164,8 +164,8 @@ export default {
                     this.status = false;
                     return;
                 }
-                this.list = res.data.list
-                this.room = res.data.room.room
+                this.list = res.data.list.reverse()
+                this.room = res.data.room.room.reverse()
                 if(res.data.room.is_alert){
                     this.alert = true
                 }else{

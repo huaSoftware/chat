@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-29 23:22:00
+ * @LastEditTime: 2020-08-30 17:48:11
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -80,7 +80,7 @@ router.afterEach(function(to,from){
     trans = toL > fromL ? 'next' : 'prev'
   }
   if (to.meta.title) {
-    store.dispatch("updateNavbarTitle", to.meta.title);
+    store.dispatch("updateNavbarTitle", 1111);
   }
   //过渡效果
   store.dispatch('updateTransition', trans)

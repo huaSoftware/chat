@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-08-15 21:16:40
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-27 13:53:43
+ * @LastEditors: hua
+ * @LastEditTime: 2020-08-30 16:22:31
  -->
 <template>
     <div class="input_wrapper">
@@ -72,8 +72,8 @@ export default {
         }
     },
     methods:{
-        onFocus(){
-            this.$emit('onFocus');
+        onFocus(event){
+            this.$emit('onFocus',event);
         },
         onBlur(){
             this.$emit('onBlur');

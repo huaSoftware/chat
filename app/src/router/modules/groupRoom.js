@@ -3,7 +3,7 @@
  * @Date: 2020-02-27 18:48:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-29 23:23:20
+ * @LastEditTime: 2020-08-30 17:16:46
  */
 const _import = require('../_import_' + process.env.NODE_ENV)
 
@@ -13,7 +13,7 @@ const groupRoomRouter = [
     path: '/groupRoom',
     name: 'groupRoom',
     component: _import('groupRoom/groupRoom'),
-    meta: { title: '房间', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home', isShowDef:true, defTextName:'详情', defPath:'groupRoomDetails'} // 定义一些公共状态，你喜欢就好
+    meta: { title: '', isShowHead: true, isShowFoot: false, isShowBack: true, backPath:'home', isShowDef:true, defTextName:'详情', defPath:'groupRoomDetails'} // 定义一些公共状态，你喜欢就好
   },
   //房间详情
   {

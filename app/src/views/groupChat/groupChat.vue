@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 群聊添加
  * @LastEditors: hua
- * @LastEditTime: 2020-08-27 22:22:45
+ * @LastEditTime: 2020-08-30 18:10:24
  -->
 <style>
 .yd-checkbox-icon{
@@ -17,7 +17,7 @@
 <template>
     <div class="content">
         <!-- 头部开始 -->
-		<header  class="yd-navbar" style="z-index:10;background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
+		<header  class="yd-navbar" style="z-index:100;background-color: rgb(255, 255, 255); height: 1rem; color: rgb(228, 228, 228);">
 			<div class="yd-navbar-item"></div> 
 			<div class="yd-navbar-center-box" style="height: 1rem;">
 				<div class="yd-navbar-center">
@@ -123,6 +123,7 @@ export default {
                 this.localRoomName = this.$route.query.room_name;
             }
             addressBookGet(this.reqData).then(res=>{
+
                 this.adderssBookList = res.data.addressBookList
             })
         },

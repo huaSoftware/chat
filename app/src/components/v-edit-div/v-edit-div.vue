@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 19:21:27
+ * @LastEditTime: 2020-08-30 16:22:23
  -->
 <template>
   <div
@@ -56,7 +56,7 @@ export default {
     onFocus() {
       this.isLocked = true;
       console.log("onFocus");
-      this.$emit("onFocus");
+      this.$emit("onFocus",event);
     },
     onBlur() {
       this.isLocked = false;

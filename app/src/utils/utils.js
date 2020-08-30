@@ -923,6 +923,16 @@ let utils = {
         })
       }
       return obj
+    },
+    getQueryVariable(variable)
+    {
+      var query = window.location.href.substring(1);
+      var vars = query.split("&");
+      for (var i=0;i<vars.length;i++) {
+              var pair = vars[i].split("=");
+              if(pair[0] == variable){return pair[1];}
+      }
+      return(false);
     }
   },
   store: {
@@ -1489,6 +1499,8 @@ let utils = {
         browser = 'Chrome'
       } else if (BrowserAgent.indexOf('MSIE') > -1 && BrowserAgent.indexOf('Trident') > -1) {
         browser = 'IE(8-10)'
+      } else if (BrowserAgent.indexOf('MiuiBrowser') > -1) {
+        browser = 'MiuiBrowser'
       }
 
       return browser
