@@ -3,7 +3,7 @@
  * @Date: 2019-09-02 11:20:16
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-05-07 11:47:00
+ * @LastEditTime: 2020-08-30 11:03:28
  */
 import request from '@/utils/request'
 
@@ -48,11 +48,11 @@ export function userList(data) {
 }
 /* 删除用户 */
 export function userDelete(data) {
-  /* return request({
+  return request({
     url: '/api/v2/admin/user/delete',
     method: 'get',
     params:data
-  }) */
+  })
 }
 
 export function userEdit(data) {

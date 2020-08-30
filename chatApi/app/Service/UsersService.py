@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-17 14:14:28
 @description: 
-@LastEditors  : hua
-@LastEditTime : 2019-12-24 13:12:11
+LastEditors: hua
+LastEditTime: 2020-08-30 11:06:36
 '''
 import time, re
 from app import CONST, delayQueue
@@ -12,8 +12,12 @@ from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Struct.Invite import Invite
 from app.Vendor.Utils import Utils
 from app.Models.Users import Users
+from app.Models.AddressBook import AddressBook
+from app.Models.UserRoomRelation import UserRoomRelation
+from app.Models.Room import Room
 from app.Vendor.Decorator import transaction
 from xpinyin import Pinyin
+from sqlalchemy import or_
 
 class UsersService():
     """ 
@@ -60,6 +64,44 @@ class UsersService():
                 return result
         return Utils.formatError(CONST['CODE']['BAD_REQUEST']['value'],'账号已注册')
     
+    """ 删除用户 """
+    @staticmethod
+    @transaction
+    def delete(params):
+        """ 删除用户，需要关联删除聊天记录，通讯录，房间 """
+        filters = {
+            Users.id == params['id']
+        }
+        Users().delete(filters)
+        """ 删除通讯录 """
+        filters = {
+            or_(AddressBook.be_focused_user_id == params['id'],AddressBook.focused_user_id == params['id'])
+        }
+        addressBookInfoList = AddressBook().getAll(filters, 'updated_at desc')
+        AddressBook().delete(filters)
+        for addressBookInfo in addressBookInfoList:
+            """ 删除房间 """
+            filters = {
+                Room.room_uuid == addressBookInfo['room_uuid']
+            }
+            Room().delete(filters)
+        """ 删除房间关系表 """
+        filters = {
+            UserRoomRelation.user_id == params['id']
+        }
+        uerRoomRelationInfoList = UserRoomRelation().getAll(filters, 'updated_at desc')
+        UserRoomRelation().delete(filters)
+        for uerRoomRelationInfo in uerRoomRelationInfoList:
+            """ 删除房间 """
+            filters = {
+                Room.room_uuid == uerRoomRelationInfo['room_uuid']
+            }
+            Room().delete(filters)
+        return  Utils.formatBody({},msg='删除成功')
+
+      
+        
+
     @staticmethod
     @socketValidator(name='email', rules={'required': True,'type': 'string','minlength': 10,'maxlength': 20})
     @socketValidator(name='password', rules={'required':True,'type':'string','minlength':6,'maxlength':200})

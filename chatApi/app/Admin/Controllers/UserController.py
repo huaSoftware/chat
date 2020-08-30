@@ -3,12 +3,13 @@
 @Date: 2019-06-11 14:59:11
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-19 20:09:59
+LastEditTime: 2020-08-30 10:58:39
 '''
 from app import app
 from app.Vendor.Decorator import validator
 from app.Vendor.UsersAuthJWT import UsersAuthJWT
 from app.Admin.Controllers.BaseController import BaseController
+from app.Service.UsersService import UsersService
 from app.Vendor.Decorator import transaction
 from app.Models.Users import Users
 from sqlalchemy import or_
@@ -39,14 +40,9 @@ def adminUserList(*args, **kwargs):
 @UsersAuthJWT.AdminApiAuth
 @transaction
 def adminUserDelete(*args, **kwargs):
-    """ 删除用户 """
+    """ 删除用户，需要关联删除聊天记录，通讯录，房间 """
     params = kwargs['params']
-    filters = {
-        Users.id == params['id']
-    }
-    Users().delete(filters)
-    return BaseController().successData()
-
+    return UsersService.delete(params)
 
 @app.route('/api/v2/admin/user/add', methods=['POST'])
 @validator(name="name", rules={'type': 'string'}, default='')
