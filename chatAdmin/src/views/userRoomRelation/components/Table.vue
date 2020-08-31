@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-31 19:59:46
+ * @LastEditTime: 2020-08-30 21:28:19
  -->
 <template>
   <div class="app-container">
@@ -31,7 +31,7 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关注者" prop="nick_name" align="center" sortable>
+      <el-table-column label="用户名" prop="nick_name" align="center" sortable>
         <template slot-scope="scope">
           <span v-if="scope.row.users">{{ scope.row.users.nick_name }}</span>
         </template>
@@ -47,13 +47,26 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="被关注者"
-        prop="nick_name"
+        label="类型"
+        prop="room_uuid"
         align="center"
         sortable
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.be_users">{{ scope.row.be_users.nick_name }}</span>
+            <el-tag size="mini" v-if="scope.row.type === 0">群员</el-tag>
+            <el-tag size="mini" v-if="scope.row.type === 1" type="success">管理员</el-tag>
+            <el-tag size="mini" v-if="scope.row.type === 2" type="danger">群主</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="状态"
+        prop="room_uuid"
+        align="center"
+        sortable
+      >
+        <template slot-scope="scope">
+            <el-tag size="mini" v-if="scope.row.status === 0" type="success">正常</el-tag>
+            <el-tag size="mini" v-if="scope.row.status === 1" type="danger">禁止</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -102,7 +115,7 @@
 <script>
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import { getToken } from "@/utils/auth";
-import { addressBookList, addressBookDelete } from "@/api/addressBook";
+import { userRoomRelationList, userRoomRelationDelete } from "@/api/userRoomRelation";
 import { parseTime } from "@/utils/index";
 export default {
   data() {
@@ -127,7 +140,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
-      addressBookList(this.listQuery).then(res => {
+      userRoomRelationList(this.listQuery).then(res => {
         console.log(res);
         this.list = res.data.list;
         this.total = res.data.page.count;
@@ -135,7 +148,7 @@ export default {
       });
     },
     move(id) {
-      addressBookDelete({ id: id }).then(res => {
+      userRoomRelationDelete({ id: id }).then(res => {
         this.$message({
           message: "删除成功",
           type: "success"

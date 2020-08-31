@@ -109,6 +109,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/userRoomRelation",
+    component: Layout,
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/userRoomRelation/index"),
+        name: "UserRoomRelation",
+        meta: { title: "群聊关联管理", icon: "message" }
+      }
+    ]
+  },
+  {
     path: "/users",
     component: Layout,
     children: [

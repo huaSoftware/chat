@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-10 09:55:10
-@LastEditors: hua
-@LastEditTime: 2020-06-04 13:42:59
+LastEditors: hua
+LastEditTime: 2020-08-30 20:56:23
 '''
 from flask import Flask
 from apscheduler.schedulers.blocking import BlockingScheduler# type: ignore
@@ -62,7 +62,7 @@ if environment == 'admin':
     #引入后台
     from app.Admin.Controllers import (LoginController, RoomController, AddressBookController,
                                     UserController, AdminController, IndexController,LogController,
-                                    ConfigController)
+                                    ConfigController, UserRoomRelationController)
 #数据库事件
 from app.Event import AddressBook, Admin, Config, Log, Msg, Room, UserRoomRelation, Users
 

@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 LastEditors: hua
-LastEditTime: 2020-08-18 21:19:23
+LastEditTime: 2020-08-31 20:01:01
 '''
 import time
 import math
@@ -22,7 +22,7 @@ from app import CONST
 
 class AddressBook(HtAddressBook, Base, SerializerMixin):
     users = relationship('Users', uselist=False, primaryjoin=foreign(
-        HtAddressBook.focused_user_id) == remote(Users.id))
+        HtAddressBook.focused_user_id) == remote(Users.id),lazy="joined")
     adminUsers = relationship('Admin', uselist=False, primaryjoin=foreign(
         HtAddressBook.focused_user_id) == remote(Admin.id))
     room = relationship('Room', uselist=False, primaryjoin=foreign(
@@ -60,6 +60,39 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             else:
                 res['list'] = res['list'].order_by(
                     asc(order[0])).offset(offset).limit(limit).all()
+        if not field:
+            res['list'] = [c.to_dict() for c in res['list']]
+        else:
+            res['list'] = [c.to_dict(only=field) for c in res['list']]
+        return res
+
+    """ 
+        列表
+        @param set filters 查询条件
+        @param obj order 排序
+        @param column group 组
+        @param tuple field 字段
+        @param int offset 偏移量
+        @param int limit 取多少条
+        @return dict
+    """
+    def getListByGroup(self, filters, order, group, field=(), offset = 0, limit = 15):
+        res = {}
+        res['page'] ={}
+        res['page']['count'] = dBSession.query(AddressBook).join(Users, Users.id==AddressBook.focused_user_id).filter(*filters).count()
+        res['list'] = []
+        res['page']['total_page'] = self.get_page_number(res['page']['count'], limit)
+        res['page']['current_page'] = offset
+        if offset != 0:
+            offset = (offset - 1) * limit
+        if res['page']['count'] > 0:
+            res['list'] = dBSession.query(AddressBook).join(Users, Users.id==AddressBook.focused_user_id).filter(*filters)
+            print(str(res['list']))
+            order = order.split(' ')
+            if order[1] == 'desc':
+                res['list'] = res['list'].order_by(desc(order[0])).group_by(group).offset(offset).limit(limit).all()
+            else:
+                res['list'] = res['list'].order_by(asc(order[0])).group_by(group).offset(offset).limit(limit).all()
         if not field:
             res['list'] = [c.to_dict() for c in res['list']]
         else:

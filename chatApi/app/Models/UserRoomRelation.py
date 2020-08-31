@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-26 09:54:21
-@LastEditors: hua
-@LastEditTime: 2019-12-03 09:32:38
+LastEditors: hua
+LastEditTime: 2020-08-31 20:02:07
 '''
 import time, math
 
@@ -17,7 +17,7 @@ from app.Models.Room import Room
 from app.Vendor.Utils import Utils
 
 class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
-    users = relationship('Users', uselist=False, primaryjoin=foreign(HtUserRoomRelation.user_id) == remote(Users.id))
+    users = relationship('Users', uselist=False, viewonly=True,primaryjoin=foreign(HtUserRoomRelation.user_id) == remote(Users.id),lazy="joined")
     room = relationship('Room', uselist=False, primaryjoin=foreign(HtUserRoomRelation.room_uuid) == remote(Room.room_uuid))
     """ 
         列表
@@ -44,6 +44,39 @@ class UserRoomRelation(Base, HtUserRoomRelation, SerializerMixin):
                 res['list'] = res['list'].order_by(desc(order[0])).offset(offset).limit(limit).all()
             else:
                 res['list'] = res['list'].order_by(asc(order[0])).offset(offset).limit(limit).all()
+        if not field:
+            res['list'] = [c.to_dict() for c in res['list']]
+        else:
+            res['list'] = [c.to_dict(only=field) for c in res['list']]
+        return res
+
+    """ 
+        列表
+        @param set filters 查询条件
+        @param obj order 排序
+        @param column group 组
+        @param tuple field 字段
+        @param int offset 偏移量
+        @param int limit 取多少条
+        @return dict
+    """
+    def getListByGroup(self, filters, order, group, field=(), offset = 0, limit = 15):
+        res = {}
+        res['page'] ={}
+        res['page']['count'] = dBSession.query(UserRoomRelation).join(Users, Users.id==UserRoomRelation.user_id).filter(*filters).count()
+        res['list'] = []
+        res['page']['total_page'] = self.get_page_number(res['page']['count'], limit)
+        res['page']['current_page'] = offset
+        if offset != 0:
+            offset = (offset - 1) * limit
+        if res['page']['count'] > 0:
+            res['list'] = dBSession.query(UserRoomRelation).join(Users, Users.id==UserRoomRelation.user_id).filter(*filters)
+            print(str(res['list']))
+            order = order.split(' ')
+            if order[1] == 'desc':
+                res['list'] = res['list'].order_by(desc(order[0])).group_by(group).offset(offset).limit(limit).all()
+            else:
+                res['list'] = res['list'].order_by(asc(order[0])).group_by(group).offset(offset).limit(limit).all()
         if not field:
             res['list'] = [c.to_dict() for c in res['list']]
         else:
