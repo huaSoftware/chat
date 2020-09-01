@@ -18,9 +18,9 @@ export function userRoomRelationList(data) {
 
 /* 删除 */
 export function userRoomRelationDelete(data) {
-   return request({
+  /*  return request({
     url: '/api/v2/admin/userRoomRelation/delete',
     method: 'get',
     params:data
-  })
+  }) */
 }
