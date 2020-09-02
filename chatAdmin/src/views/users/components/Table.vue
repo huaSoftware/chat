@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-19 20:14:14
+ * @LastEditTime: 2020-09-02 20:46:18
  -->
 <template>
   <div class="app-container">
@@ -158,8 +158,17 @@ export default {
       'LOADING',
       'SUCCESS',
       'FAIL',
-      'CHAT_NOTIFY'
+      'CHAT_NOTIFY',
+      'CLOUD',
+      'ADMIN'
     ])
+  },
+  watch: {
+    addReqVisible(newVal, oldVal) {
+      if(newVal === false){
+         send("adminLeave", { room_uuid: this.currentRoomUuid });
+      }
+    }
   },
   methods: {
     ...mapMutations({
@@ -188,17 +197,20 @@ export default {
       this.updateMsgList([])
       adminCreateRoom({ user_id: user_id }).then(res => {
         const room_uuid = res.data.room_uuid
+        console.log( res.data.room_uuid,this.ADMIN,this.CLOUD)
         joinChatSend({
           name: '系统会话',
           room_uuid: room_uuid,
-          type: 3,
-          save_action: 1
+          type: this.ADMIN,
+          save_action: this.CLOUD
+        }).then(res=>{
+          this.$store.commit('updateCurrentRoomUuid', room_uuid)
+          this.$store.commit('updateCurrentRoomName', '系统会话')
+          this.$store.commit('updateCurrentRoomType', this.ADMIN)
+          this.$store.commit('updateCurrentRoomSaveAction', this.CLOUD)
+          this.handleMsgGet(room_uuid, user_id, 1, 4)
         })
-        this.$store.commit('updateCurrentRoomUuid', room_uuid)
-        this.$store.commit('updateCurrentRoomName', '系统会话')
-        this.$store.commit('updateCurrentRoomType', 3)
-        this.$store.commit('updateCurrentRoomSaveAction', 1)
-        this.handleMsgGet(room_uuid, user_id, 1, 4)
+       
       })
     },
     handleOnFocus() {

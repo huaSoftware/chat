@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-08-24 09:39:55
+ * @LastEditTime: 2020-09-02 19:35:24
  */
 import store from "../store";
 import router from "../router";
@@ -145,7 +145,7 @@ export default function setupAuthEvent() {
         //他人发送的需要根据设置的房间状态去同步聊天数据
         delete msgList[index]["id"];
         console.log("消息列表", msgList[index]);
-        if (store.getters.currentRoomSaveAction == store.getters.LOCAL) {
+        if (store.getters.currentRoomSaveAction == store.getters.LOCAL && data['data']['type'] !== store.getters.CHAT_VIDEO) {
           console.log(msgList[index]);
           addLocalRoomMsg(msgList[index]);
         }

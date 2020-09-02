@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-08-17 21:07:57
+ * @LastEditTime: 2020-09-02 20:43:51
  */
 import store from "../store";
 import router from "../router";
@@ -81,6 +81,10 @@ export default function setupAuthEvent() {
       let data = res.data;
       //逻辑处理,存放indexdDB,存放一份实时的在vuex
       console.log("发送消息监听回复", data);
+      if(data.type === store.getters.CHAT_VIDEO){
+        alert(3)
+        return;
+      }
       let index = modifyMsgStatus(data, store.getters.SUCCESS);
       let msgList = JSON.parse(JSON.stringify(store.getters.msgList));
       //这边会有发送后接收不到的问题
@@ -89,7 +93,7 @@ export default function setupAuthEvent() {
         //他人发送的需要根据设置的房间状态去同步聊天数据
         delete msgList[index]["id"];
         console.log("消息列表", msgList[index]);
-        if (store.getters.currentRoomSaveAction == store.getters.LOCAL) {
+        if (store.getters.currentRoomSaveAction == store.getters.LOCAL && data['data']['type'] !== store.getters.CHAT_VIDEO) {
           console.log(msgList[index]);
           addLocalRoomMsg(msgList[index]);
         }
@@ -97,12 +101,12 @@ export default function setupAuthEvent() {
         msgList = msgList.concat(data);
       }
       store.dispatch("updateMsgList", msgList);
-      let reqData = {
+      /* let reqData = {
         room_uuid: data["room_uuid"],
         created_at: data["created_at"],
         user_id: data["user_id"],
         send_status: store.getters.SUCCESS
-      };
+      }; */
       /* if (store.getters.currentRoomSaveAction == store.getters.LOCAL) {
         updateLocalRoomMsg(reqData);
       } else if (store.getters.currentRoomSaveAction == store.getters.CLOUD) {

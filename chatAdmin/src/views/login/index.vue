@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-08-21 22:03:19
+ * @LastEditTime: 2020-09-02 21:10:18
  -->
 <template>
   <div class="login-container">
@@ -73,6 +73,7 @@ border:none" @click.native.prevent="handleLogin">
 
 <script>
 import Vimg from '@/components/Vimg'
+import {setup} from '@/utils/socketio'
 import { validUsername, validMobile } from '@/utils/validate'
 /* import SocialSign from './socialsignin' */
 import { login } from '@/api/user'
@@ -157,6 +158,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.loading = false
+            setup()
             this.$router.push({ path: '/' })
           }).catch((err) => {
             this.loading = false

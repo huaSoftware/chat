@@ -20,6 +20,14 @@ export default {
       NOTIFY: {
         text: "通知",
         value: 4
+      },
+      VIDEO: {
+        text: "视频",
+        value: 5,
+      },
+      RECALL:{
+        text:"撤回",
+        value:6
       }
     },
     LOG: {
@@ -52,7 +60,11 @@ export default {
       NOTIFY: {
         text: "通知",
         value: 2
-      }
+      },
+      ADMIN: {
+        text: "后台",
+        value: 3,
+      },
     },
     SAVE: {
       LOCAL: {
@@ -163,6 +175,9 @@ export default {
     GROUP(state) {
       return state.ROOM.GROUP.value;
     },
+    ADMIN(state) {
+      return state.ROOM.ADMIN.value;
+    },
     NOTIFY(state) {
       return state.ROOM.NOTIFY.value;
     },
@@ -183,6 +198,9 @@ export default {
     },
     CHAT_NOTIFY(state) {
       return state.CHAT.NOTIFY.value;
+    },
+    CHAT_VIDEO(state) {
+      return state.CHAT.VIDEO.value;
     },
     LOADING(state) {
       return state.STATUS.LOADING.value;
