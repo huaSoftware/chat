@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-08-19 20:13:30
+ * @LastEditTime: 2020-09-04 21:59:29
  -->
 <template>
   <div class="app-container">
@@ -45,6 +45,7 @@
         <template slot-scope="scope">
           <span v-if="scope.row.type == 0">单聊</span>
           <span v-if="scope.row.type == 1">群聊</span>
+          <span v-if="scope.row.type == 3">后台</span>
         </template>
       </el-table-column>
       <el-table-column label="最近留言" prop="last_msg" sortable class-name="status-col">
