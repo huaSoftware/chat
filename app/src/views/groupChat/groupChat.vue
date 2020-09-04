@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 群聊添加
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 18:10:24
+ * @LastEditTime: 2020-09-04 21:55:13
  -->
 <style>
 .yd-checkbox-icon{
@@ -260,7 +260,7 @@ dl {
     font-size: .6rem;
     position: fixed;
     right: 0;
-    top:43%;
+    top:50%;
     width: 1rem;
     padding-top: 2.2rem;
     -webkit-transform: translateY(-50%);

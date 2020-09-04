@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 17:12:59
  * @LastEditors: hua
- * @LastEditTime: 2020-04-19 20:27:40
+ * @LastEditTime: 2020-09-04 21:55:06
  -->
 
 <template>
@@ -283,7 +283,7 @@ dl {
   font-size: 0.6rem;
   position: fixed;
   right: 0;
-  top: 55%;
+  top: 50%;
   width: 1rem;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
