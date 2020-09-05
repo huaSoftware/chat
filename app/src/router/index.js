@@ -12,7 +12,10 @@ import authRouter from './modules/auth'
 import myRouter from './modules/my'
 import roomRouter from './modules/room'
 import groupRoomRouter from './modules/groupRoom'
-
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)

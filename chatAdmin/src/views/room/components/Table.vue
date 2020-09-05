@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-09-04 21:59:29
+ * @LastEditTime: 2020-09-05 13:54:08
  -->
 <template>
   <div class="app-container">
@@ -33,7 +33,8 @@
       </el-table-column>
       <el-table-column label="房间名" prop="name" sortable align="center">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span v-if="scope.row.name">{{scope.row.name}}</span>
+          <span v-else>单聊房</span>
         </template>
       </el-table-column>
       <el-table-column label="房间编号" prop="room_uuid" sortable align="center">

@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 17:58:01
+ * @LastEditTime: 2020-09-05 16:12:15
  -->
 <template>
   <yd-layout>
@@ -201,31 +201,29 @@ export default {
       }
       if (this.user.token) {
         addressBookBegCache().then(res => {
-          let data = res.data;
-          if (JSON.stringify(data) !== "{}") {
-            // 复制原来的值
-            data["data"]["user_id"] = data["data"]["id"];
-            // 删除原来的键
-            delete data["data"]["id"];
-            // 增加状态,0申请，1通过，2拒绝
-            data["data"]["status"] = 0;
-            console.log(data);
-            Toast({ mes: `${data.data.nick_name}申请加你好友` });
-            addAddressBookBeg(data["data"]);
-            getAddressBookBeg().then(res => {
-              let newFriendAlertNumber = 0;
-              console.log("通讯录地址" + res);
-              if (!res) return;
-              if (res.length > 0) {
-                res.forEach(item => {
-                  if (item.status == 0) {
-                    newFriendAlertNumber++;
-                  }
-                });
-              }
-              store.commit("updateNewFriendAlertNumber", newFriendAlertNumber);
-            });
+          let data = res.data.data;
+          if(JSON.stringify(data) !== '{}'){
+            return
           }
+          data.user_id = res.data.focused_user_id
+          // 增加状态,0申请，1通过，2拒绝
+          data.status = 0;
+          console.log(data);
+          Toast({ mes: `${data.data.nick_name}申请加你好友` });
+          addAddressBookBeg(data["data"]);
+          getAddressBookBeg().then(res => {
+            let newFriendAlertNumber = 0;
+            console.log("通讯录地址" + res);
+            if (!res) return;
+            if (res.length > 0) {
+              res.forEach(item => {
+                if (item.status == 0) {
+                  newFriendAlertNumber++;
+                }
+              });
+            }
+            store.commit("updateNewFriendAlertNumber", newFriendAlertNumber);
+          });
         });
       }
     });

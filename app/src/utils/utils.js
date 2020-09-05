@@ -1410,6 +1410,59 @@ let utils = {
     }
   },
   others: {
+    showMsgNotification(title, msg, clickCallBack) {
+        var regex = /(<([^>]+)>)/ig
+        msg = msg.replace(regex, "");
+        var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+        if(Notification) {//支持桌面通知
+            if(Notification.permission == "granted") {//已经允许通知
+                var instance = new Notification(title, {
+                    body: msg,
+                    icon: "static/img/icon.png",
+                });
+
+                instance.onclick = function() {
+                    //$('body').css({'background': 'red'});
+                    clickCallBack();
+                    console.log('onclick');
+                    instance.close();
+                };
+                instance.onerror = function() {
+                    console.log('onerror');
+                };
+                instance.onshow = function() {
+                    console.log('onshow');
+                };
+                instance.onclose = function() {
+                    console.log('onclose');
+                };
+            }else {//第一次询问或已经禁止通知(如果用户之前已经禁止显示通知，那么浏览器不会再次询问用户的意见，Notification.requestPermission()方法无效)
+                Notification.requestPermission(function(status) {
+                    if (status === "granted") {//用户允许
+                        var instance = new Notification(title, {
+                            body: msg,
+                            icon: "static/img/icon.png",
+                        });
+
+                        instance.onclick = function() {
+                            // Something to do
+                        };
+                        instance.onerror = function() {
+                            // Something to do
+                        };
+                        instance.onshow = function() {
+                            // Something to do
+                        };
+                        instance.onclose = function() {
+                            // Something to do
+                        };
+                    }else {//用户禁止
+                        return false
+                    }
+                });
+            }
+        }
+    },
     /*解析阿里返回地区三级列表 
      *param: array
      *return array

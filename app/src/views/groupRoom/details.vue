@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 18:10:51
+ * @LastEditTime: 2020-09-05 16:06:52
  -->
 <template>
     <div class="room_details" >
@@ -137,9 +137,6 @@ export default {
             alert: true,
             save_action:false,
             list:[],
-            room:{
-            }
-            ,
         };
     },
     components: {vImg, vModal, CrossLine},
@@ -160,12 +157,13 @@ export default {
         init(){
             console.log("333333",this.currentRoomUuid)
             userRoomRelationGetByRoomUuid({room_uuid: this.currentRoomUuid}).then(res=>{
+                console.log(res)
                 if(!res.data.room){
                     this.status = false;
                     return;
                 }
                 this.list = res.data.list.reverse()
-                this.room = res.data.room.room.reverse()
+
                 if(res.data.room.is_alert){
                     this.alert = true
                 }else{

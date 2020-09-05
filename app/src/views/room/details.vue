@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-08-25 22:13:39
+ * @LastEditTime: 2020-09-05 16:07:15
  -->
 <template>
     <div class="room_details" >
@@ -127,10 +127,7 @@ export default {
             isHide: true, //初始值为true，显示为折叠画面
             alert: true,
             save_action:false,
-            list:[],
-            room:{
-            }
-            ,
+            list:[]
         };
     },
     components: {vImg, vModal, CrossLine},
@@ -155,7 +152,6 @@ export default {
                     return;
                 }
                 this.list = res.data.list
-                this.room = res.data.room.room
                 if(res.data.room.is_alert){
                     this.alert = true
                 }else{

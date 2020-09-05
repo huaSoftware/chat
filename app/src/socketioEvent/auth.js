@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-09-02 19:35:24
+ * @LastEditTime: 2020-09-05 15:51:09
  */
 import store from "../store";
 import router from "../router";
@@ -30,6 +30,7 @@ import {
   updateReadStatusCloudRoomMsgByRoomIdAndUserId,
 } from "@/socketioApi/room";
 import { addressBookBegCacheDel } from "@/socketioApi/addressBook";
+import utils from '@/utils/utils'
 /*
  * 有权限socketio监听事件
  */
@@ -220,6 +221,8 @@ export default function setupAuthEvent() {
             "LocalMSG",
             { cover: false, title: data.data.nick_name }
           );
+        }else{
+          utils.others.showMsgNotification(data.data.nick_name, `${data.data.nick_name}申请加你好友`,()=>{});
         }
         console.log(data);
         //接收到后删除缓存
@@ -286,7 +289,7 @@ export default function setupAuthEvent() {
         if (data) {
           //app消息通知
           console.log("app消息通知", store.getters.isPaused, data[0].is_alert)
-          if (window.plus && store.getters.isPaused && data[0].is_alert) {
+          if (window.plus && store.getters.isPaused && data[0].is_alert && data[0].unread_number>0) {
             plus.push.createMessage(
               formatLastMsg(data[0]["room"]["last_msg"]),
               "LocalMSG",
@@ -294,14 +297,15 @@ export default function setupAuthEvent() {
             );
           }
           //H5消息通知
-          if (!window.plus && store.getters.isPaused && data[0].is_alert) {
-            if (window.webkitNotifications.checkPermission() == 0) {
+          if (!window.plus && data[0].is_alert &&JSON.parse(data[0]["room"]["last_msg"])['user_id']!== store.getters.userInfo.id) {
+            /* if (window.webkitNotifications.checkPermission() == 0) {
               window.webkitNotifications.createNotification(
                 "", //icon
                 formatLastMsg(data[0]["room"]["last_msg"]),
                 data[0].users.nick_name
               );
-            }
+            } */
+            utils.others.showMsgNotification(data[0].users.nick_name, formatLastMsg(data[0]["room"]["last_msg"]),()=>{});
           }
           console.log(24234234, data);
           store.dispatch("updateRoomList", data);
@@ -316,17 +320,21 @@ export default function setupAuthEvent() {
     response(data).then((res) => {
       console.log("groupRoom", res);
       let data = res.data.list;
-      if (data != null) {
-        for (let i = 0; i < data.length; i++) {
-          let last_msg = formatLastMsg(data[i]["room"]["last_msg"]);
-          //app消息通知
-          if (window.plus && store.getters.isPaused && data[i].is_alert) {
-            plus.push.createMessage(last_msg, "LocalMSG", {
-              cover: false,
-              title: data[i].users.nick_name,
-            });
-          }
+      if (data) {
+        //for (let i = 0; i < data.length; i++) {
+        let last_msg = formatLastMsg(data[0]["room"]["last_msg"]);
+        //app消息通知
+        if (window.plus && store.getters.isPaused && data[0].is_alert) {
+          plus.push.createMessage(last_msg, "LocalMSG", {
+            cover: false,
+            title: data[0].users.nick_name,
+          });
         }
+        //H5消息通知
+        if (!window.plus && data[0].is_alert && data[0].unread_number>0 &&JSON.parse(data[0]["room"]["last_msg"])['user_id']!== store.getters.userInfo.id) {
+          utils.others.showMsgNotification(data[0].users.nick_name, last_msg,()=>{});
+        }
+        //}
       }
       console.log(data);
       store.dispatch("updateGroupRoomList", data);
