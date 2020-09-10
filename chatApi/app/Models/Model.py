@@ -11,8 +11,8 @@ class HtAddressBook(Base):
     __tablename__ = 'ht_address_book'
 
     id = Column(INTEGER(11), primary_key=True)
-    be_focused_user_id = Column(INTEGER(11), nullable=False)
-    focused_user_id = Column(INTEGER(11), nullable=False, index=True)
+    be_focused_user_id = Column(String(32), nullable=False, server_default=text("''"))
+    focused_user_id = Column(String(32), nullable=False, server_default=text("''"))
     created_at = Column(INTEGER(11), nullable=False)
     updated_at = Column(INTEGER(11), nullable=False)
     room_uuid = Column(VARCHAR(255), nullable=False, server_default=text("''"))

@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-10 10:13:37
 @description: 
-@LastEditors: hua
-@LastEditTime: 2019-12-12 14:24:17
+LastEditors: hua
+LastEditTime: 2020-09-10 20:38:30
 '''
 from app import CONST
 from app.Models.Admin import Admin
@@ -96,7 +96,8 @@ class AdminService():
         m1 = hashlib.md5()
         #使用md5对象里的update方法md5转换
         m1.update(data['pwd'].encode("utf-8"))
-        data['pwd'] = m1.hexdigest()    
+        data['pwd'] = m1.hexdigest()   
+        data['uuid'] = Utils.unique_id()
         res = Admin().add(data)
         if res:
             return Utils.formatBody(msg = '添加成功')

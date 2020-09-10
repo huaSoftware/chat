@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 LastEditors: hua
-LastEditTime: 2020-08-31 20:01:01
+LastEditTime: 2020-09-10 20:42:15
 '''
 import time
 import math
@@ -221,7 +221,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
             'room_uuid': room_uuid,
             'last_msg': '',
             'user_id': focused_user_id,
-            'type': 0
+            'type': CONST['ROOM']['ALONE']['value']
         }
         Room.insertRoomData(roomData)
         addressBook = AddressBook(
@@ -258,7 +258,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         }
         Room.insertAdminRoomData(roomData)
         addressBook = AddressBook(
-            focused_user_id=admin_user_info['id'],
+            focused_user_id=admin_user_info['uuid'],
             be_focused_user_id=be_focused_user_id,
             room_uuid=room_uuid,
             unread_number=0,
@@ -269,7 +269,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
         dBSession.add(addressBook)
         addressBook = AddressBook(
             focused_user_id=be_focused_user_id,
-            be_focused_user_id=admin_user_info['id'],
+            be_focused_user_id=admin_user_info['uuid'],
             room_uuid=room_uuid,
             unread_number=0,
             is_alert=1,

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-09-05 15:51:09
+ * @LastEditTime: 2020-09-10 20:04:21
  */
 import store from "../store";
 import router from "../router";
@@ -48,12 +48,14 @@ export default function setupAuthEvent() {
     //用户输入时逻辑处理
     response(data).then((res) => {
       let data = res.data;
+      console.log(data)
+      console.log(store.getters.currentRoomUuid,data.room_uuid)
       if (
-        data.even == "focus" &&
-        store.getters.currentRoomType == 0 &&
-        store.getters.currentRoomUuid == data.room_uuid &&
-        data.users.id != store.getters.userInfo.id &&
-        data.type == 0
+        data.even === "focus" &&
+        store.getters.currentRoomType === 0 &&
+        store.getters.currentRoomUuid === data.room_uuid &&
+        data.users.id !== store.getters.userInfo.id &&
+        data.type === 0
       ) {
         document.getElementsByClassName(
           "yd-navbar-center-title"
@@ -74,11 +76,11 @@ export default function setupAuthEvent() {
           );
           modifyMsgReadStatus();
         }
-      } else {
+      } /* else {
         document.getElementsByClassName(
           "yd-navbar-center-title"
         )[0].innerHTML = `${data.users.nick_name}`;
-      }
+      } */
     });
   });
   window.apiSocket.on("video", (data) => {
