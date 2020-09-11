@@ -2,7 +2,7 @@
 @Author: hua
 @Date: 2019-02-14 11:11:29
 LastEditors: hua
-LastEditTime: 2020-09-10 20:42:15
+LastEditTime: 2020-09-11 08:50:58
 '''
 import time
 import math
@@ -24,7 +24,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     users = relationship('Users', uselist=False, primaryjoin=foreign(
         HtAddressBook.focused_user_id) == remote(Users.id),lazy="joined")
     adminUsers = relationship('Admin', uselist=False, primaryjoin=foreign(
-        HtAddressBook.focused_user_id) == remote(Admin.id))
+        HtAddressBook.focused_user_id) == remote(Admin.uuid))
     room = relationship('Room', uselist=False, primaryjoin=foreign(
         HtAddressBook.room_uuid) == remote(Room.room_uuid))
     be_users = relationship('Users', uselist=False, primaryjoin=foreign(
