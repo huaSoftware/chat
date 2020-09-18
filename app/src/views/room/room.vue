@@ -163,7 +163,7 @@ import {
   Loading
 } from "vue-ydui/dist/lib.rem/dialog";
 import { send } from "@/utils/socketio";
-import { chatSend, reChatSend } from "@/socketIoApi/chat";
+import { chatSend, reChatSend } from "@/socketioApi/chat";
 import axios from "axios";
 import lrz from "lrz";
 export default {

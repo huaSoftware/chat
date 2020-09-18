@@ -42,7 +42,7 @@
 import { mapGetters, mapMutations } from "vuex";
 import { uploadBase64 } from "@/socketioApi/common";
 import { VueCropper } from "vue-cropper";
-import { chatSend } from "@/socketIoApi/chat";
+import { chatSend } from "@/socketioApi/chat";
 import {Loading} from "vue-ydui/dist/lib.rem/dialog";
 export default {
     data(){

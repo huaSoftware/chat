@@ -90,7 +90,7 @@ import storage from "@/utils/localstorage"
 import {addressBookGet} from '@/socketioApi/addressBook'
 import {groupChatCreate} from '@/socketioApi/userRoomRelation'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
-import {joinChatSend} from '@/socketIoApi/chat'
+import {joinChatSend} from '@/socketioApi/chat'
 import vImg from '@/components/v-img/v-img'
 export default {
     components: {vEditDiv, vImg},

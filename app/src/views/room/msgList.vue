@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2019-12-11 17:10:22
+ * @LastEditTime: 2020-09-18 20:07:58
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -30,7 +30,7 @@ import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
 import {getLocalRoomMsg} from "@/utils/indexedDB"
 import {getCloudRoomMsg} from '@/socketioApi/room'
-import {joinChatSend} from '@/socketIoApi/chat'
+import {joinChatSend} from '@/socketioApi/chat'
 export default {
   components: {
     MescrollVue

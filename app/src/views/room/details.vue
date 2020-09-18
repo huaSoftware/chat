@@ -105,7 +105,7 @@ import {Confirm} from "vue-ydui/dist/lib.rem/dialog";
 import vModal from '@/components/v-modal/v-modal'
 import storage from "@/utils/localstorage"
 import vImg from '@/components/v-img/v-img'
-import {joinChatSend} from '@/socketIoApi/chat'
+import {joinChatSend} from '@/socketioApi/chat'
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import {delRoomMsg} from '@/utils/indexedDB'

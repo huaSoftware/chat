@@ -99,7 +99,7 @@ import { roomGet } from "@/socketioApi/room";
 import storage from "@/utils/localstorage";
 import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
 import { setup } from "@/utils/socketio";
-import { joinChatSend } from "@/socketIoApi/chat";
+import { joinChatSend } from "@/socketioApi/chat";
 export default {
   components: { vImg, vEmpty },
   name: "home",

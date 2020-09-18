@@ -2,8 +2,8 @@
  * @Author: hua
  * @Date: 2019-07-10 10:50:03
  * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-26 19:06:04
+ * @LastEditors: hua
+ * @LastEditTime: 2020-09-18 20:07:41
  -->
 <template>
     <div class="room_details">
@@ -105,7 +105,7 @@ import {Confirm} from "vue-ydui/dist/lib.rem/dialog";
 import vModal from '@/components/v-modal/v-modal'
 import storage from "@/utils/localstorage"
 import vImg from '@/components/v-img/v-img'
-import {joinChatSend} from '@/socketIoApi/chat'
+import {joinChatSend} from '@/socketioApi/chat'
 import CrossLine from '@/components/cross-line/cross-line'
 import CrossItem from '@/components/cross-item/cross-item'
 import {delRoomMsg} from '@/utils/indexedDB'

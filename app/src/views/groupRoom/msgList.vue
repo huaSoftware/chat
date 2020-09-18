@@ -30,7 +30,7 @@ import utils from '@/utils/utils'
 import MescrollVue from "mescroll.js/mescroll.vue"
 import {getLocalRoomMsg} from "@/utils/indexedDB"
 import {getCloudRoomMsg} from '@/socketioApi/room'
-import {joinChatSend} from '@/socketIoApi/chat'
+import {joinChatSend} from '@/socketioApi/chat'
 export default {
   components: {
     MescrollVue
