@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2020-05-05 09:24:14
+ * @LastEditTime: 2020-09-23 20:30:30
  -->
 
 ### 工具鸡-聊天室
@@ -134,7 +134,7 @@ http://doc.zhuhui.store
 
 ### 购买实时最新版
 
-[淘宝链接](https://item.taobao.com/item.htm?id=607024716747).
+[淘宝链接](https://item.taobao.com/item.htm?ft=t&id=627987350463).
 
 ### 二次开发
 
