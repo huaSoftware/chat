@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-02-01 13:57:47
  * @LastEditors: hua
- * @LastEditTime: 2020-09-23 20:30:30
+ * @LastEditTime: 2020-10-06 18:41:02
  -->
 
 ### 工具鸡-聊天室
@@ -116,6 +116,13 @@ http://doc.zhuhui.store
     5.测试运行
         python socketRun.py
         python run.py
+
+### win10安装工具鸡-聊天室视频
+https://www.bilibili.com/video/BV1154y1y7H3
+
+### centos安装工具鸡-聊天室视频
+https://www.bilibili.com/video/BV1yD4y1R738
+
 
 #### 作者其他开源产品
 
