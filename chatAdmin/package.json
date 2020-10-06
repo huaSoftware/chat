@@ -43,6 +43,7 @@
     "benz-amr-recorder": "^1.1.2",
     "clipboard": "2.0.4",
     "codemirror": "5.45.0",
+    "core-js": "^2.6.11",
     "dexie": "^2.0.4",
     "driver.js": "0.9.5",
     "dropzone": "5.5.1",
