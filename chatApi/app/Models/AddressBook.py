@@ -1,8 +1,8 @@
 '''
 @Author: hua
 @Date: 2019-02-14 11:11:29
-@LastEditors: hua
-@LastEditTime: 2020-05-14 11:58:45
+LastEditors: hua
+LastEditTime: 2020-10-10 22:56:43
 '''
 import time
 import math
@@ -272,7 +272,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def updateUnreadNumber(room_uuid, user_id):
         filter = {
-            AddressBook.be_focused_user_id != user_id,
+            AddressBook.be_focused_user_id != str(user_id),
             AddressBook.room_uuid == room_uuid
         }
         dBSession.query(AddressBook).filter(*filter).update({
@@ -284,7 +284,7 @@ class AddressBook(HtAddressBook, Base, SerializerMixin):
     @staticmethod
     def cleanUnreadNumber(room_uuid, user_id):
         filter = {
-            AddressBook.be_focused_user_id == user_id,
+            AddressBook.be_focused_user_id == str(user_id),
             AddressBook.room_uuid == room_uuid
         }
         dBSession.query(AddressBook).filter(

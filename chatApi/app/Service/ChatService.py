@@ -2,8 +2,8 @@
 @Author: hua
 @Date: 2019-06-01 11:49:33
 @description: 
-@LastEditors: hua
-@LastEditTime: 2020-05-17 18:54:50
+LastEditors: hua
+LastEditTime: 2020-10-10 23:21:17
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -34,12 +34,16 @@ class ChatService():
             'room_uuid': room_uuid,
             'created_at': created_at,
             'read_status': 0,
-            'user_type': user_type}
+            'user_type': user_type
+            }
         if room_data != None and room_type == CONST['ROOM']['ADMIN']['value']:
             address_book_data = AddressBook.get(room_uuid)
             # 发送消息
             socketio.emit('chat',  Utils.formatBody(data),
                           namespace='/api', room=room_uuid)
+            # 视频消息则直接返回
+            if Type ==  CONST['CHAT']['VIDEO']['value']:
+                return
             # 如果是云端存储则记录，这边判断不判断都存储
             # if save_action == CONST['SAVE']['CLOUD']['value']:
             res = Msg().getOne({Msg.room_uuid == room_uuid, Msg.created_at ==
@@ -49,15 +53,21 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
-            if "uuid" in user_data:
-                AddressBook.updateUnreadNumber(room_uuid, user_data['uuid'])
-                AddressBook.cleanUnreadNumber(room_uuid, user_data['uuid'])
-            else:
-                AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
-                AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
+            AddressBook.updateUnreadNumber(room_uuid, user_data['id'])
+            AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
             # 更新客户端房间信息
             for item in address_book_data:
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)
@@ -65,6 +75,15 @@ class ChatService():
                     roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
         if room_data != None and room_type == CONST['ROOM']['ALONE']['value']:
             address_book_data = AddressBook.get(room_uuid)
+            # 视频消息则直接返回
+            if Type ==  CONST['CHAT']['VIDEO']['value']:
+                videoData = data
+                videoData["room_type"] = room_type
+                # 发送消息
+                for item in address_book_data:
+                    if item['be_focused_user_id'] != user_data['id']:
+                        emit('video',  Utils.formatBody(videoData), room='@broadcast.'+str(item.be_focused_user_id))
+                return 
             # 发送消息
             emit('chat',  Utils.formatBody(data), room=room_uuid)
             # 如果是云端存储则记录，这边判断不判断都存储
@@ -76,6 +95,16 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
@@ -83,10 +112,20 @@ class ChatService():
             AddressBook.cleanUnreadNumber(room_uuid, user_data['id'])
             # 更新客户端房间信息
             for item in address_book_data:
+                print(AddressBook,item)
                 roomList = AddressBook.getRoomList(item.be_focused_user_id)
                 socketio.emit('room', Utils.formatBody(
                     roomList), namespace='/api', room='@broadcast.'+str(item.be_focused_user_id))
         elif room_data != None and room_type == CONST['ROOM']['GROUP']['value']:
+            # 获取用户的权限，如果禁言状态返回错误
+            filters = {
+                UserRoomRelation.user_id == user_data['id'],
+                UserRoomRelation.room_uuid == room_uuid
+            }
+            selfUserRoomRelationData = UserRoomRelation().getOne(filters)
+            if selfUserRoomRelationData['status'] == CONST['GROUP']['BLOCK']['value']:
+                return Utils.formatError(CONST['CODE']['ERROR']['value'], '禁言中')
+            # 获取群组内用户
             user_room_relation_data = UserRoomRelation.get(room_uuid)
             # 发送消息
             emit('chat', Utils.formatBody(data), room=room_uuid)
@@ -99,6 +138,16 @@ class ChatService():
                 copy_data['msg'] = json.dumps(msg)
                 copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
                 Msg().add(copy_data)
+            else:
+                copy_data = data.copy()
+                copy_data['msg'] = json.dumps(msg)
+                copy_data['send_status'] = CONST['STATUS']['SUCCESS']['value']
+                filters = {
+                    Msg.name == copy_data['name'],
+                    Msg.created_at == copy_data['created_at'],
+                    Msg.room_uuid == room_uuid
+                }
+                Msg().edit(copy_data, filters)
             # 聊天时同步房间信息
             Room.updateLastMsgRoom(room_uuid, data, created_at)
             # 更新聊天提示数字
@@ -124,7 +173,8 @@ class ChatService():
         admin_user_info = Admin().getOne(filters)
         filters = {
             AddressBook.be_focused_user_id == message['user_id'],
-            AddressBook.focused_user_id == admin_user_info['uuid']
+            AddressBook.focused_user_id == admin_user_info['id'],
+            AddressBook.type == 1
         }
         addressBookInfo = AddressBook().getOne(filters)
         if addressBookInfo == None:
@@ -139,7 +189,7 @@ class ChatService():
             for item in addressBookData:
                 roomList = AddressBook.getRoomList(
                     item.be_focused_user_id)['list']
-                if item.type == CONST['ADDRESSBOOK']['ADMIN']['value']:
+                if item['type'] == CONST['ADDRESSBOOK']['ADMIN']['value']:
                     socketio.emit('room', Utils.formatBody(
                         roomList), namespace="/api", room='@broadcast.'+str(item.be_focused_user_id))
                 else:
@@ -204,13 +254,21 @@ class ChatService():
     @transaction
     def groupChatCreate(params, user_info):
         """ 
-            创建聊天群组
+            创建聊天群组，userInfo.id是群主
             @Param dict userInfo
             @param dict params
             @return bool
         """
         room_uuid = Utils.unique_id()
         name = ''
+        userRoomRelationData = {
+                'user_id': user_info['data']['id'],
+                'room_uuid': room_uuid,
+                'is_alert': 0,
+                'unread_number': 0,
+                'type':CONST['GROUP']['MASTER']['value']
+            }
+        UserRoomRelation().add(userRoomRelationData)
         for id in params['ids']:
             user_data = Users().getOne({Users.id == id})
             name = name + ',' + user_data['nick_name']
