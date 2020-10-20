@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 13:57:47
  * @description: 入口页面
  * @LastEditors: hua
- * @LastEditTime: 2020-09-05 16:12:15
+ * @LastEditTime: 2020-10-20 21:34:41
  -->
 <template>
   <yd-layout>
@@ -230,7 +230,10 @@ export default {
   },
   mounted() {},
   methods: {
-    ...mapGetters(["TIME"]),
+    ...mapGetters(["TIME",
+      "currentRoomUuid",
+      "currentRoomName",
+      "currentRoomType",]),
     ...mapMutations({
       updateMsgList: "updateMsgList",
       updateRoomList: "updateRoomList",

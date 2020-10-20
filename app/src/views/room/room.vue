@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 16:35:20
+ * @LastEditTime: 2020-10-20 21:11:46
  -->
 <template>
   <div style="font-size: 0;" id="msg_empty">
@@ -395,18 +395,21 @@ export default {
       this.currentKey = item;
     },
     handleOnFocus(e) {
-      setTimeout(function(){e.target.scrollIntoView(true)},300)
-      if (!this.onFocusLock) {
-        this.onFocusLock = true;
-        send(
-          "input",
-          { room_uuid: this.currentRoomUuid, even: "focus" },
-          "broadcast"
-        );
-      }
+      setTimeout(()=>{
+        e.target.scrollIntoView(true);
+        if (!this.onFocusLock) {
+          this.onFocusLock = true;
+          send(
+            "input",
+            { room_uuid: this.currentRoomUuid, even: "focus" },
+            "broadcast"
+          );
+          console.log('handleOnFocus')
+        }
+      },300)
     },
     handleOnblur() {
-      
+      console.log('handleOnblur')
       this.onFocusLock = false;
       send(
         "input",

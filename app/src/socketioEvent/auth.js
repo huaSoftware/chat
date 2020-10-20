@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-09-10 20:04:21
+ * @LastEditTime: 2020-10-20 21:35:05
  */
 import store from "../store";
 import router from "../router";
@@ -45,17 +45,17 @@ export default function setupAuthEvent() {
     //逻辑处理
   });
   window.apiSocket.on("input", (data) => {
+    console.log("input",data)
     //用户输入时逻辑处理
     response(data).then((res) => {
       let data = res.data;
       console.log(data)
-      console.log(store.getters.currentRoomUuid,data.room_uuid)
+      console.log(store.getters.currentRoomUuid,data.room_uuid,store.getters.currentRoomType)
       if (
         data.even === "focus" &&
-        store.getters.currentRoomType === 0 &&
         store.getters.currentRoomUuid === data.room_uuid &&
         data.users.id !== store.getters.userInfo.id &&
-        data.type === 0
+        data.type === store.getters.ALONE
       ) {
         document.getElementsByClassName(
           "yd-navbar-center-title"
@@ -76,11 +76,11 @@ export default function setupAuthEvent() {
           );
           modifyMsgReadStatus();
         }
-      } /* else {
+      } else {
         document.getElementsByClassName(
           "yd-navbar-center-title"
         )[0].innerHTML = `${data.users.nick_name}`;
-      } */
+      }
     });
   });
   window.apiSocket.on("video", (data) => {
@@ -148,7 +148,7 @@ export default function setupAuthEvent() {
         //他人发送的需要根据设置的房间状态去同步聊天数据
         delete msgList[index]["id"];
         console.log("消息列表", msgList[index]);
-        if (store.getters.currentRoomSaveAction == store.getters.LOCAL && data['data']['type'] !== store.getters.CHAT_VIDEO) {
+        if (store.getters.currentRoomSaveAction == store.getters.LOCAL && data['type'] !== store.getters.CHAT_VIDEO) {
           console.log(msgList[index]);
           addLocalRoomMsg(msgList[index]);
         }
@@ -193,11 +193,8 @@ export default function setupAuthEvent() {
     }, store.state.codeData.TIME.TIME_ONLINE_INTERVAL.value); //超时时间动态设置
   }
   //如果当前存在房间则进入
-  if (
-    store.getters.currentRoomUuid !== "" &&
-    store.getters.currentRoomName !== ""
-  ) {
-    send("join", {
+  if (store.getters.currentRoomUuid) {
+    joinChatSend({
       name: store.getters.currentRoomName,
       room_uuid: store.getters.currentRoomUuid,
       type: store.getters.currentRoomType,
@@ -307,6 +304,7 @@ export default function setupAuthEvent() {
                 data[0].users.nick_name
               );
             } */
+            console.log("H5消息通知")
             utils.others.showMsgNotification(data[0].users.nick_name, formatLastMsg(data[0]["room"]["last_msg"]),()=>{});
           }
           console.log(24234234, data);
