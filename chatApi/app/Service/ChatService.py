@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-08-30 18:11:43
+LastEditTime: 2020-10-20 21:17:49
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -299,6 +299,6 @@ class ChatService():
         # 发送消息
         data = AddressBook().getOne(filters)
         data['even'] = params['even']
-        emit('input',  Utils.formatBody(data),
+        socketio.emit('input',  Utils.formatBody(data),namespace='/api',
              room='@broadcast.'+str(data['be_focused_user_id']))
         return Utils.formatBody({'action': "input", "data": data})
