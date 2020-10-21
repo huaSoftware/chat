@@ -3,7 +3,7 @@
 @Date: 2019-06-01 11:49:33
 @description: 
 LastEditors: hua
-LastEditTime: 2020-10-20 21:17:49
+LastEditTime: 2020-10-21 20:28:08
 '''
 from flask_socketio import emit
 from app.Models.AddressBook import AddressBook
@@ -171,9 +171,9 @@ class ChatService():
         }
         admin_user_info = Admin().getOne(filters)
         filters = {
-            AddressBook.be_focused_user_id == message['user_id'],
-            AddressBook.focused_user_id == admin_user_info['id'],
-            AddressBook.type == 1
+            AddressBook.be_focused_user_id == str(message['user_id']),
+            AddressBook.focused_user_id == str(admin_user_info['id']),
+            AddressBook.type == CONST['ADDRESSBOOK']['ADMIN']['value']
         }
         addressBookInfo = AddressBook().getOne(filters)
         if addressBookInfo == None:
@@ -291,14 +291,15 @@ class ChatService():
     @staticmethod
     @transaction
     def input(params, user_info):
+        print("into input logic")
         filters = {
-            AddressBook.focused_user_id == user_info['data']['id'],
+            AddressBook.focused_user_id == str(user_info['data']['id']),
             AddressBook.room_uuid == params['room_uuid']
         }
         AddressBook().edit({'is_input': 1}, filters)
         # 发送消息
         data = AddressBook().getOne(filters)
         data['even'] = params['even']
-        socketio.emit('input',  Utils.formatBody(data),namespace='/api',
+        emit('input',  Utils.formatBody(data),
              room='@broadcast.'+str(data['be_focused_user_id']))
         return Utils.formatBody({'action': "input", "data": data})

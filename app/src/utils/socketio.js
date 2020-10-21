@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-20 21:32:38
+ * @LastEditTime: 2020-10-21 19:46:18
  */
 
 import store from '../store'
@@ -126,6 +126,12 @@ export function response(res){
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
 			store.commit('SET_TOKEN', null)
+			//页面再次可见的时间-隐藏时间>10S,重连
+            setDown();
+            console.log("主动关闭连接后重连");
+            setTimeout(() => {
+              setup(); //打开连接，使用的vuejs，这是socketio的连接方法
+            }, 1500); //1.5S后重连
 			router.push({name: 'authLogin'})
 			reject(res)
 		}
