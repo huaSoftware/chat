@@ -1,10 +1,11 @@
 /*
  * @Author: hua
  * @Date: 2020-02-27 18:48:10
- * @description: 
+ * @description: 群聊路由模块
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 17:16:46
+ * @LastEditTime: 2020-10-22 21:12:25
  */
+
 const _import = require('../_import_' + process.env.NODE_ENV)
 
 const groupRoomRouter = [

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-20 21:35:05
+ * @LastEditTime: 2020-10-22 20:29:33
  */
 import store from "../store";
 import router from "../router";
@@ -31,6 +31,7 @@ import {
 } from "@/socketioApi/room";
 import { addressBookBegCacheDel } from "@/socketioApi/addressBook";
 import utils from '@/utils/utils'
+
 /*
  * 有权限socketio监听事件
  */

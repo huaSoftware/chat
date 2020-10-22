@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2020-05-18 09:00:54
- * @description: 
+ * @description: 录音工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-05-18 09:14:34
+ * @LastEditTime: 2020-10-22 21:14:20
  */ 
 var reader = new FileReader();
 //每次切分的大小

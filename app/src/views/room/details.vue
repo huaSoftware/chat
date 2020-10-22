@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-07-10 10:50:03
- * @description: 
+ * @description: 房间详情
  * @LastEditors: hua
- * @LastEditTime: 2020-09-05 16:07:15
+ * @LastEditTime: 2020-10-22 21:16:46
  -->
 <template>
     <div class="room_details" >

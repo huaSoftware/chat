@@ -3,7 +3,7 @@
 @Author: hua
 @Date: 2019-02-10 09:55:10
 LastEditors: hua
-LastEditTime: 2020-08-15 22:31:19
+LastEditTime: 2020-10-22 20:55:57
 '''
 from flask_socketio import join_room, leave_room
 from app import socketio, CONST, delayQueue
@@ -59,7 +59,7 @@ def leave(message, user_info):
 @socketio.on('adminJoin', namespace='/api')
 @decryptMessage
 @UsersAuthJWT.adminSocketAuth
-def join(message, user_info):
+def adminJoin(message, user_info):
     if message['type'] == CONST['ROOM']['ALONE']['value']:
         room_uuid = message['room_uuid']
         join_room(room_uuid)
@@ -82,7 +82,7 @@ def join(message, user_info):
 @socketio.on('adminLeave', namespace='/api')
 @decryptMessage
 @UsersAuthJWT.adminSocketAuth
-def leave(message, user_info):
+def adminLeave(message, user_info):
     room_uuid = message['room_uuid']
     leave_room(room_uuid)
     return Utils.formatBody({'action': "leave"})

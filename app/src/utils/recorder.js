@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2020-04-18 22:12:14
- * @description:
+ * @description:录音工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-05-01 09:31:30
+ * @LastEditTime: 2020-10-22 21:14:32
  */
 // 必须引入的核心，换成require也是一样的。注意：recorder-core会自动往window下挂载名称为Recorder对象，全局可调用window.Recorder，也许可自行调整相关源码清除全局污染
 import Recorder from 'recorder-core'

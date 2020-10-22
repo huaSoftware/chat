@@ -2,10 +2,10 @@
  * @Author: hua
  * @Date: 2019-12-30 20:23:23
  * @description: 无权限socketio监听事件
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-19 15:24:33
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:04:06
  */
-import router from '../router'
+
 /* 
  * 无权限socketio监听事件
  */

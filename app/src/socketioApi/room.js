@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-29 13:53:24
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-28 09:55:08
+ * @description: 房间接口
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:10:10
  */
 import {send} from '@/utils/socketio'
 

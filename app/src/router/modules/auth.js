@@ -1,10 +1,11 @@
 /*
  * @Author: hua
  * @Date: 2019-11-01 13:55:09
- * @description:
+ * @description: 认证路由模块
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 15:34:22
+ * @LastEditTime: 2020-10-22 21:12:36
  */
+
 const _import = require("../_import_" + process.env.NODE_ENV);
 
 const authRouter = [

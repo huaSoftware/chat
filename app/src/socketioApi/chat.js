@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
+ * @description: 发送消息接口
  * @LastEditors: hua
- * @LastEditTime: 2020-09-02 19:34:29
+ * @LastEditTime: 2020-10-22 21:09:40
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"

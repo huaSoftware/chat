@@ -1,14 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
+ * @description: 应用临时数据管理
  * @LastEditors: hua
- * @LastEditTime: 2019-12-02 20:58:08
- */
-/**
- * 作者：yujinjin9@126.com
- * 时间：2017-01-19
- * app临时数据管理
+ * @LastEditTime: 2020-10-22 21:05:00
  */
 export default {
   state: {

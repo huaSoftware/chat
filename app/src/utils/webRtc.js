@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2020-06-21 14:33:32
- * @description: 视频聊天
+ * @description: 视频聊天rtc工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-08-23 14:44:23
+ * @LastEditTime: 2020-10-22 21:14:51
  */
 import store from "../store";
 import { Loading, Toast } from 'vue-ydui/dist/lib.rem/dialog'

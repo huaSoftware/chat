@@ -1,14 +1,22 @@
 /*
  * @Author: hua
  * @Date: 2019-12-30 20:41:35
- * @description: 
+ * @description: api接口事件
  * @LastEditors: hua
- * @LastEditTime: 2020-06-26 16:04:08
+ * @LastEditTime: 2020-10-22 20:27:10
  */
 import store from '../store'
 import router from '../router'
 import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import {rsaEncode} from '@/utils/socketio'
+
+/**  
+ * api接口
+ * 用于与服务器通信，类似于http一发一收
+ * 
+ * @param object data
+ * @param string method
+ */
 export default function api(data, method){
     var res = new Promise((resolve, reject)=>{
         let encryptStr =""

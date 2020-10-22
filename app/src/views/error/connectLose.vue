@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-12-30 09:40:10
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-30 10:42:08
+ * @description: 错误页面
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:15:50
  -->
 <template>
 <!-- 参数空时页面 -->

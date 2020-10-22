@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-08-15 21:16:40
- * @description: 
+ * @description: 输入框页面
  * @LastEditors: hua
- * @LastEditTime: 2020-08-30 16:22:31
+ * @LastEditTime: 2020-10-22 21:17:45
  -->
 <template>
     <div class="input_wrapper">

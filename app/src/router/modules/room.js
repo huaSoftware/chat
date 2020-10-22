@@ -1,3 +1,11 @@
+/*
+ * @Author: hua
+ * @Date: 2020-02-27 18:48:10
+ * @description: 房间路由模块
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:13:24
+ */
+
 const _import = require('../_import_' + process.env.NODE_ENV)
 
 const roomRouter = [

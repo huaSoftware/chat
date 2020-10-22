@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
+ * @description: socketio工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-10-21 19:46:18
+ * @LastEditTime: 2020-10-22 21:02:54
  */
 
 import store from '../store'
@@ -15,7 +15,7 @@ import room from '@/socketioEvent/room'
 import broadcast from '@/socketioEvent/broadcast'
 import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import api from '../socketioEvent/api'
-import login from '../socketioEvent/login'
+import loginEvent from '../socketioEvent/login'
 
 /* 注册socketio */
 export function setup() {
@@ -88,7 +88,7 @@ export function  send(method, data, type = 'room') {
 			return api(data, method);
 		}
 		if(type == 'loginConnect' || type == 'logoutDisconnect'){
-			return login(data, method);
+			return loginEvent(data, method);
 		}
 	}
 }

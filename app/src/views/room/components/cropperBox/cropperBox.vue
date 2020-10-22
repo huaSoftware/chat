@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-07-18 08:54:06
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-23 16:38:41
+ * @description: 裁剪页面
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:17:07
  -->
 <template>
    <!-- 裁剪图 -->

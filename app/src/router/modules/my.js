@@ -1,3 +1,11 @@
+/*
+ * @Author: hua
+ * @Date: 2020-02-27 18:48:10
+ * @description: 用户路由模块
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-22 21:12:52
+ */
+
 const _import = require('../_import_' + process.env.NODE_ENV)
 
 const myRouter = [
