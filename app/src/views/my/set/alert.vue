@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 17:20:34
+ * @description: 消息提醒页面
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:44:27
+ -->
 <template>
     <yd-cell-item style="background: #fff;">
         <span slot="left" style="font-weight: bold">新消息提醒</span>

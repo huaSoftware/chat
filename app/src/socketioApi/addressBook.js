@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-27 15:27:50
- * @description: 用户接口
+ * @description: 通讯录接口
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 21:09:33
+ * @LastEditTime: 2020-10-23 20:44:52
  */
 
 import {send} from '@/utils/socketio'
