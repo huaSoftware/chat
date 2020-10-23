@@ -1,3 +1,11 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 状态码管理
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:29:02
+ */
+
 export default {
   state: {
     CHAT: {

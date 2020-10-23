@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-11-01 13:55:09
- * @description:
+ * @description: 认证路由模块
  * @LastEditors: hua
- * @LastEditTime: 2020-04-18 08:39:30
+ * @LastEditTime: 2020-10-23 20:23:47
  */
 const _import = require("../_import_" + process.env.NODE_ENV);
 

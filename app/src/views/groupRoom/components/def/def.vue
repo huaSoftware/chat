@@ -1,3 +1,11 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-07-18 08:54:06
+ * @description: 功能栏页面
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:35:03
+ -->
+ 
 <template>
     <!-- 功能栏 -->
     <div class="defs_wrapper">

@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2020-01-24 16:52:11
+ * @description: 注册
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:31:10
  -->
 <template>
 <div>

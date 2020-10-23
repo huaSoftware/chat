@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
+ * @description: 应用临时数据管理
  * @LastEditors: hua
- * @LastEditTime: 2019-12-02 20:58:08
+ * @LastEditTime: 2020-10-23 20:28:51
  */
 /**
  * 作者：yujinjin9@126.com

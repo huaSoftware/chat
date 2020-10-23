@@ -1,3 +1,11 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 用户信息
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:29:34
+ */
+
 import { getToken } from '@/utils/auth'
 import storage from "@/utils/localstorage";
 

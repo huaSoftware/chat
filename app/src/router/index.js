@@ -1,9 +1,9 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
+ * @description: 路由模块
  * @LastEditors: hua
- * @LastEditTime: 2020-02-27 18:51:35
+ * @LastEditTime: 2020-10-23 20:23:33
  */
 import Vue from 'vue'
 import Router from 'vue-router'

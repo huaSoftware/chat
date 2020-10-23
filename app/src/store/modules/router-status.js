@@ -1,8 +1,11 @@
-/**
- * 作者：yujinjin9@126.com
- * 时间：2017-01-19
- * app路由状态管理
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: app路由状态管理
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:29:21
  */
+
 export default {
   state: {
     direction: null, //going：前进|backing后退|replace

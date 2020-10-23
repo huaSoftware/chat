@@ -1,10 +1,11 @@
 /*
  * @Author: hua
  * @Date: 2019-09-29 14:25:37
- * @description: 
+ * @description: 用户房间关系接口
  * @LastEditors: hua
- * @LastEditTime: 2019-11-04 11:14:16
+ * @LastEditTime: 2020-10-23 20:26:37
  */
+
 import {send} from '@/utils/socketio'
 
 // 获取通讯录列表（群聊）

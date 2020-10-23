@@ -1,8 +1,11 @@
-/**
- * 作者：hua
- * 时间：2019-03-15
- * 聊天数据临时管理
+/*
+ * @Author: hua
+ * @Date: 2019-09-03 17:07:10
+ * @description: 房间数据管理
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:29:11
  */
+
 import { addLocalRoomMsg } from "@/utils/indexedDB"
 
 export default {

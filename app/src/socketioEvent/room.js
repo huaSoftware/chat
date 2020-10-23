@@ -3,12 +3,20 @@
  * @Date: 2019-12-30 20:41:03
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-20 19:30:57
+ * @LastEditTime: 2020-10-23 20:28:27
  */
 import store from "../store";
 import router from "../router";
 import { Loading, Toast } from "vue-ydui/dist/lib.rem/dialog";
 import { send, rsaEncode, response, modifyMsgStatus } from "@/utils/socketio";
+
+/**  
+ * 房间事件
+ * 房间数据交互
+ * 
+ * @param object data
+ * @param string method
+ */
 export default function room(data, method) {
   //响应超时
   window.sendTimeOut = setTimeout(() => {

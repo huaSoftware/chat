@@ -1,3 +1,11 @@
+/*
+ * @Author: hua
+ * @Date: 2019-09-27 15:27:50
+ * @description: 公共接口
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:25:37
+ */
+
 import {send} from '@/utils/socketio'
 
 //上传图片

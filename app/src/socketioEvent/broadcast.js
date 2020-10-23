@@ -1,14 +1,22 @@
 /*
  * @Author: hua
  * @Date: 2019-12-30 20:41:23
- * @description: 
+ * @description: 广播事件
  * @LastEditors: hua
- * @LastEditTime: 2020-05-16 09:15:24
+ * @LastEditTime: 2020-10-23 20:27:57
  */
 import store from '../store'
 import router from '../router'
 import {Loading} from 'vue-ydui/dist/lib.rem/dialog'
 import {send, rsaEncode, response} from '@/utils/socketio'
+
+/**  
+ * 广播接口
+ * 用于发送广播消息
+ * 
+ * @param object data
+ * @param string method
+ */
 export default function broadcast(data, method){
     if(!store.getters.token){
         window.tryBroadcastLinkCount = 0

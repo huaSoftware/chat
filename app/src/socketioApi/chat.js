@@ -1,10 +1,11 @@
 /*
  * @Author: hua
  * @Date: 2019-09-03 17:07:10
- * @description: 
- * @LastEditors  : hua
- * @LastEditTime : 2019-12-27 16:53:46
+ * @description: 发送消息接口
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:25:25
  */
+
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
 import store from '../store'

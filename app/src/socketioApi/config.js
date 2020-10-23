@@ -1,10 +1,11 @@
 /*
  * @Author: hua
  * @Date: 2019-11-04 11:13:25
- * @description: 
+ * @description: 配置接口
  * @LastEditors: hua
- * @LastEditTime: 2019-11-07 15:10:43
+ * @LastEditTime: 2020-10-23 20:25:48
  */
+
 import {send} from '@/utils/socketio'
 
 // 获取常量配置

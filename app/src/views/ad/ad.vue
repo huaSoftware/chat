@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-02-01 14:08:36
- * @description: 
+ * @description: 广告页
  * @LastEditors: hua
- * @LastEditTime: 2019-10-03 17:18:45
+ * @LastEditTime: 2020-10-23 20:30:34
  -->
 <template>
   <!-- 广告页 -->

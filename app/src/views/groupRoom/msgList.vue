@@ -1,9 +1,9 @@
 <!--
  * @Author: hua
  * @Date: 2019-07-15 11:29:43
- * @description: 
+ * @description: 聊天记录
  * @LastEditors: hua
- * @LastEditTime: 2019-12-11 17:10:22
+ * @LastEditTime: 2020-10-23 20:32:35
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">

@@ -1,3 +1,11 @@
+<!--
+ * @Author: hua
+ * @Date: 2019-02-01 17:20:34
+ * @description: 关于页面
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-23 20:38:06
+ -->
+
 <template>
     <div class="about_our_wapper">
         <div class="about_our_article">
