@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-25 13:13:27
+ * @LastEditTime: 2020-10-27 20:46:38
  -->
 <template>
   <div class="dashboard-editor-container">
@@ -11,9 +11,6 @@
  -->
     <panel-group @handleSetLineChartData="handleSetLineChartData" :panelGroupData="panelGroupData"/>
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <!-- <line-chart :chart-data="lineChartDataList"  :name="name"/> -->
-    </el-row>
   </div>
 </template>
 

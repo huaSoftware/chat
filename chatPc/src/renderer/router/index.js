@@ -83,7 +83,7 @@ export const constantRoutes = [
       },
     ],
   },
-  {
+  /* {
     path: "/room",
     component: Layout,
     children: [
@@ -91,7 +91,7 @@ export const constantRoutes = [
         path: "index",
         component: () => import("@/views/room/index"),
         name: "Room",
-        meta: { title: "房间管理", icon: "table" },
+        meta: { title: "消息", icon: "table" },
       },
     ],
   },
@@ -103,7 +103,7 @@ export const constantRoutes = [
         path: "index",
         component: () => import("@/views/addressBook/index"),
         name: "AddressBook",
-        meta: { title: "通讯录管理", icon: "message" },
+        meta: { title: "通讯录", icon: "message" },
       },
     ],
   },
@@ -115,22 +115,10 @@ export const constantRoutes = [
         path: "index",
         component: () => import("@/views/users/index"),
         name: "Users",
-        meta: { title: "用户管理", icon: "people" },
+        meta: { title: "我的", icon: "people" },
       },
     ],
-  },
-  {
-    path: "/admin",
-    component: Layout,
-    children: [
-      {
-        path: "index",
-        component: () => import("@/views/admin/index"),
-        name: "Admin",
-        meta: { title: "管理员管理", icon: "peoples" },
-      },
-    ],
-  }
+  } */
 ];
 
 /**

@@ -3,12 +3,12 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-10-25 15:02:29
+ * @LastEditTime: 2020-10-27 20:43:38
  -->
 <template>
   <div class="login-container">
    <div class="container">
-      <Vimg :img-url="require('@/assets/img/portrait@2x.png')" style="width:90px;height:90px;position:absolute;left:50%;margin-left:-45px;margin-top:-50px"/>
+      <Vimg :img-url="require('@/assets/img/portrait@2x.png')" style="-webkit-app-region:drag;width:90px;height:90px;position:absolute;left:50%;margin-left:-45px;margin-top:-50px"/>
       <div class="title">聊天室PC端</div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <el-form-item prop="name" style="background: rgba(255,255,255,1);">
@@ -147,7 +147,7 @@ export default {
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = ''
+        this.passwordType = 'text'
       } else {
         this.passwordType = 'password'
       }

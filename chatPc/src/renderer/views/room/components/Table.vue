@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:14:03
+ * @LastEditTime: 2020-10-27 20:53:20
  -->
 <template>
   <div class="app-container">
@@ -70,7 +70,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="send(scope.row.room_uuid, scope.row.user_id)">发送信息</el-button>
+          <el-button size="mini" style="width:80px" type="primary" plain @click="send(scope.row.room_uuid, scope.row.user_id)">发送信息</el-button>
           <el-button size="mini" type="danger" plain @click="move(scope.row.room_uuid)">删除</el-button>
         </template>
       </el-table-column>
