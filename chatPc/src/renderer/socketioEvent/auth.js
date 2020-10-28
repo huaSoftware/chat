@@ -3,13 +3,12 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-27 21:28:05
+ * @LastEditTime: 2020-10-28 19:46:46
  */
 import store from "../store";
 import router from "../router";
 import { joinChatSend } from "@/socketIoApi/chat";
 import { stopVideo, hangUp, init, agreeStartVideo, onOffer, onAnswer, onCandidate, stop, connect } from "@/utils/webRtc.js"
-import { Confirm, Toast } from "vue-ydui/dist/lib.rem/dialog";
 import { MessageBox, Message } from "element-ui";
 
 import {
@@ -108,21 +107,20 @@ export default function setupAuthEvent() {
             console.log("disconnected");
             stop();
           } else if (evt.type === 'start') {
-            //开启视频
-            Confirm({
-              title: "视频邀请",
-              mes: `${data.name}邀请进入聊天`,
-              opts: () => {
-                joinChatSend({
-                  name: data.name,
-                  room_uuid: data.room_uuid,
-                  type: data.room_type,
-                  save_action: store.getters.LOCAL
-                }).then(res => {
-                  init();
-                  agreeStartVideo();
-                })
-              }
+            MessageBox.confirm(`${data.name}邀请进入聊天`, {
+              confirmButtonText: "重新登陆",
+              cancelButtonText: "取消",
+              type: "warning",
+            }).then(() => {
+              joinChatSend({
+                name: data.name,
+                room_uuid: data.room_uuid,
+                type: data.room_type,
+                save_action: store.getters.LOCAL
+              }).then(res => {
+                init();
+                agreeStartVideo();
+              })
             });
           } else if (evt.type === 'end') {
             stopVideo();

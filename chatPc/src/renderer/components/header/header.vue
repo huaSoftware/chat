@@ -3,7 +3,7 @@
  * @Date: 2019-01-17 14:38:02
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-25 15:23:05
+ * @LastEditTime: 2020-10-28 21:30:10
  -->
 <!-- 头部组件 -->
 <style>
@@ -123,8 +123,7 @@ export default {
     },
     created () {
         //检测是否存在token
-        document.getElementById('loading').style.display="none";
-        document.getElementById('app').style.display="block";
+
         //this.modalLoginShow = true
     },
     mounted () {

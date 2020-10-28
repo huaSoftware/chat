@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-04-18 19:06:37
+ * @LastEditTime: 2020-10-28 21:24:07
  */
 import axios from "axios";
 import { MessageBox, Message } from "element-ui";
@@ -26,7 +26,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers["Authorization"] = "JWT " + getToken();
+      config.headers["Authorization"] = "JWT " + getToken('token');
     }
     return config;
   },

@@ -3,13 +3,12 @@
  * @Date: 2019-12-30 20:41:57
  * @description: 登录与退出事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-27 21:30:36
+ * @LastEditTime: 2020-10-28 21:32:32
  */
 import store from '../store'
 import router from '../router'
-import {Loading, Toast} from 'vue-ydui/dist/lib.rem/dialog'
 import {rsaEncode} from '@/utils/socketio'
-
+import { Message } from "element-ui";
 /**  
  * 登录与退出
  * 用于记录在线状态
@@ -50,7 +49,7 @@ export default function loginEvent(data, method){
                 });
                 // 这里需要删除token，不然携带错误token无法去登陆
                 window.localStorage.removeItem('token')
-                store.commit('SET_TOKEN', null)
+                store.commit('user/SET_TOKEN', null)
                 router.push({name: 'authLogin'})
                 reject('error')
             }

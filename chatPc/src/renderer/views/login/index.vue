@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-10-27 20:43:38
+ * @LastEditTime: 2020-10-28 21:58:06
  -->
 <template>
   <div class="login-container">
@@ -11,14 +11,14 @@
       <Vimg :img-url="require('@/assets/img/portrait@2x.png')" style="-webkit-app-region:drag;width:90px;height:90px;position:absolute;left:50%;margin-left:-45px;margin-top:-50px"/>
       <div class="title">聊天室PC端</div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-        <el-form-item prop="name" style="background: rgba(255,255,255,1);">
+        <el-form-item prop="email" style="background: rgba(255,255,255,1);">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
           <el-input
-            v-model="loginForm.name"
+            v-model="loginForm.email"
             placeholder="请输入用户名"
-            name="name"
+            name="email"
             type="text"
             auto-complete="on"
           />
@@ -29,10 +29,10 @@
             <svg-icon icon-class="password" />
           </span>
           <el-input
-            v-model="loginForm.pwd"
+            v-model="loginForm.password"
             :type="passwordType"
             placeholder="请输入密码"
-            name="pwd"
+            name="password"
             auto-complete="on"
             @keyup.enter.native="handleLogin"
           />
@@ -40,21 +40,6 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-
-        <el-form-item prop="captcha" style="background: rgba(255,255,255,1);">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            v-model="loginForm.captcha"
-            type="text"
-            placeholder="动态验证码"
-            name="captcha"
-            auto-complete="on"
-          />
-          <Vimg id="code" :img-url="`${url}/api/v2/admin/getCode`" style="-webkit-app-region:no-drag;position:absolute;right:0px;width:120px;height:50px;background:#fff" @click="reGetCaptcha" />
-        </el-form-item>
-
         <el-button :loading="loading" type="primary" style="-webkit-app-region:no-drag;width:100%;margin-bottom:30px;background:linear-gradient(0deg,rgba(255,156,0,1) 0%,rgba(249,213,25,1) 100%);
 border-radius:10px;
 font-size:20px;
@@ -74,10 +59,13 @@ border:none" @click.native.prevent="handleLogin">
 import Vimg from '@/components/Vimg'
 import {setup} from '@/utils/socketio'
 import { validUsername, validMobile } from '@/utils/validate'
-/* import SocialSign from './socialsignin' */
+import { Message } from "element-ui";
 import { login } from '@/api/user'
 import {ipcRenderer} from 'electron';
-
+import utils from '@/utils/utils'
+import { setToken } from '@/utils/auth'
+import storage  from  '@/utils/localstorage'
+import {deleteTables} from '@/utils/indexedDB'
 export default {
   name: 'Login',
   components: {
@@ -108,35 +96,23 @@ export default {
     return {
       url: process.env.VUE_APP_BASE_API,
       loginForm: {
-        name: '',
-        pwd: '',
-        captcha: ''
+        email: "",
+        password: "",
       },
       loginRules: {
-        name: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        pwd: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        captcha: [{ required: true, trigger: 'blur', validator: validateCaptcha }]
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
       },
       passwordType: 'password',
-      loading: false,
-      showDialog: false,
-      redirect: undefined,
-      captcha: {
-        base64blob: '',
-        captchaId: ''
-      }
+      loading: false
     }
   },
   watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
-    }
+  
   },
   created() {
     console.log(this.$store)
+    setup()
   },
   mounted() {
     
@@ -156,29 +132,34 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          console.log(0)
+          this.$store.dispatch('user/login', this.loginForm).then((res) => {
             this.loading = false
+            console.log(res)
+            deleteTables()
+            console.log(1)
+            Message({
+              message:'登录成功',
+              type: "success",
+              duration: 5 * 1000,
+            });
+            console.log(2)
+            storage.set('user',res.data.user)
+            this.$store.commit('user/updateUserInfo', res.data.user)
+            console.log(3)
             setup()
             ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
-            this.$router.push({ path: '/' })
+            //缺少过度效果
+            console.log(4)
+            this.$router.push({ name: 'Dashboard' })
           }).catch((err) => {
             this.loading = false
-            this.reGetCaptcha(document.getElementById('code'))
+      
           })
         } else {
           return false
         }
       })
-    },
-    reGetCaptcha(event) {
-      if (event.src) {
-        event.src = `${this.url}/api/v2/admin/getCode?` + Math.random()
-        return
-      }
-      event.target.src = `${this.url}/api/v2/admin/getCode?` + Math.random()
-    },
-    afterQRScan() {
-
     },
     goReset() {
       this.$router.push({ path: '/reset' })

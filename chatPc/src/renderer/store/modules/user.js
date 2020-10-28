@@ -1,14 +1,20 @@
-import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import storage from "@/utils/localstorage";
 import {ipcRenderer} from 'electron'
-
+import { login } from '@/socketioApi/user'
+import md5 from 'js-md5'
+import { deleteTables } from "@/utils/indexedDB";
+import { setDown, send } from "@/utils/socketio";
+import { clearData } from "@/utils/auth";
 const state = {
-  token: getToken(),
+  token: getToken('token'),
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  homePageMsg:{},
+  userInfo:storage.get('user')
 }
 
 const mutations = {
@@ -26,6 +32,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  updateUserInfo(state, userInfo){
+    state.userInfo = userInfo
   }
 }
 
@@ -33,12 +42,11 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
-      login(userInfo).then(response => {
+      login({email:userInfo.email, password:md5(userInfo.password)}).then(response => {
         const { data } = response
-        console.log(data)
         commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
+        setToken('token',data.token)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
@@ -75,7 +83,23 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      ipcRenderer.send('mianWindowLogout', 'ping') //给主进程发送消息“ping”
+      removeToken()
+      resetRouter()
+      //更新在线状态
+      clearInterval(window.loginConnectInterval);
+      clearTimeout(window.sendTimeOut)
+      clearTimeout(window.broadcastTimeOut)
+      clearTimeout(window.timeOut);
+      send("logoutDisconnect", {}, "logoutDisconnect");
+      //监听
+      clearData();
+      setDown();
+      deleteTables();
+      resolve()
+      /* logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         ipcRenderer.send('mianWindowLogout', 'ping') //给主进程发送消息“ping”
@@ -84,7 +108,7 @@ const actions = {
         resolve()
       }).catch(error => {
         reject(error)
-      })
+      }) */
     })
   },
 

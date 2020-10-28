@@ -3,13 +3,12 @@
  * @Date: 2019-12-30 20:41:03
  * @description: 房间事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-27 21:31:41
+ * @LastEditTime: 2020-10-28 20:55:36
  */
 import store from "../store";
 import router from "../router";
-import { Toast } from "vue-ydui/dist/lib.rem/dialog";
 import { send, rsaEncode, response, modifyMsgStatus } from "@/utils/socketio";
-
+import { Message } from "element-ui";
 /**  
  * 房间事件
  * 房间数据交互
@@ -18,6 +17,7 @@ import { send, rsaEncode, response, modifyMsgStatus } from "@/utils/socketio";
  * @param string method
  */
 export default function room(data, method) {
+  console.log(store.state)
   //如果sendTimeout存在先要清空
   if(window.sendTimeOut){
     clearTimeout(window.sendTimeOut)

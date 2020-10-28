@@ -3,9 +3,9 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-25 15:04:34
+ * @LastEditTime: 2020-10-28 21:57:20
  */
-import { app, BrowserWindow, Menu, ipcMain} from 'electron'
+import { app, BrowserWindow, Menu, ipcMain,screen } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -58,7 +58,9 @@ app.on('activate', () => {
 })
 
 ipcMain.on('mianWindowLogin',(event, arg) => { // arg为接受到的消息
-  mainWindow.setSize(1000, 760);
+  let winW = screen.getPrimaryDisplay().workAreaSize.width;
+  let winH = screen.getPrimaryDisplay().workAreaSize.height;
+  mainWindow.setBounds({width:800, height:600,x:(winW/2)-400,y:(winH/2)-300});
   mainWindow.setResizable(true);
 })
 

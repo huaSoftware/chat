@@ -52,6 +52,7 @@ export const constantRoutes = [
   },
   {
     path: "/login",
+    name:"authLogin",
     component: () => import("@/views/login/index"),
     hidden: true,
   },

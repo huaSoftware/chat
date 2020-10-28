@@ -135,7 +135,7 @@ export function response(res){
 			});
 			// 这里需要删除token，不然携带错误token无法去登陆
 			window.localStorage.removeItem('token')
-			store.commit('SET_TOKEN', null)
+			store.commit('user/SET_TOKEN', null)
 			//页面再次可见的时间-隐藏时间>10S,重连
             setDown();
             console.log("主动关闭连接后重连");

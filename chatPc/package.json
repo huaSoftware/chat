@@ -55,9 +55,11 @@
   "dependencies": {
     "axios": "0.17.1",
     "benz-amr-recorder": "^1.1.2",
+    "dexie": "^3.0.2",
     "element-ui": "2.7.0",
     "fuse.js": "^5.1.0",
     "js-cookie": "^2.2.0",
+    "js-md5": "^0.7.3",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "recorder-core": "^1.0.20040700",
