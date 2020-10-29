@@ -3,9 +3,9 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-28 21:57:20
+ * @LastEditTime: 2020-10-29 20:26:09
  */
-import { app, BrowserWindow, Menu, ipcMain,screen } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, screen } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -33,7 +33,7 @@ function createWindow() {
     resizable: false,
     maximizable: true,
     minimizable: true,
-    transparent:true
+    transparent: true
   })
 
   mainWindow.loadURL(winURL)
@@ -57,15 +57,17 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.on('mianWindowLogin',(event, arg) => { // arg为接受到的消息
+ipcMain.on('mianWindowLogin', (event, arg) => { // arg为接受到的消息
   let winW = screen.getPrimaryDisplay().workAreaSize.width;
   let winH = screen.getPrimaryDisplay().workAreaSize.height;
-  mainWindow.setBounds({width:800, height:600,x:(winW/2)-400,y:(winH/2)-300});
+  mainWindow.setBounds({ width: 800, height: 600, x: (winW / 2) - 400, y: (winH / 2) - 300 });
   mainWindow.setResizable(true);
 })
 
-ipcMain.on('mianWindowLogout',(event, arg) => { // arg为接受到的消息
-  mainWindow.setSize(420, 455);
+ipcMain.on('mianWindowLogout', (event, arg) => { // arg为接受到的消息
+  let winW = screen.getPrimaryDisplay().workAreaSize.width;
+  let winH = screen.getPrimaryDisplay().workAreaSize.height;
+  mainWindow.setBounds({ width: 420, height: 455, x: (winW / 2) - 210, y: (winH / 2) - 227 });
   mainWindow.setResizable(false);
 })
 /**

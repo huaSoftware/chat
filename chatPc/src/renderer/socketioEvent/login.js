@@ -9,6 +9,7 @@ import store from '../store'
 import router from '../router'
 import {rsaEncode} from '@/utils/socketio'
 import { Message } from "element-ui";
+import {ipcRenderer} from 'electron';
 /**  
  * 登录与退出
  * 用于记录在线状态
@@ -50,6 +51,7 @@ export default function loginEvent(data, method){
                 // 这里需要删除token，不然携带错误token无法去登陆
                 window.localStorage.removeItem('token')
                 store.commit('user/SET_TOKEN', null)
+                ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
                 router.push({name: 'authLogin'})
                 reject('error')
             }

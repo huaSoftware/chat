@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2020-04-18 18:43:22
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-29 21:53:31
+ */
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
@@ -5,6 +12,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import {ipcRenderer} from 'electron';
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -23,8 +31,11 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      next({ path: '/' })
-      NProgress.done()
+      setTimeout(()=>{
+        ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
+        next({ path: '/' })
+        NProgress.done()
+      },300)
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0

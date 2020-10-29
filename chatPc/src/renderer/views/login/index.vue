@@ -3,11 +3,11 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-10-28 21:58:06
+ * @LastEditTime: 2020-10-29 19:44:58
  -->
 <template>
   <div class="login-container">
-   <div class="container">
+   <div class="container"  v-if="loginShow">
       <Vimg :img-url="require('@/assets/img/portrait@2x.png')" style="-webkit-app-region:drag;width:90px;height:90px;position:absolute;left:50%;margin-left:-45px;margin-top:-50px"/>
       <div class="title">聊天室PC端</div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
@@ -104,14 +104,15 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
       },
       passwordType: 'password',
-      loading: false
+      loading: false,
+      loginShow:true
     }
   },
   watch: {
   
   },
   created() {
-    console.log(this.$store)
+    console.log(111111111)
     setup()
   },
   mounted() {
@@ -134,24 +135,18 @@ export default {
           this.loading = true
           console.log(0)
           this.$store.dispatch('user/login', this.loginForm).then((res) => {
+            this.loginShow = false;
             this.loading = false
             console.log(res)
             deleteTables()
-            console.log(1)
-            Message({
-              message:'登录成功',
-              type: "success",
-              duration: 5 * 1000,
-            });
-            console.log(2)
             storage.set('user',res.data.user)
             this.$store.commit('user/updateUserInfo', res.data.user)
-            console.log(3)
             setup()
-            ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
-            //缺少过度效果
-            console.log(4)
-            this.$router.push({ name: 'Dashboard' })
+            setTimeout(()=>{
+              ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
+              this.$router.push({ name: 'Dashboard' })
+            },300)
+            
           }).catch((err) => {
             this.loading = false
       

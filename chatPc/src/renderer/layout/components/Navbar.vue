@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-25 15:07:26
+ * @LastEditTime: 2020-10-29 21:58:54
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
@@ -50,9 +50,11 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      this.$store.dispatch('user/logout').then(res=>{
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
+      
     }
   },
 };

@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: socketio工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-10-27 21:22:17
+ * @LastEditTime: 2020-10-29 21:56:22
  */
 
 import store from '../store'
@@ -16,7 +16,7 @@ import broadcast from '@/socketioEvent/broadcast'
 import { Message } from 'element-ui'
 import api from '../socketioEvent/api'
 import loginEvent from '../socketioEvent/login'
-
+import {ipcRenderer} from 'electron';
 /* 注册socketio */
 export function setup() {
 	// 创建添加新好友套接字连接
@@ -141,7 +141,8 @@ export function response(res){
             console.log("主动关闭连接后重连");
             setTimeout(() => {
               setup(); //打开连接，使用的vuejs，这是socketio的连接方法
-            }, 1500); //1.5S后重连
+			}, 1500); //1.5S后重连
+			ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
 			router.push({name: 'authLogin'})
 			reject(res)
 		}

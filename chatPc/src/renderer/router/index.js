@@ -84,19 +84,19 @@ export const constantRoutes = [
       },
     ],
   },
-  /* {
-    path: "/room",
+  {
+    path: "/home",
     component: Layout,
     children: [
       {
         path: "index",
-        component: () => import("@/views/room/index"),
-        name: "Room",
+        component: () => import("@/views/home/index"),
+        name: "Home",
         meta: { title: "消息", icon: "table" },
       },
     ],
   },
-  {
+  /* {
     path: "/addressBook",
     component: Layout,
     children: [

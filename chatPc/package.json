@@ -1,5 +1,5 @@
 {
-  "name": "electron-vue-admin",
+  "name": "chat",
   "version": "3.0.0",
   "author": "Pan <panfree23@gmail.com>",
   "description": "An electron-vue project",
@@ -16,10 +16,11 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "npm run lint:fix",
+    "win32": "node .electron-vue/build.js && electron-builder --platform=win32  --arch=ia32"
   },
   "build": {
-    "productName": "electron-vue-admin",
+    "productName": "聊天室",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
