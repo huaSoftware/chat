@@ -1,6 +1,13 @@
+<!--
+ * @Author: hua
+ * @Date: 2020-04-18 18:43:22
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-30 20:10:52
+-->
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
-    <transition-group name="breadcrumb">
+    <transition-group name="breadcrumb" >
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
         <span
           v-if="item.redirect === 'noRedirect' || index == levelList.length - 1"

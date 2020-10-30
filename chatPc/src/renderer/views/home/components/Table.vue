@@ -3,12 +3,12 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 21:47:19
+ * @LastEditTime: 2020-10-30 22:14:42
  -->
 <template>
   <div class="content">
     <!-- 头部开始 -->
-    <header class="yd-navbar header">
+   <!--  <header class="yd-navbar header">
       <div class="yd-navbar-item"></div>
       <div class="yd-navbar-center-box" style="height: 1rem;">
         <div class="yd-navbar-center">
@@ -18,12 +18,12 @@
       <div class="yd-navbar-item" @click="defShow=!defShow">
         <span class="icon-custom-jia2 navbar_icon"></span>
       </div>
-    </header>
+    </header> -->
     <!-- 功能栏 -->
-    <yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet>
+    <!-- <yd-actionsheet :items="defs" v-model="defShow" cancel="取消"></yd-actionsheet> -->
     <!-- 头部结束 -->
     <!-- 单聊 -->
-    <article class="yd-list yd-list-theme4" style="padding-top:1rem">
+    <!-- <article class="yd-list yd-list-theme4" style="padding-top:1rem">
       <a
         @click="handleJoinRoom(item)"
         href="javascript:;"
@@ -49,16 +49,15 @@
             <div>
               <span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span>
             </div>
-            <!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
             <div v-if="alert && item.is_alert">
               <yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge>
             </div>
           </div>
         </div>
       </a>
-    </article>
+    </article> -->
     <!-- 群聊 -->
-    <article class="yd-list yd-list-theme4">
+   <!--  <article class="yd-list yd-list-theme4">
       <a
         @click="handleJoinGroupRoom(item)"
         href="javascript:;"
@@ -84,10 +83,55 @@
           </div>
         </div>
       </a>
-    </article>
+    </article> -->
     <!-- <vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />-->
     <!-- 参数空时页面 -->
     <!-- <vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty> -->
+    <el-row style="height:100%">
+      <el-col :span="8" style="height:100%;overflow: auto;">
+        <el-menu
+          default-active="2"
+          class="el-menu-vertical"
+        >
+          <el-submenu
+            @click="handleJoinRoom(item)"
+            v-for=" (item, index) in roomList"
+            :key="index"
+            :index="String(index)">
+            <template slot="title">
+              <div class="room_wrap"   >
+                <div class="list-img">
+                  <vImg v-if="item.type ==1 && item.adminUsers" :imgUrl="item.adminUsers.avatar" />
+                  <vImg
+                    v-else
+                    :style="item.users.online == 1?'':'background: grey;opacity: 0.5'"
+                    :imgUrl="item.users.head_img"
+                  />
+                </div>
+                <div class="list-mes">
+                  <div class="list-title">
+                    <div class="title-left" v-if="item.type ==1&& item.adminUsers">{{item.adminUsers.nick_name}}</div>
+                    <div class="title-left" v-if="item.type ==0">{{item.users.nick_name}}</div>
+                    <div class="title-right">{{formatTime(item.room.updated_at)}}</div>
+                  </div>
+                  <div class="list-other">
+                    <div>
+                      <span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span>
+                    </div>
+                    <div v-if="alert && item.is_alert">
+                      <div v-if="item.unread_number" type="danger">{{item.unread_number}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </el-submenu>
+         
+        </el-menu>
+      </el-col>
+      <el-col :span="16">
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -214,66 +258,48 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.header {
-  background-color: rgb(255, 255, 255);
-  height: 1rem;
-  color: rgb(228, 228, 228);
-  position: fixed;
-  width: 100%;
-  max-width: 750px;
-  min-width: 300px;
+.content{
+  height:100%;
 }
-.yd-list-theme4 .yd-list-item .yd-list-img {
-  width: 1.2rem;
-  padding: 0.6rem 0;
+.el-menu-vertical{
+  height:100%;
 }
+.room_wrap{
+  padding-left:10px;
+  display: flex;
+  flex-direction: row;
+}
+.list-img img{
+  width: 40px;
+  height: 40px;
+}
+.list-mes{
+  padding-left:10px;
+  width: calc(100% - 40px);
+  .list-title{
+    height:28px;
+    line-height:28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width:100%;
+    .title-left{
+      width:50%;
+     /*  text-overflow: ellipsis; */
+      overflow: hidden;
+      display: inline-block;
 
-.yd-list-theme4 .yd-list-item .yd-list-title {
-  line-height: 0.6rem;
-}
-.title-right {
-  font-weight: normal;
-  display: inline-block;
-  font-size: 12px;
-  width: 48%;
-  overflow: hidden;
-  text-align: right;
-}
-.title-left {
-  width: 50%;
-  overflow: hidden;
-  display: inline-block;
-}
-.yd-list-title {
-  line-height: 0.4rem !important;
-}
-
-.navbar_icon {
-  color: rgb(92, 92, 92);
-  font-size: 0.45rem;
-  margin-left: 0.3rem;
-}
-.last_msg {
-  overflow: hidden;
-  width: 2rem;
-  display: inline-block;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.loading {
-  width: 100%;
-  height: 100%;
-  padding: 0 70px 70px 70px;
-  position: fixed;
-  z-index: 100;
-  top: 0rem;
-  background: #fff;
-  max-width: 750px;
-  min-width: 300px;
-}
-</style>
-<style>
-.yd-accordion-head:after {
-  background-image: none !important;
+    }
+    .title-right{
+      width:40%;
+      text-align:right;
+      display: inline-block;
+      padding-right:10px;
+    }
+  }
+  .list-other{
+    height:25px;
+    line-height:25px;
+  }
 }
 </style>

@@ -3,15 +3,15 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 21:58:54
+ * @LastEditTime: 2020-10-30 20:08:48
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <hamburger
+   <!--  <hamburger
       class="hamburger-container"
       :toggleClick="toggleSideBar"
       :isActive="sidebar.opened"
-    ></hamburger>
+    ></hamburger> -->
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
