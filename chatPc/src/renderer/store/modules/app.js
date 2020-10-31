@@ -1,8 +1,15 @@
+/*
+ * @Author: hua
+ * @Date: 2020-04-18 18:43:22
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-31 13:43:52
+ */
 import Cookies from 'js-cookie'
 
 const state = {
   sidebar: {
-    opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+    opened: false,//Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
   device: 'desktop',

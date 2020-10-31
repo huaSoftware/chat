@@ -1,3 +1,10 @@
+/*
+ * @Author: hua
+ * @Date: 2020-04-18 18:43:22
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-10-31 15:09:24
+ */
 import Vue from "vue";
 
 import "normalize.css/normalize.css"; // A modern alternative to CSS resets
@@ -27,6 +34,15 @@ Vue.use(VueLazyload, {
   attempt: 3, //尝试加载次数
   throttleWait: 500,
 });
+//图片点击全屏
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+
+let options = {
+  fullscreenEl: false
+};
+Vue.use(preview, options)
+
 new Vue({
   components: { App },
   router,

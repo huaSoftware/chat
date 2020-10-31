@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-10-30 22:14:42
+ * @LastEditTime: 2020-10-31 21:08:58
  -->
 <template>
   <div class="content">
@@ -88,18 +88,16 @@
     <!-- 参数空时页面 -->
     <!-- <vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty> -->
     <el-row style="height:100%">
-      <el-col :span="8" style="height:100%;overflow: auto;">
+      <el-col class="home-room-list-wrap" :span="8" style="height:100%;">
         <el-menu
-          default-active="2"
-          class="el-menu-vertical"
+          :default-active="String(activeIndex)"
         >
           <el-submenu
-            @click="handleJoinRoom(item)"
             v-for=" (item, index) in roomList"
             :key="index"
-            :index="String(index)">
+            :index="`${String(index)}`">
             <template slot="title">
-              <div class="room_wrap"   >
+              <div :class="activeIndex == index?'room-wrap-hover room_wrap':'room_wrap'" @click="handleJoinRoom(item,index)" >
                 <div class="list-img">
                   <vImg v-if="item.type ==1 && item.adminUsers" :imgUrl="item.adminUsers.avatar" />
                   <vImg
@@ -129,14 +127,16 @@
          
         </el-menu>
       </el-col>
-      <el-col :span="16">
+      <el-col :span="16" style="height: 100%;">
+        <room v-if="roomStatus"></room>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import vImg from '@/components/Vimg'
+import vImg from '@/components/v-img'
+import room from '../components/room';
 import utils from "@/utils/utils";
 import { roomGet } from "@/socketioApi/room";
 import storage from "@/utils/localstorage";
@@ -144,10 +144,11 @@ import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
 import { setup } from "@/utils/socketio";
 import { joinChatSend } from "@/socketIoApi/chat";
 export default {
-  components: { vImg },
+  components: { vImg,room },
   name: "home",
   data() {
     return {
+      activeIndex:"0",
       alert: true,
       loading: true,
       defShow: false,
@@ -178,7 +179,8 @@ export default {
       "TEXT",
       "IMG",
       "FILE",
-      "CHAT_NOTIFY"
+      "CHAT_NOTIFY",
+      "roomStatus"
     ])
   },
   methods: {
@@ -208,7 +210,10 @@ export default {
         }
       });
     },
-    handleJoinRoom(item) {
+    handleJoinRoom(item,index) {
+      this.$store.commit("updateRoomStatus", false);
+      this.activeIndex = index;
+      console.log(this.activeIndex)
       joinChatSend({
         name: item.type == 1 ? item.adminUsers.nick_name : item.users.nick_name,
         room_uuid: item.room_uuid,
@@ -261,13 +266,16 @@ export default {
 .content{
   height:100%;
 }
-.el-menu-vertical{
+/* .el-menu-vertical{
   height:100%;
-}
+} */
 .room_wrap{
   padding-left:10px;
   display: flex;
   flex-direction: row;
+}
+.room-wrap-hover {
+  background-color: #ecf5ff;
 }
 .list-img img{
   width: 40px;
@@ -301,5 +309,8 @@ export default {
     height:25px;
     line-height:25px;
   }
+}
+.home-room-list-wrap:hover {
+  overflow: auto;
 }
 </style>

@@ -56,7 +56,7 @@ border:none" @click.native.prevent="handleLogin">
 </template>
 
 <script>
-import Vimg from '@/components/Vimg'
+import Vimg from '@/components/v-img'
 import {setup} from '@/utils/socketio'
 import { validUsername, validMobile } from '@/utils/validate'
 import { Message } from "element-ui";

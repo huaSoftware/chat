@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 21:53:31
+ * @LastEditTime: 2020-10-31 13:35:07
  */
 import router from './router'
 import store from './store'
@@ -41,8 +41,11 @@ router.beforeEach(async(to, from, next) => {
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       console.log(hasRoles)
       if (hasRoles) {
-
-        next()
+        setTimeout(()=>{
+          ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
+          next()
+          NProgress.done()
+        },300)
       } else {
         try {
           // get user info

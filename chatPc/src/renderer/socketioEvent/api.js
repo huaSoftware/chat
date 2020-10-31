@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:35
  * @description: api接口事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 21:56:31
+ * @LastEditTime: 2020-10-31 13:36:38
  */
 import store from '../store'
 import router from '../router'
@@ -62,8 +62,10 @@ export default function api(data, method){
                 window.localStorage.removeItem('token')
                 store.commit('user/SET_TOKEN', null)
                 //setDown()
-                ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
-                router.push({name: 'authLogin'})
+                setTimeout(()=>{
+                    ipcRenderer.send('mianWindowLogout', 'ping') //给主进程发送消息“ping”
+                    router.push({name: 'authLogin'})
+                },300)
                 reject('error')
             }
             reject('error')

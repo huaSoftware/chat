@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: socketio工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 21:56:22
+ * @LastEditTime: 2020-10-31 13:36:26
  */
 
 import store from '../store'
@@ -142,8 +142,10 @@ export function response(res){
             setTimeout(() => {
               setup(); //打开连接，使用的vuejs，这是socketio的连接方法
 			}, 1500); //1.5S后重连
-			ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
-			router.push({name: 'authLogin'})
+			setTimeout(()=>{
+				ipcRenderer.send('mianWindowLogout', 'ping') //给主进程发送消息“ping”
+				router.push({name: 'authLogin'})
+			},300)
 			reject(res)
 		}
 		if (res.error_code === store.getters.CODE.ROOM_NO_EXIST.value) {

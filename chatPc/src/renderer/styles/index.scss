@@ -12,6 +12,7 @@ body {
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
     Microsoft YaHei, Arial, sans-serif;
+  border-bottom:1px solid #e6e6e6;
 }
 
 label {
@@ -20,6 +21,8 @@ label {
 
 html {
   height: 100%;
+  position: fixed;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -54,6 +57,10 @@ a:hover {
   text-decoration: none;
 }
 
+ul {
+  list-style: none;
+  padding:0px;
+}
 div:focus {
   outline: none;
 }
@@ -200,17 +207,15 @@ aside {
 }
 
 ::-webkit-scrollbar-track-piece { //滚动条凹槽的颜色，还可以设置边框属性
-  background-color:#f8f8f8;
-  }
-  ::-webkit-scrollbar {//滚动条的宽度
-  width:9px;
-  height:9px;
-  }
-  ::-webkit-scrollbar-thumb {//滚动条的设置
-  background-color:#dddddd;
-  background-clip:padding-box;
-  min-height:28px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
+  background-color:none;
+}
+::-webkit-scrollbar {//滚动条的宽度
+  width:1px;
+  height:1px;
+}
+::-webkit-scrollbar-thumb {//滚动条的设置
   background-color:#bbb;
-  }
+  background-clip:padding-box;
+  height:14px;
+}
+

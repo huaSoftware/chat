@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 房间数据管理
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 21:06:34
+ * @LastEditTime: 2020-10-31 15:47:24
  */
 
 import { addLocalRoomMsg } from "@/utils/indexedDB"
@@ -21,7 +21,8 @@ export default {
         roomList: [],//单聊房间数据 
         groupRoomList: [], //群聊房间数据
         isPaused:false,
-        msg:""//@聊天数据
+        msg:"",//@聊天数据
+        roomStatus:false
     },
     getters:{
         msgList(state){
@@ -62,6 +63,9 @@ export default {
         },
         msg(state){
             return state.msg
+        },
+        roomStatus(state){
+            return state.roomStatus
         }
     },
 
@@ -93,8 +97,10 @@ export default {
         },
         updateMsg({commit}, msg){
             commit("updateMsg", msg);
+        },
+        updateRoomStatus({commit}, roomStatus){
+            commit("updateRoomStatus", roomStatus);
         } 
-        
     },
 
     mutations: {
@@ -208,6 +214,9 @@ export default {
         },
         updateMsg(state, msg){
             state.msg = msg
+        },
+        updateRoomStatus(state, roomStatus){
+            state.roomStatus = roomStatus
         }
     }
 }

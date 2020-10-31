@@ -1,0 +1,100 @@
+.user_header_wrapper{
+    padding:0.24rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    text-align: center;
+    flex-wrap: wrap;
+    width:100%;
+}
+.user_header_wrapper li{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding:0.1rem;
+}
+.user_header_wrapper li img{
+    width:1rem;
+    height: 1rem;
+}
+.user_header_wrapper li span{
+    margin-top:0.1rem;
+    font-size:0.24rem;
+    width: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+/* 折叠 */
+.hideBg {
+    width: 100%;
+    background-color: #e9ecef;
+    padding-bottom: 0;    /* 方便渐变层遮挡 */
+    position: relative;    /* 用于子元素定位 */
+}
+/* 全文背景板，基本与摘要相同 */
+.showBg {
+    width: 100%;
+    background-color: #e9ecef;
+}
+/* 摘要内容 */
+.summary {
+    overflow: hidden;    /* 隐藏溢出内容 */
+    text-overflow: clip;    /* 修剪文本 */
+    display: -webkit-box;    /* 弹性布局 */
+    -webkit-box-orient: vertical;    /* 从上向下垂直排列子元素 */
+    -webkit-line-clamp: 3;    /* 限制文本仅显示前三行 */
+}
+#example p {
+    text-indent: 2em;
+}
+/* 展开按钮 */
+.showBtn {
+    width: 100%;    /* 与背景宽度一致 */
+    height: 0.8rem;
+ 
+    z-index: 0;    /* 正序堆叠，覆盖在p元素上方 */
+    text-align: center;
+    background: linear-gradient(rgba(233,236,239,.5), white);    /* 背景色半透明到白色的渐变层 */
+    padding-top:  0.4rem;
+    /* top:3rem; */
+}
+/* 收起按钮 */
+.hideBtn {
+    text-align: right;
+}
+#example a {
+    text-decoration: none;    /* 清除链接默认的下划线 */
+}
+/* 向下角箭头 */
+.downArrow {
+    display: inline-block;
+    width: 8px;    /* 尺寸不超过字号的一半为宜 */
+    height: 8px;
+    border-right: 1px solid;    /* 画两条相邻边框 */
+    border-bottom: 1px solid;
+    transform: rotate(45deg);    /* 顺时针旋转45° */
+    margin-bottom: 3px;
+}
+/* 向上角箭头，原理与下箭头相同 */
+.upArrow {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    transform: rotate(45deg);
+    margin-top: 3px;
+}
+.icon-right{
+    font-weight:bold;
+    font-size:0.5rem;
+    float:right;
+    line-height:1rem;
+    color:#aaaaaa;
+}
+.yd-btn-hollow{
+    color:red!important;
+}
