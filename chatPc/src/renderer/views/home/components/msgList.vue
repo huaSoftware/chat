@@ -3,7 +3,7 @@
  * @Date: 2019-07-15 11:29:43
  * @description: 聊天记录
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 21:16:36
+ * @LastEditTime: 2020-11-01 19:20:29
  -->
 <template>
   <div class="room_msg_list" id="msg_list_empty">
@@ -191,23 +191,22 @@ export default {
 <style lang="scss" scoped>
 /*通过fixed固定mescroll的高度*/
 .mescroll {
-    position: fixed;
+    position: relative;
     padding:0.24rem;
-    top: 1.5rem;
-    bottom: 0;
     height: auto;
 }
 .title{
-    color:#00C2E6;
-    line-height: 0.6rem;
-    height:0.6rem;
+    line-height: 20px;
+    height:20px;
     display: flex;
     justify-content:space-between;
     flex-direction: row;
 }
 .msg{
     font-weight: bold;
-    line-height: 0.6rem;
+    line-height: 16px;
     border-bottom:  1px solid #e9e9e9;
+    margin-bottom:10px;
+    padding-bottom:5px;
 }
 </style>

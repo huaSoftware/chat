@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description: 房间事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 15:58:22
+ * @LastEditTime: 2020-11-01 19:24:19
  */
 import store from "../store";
 import router from "../router";

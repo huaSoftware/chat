@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 23:18:51
+ * @LastEditTime: 2020-11-01 20:10:04
  -->
 <template>
   <div id="msg_empty">
@@ -22,6 +22,15 @@
           </div>
       </div>
     </div>
+    <!-- 历史消息 -->
+    <el-dialog
+      class="detail-dialog"
+      title="历史消息"
+      :visible.sync="msgListVisible"
+      :close-on-click-modal="false"
+    >
+      <msgList></msgList>
+    </el-dialog>
     <!-- 内容 -->
     <mescroll-vue :up="mescrollUp" :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
       <div class="mscroll-container">
@@ -57,7 +66,7 @@
                 <div
                   v-if="key.type == RECORD"
                   class="msg"
-                  @touchstart="amrPlay(JSON.parse(key.msg), index)"
+                  @mousedown="amrPlay(JSON.parse(key.msg), index)"
                 >
                   <img
                     class="vioce_start"
@@ -102,7 +111,7 @@
                 <div
                   v-if="key.type == RECORD"
                   class="msg"
-                  @touchstart="amrPlay(JSON.parse(key.msg), index)"
+                  @mousedown="amrPlay(JSON.parse(key.msg), index)"
                 >
                   <img
                     class="chat_right vioce_start"
@@ -127,7 +136,7 @@
       </div>
     </mescroll-vue>
     <!-- 语音输入gif图 -->
-    <img v-show="recordingShow" class="recording" :src="'static/img/recording.png'" />
+    <img v-show="recordingShow" class="recording" :src="'static/img/recording.gif'" />
     <!-- 输入     :style="iconsShow || defsShow ?'bottom:200px':'bottom:0rem'"-->
     <inputWrapper
       @handleRecordShow="handleRecordShow"
@@ -141,6 +150,7 @@
       @handleStartRecord="handleStartRecord"
       @onFocus="handleOnFocus"
       @onBlur="handleOnblur"
+      @handleMsgList="msgListVisible=true"
       :recordShow="recordShow"
       :content="content"
       :touched="touched"
@@ -149,14 +159,14 @@
     <!-- 表情 -->
     <icons @recInsertIcon="insertIcon" v-if="iconsShow" />
     <!-- 功能栏 -->
-    <def v-show="defsShow" />
+    <!-- <def v-show="defsShow" /> -->
     <!-- 裁剪图 -->
-    <cropperBox
+    <!-- <cropperBox
       v-if="cropperShow"
       :reqImgData="reqImgData"
       @recReqImgData="recReqImgData"
       @recCropperShow="recCropperShow"
-    />
+    /> -->
   </div>
 </template>
 <script>
@@ -169,8 +179,9 @@ import inputWrapper from "./components/input-wrapper/input-wrapper";
 import icons from "./components/icons/icons";
 import def from "./components/def/def";
 import cropperBox from "./components/cropperBox/cropperBox";
+import msgList from "./msgList";
 import MescrollVue from "mescroll.js/mescroll.vue";
-import { uploadFile } from "@/socketioApi/common";
+import { uploadFile,uploadBase64 } from "@/socketioApi/common";
 import utils from "@/utils/utils";
 import { recOpen, recStart, recStop } from "@/utils/recorder";
 import storage from "@/utils/localstorage";
@@ -190,7 +201,8 @@ export default {
     def,
     cropperBox,
     vEmpty,
-    inputWrapper
+    inputWrapper,
+    msgList
   },
   computed: {
     ...mapGetters([
@@ -217,6 +229,7 @@ export default {
   data() {
     return {
       menuTop:0,
+      msgListVisible:false,
       menuVisible:false,
       currentKey:{},
       uuidVal: "",
@@ -272,6 +285,7 @@ export default {
     next();
   },
   destroyed() {
+    this.$store.commit("updateRoomStatus", false);
     if (Vue.prototype.$preview.self) {
       Vue.prototype.$preview.self.close();
     }
@@ -528,7 +542,19 @@ export default {
             });
           } else {
             this.reqImgData.imgDatas = rst.base64;
-            this.cropperShow = true;
+            uploadBase64(this.reqImgData).then(res => {
+              //Loading.close()
+              let img = `<img class='chat_img'  preview='1' preview-text='' width='100' src='${process.env.VUE_APP_CLIENT_SOCKET+res.data.path}'>`;
+              chatSend({
+              data: {
+                  msg: img,
+                  room_uuid: window.room_uuid,
+                  room_uuid: this.currentRoomUuid,
+                  type: this.IMG,
+                  save_action:this.currentRoomSaveAction
+              }
+              });
+            })
           }
           console.log(rst);
         })
@@ -576,6 +602,9 @@ export default {
       );
     },
     sendMsg() {
+      if(this.content === ""){
+        return;
+      }
       chatSend({
         data: {
           msg: this.content,
@@ -604,11 +633,7 @@ export default {
       this.content = value;
     },
     handleRecordShow(value) {
-      if (value == "") {
-        this.recordShow = !this.recordShow;
-      } else {
-        this.recordShow = value;
-      }
+      this.recordShow = value;
     },
     closeDefIconsShow() {
       this.iconsShow = false;

@@ -3,16 +3,16 @@
  * @Date: 2019-08-15 21:16:40
  * @description: 输入框页面
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 23:01:45
+ * @LastEditTime: 2020-11-01 19:16:58
  -->
 <template>
     <div class="input-wrapper">
         <div class="input-def">
-            <svg-icon @click="handleIconsShow" :icon-class="'smile'" class="icon-wrap"></svg-icon>
-            <svg-icon :icon-class="'file'" class="icon-wrap"></svg-icon>
-            <svg-icon :icon-class="'image'" class="icon-wrap"></svg-icon>
-            <svg-icon :icon-class="'record'" class="icon-wrap"></svg-icon>
-            <svg-icon :icon-class="'chat'" class="icon-wrap"></svg-icon>
+            <svg-icon @click.native="handleIconsShow" :icon-class="'smile'" class="icon-wrap"></svg-icon>
+            <svg-icon @click.native="handleFile" :icon-class="'file'" class="icon-wrap"></svg-icon>
+            <svg-icon @click.native="handleImg" :icon-class="'image'" class="icon-wrap"></svg-icon>
+            <svg-icon style="user-select: none" @mousedown.native="startRecord" @mouseup.native="stopRecord" @mousemove.native="stopRecord" :icon-class="'record'" class="icon-wrap"></svg-icon>
+            <svg-icon @click.native="handleMsgList" :icon-class="'chat'" class="icon-wrap"></svg-icon>
         </div>
       <!-- <div class="voice" @click="handleRecordShow">
         <i slot="icon" name="uniE906" custom></i>
@@ -88,17 +88,19 @@ export default {
             this.$emit('onBlur');
         },
         handleRecordShow(){
-            this.$emit('handleRecordShow', '')
+            this.$emit('handleRecordShow', true)
         },
         // 录音开始
-        startRecord() {
-          this.$emit('handleStartRecord','')
-
+        startRecord(e) {
+            this.$emit('handleRecordShow', true)
+            this.$emit('handleStartRecord','')
+            e.preventDefault();
         },
         // 录音结束
-        stopRecord() {
+        stopRecord(e) {
             this.$emit('handleRecordShow', false)
             //window.r.stop();
+            e.preventDefault();
         },
         closeDefIconsShow(){
             this.$emit('closeDefIconsShow', '')
@@ -117,6 +119,15 @@ export default {
         },
         handleFileOnChange(){
             this.$emit('handleFileOnChange',event)
+        },
+        handleFile(){
+            document.getElementById('file').click()
+        },
+        handleImg(){
+            document.getElementById('img').click()
+        },
+        handleMsgList(){
+            this.$emit('handleMsgList')
         }
     }
 }
@@ -159,10 +170,13 @@ export default {
 }
 
 .recording{
-    position:absolute; 
+    position: absolute;
+    width:100px;
+    left:65.3%;
+    margin-left:-50px;
     top:40%;
-    width:50%;
-    margin-left:25%;
+    margin-top:-50px;
+    height:100px;
 }
 .record {
     width: 100%;
@@ -207,5 +221,9 @@ export default {
     font-size: 20px;
     margin-right:15px;
     cursor:pointer;
+    fill:#606266!important;
+}
+.icon-wrap:hover{
+    fill:#000000!important;
 }
 </style>

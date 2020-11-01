@@ -45,14 +45,6 @@
     content: attr(placeholder);
 }
 
-.recording{
-    position:absolute; 
-    top:40%;
-    width:50%;
-    margin-left:25%;
-}
-
-
 .touched {
     background: #999999;
     color: #fff;
@@ -290,7 +282,7 @@ li {
     vertical-align: top;
 }
 .vioce_stop_right {
-     background: url('../../../assets/img/spriteImg.png') no-repeat;
+    background: url('../../../assets/img/spriteImg.png') no-repeat;
     background-position: -200px -433px;
     -webkit-background-size: 487px 462px;
     background-size: 487px 462px;
@@ -299,6 +291,7 @@ li {
     width: 23px;
     height: 23px;
     margin-right: 4px;
+    cursor: pointer;
 }
 
 .vioce_stop_left {
@@ -311,6 +304,7 @@ li {
     width: 23px;
     height: 23px;
     margin-left: 1px;
+    cursor: pointer;
 }
 
 /* .vue-cropper-box {

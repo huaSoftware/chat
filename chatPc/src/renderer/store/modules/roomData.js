@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 房间数据管理
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 15:47:24
+ * @LastEditTime: 2020-11-01 19:32:17
  */
 
 import { addLocalRoomMsg } from "@/utils/indexedDB"
@@ -154,6 +154,10 @@ export default {
             let unread_number = 0
             console.log("342342",groupRoomList)
             groupRoomList.forEach((item)=>{
+                console.log(item)
+                if(item.room === null){
+                    return;
+                }
                 if(item.room.last_msg !=''){
                     console.log(item.room.last_msg)
                     let data = JSON.parse(item.room.last_msg)

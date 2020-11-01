@@ -3,7 +3,7 @@
  * @Date: 2019-07-18 08:54:06
  * @description: 表情页面
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 21:17:37
+ * @LastEditTime: 2020-11-01 17:22:59
  -->
 
 <template>
@@ -50,21 +50,21 @@ export default {
 <style lang="scss">
 .icons_wrapper {
     height: 200px !important;
-    width: 100%;
-    max-width: 750px;
-    min-width: 300px;
+    width: 400px;
+    /* max-width: 750px;
+    min-width: 300px; */
     border-top: 1px solid #e9e9e9;
     text-align: left;
     overflow-x: auto;
     background: #fff;
     flex-wrap: wrap;
     position:fixed;
-    bottom:0rem;
+    bottom:140px;
 }
 
 .icons_wrapper img {
-    margin: 2.25%;
-    width: 8%;
+    margin: 1.8%;
+    width: 25px;
 }
 
 .swiper-pagination {
