@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-01 19:46:56
+ * @LastEditTime: 2020-11-03 21:52:59
  -->
 <template>
   <div class="content">
@@ -95,8 +95,9 @@
           <el-submenu
             v-for=" (item, index) in roomList"
             :key="index"
-            :index="`${String(index)}`">
-            <template slot="title">
+            :index="`${String(index)}`"
+            >
+            <template slot="title" v-if="item.room">
               <div :class="activeIndex == index?'room-wrap-hover room_wrap':'room_wrap'" @click="handleJoinRoom(item,index)" >
                 <div class="list-img">
                   <vImg v-if="item.type ==1 && item.adminUsers" :imgUrl="item.adminUsers.avatar" />
@@ -109,15 +110,17 @@
                 <div class="list-mes">
                   <div class="list-title">
                     <div class="title-left" v-if="item.type ==1&& item.adminUsers">{{item.adminUsers.nick_name}}</div>
-                    <div class="title-left" v-if="item.type ==0">{{item.users.nick_name}}</div>
+                    <div class="title-left" v-if="item.type ==0&& item.room.type ==0">{{item.users.nick_name}}</div>
+                    <div class="title-left" v-if="item.room.type == 1">{{item.room.name}}</div>
                     <div class="title-right">{{formatTime(item.room.updated_at)}}</div>
                   </div>
                   <div class="list-other">
-                    <div>
+                    <div class="other-left">
                       <span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span>
                     </div>
-                    <div v-if="alert && item.is_alert">
-                      <div v-if="item.unread_number" type="danger">{{item.unread_number}}</div>
+                    <div v-if="alert && item.is_alert" class="other-right">
+                      <el-badge style="margin-top:6px" v-if="item.unread_number" :value="item.unread_number">
+                    </el-badge>
                     </div>
                   </div>
                 </div>
@@ -196,18 +199,31 @@ export default {
       } else {
         this.alert = storage.get("alert");
       }
+      function compare(property){ 
+        return function(a,b){ 
+          var value1 = a[property]; 
+          var value2 = b[property]; 
+          return value1 - value2; 
+        } 
+      }
       roomGet().then(res => {
         console.log("222222",res)
+        let localRoomList = [];
         if (res.data.list != null) {
-          this.updateRoomList(res.data.list);
-          this.loading = false;
+          localRoomList = res.data.list;
+          console.log(res.data.list)
         }
-      });
-      userRoomRelationGet().then(res => {
-        if (res.data.list != null) {
-          this.updateGroupRoomList(res.data.list);
+         console.log(localRoomList)
+        userRoomRelationGet().then(resRoomRelation => {
+          if (resRoomRelation.data.list != null) {
+            localRoomList = localRoomList.concat(resRoomRelation.data.list);
+            localRoomList.sort(compare('updated_at'))
+            //this.updateGroupRoomList(resRoomRelation.data.list);
+          }
+          console.log(localRoomList)
+          this.updateRoomList(localRoomList);
           this.loading = false;
-        }
+        });
       });
     },
     handleJoinRoom(item,index) {
@@ -250,9 +266,9 @@ export default {
         if (data["type"] == this.CHAT_NOTIFY) {
           return JSON.parse(data["msg"])["msg"];
         }
-        return data["msg"];
+        return data["msg"]+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
       } catch (e) {
-        return last_msg;
+        return last_msg+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
       }
     }
   },
@@ -308,6 +324,18 @@ export default {
   .list-other{
     height:25px;
     line-height:25px;
+    display: flex;
+    justify-content: space-between;
+    .other-left{
+      width:80%;
+      overflow: hidden;
+      text-overflow:ellipsis;
+    }
+    .other-right{
+      width:20%;
+      text-align: right;
+      padding-right: 10px;
+    }
   }
 }
 .home-room-list-wrap:hover {

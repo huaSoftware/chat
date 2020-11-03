@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-08-26 20:03:30
+ * @LastEditTime: 2020-11-03 21:49:58
  -->
 <template>
   <div class="content">
@@ -30,6 +30,7 @@
         class="yd-list-item"
         v-for=" (item, index) in roomList"
         :key="index"
+        v-if="item.room"
       >
         <div class="yd-list-img">
           <vImg v-if="item.type ==1 && item.adminUsers" :imgUrl="item.adminUsers.avatar" />
@@ -42,14 +43,14 @@
         <div class="yd-list-mes">
           <div class="yd-list-title">
             <span class="title-left" v-if="item.type ==1&& item.adminUsers">{{item.adminUsers.nick_name}}</span>
-            <span class="title-left" v-if="item.type ==0">{{item.users.nick_name}}</span>
+            <span class="title-left" v-if="item.type ==0 && item.room.type ==0">{{item.users.nick_name}}</span>
+            <span class="title-left" v-if="item.room.type == 1">{{item.room.name}}</span>
             <span class="title-right">{{formatTime(item.room.updated_at)}}</span>
           </div>
           <div class="yd-list-other">
             <div>
               <span class="last_msg" v-html="formatLastMsg(item.room.last_msg)"></span>
             </div>
-            <!-- <div><yd-icon name="lingsheng" custom slot="icon" size="0.4rem"></yd-icon></div> -->
             <div v-if="alert && item.is_alert">
               <yd-badge v-if="item.unread_number" type="danger">{{item.unread_number}}</yd-badge>
             </div>
@@ -65,6 +66,7 @@
         class="yd-list-item"
         v-for=" (item, index) in groupRoomList"
         :key="index"
+        v-if="item.room"
       >
         <div class="yd-list-img">
           <img src="@/assets/img/default.jpg" />
@@ -151,19 +153,38 @@ export default {
       } else {
         this.alert = storage.get("alert");
       }
+      function compare(property){ 
+        return function(a,b){ 
+          var value1 = a[property]; 
+          var value2 = b[property]; 
+          return value1 - value2; 
+        } 
+      }
       roomGet().then(res => {
         console.log("222222",res)
+        let localRoomList = [];
         if (res.data.list != null) {
-          this.updateRoomList(res.data.list);
-          this.loading = false;
+          localRoomList = res.data.list;
+          console.log(res.data.list)
         }
+         console.log(localRoomList)
+        userRoomRelationGet().then(resRoomRelation => {
+          if (resRoomRelation.data.list != null) {
+            localRoomList = localRoomList.concat(resRoomRelation.data.list);
+            localRoomList.sort(compare('updated_at'))
+            //this.updateGroupRoomList(resRoomRelation.data.list);
+          }
+          console.log(localRoomList)
+          this.updateRoomList(localRoomList);
+          this.loading = false;
+        });
       });
-      userRoomRelationGet().then(res => {
+      /* userRoomRelationGet().then(res => {
         if (res.data.list != null) {
           this.updateGroupRoomList(res.data.list);
           this.loading = false;
         }
-      });
+      }); */
     },
     handleJoinRoom(item) {
       joinChatSend({

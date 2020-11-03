@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 房间数据管理
  * @LastEditors: hua
- * @LastEditTime: 2020-11-01 19:32:17
+ * @LastEditTime: 2020-11-03 21:52:21
  */
 
 import { addLocalRoomMsg } from "@/utils/indexedDB"
@@ -113,6 +113,9 @@ export default {
             //非云端状态下把最后一条聊天记录保存到本地
             let unread_number = 0
             roomList.forEach((item)=>{
+                if(item.room === null){
+                    return;
+                }
                 if(item.room.last_msg !=''){
                     let data = JSON.parse(item.room.last_msg)
                     if(item.save_action == 0){
@@ -154,7 +157,6 @@ export default {
             let unread_number = 0
             console.log("342342",groupRoomList)
             groupRoomList.forEach((item)=>{
-                console.log(item)
                 if(item.room === null){
                     return;
                 }
