@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-30 20:08:48
+ * @LastEditTime: 2020-11-04 21:19:36
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
@@ -12,19 +12,19 @@
       :toggleClick="toggleSideBar"
       :isActive="sidebar.opened"
     ></hamburger> -->
-    <breadcrumb></breadcrumb>
+   <!--  <breadcrumb></breadcrumb> -->
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="require('@/assets/img/default.png')" />
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
+        <!-- <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
           </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
+        </router-link> -->
+        <el-dropdown-item >
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>

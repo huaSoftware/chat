@@ -2,7 +2,7 @@
  * @Author: hua
  * @Date: 2019-04-23 20:38:30
  * @LastEditors: hua
- * @LastEditTime: 2020-04-17 23:14:12
+ * @LastEditTime: 2020-11-04 21:20:20
  -->
 <template>
   <div class="app-container">
@@ -70,7 +70,7 @@
 
 <script>
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
-import Vimg from "@/components/Vimg";
+import Vimg from "@/components/v-img";
 import { getToken } from "@/utils/auth";
 import { userList, userDelete } from "@/api/user";
 import { parseTime } from "@/utils/index";

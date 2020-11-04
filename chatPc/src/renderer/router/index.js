@@ -71,7 +71,7 @@ export const constantRoutes = [
     component: () => import("@/views/error-page/401"),
     hidden: true,
   },
-  {
+ /*  {
     path: "",
     component: Layout,
     redirect: "/dashboard",
@@ -83,20 +83,20 @@ export const constantRoutes = [
         meta: { title: "首页", icon: "dashboard", affix: true },
       },
     ],
-  },
+  }, */
   {
-    path: "/home",
+    path: "",
     component: Layout,
     children: [
       {
         path: "index",
         component: () => import("@/views/home/index"),
         name: "Home",
-        meta: { title: "消息", icon: "table" },
+        meta: { title: "消息", icon: "chat" },
       },
     ],
   },
-  /* {
+  {
     path: "/addressBook",
     component: Layout,
     children: [
@@ -104,22 +104,22 @@ export const constantRoutes = [
         path: "index",
         component: () => import("@/views/addressBook/index"),
         name: "AddressBook",
-        meta: { title: "通讯录", icon: "message" },
+        meta: { title: "通讯录", icon: "address" },
       },
     ],
   },
   {
-    path: "/users",
+    path: "/user",
     component: Layout,
     children: [
       {
         path: "index",
-        component: () => import("@/views/users/index"),
-        name: "Users",
-        meta: { title: "我的", icon: "people" },
+        component: () => import("@/views/user/index"),
+        name: "User",
+        meta: { title: "我的", icon: "mine" },
       },
     ],
-  } */
+  }
 ];
 
 /**

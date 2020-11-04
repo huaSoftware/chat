@@ -3,7 +3,7 @@
  * @Date: 2019-06-10 16:27:01
  * @description:
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 19:44:58
+ * @LastEditTime: 2020-11-04 21:14:11
  -->
 <template>
   <div class="login-container">
@@ -144,7 +144,7 @@ export default {
             setup()
             setTimeout(()=>{
               ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
-              this.$router.push({ name: 'Dashboard' })
+              this.$router.push({ name: 'Home' })
             },300)
             
           }).catch((err) => {

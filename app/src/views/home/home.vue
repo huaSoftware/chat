@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-03 21:49:58
+ * @LastEditTime: 2020-11-03 21:55:11
  -->
 <template>
   <div class="content">
@@ -160,31 +160,33 @@ export default {
           return value1 - value2; 
         } 
       }
-      roomGet().then(res => {
-        console.log("222222",res)
-        let localRoomList = [];
-        if (res.data.list != null) {
-          localRoomList = res.data.list;
-          console.log(res.data.list)
-        }
-         console.log(localRoomList)
-        userRoomRelationGet().then(resRoomRelation => {
-          if (resRoomRelation.data.list != null) {
-            localRoomList = localRoomList.concat(resRoomRelation.data.list);
-            localRoomList.sort(compare('updated_at'))
-            //this.updateGroupRoomList(resRoomRelation.data.list);
+      setTimeout(()=>{
+        roomGet().then(res => {
+          console.log("222222",res)
+          let localRoomList = [];
+          if (res.data.list != null) {
+            localRoomList = res.data.list;
+            console.log(res.data.list)
           }
           console.log(localRoomList)
-          this.updateRoomList(localRoomList);
-          this.loading = false;
+          userRoomRelationGet().then(resRoomRelation => {
+            if (resRoomRelation.data.list != null) {
+              localRoomList = localRoomList.concat(resRoomRelation.data.list);
+              localRoomList.sort(compare('updated_at'))
+              //this.updateGroupRoomList(resRoomRelation.data.list);
+            }
+            console.log(localRoomList)
+            this.updateRoomList(localRoomList);
+            this.loading = false;
+          });
         });
-      });
-      /* userRoomRelationGet().then(res => {
-        if (res.data.list != null) {
-          this.updateGroupRoomList(res.data.list);
-          this.loading = false;
-        }
-      }); */
+        /* userRoomRelationGet().then(res => {
+          if (res.data.list != null) {
+            this.updateGroupRoomList(res.data.list);
+            this.loading = false;
+          }
+        }); */
+      })
     },
     handleJoinRoom(item) {
       joinChatSend({
