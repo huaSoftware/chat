@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-29 20:26:09
+ * @LastEditTime: 2020-11-05 22:15:11
  */
 import { app, BrowserWindow, Menu, ipcMain, screen } from 'electron'
 
@@ -69,6 +69,11 @@ ipcMain.on('mianWindowLogout', (event, arg) => { // arg为接受到的消息
   let winH = screen.getPrimaryDisplay().workAreaSize.height;
   mainWindow.setBounds({ width: 420, height: 455, x: (winW / 2) - 210, y: (winH / 2) - 227 });
   mainWindow.setResizable(false);
+})
+
+ipcMain.on('mianWindowCheck', (event, arg) => { // arg为接受到的消息
+  mainWindow.setSize(800,  600);
+  mainWindow.setResizable(true);
 })
 /**
  * Auto Updater

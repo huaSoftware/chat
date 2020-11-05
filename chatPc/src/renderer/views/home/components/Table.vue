@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-04 21:12:40
+ * @LastEditTime: 2020-11-05 21:13:26
  -->
 <template>
   <div class="content">
@@ -225,6 +225,14 @@ export default {
             console.log(localRoomList)
             this.updateRoomList(localRoomList);
             this.loading = false;
+            if(this.$route.query.hasOwnProperty("id")){
+              localRoomList.forEach((item,index)=>{
+                if(item.room_uuid === this.$route.query.room_uuid){
+                  this.handleJoinRoom(item,index);
+                  return;
+                }
+              })
+            }
           });
         });
       })

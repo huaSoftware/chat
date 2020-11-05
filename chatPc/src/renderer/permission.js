@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 13:35:07
+ * @LastEditTime: 2020-11-05 22:08:35
  */
 import router from './router'
 import store from './store'
@@ -32,7 +32,7 @@ router.beforeEach(async(to, from, next) => {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       setTimeout(()=>{
-        ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
+        ipcRenderer.send('mianWindowCheck', 'ping') //给主进程发送消息“ping”
         next({ path: '/' })
         NProgress.done()
       },300)
@@ -42,7 +42,7 @@ router.beforeEach(async(to, from, next) => {
       console.log(hasRoles)
       if (hasRoles) {
         setTimeout(()=>{
-          ipcRenderer.send('mianWindowLogin', 'ping') //给主进程发送消息“ping”
+          ipcRenderer.send('mianWindowCheck', 'ping') //给主进程发送消息“ping”
           next()
           NProgress.done()
         },300)

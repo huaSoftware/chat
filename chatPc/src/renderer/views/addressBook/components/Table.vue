@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:36
  * @description: 通讯录
  * @LastEditors: hua
- * @LastEditTime: 2020-11-04 21:53:37
+ * @LastEditTime: 2020-11-05 21:12:26
  -->
 <template>
   <div class="content">
@@ -13,12 +13,12 @@
         <dl v-for="num in 26" :key="num">
           <dt :ref="String.fromCharCode(64+num)">{{String.fromCharCode(64+num)}}</dt>
           <dd
-            @click="handleJoinRoom(item)"
+            @click="handleActive(item,index)"
             v-for="(item, index) in adderssBookList"
             :key="index"
             v-if="String.fromCharCode(64+num) == item.users.first_word && item.type==0"
+            :class="activeIndex === index?'address-book-item-hover':''"
           >
-         
             <a>
               <vImg :imgUrl="item.users.head_img" />
               {{item.users.nick_name}}
@@ -28,10 +28,11 @@
         <dl>
           <dt :ref="'#'">#</dt>
           <dd
-            @click="handleJoinRoom(item)"
+            @click="handleActive(item,index)"
             v-for="(item, index) in adderssBookList"
             :key="index"
             v-if="item.users.first_word == '#'"
+            :class="activeIndex === index?'address-book-item-hover':''"
           >
            
             <a>
@@ -42,6 +43,36 @@
         </dl>
       </el-col>
       <el-col :span="16" style="height: 100%;">
+          <el-row style="height:100%;padding:50px;" v-if="JSON.stringify(localItem.users)!=='{}'">
+            <div class="header-row">
+              <div class="header-column">
+                <div class="header-name">{{localItem.users.nick_name}}</div>
+                <div class="header-des">{{localItem.users.email}}</div>
+              </div>
+              <vImg :img-url="localItem.users.head_img" class="header-img"/>
+            </div>
+            <div class="body-column">
+              <div class="body-row">
+                <div class="body-name">是否在线</div>
+                <div class="body-des">{{localItem.users.online}}</div>
+              </div>
+              <div class="body-row">
+                <div class="body-name">房间编号</div>
+                <div class="body-des">{{localItem.room.room_uuid}}</div>
+              </div>
+              <div class="body-row">
+                <div class="body-name">创建时间</div>
+                <div class="body-des">{{formatTime(localItem.room.created_at)}}</div>
+              </div>
+              <div class="body-row">
+                <div class="body-name">更新时间</div>
+                <div class="body-des">{{formatTime(localItem.room.updated_at)}}</div>
+              </div>
+            </div>
+            <div class="btn-center">
+              <el-button type="success" class="send-btn" @click="handleJoinRoom">发消息</el-button>
+            </div>
+          </el-row>
       </el-col>
     </el-row>
   </div>
@@ -51,6 +82,7 @@ import { mapGetters, mapMutations } from "vuex";
 import { addressBookGet } from "@/socketioApi/addressBook";
 import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
 import { joinChatSend } from "@/socketIoApi/chat";
+import utils from "@/utils/utils";
 import vImg from "@/components/v-img";
 import { Message } from "element-ui";
 export default {
@@ -64,6 +96,8 @@ export default {
       adderssBookList: [],
       defShow: false,
       activeName: "",
+      activeIndex:"",
+      localItem:{users:{},room:{}},
       defs: [
         {
           label: "发起群聊",
@@ -119,13 +153,20 @@ export default {
       });
     },
     handleScroll() {},
-    handleJoinRoom(item) {
-      joinChatSend({
-        name: item.users.nick_name,
-        room_uuid: item.room_uuid,
-        type: item.room.type,
-        save_action: item.save_action
-      });
+    handleActive(item,index){
+      console.log(item)
+      this.localItem = item;
+      this.activeIndex = index;
+    },
+    handleJoinRoom() {
+       //传参给home页
+      this.$router.push({ name: 'Home',query: this.localItem})
+      /* joinChatSend({
+        name: this.localItem.users.nick_name,
+        room_uuid: this.localItem.room_uuid,
+        type: this.localItem.room.type,
+        save_action: this.localItem.save_action
+      }); */
     },
     handleJoinGroupRoom(item) {
       joinChatSend({
@@ -134,15 +175,21 @@ export default {
         type: item.room.type,
         save_action: item.save_action
       });
-    }
+    },
+    formatTime(value) {
+      if(!value){
+        return
+      }
+      return utils.time.formatDate(value, "yyyy-MM-dd hh:mm:ss");
+    },
   },
   created() {
     this.init();
   },
   mounted() {
-    document
+    /* document
       .getElementById("scrollView")
-      .addEventListener("scroll", this.handleScroll);
+      .addEventListener("scroll", this.handleScroll); */
   }
 };
 </script>
@@ -173,9 +220,10 @@ dl {
 }
 
 .address-book-list dd {
-  margin-top: 10px;
+/*   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 10px;
+  padding-left: 10px; */
+  margin: 0px;
 }
 
 .address-book-list dd.hot {
@@ -194,10 +242,9 @@ dl {
 
 .address-book-list dd a {
   display: block;
-  height: 27.5px;
-  line-height: 2.75rem;
+  height: 50px;
   position: relative;
-  line-height: 27.5px;
+  line-height: 50px;
 }
 
 .address-book-list dd a img {
@@ -206,6 +253,8 @@ dl {
   height: 27.5px;
   width: 27.5px;
   margin-right: 5%;
+  margin-top:10px;
+  margin-left:10px;
 }
 
 .address-book-list dd.hot a span {
@@ -254,11 +303,6 @@ dl {
   margin-left: 0.3rem;
 }
 
-dd {
-  margin-top: 10px;
-  padding-bottom: 10px;
-  margin-left: 10px;
-}
 dd a {
   display: block;
   height: 27.5px;
@@ -273,7 +317,61 @@ dd a img {
   width: 27.5px;
   margin-right: 5%;
 }
-.activeName {
-  color: #45baf4 !important;
+.address-book-item-hover{
+  background-color: #ecf5ff;
+}
+.header-row{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom:20px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+}
+.header-column{
+  display:flex;
+  flex-direction: column;
+}
+.header-name{
+  font-size:24px;
+  line-height: 24px;
+}
+.header-des{
+  font-size:14px;
+  line-height: 14px;
+  margin-top:15px;
+  color:#999999;
+}
+.header-img{
+  height:60px;
+}
+.body-row{
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.body-column{
+  display:flex;
+  flex-direction: column;
+  padding-bottom:20px;
+  padding-top:20px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+}
+.body-name{
+  font-size:14px;
+  line-height: 29px;
+  color:#999999;
+  margin-right:25px;
+}
+.body-des{
+  font-size:14px;
+  line-height: 29px;
+}
+.send-btn{
+  width:150px;
+}
+.btn-center{
+  display: flex;
+  justify-content: center;
+  margin-top:30px;
 }
 </style>
