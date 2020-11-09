@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-04 21:19:36
+ * @LastEditTime: 2020-11-09 21:26:26
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
@@ -13,6 +13,13 @@
       :isActive="sidebar.opened"
     ></hamburger> -->
    <!--  <breadcrumb></breadcrumb> -->
+   <el-button @click="addFriendVisible=true" size="small" round icon="el-icon-plus" style="margin-left:10px;"></el-button>
+   <el-dialog :close-on-click-modal="false" title="添加好友" :visible.sync="addFriendVisible">
+     <addFriend v-if="addFriendVisible"></addFriend>
+    </el-dialog>
+   <el-dialog title="添加好友记录" :visible.sync="visible">
+     <newFriend v-if="visible"></newFriend>
+    </el-dialog>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="require('@/assets/img/default.png')" />
@@ -24,7 +31,16 @@
             首页
           </el-dropdown-item>
         </router-link> -->
-        <el-dropdown-item >
+        <el-dropdown-item>
+          <span @click="visible=true" style="display:block;">添加好友记录</span>
+        </el-dropdown-item>
+        <el-dropdown-item>
+          <span @click="handleClean('addressBookBeg')" style="display:block;">清空好友记录</span>
+        </el-dropdown-item>
+        <el-dropdown-item>
+          <span @click="handleClean('msg')" style="display:block;">清空聊天记录</span>
+        </el-dropdown-item>
+        <el-dropdown-item>
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -36,12 +52,22 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
+import newFriend from "@/components/newFriend/newFriend";
+import addFriend from "@/components/addFriend/addFriend";
 import {ipcRenderer} from 'electron';
-
+import { MessageBox, Message } from "element-ui";
 export default {
   components: {
     Breadcrumb,
     Hamburger,
+    newFriend,
+    addFriend
+  },
+  data() {
+    return {
+      visible:false,
+      addFriendVisible:false
+    };
   },
   computed: {
     ...mapGetters(["sidebar", "avatar"]),
@@ -50,11 +76,24 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
+    handleClean(name) {
+      MessageBox.confirm(`是否清除?清除后不可还原`, {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+        window.indexedDB.deleteDatabase(name);
+        Message({
+          message:`清除成功`,
+          type: "success",
+          duration: 5 * 1000,
+        });
+      })
+    },
     logout() {
       this.$store.dispatch('user/logout').then(res=>{
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-      })
-      
+      })   
     }
   },
 };

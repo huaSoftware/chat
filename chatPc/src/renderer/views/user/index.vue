@@ -3,11 +3,14 @@
  * @Date: 2019-02-01 17:20:34
  * @description: 我的页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-05 22:04:26
+ * @LastEditTime: 2020-11-09 20:35:27
  -->
 
 <template>
   <div class="content">
+    <el-dialog title="添加好友记录" :visible.sync="visible">
+     <newFriend v-if="visible"></newFriend>
+    </el-dialog>
     <div class="header_wrapper">
       <vImg class="header_img" :imgUrl="userInfo.head_img" />
       <div class="header_body">
@@ -20,10 +23,9 @@
     </div>
 
     <!-- 功能区 -->
-    <div class="item">添加好友记录</div>
-    <div class="item">清空添加好友记录</div>
-    <div class="item">清空聊天记录</div>
-    <div class="item">新消息提醒</div>
+    <div class="item" @click="visible=true">添加好友记录</div>
+    <div class="item" @click="handleClean('addressBookBeg')">清空添加好友记录</div>
+    <div class="item" @click="handleClean('msg')">清空聊天记录</div>
     <div class="item" @click="handleExit">退出</div>
     <!-- <CrossItem name="添加好友记录"  @click.native="$router.push({name: 'newFriend'})">
         <yd-badge   type="danger" v-if="newFriendAlertNumber > 0">{{newFriendAlertNumber}}</yd-badge>
@@ -46,12 +48,13 @@ import { MessageBox, Message } from "element-ui";
 import { deleteTables } from "@/utils/indexedDB";
 import { setDown, send } from "@/utils/socketio";
 import { clearData } from "@/utils/auth";
-
+import newFriend from "@/components/newFriend/newFriend";
 export default {
-  components: { vImg },
+  components: { vImg,newFriend },
   data() {
     return {
       userInfo: {},
+      visible:false
     };
   },
   computed: {
@@ -65,6 +68,20 @@ export default {
         this.userInfo = res.data;
         this.$store.commit("user/updateUserInfo", res.data);
       });
+    },
+    handleClean(name) {
+      MessageBox.confirm(`是否清除?清除后不可还原`, {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+        window.indexedDB.deleteDatabase(name);
+        Message({
+          message:`清除成功`,
+          type: "success",
+          duration: 5 * 1000,
+        });
+      })
     },
     handleExit() {
       MessageBox.confirm(`确认退出？退出后本地记录将自动删除！`, {
