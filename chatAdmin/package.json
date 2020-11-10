@@ -59,7 +59,7 @@
     "path-to-regexp": "2.4.0",
     "recorder-core": "^1.0.20040700",
     "screenfull": "4.2.0",
-    "showdown": "1.9.0",
+    "showdown": "1.9.1",
     "sortablejs": "1.8.4",
     "tui-editor": "1.3.3",
     "vue": "2.6.10",
