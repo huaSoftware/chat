@@ -3,7 +3,7 @@
  * @Date: 2020-09-30 20:46:21
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-09 21:32:26
+ * @LastEditTime: 2020-11-10 20:21:09
 -->
 <template>
   <div class="container">
@@ -35,7 +35,7 @@ import {search} from '@/socketioApi/search';
 import vImg from '@/components/v-img';
 
 export default {
-  name: "Menu",
+  name: "AddFriend",
   data() {
     return {
       loading: false,

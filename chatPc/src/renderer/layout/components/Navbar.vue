@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-09 21:26:26
+ * @LastEditTime: 2020-11-10 21:28:35
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
@@ -13,9 +13,17 @@
       :isActive="sidebar.opened"
     ></hamburger> -->
    <!--  <breadcrumb></breadcrumb> -->
-   <el-button @click="addFriendVisible=true" size="small" round icon="el-icon-plus" style="margin-left:10px;"></el-button>
+   <el-button class="btn" @click="addFriendVisible=true" size="small" round style="margin-left:10px;">
+    <svg-icon icon-class="zengjiarenyuan" class="icon" />
+   </el-button>
+   <el-button class="btn" @click="addFriendsVisible=true" size="small" round style="margin-left:10px;">
+    <svg-icon icon-class="zengjiaqunzu" class="icon" />
+   </el-button>
    <el-dialog :close-on-click-modal="false" title="添加好友" :visible.sync="addFriendVisible">
      <addFriend v-if="addFriendVisible"></addFriend>
+    </el-dialog>
+    <el-dialog :close-on-click-modal="false" title="创建群组" :visible.sync="addFriendsVisible">
+     <addFriends v-if="addFriendsVisible" @handleCloseAddFriends="handleCloseAddFriends"></addFriends>
     </el-dialog>
    <el-dialog title="添加好友记录" :visible.sync="visible">
      <newFriend v-if="visible"></newFriend>
@@ -54,6 +62,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import newFriend from "@/components/newFriend/newFriend";
 import addFriend from "@/components/addFriend/addFriend";
+import addFriends from "@/components/addFriends/addFriends";
 import {ipcRenderer} from 'electron';
 import { MessageBox, Message } from "element-ui";
 export default {
@@ -61,18 +70,23 @@ export default {
     Breadcrumb,
     Hamburger,
     newFriend,
-    addFriend
+    addFriend,
+    addFriends
   },
   data() {
     return {
       visible:false,
-      addFriendVisible:false
+      addFriendVisible:false,
+      addFriendsVisible:false
     };
   },
   computed: {
     ...mapGetters(["sidebar", "avatar"]),
   },
   methods: {
+    handleCloseAddFriends(){
+      this.addFriendsVisible = false;
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -100,6 +114,13 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.icon{
+  font-size:13px;
+  fill:#606266!important;
+}
+.btn:hover .icon{
+  fill:#409EFF!important;
+}
 .navbar {
   height: 50px;
   line-height: 50px;

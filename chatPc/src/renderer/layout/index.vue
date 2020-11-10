@@ -25,7 +25,7 @@
 
 <script>
 import RightPanel from "@/components/RightPanel";
-  import headerTop from '@/components/header/header';
+import headerTop from '@/components/header/header';
 import { AppMain, Navbar, Sidebar } from "./components";
 /* import { Settings } from "./components/Settings/index";
 import { TagsView } from "./components/TagsView/index" */ import ResizeMixin from "./mixin/ResizeHandler";
