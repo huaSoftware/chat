@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:41:03
  * @description: 房间事件
  * @LastEditors: hua
- * @LastEditTime: 2020-11-01 19:24:19
+ * @LastEditTime: 2020-11-11 21:22:52
  */
 import store from "../store";
 import router from "../router";
@@ -116,7 +116,7 @@ export default function room(data, method) {
             }
             console.log("聊天室进入传参", data);
             if (data.type == store.getters.ALONE) {
-              store.commit("updateRoomStatus", true);
+              store.commit("updateRoomStatus", data.type);
               /* router
                 .push({
                   name: "room",
@@ -125,7 +125,7 @@ export default function room(data, method) {
                 .catch(() => {}); */
             }
             if (data.type == store.getters.ADMIN) {
-              store.commit("updateRoomStatus", true);
+              store.commit("updateRoomStatus", data.type);
               /* router
                 .push({
                   name: "room",
@@ -134,6 +134,7 @@ export default function room(data, method) {
                 .catch(() => {}); */
             }
             if (data.type == store.getters.GROUP) {
+              store.commit("updateRoomStatus", data.type);
               /* router
                 .push({
                   name: "groupRoom",

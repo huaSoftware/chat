@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-05 21:13:26
+ * @LastEditTime: 2020-11-11 21:37:21
  -->
 <template>
   <div class="content">
@@ -132,7 +132,8 @@
         </el-menu>
       </el-col>
       <el-col :span="16" style="height: 100%;">
-        <room v-if="roomStatus"></room>
+        <room v-if="roomStatus === 0 || roomStatus === 3"></room>
+        <groupRoom v-if="roomStatus === 1"></groupRoom>
       </el-col>
     </el-row>
   </div>
@@ -141,6 +142,7 @@
 import { mapGetters, mapMutations } from "vuex";
 import vImg from '@/components/v-img'
 import room from '../components/room';
+import groupRoom from '../components/groupRoom';
 import utils from "@/utils/utils";
 import { roomGet } from "@/socketioApi/room";
 import storage from "@/utils/localstorage";
@@ -148,7 +150,7 @@ import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
 import { setup } from "@/utils/socketio";
 import { joinChatSend } from "@/socketIoApi/chat";
 export default {
-  components: { vImg,room },
+  components: { vImg, room, groupRoom },
   name: "home",
   data() {
     return {
@@ -204,7 +206,7 @@ export default {
         return function(a,b){ 
           var value1 = a[property]; 
           var value2 = b[property]; 
-          return value1 - value2; 
+          return !(value1 - value2); 
         } 
       }
       setTimeout(()=>{
