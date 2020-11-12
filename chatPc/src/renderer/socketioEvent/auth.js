@@ -3,14 +3,14 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-11-11 20:48:28
+ * @LastEditTime: 2020-11-12 21:41:08
  */
 import store from "../store";
 import router from "../router";
 import { joinChatSend } from "@/socketIoApi/chat";
 import { stopVideo, hangUp, init, agreeStartVideo, onOffer, onAnswer, onCandidate, stop, connect } from "@/utils/webRtc.js"
 import { MessageBox, Message } from "element-ui";
-
+import { roomGet } from "@/socketioApi/room";
 import {
   send,
   response,

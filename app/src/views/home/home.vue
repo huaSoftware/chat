@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-03 21:55:11
+ * @LastEditTime: 2020-11-12 21:38:18
  -->
 <template>
   <div class="content">
@@ -157,7 +157,7 @@ export default {
         return function(a,b){ 
           var value1 = a[property]; 
           var value2 = b[property]; 
-          return value1 - value2; 
+          return -(value1 - value2); 
         } 
       }
       setTimeout(()=>{

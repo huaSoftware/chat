@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 17:20:34
  * @description: 我的页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-09 20:35:27
+ * @LastEditTime: 2020-11-12 21:07:29
  -->
 
 <template>
@@ -23,7 +23,10 @@
     </div>
 
     <!-- 功能区 -->
-    <div class="item" @click="visible=true">添加好友记录</div>
+    <div class="item" @click="visible=true">
+      添加好友记录
+      <el-badge  v-if="newFriendAlertNumber > 0" :value="newFriendAlertNumber"></el-badge>
+    </div>
     <div class="item" @click="handleClean('addressBookBeg')">清空添加好友记录</div>
     <div class="item" @click="handleClean('msg')">清空聊天记录</div>
     <div class="item" @click="handleExit">退出</div>

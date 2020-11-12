@@ -3,7 +3,7 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-10 21:28:35
+ * @LastEditTime: 2020-11-12 21:32:41
  -->
 <template>
   <el-menu class="navbar" mode="horizontal">
@@ -32,6 +32,7 @@
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="require('@/assets/img/default.png')" />
         <i class="el-icon-caret-bottom"></i>
+        <el-badge  style="position: absolute;top:-10px;left:28px;" v-if="newFriendAlertNumber > 0" :value="newFriendAlertNumber"></el-badge>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <!-- <router-link class="inlineBlock" to="/">
@@ -40,7 +41,7 @@
           </el-dropdown-item>
         </router-link> -->
         <el-dropdown-item>
-          <span @click="visible=true" style="display:block;">添加好友记录</span>
+          <span @click="visible=true" style="display:block;">添加好友记录<el-badge  style="position: absolute;top:10px;right:5px;" v-if="newFriendAlertNumber > 0" :value="newFriendAlertNumber"></el-badge></span>
         </el-dropdown-item>
         <el-dropdown-item>
           <span @click="handleClean('addressBookBeg')" style="display:block;">清空好友记录</span>
@@ -81,7 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"]),
+    ...mapGetters(["sidebar", "avatar","newFriendAlertNumber"]),
   },
   methods: {
     handleCloseAddFriends(){

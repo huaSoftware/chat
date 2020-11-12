@@ -3,7 +3,7 @@
  * @Date: 2019-02-16 19:35:43
  * @description: 新的朋友列表
  * @LastEditors: hua
- * @LastEditTime: 2020-11-09 20:46:07
+ * @LastEditTime: 2020-11-12 21:37:48
  -->
 <template>
   <div class="newFriend_content">
@@ -55,6 +55,9 @@ import { MessageBox } from "element-ui";
 import utils from "@/utils/utils";
 import storage from "@/utils/localstorage";
 import { addressBookAdd } from "@/socketioApi/addressBook";
+import { roomGet } from "@/socketioApi/room";
+import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
+
 export default {
   data() {
     return {
@@ -102,7 +105,25 @@ export default {
               cancelButtonText: "取消",
               type: "warning",
             }).then(() => {
-            this.$router.push({ name: "home" });
+              setTimeout(()=>{
+                roomGet().then(res => {
+                  console.log("222222",res)
+                  let localRoomList = [];
+                  if (res.data.list != null) {
+                    localRoomList = res.data.list;
+                    console.log(res.data.list)
+                  }
+                  console.log(localRoomList)
+                  userRoomRelationGet().then(resRoomRelation => {
+                    if (resRoomRelation.data.list != null) {
+                      localRoomList = localRoomList.concat(resRoomRelation.data.list);
+                      localRoomList.sort(compare('updated_at'))
+                    }
+                    this.updateRoomList(localRoomList);
+                    this.$router.push({ name: "Home" });
+                  });
+                });
+              })
           })
         });
       });
@@ -122,6 +143,7 @@ export default {
 
 .yd-list-theme4 .yd-list-item .yd-list-title {
   line-height: 30px;
+  max-height: 30px!important;
 }
 .title-right {
   font-weight: normal;

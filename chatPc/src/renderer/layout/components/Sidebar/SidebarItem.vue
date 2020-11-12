@@ -1,3 +1,10 @@
+<!--
+ * @Author: hua
+ * @Date: 2020-04-18 18:43:22
+ * @description: 
+ * @LastEditors: hua
+ * @LastEditTime: 2020-11-12 20:58:59
+-->
 <template>
   <div class="menu-wrapper">
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
@@ -7,7 +14,9 @@
         <el-menu-item :index="item.path+'/'+item.children[0].path" :class="{'submenu-title-noDropdown':!isNest}">
           <svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>
           <span v-if="item.children[0].meta&&item.children[0].meta.title" slot="title">{{item.children[0].meta.title}}</span>
-        </el-menu-item>
+          <el-badge  v-if="item.children[0]['name'] === 'Home'  && (msgAlertNumber+groupMsgAlertNumber) > 0" class="badge" :value="msgAlertNumber+groupMsgAlertNumber"></el-badge>
+          <el-badge  v-if="item.children[0]['name'] === 'User'  && newFriendAlertNumber > 0" class="badge" :value="newFriendAlertNumber"></el-badge>
+       </el-menu-item>
       </router-link>
 
       <el-submenu v-else :index="item.name||item.path" :key="item.name">
@@ -33,6 +42,8 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from "vuex";
+
 export default {
   name: 'SidebarItem',
   props: {
@@ -43,6 +54,19 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      "msgList",
+      "currentRoomUuid",
+      "currentRoomName",
+      "currentRoomType",
+      "currentRoomSaveAction",
+      "msgAlertNumber",
+      "groupMsgAlertNumber",
+      "newFriendAlertNumber"
+    ]),
+    ...mapState(["user"])
   },
   methods: {
     hasOneShowingChildren(children) {
@@ -57,3 +81,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.badge{
+  position: absolute;
+  margin-left:-24px;
+}
+</style>

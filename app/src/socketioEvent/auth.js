@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 20:29:33
+ * @LastEditTime: 2020-11-12 21:41:13
  */
 import store from "../store";
 import router from "../router";
@@ -31,7 +31,16 @@ import {
 } from "@/socketioApi/room";
 import { addressBookBegCacheDel } from "@/socketioApi/addressBook";
 import utils from '@/utils/utils'
+import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
+import { roomGet } from "@/socketioApi/room";
 
+function compare(property){ 
+  return function(a,b){ 
+    var value1 = a[property]; 
+    var value2 = b[property]; 
+    return !(value1 - value2); 
+  } 
+}
 /*
  * 有权限socketio监听事件
  */
@@ -308,8 +317,14 @@ export default function setupAuthEvent() {
             console.log("H5消息通知")
             utils.others.showMsgNotification(data[0].users.nick_name, formatLastMsg(data[0]["room"]["last_msg"]),()=>{});
           }
-          console.log(24234234, data);
-          store.dispatch("updateRoomList", data);
+          userRoomRelationGet().then(resRoomRelation => {
+            if (resRoomRelation.data.list != null) {
+              data = data.concat(resRoomRelation.data.list);
+              data.sort(compare('updated_at'))
+              //this.updateGroupRoomList(resRoomRelation.data.list);
+            }
+            store.dispatch("updateRoomList", data);
+          });
         }
       })
       .catch((e) => {
@@ -336,9 +351,18 @@ export default function setupAuthEvent() {
           utils.others.showMsgNotification(data[0].users.nick_name, last_msg,()=>{});
         }
         //}
+        roomGet().then(res => {
+          console.log("222222",res)
+          let localRoomList = [];
+          if (res.data.list != null) {
+            localRoomList = res.data.list;
+            console.log(res.data.list)
+          }
+          localRoomList = localRoomList.concat(data);
+          localRoomList.sort(compare('updated_at'));  
+          store.dispatch("updateGroupRoomList", data);
+        });
       }
-      console.log(data);
-      store.dispatch("updateGroupRoomList", data);
     });
   });
   //初始化好友邀请消息状态
