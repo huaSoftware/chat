@@ -3,7 +3,7 @@
  * @Date: 2019-08-15 21:16:40
  * @description: 输入框页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-01 19:16:58
+ * @LastEditTime: 2020-11-13 21:03:41
  -->
 <template>
     <div class="input-wrapper">
@@ -13,6 +13,7 @@
             <svg-icon @click.native="handleImg" :icon-class="'image'" class="icon-wrap"></svg-icon>
             <svg-icon style="user-select: none" @mousedown.native="startRecord" @mouseup.native="stopRecord" @mousemove.native="stopRecord" :icon-class="'record'" class="icon-wrap"></svg-icon>
             <svg-icon @click.native="handleMsgList" :icon-class="'chat'" class="icon-wrap"></svg-icon>
+            <svg-icon @click.native="handleDetail" :icon-class="'wechat'" class="icon-wrap"></svg-icon>
         </div>
       <!-- <div class="voice" @click="handleRecordShow">
         <i slot="icon" name="uniE906" custom></i>
@@ -128,6 +129,9 @@ export default {
         },
         handleMsgList(){
             this.$emit('handleMsgList')
+        },
+        handleDetail(){
+            this.$emit('handleDetail')
         }
     }
 }

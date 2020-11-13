@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-01 20:10:04
+ * @LastEditTime: 2020-11-13 21:32:34
  -->
 <template>
   <div id="msg_empty">
@@ -29,7 +29,11 @@
       :visible.sync="msgListVisible"
       :close-on-click-modal="false"
     >
-      <msgList></msgList>
+      <msgList style="height: 300px;overflow: auto;"></msgList>
+    </el-dialog>
+    <!-- 详情 -->
+    <el-dialog title="详情" :visible.sync="detailsVisible">
+      <roomDetails style="height: 300px;overflow: auto;" v-if="detailsVisible"></roomDetails>
     </el-dialog>
     <!-- 内容 -->
     <mescroll-vue :up="mescrollUp" :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
@@ -151,6 +155,7 @@
       @onFocus="handleOnFocus"
       @onBlur="handleOnblur"
       @handleMsgList="msgListVisible=true"
+      @handleDetail="detailsVisible=true"
       :recordShow="recordShow"
       :content="content"
       :touched="touched"
@@ -174,6 +179,7 @@
 import Vue from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import vImg from "@/components/v-img";
+import roomDetails from "@/components/roomDetails";
 import vEmpty from "@/components/v-empty/v-empty";
 import inputWrapper from "./components/input-wrapper/input-wrapper";
 import icons from "./components/icons/icons";
@@ -202,7 +208,8 @@ export default {
     cropperBox,
     vEmpty,
     inputWrapper,
-    msgList
+    msgList,
+    roomDetails
   },
   computed: {
     ...mapGetters([
@@ -229,6 +236,7 @@ export default {
   data() {
     return {
       menuTop:0,
+      detailsVisible:false,
       msgListVisible:false,
       menuVisible:false,
       currentKey:{},
