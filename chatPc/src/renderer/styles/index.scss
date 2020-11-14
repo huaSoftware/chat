@@ -225,3 +225,9 @@ aside {
   margin-left: 16px!important;
   font-size:20px!important;
 }
+.el-table--border::after, .el-table--group::after, .el-table::before {
+  content: '';
+  position: absolute;
+  background: none!important;
+  z-index: 1;
+}

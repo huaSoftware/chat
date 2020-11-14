@@ -3,7 +3,7 @@
  * @Date: 2020-09-30 20:46:21
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-10 21:28:02
+ * @LastEditTime: 2020-11-14 20:00:37
 -->
 <template>
   <div class="container">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import { Message } from "element-ui";
 import storage from "@/utils/localstorage"
 import {addressBookGet} from '@/socketioApi/addressBook'
@@ -42,7 +42,8 @@ import {groupChatCreate,addGroupByUserId } from '@/socketioApi/userRoomRelation'
 import vEditDiv from '@/components/v-edit-div/v-edit-div'
 import {joinChatSend} from '@/socketIoApi/chat'
 import vImg from '@/components/v-img'
-
+import { roomGet } from "@/socketioApi/room";
+import { userRoomRelationGet } from "@/socketioApi/userRoomRelation";
 export default {
   name: "AddFriends",
   data() {
@@ -84,6 +85,9 @@ export default {
   mounted() {
   },
   methods: {
+    ...mapMutations({
+      updateRoomList: "updateRoomList",
+    }),
     init(){
         if(this.room_uuid !== ''){
             console.log(this.localGroupRoomUuid)
@@ -97,6 +101,34 @@ export default {
     },
     handleSelectionChange(val) {
        this.checkedUsers = val;
+    },
+    handleUpdateRoom() {
+      setTimeout(()=>{
+        function compare(property){ 
+          return function(a,b){ 
+            var value1 = a[property]; 
+            var value2 = b[property]; 
+            return !(value1 - value2); 
+          } 
+        }
+        roomGet().then(res => {
+          console.log("222222",res)
+          let localRoomList = [];
+          if (res.data.list != null) {
+            localRoomList = res.data.list;
+            console.log(res.data.list)
+          }
+          console.log(localRoomList)
+          userRoomRelationGet().then(resRoomRelation => {
+            if (resRoomRelation.data.list != null) {
+              localRoomList = localRoomList.concat(resRoomRelation.data.list);
+              localRoomList.sort(compare('updated_at'))
+            }
+            this.updateRoomList(localRoomList);
+            this.$router.push({ name: "Home" });
+          });
+        });
+      })
     },
     handleSubmit(){
         let user = storage.get('user')
@@ -121,6 +153,7 @@ export default {
                     type: "success",
                     duration: 5 * 1000,
                 });
+                this.handleUpdateRoom();
                 this.$emit('handleCloseAddFriends', '')
             })
         }else{
@@ -138,6 +171,7 @@ export default {
                     type: "success",
                     duration: 5 * 1000,
                 })
+                this.handleUpdateRoom();
                 this.$emit('handleCloseAddFriends', '')
             })
         }

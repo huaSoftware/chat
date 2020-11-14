@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-13 21:39:43
+ * @LastEditTime: 2020-11-14 19:49:22
  -->
 <template>
   <div id="msg_empty">
@@ -33,7 +33,7 @@
     </el-dialog>
      <!-- 详情 -->
     <el-dialog title="详情" :visible.sync="detailsVisible">
-      <groupRoomDetails style="height: 300px;overflow: auto;" v-if="detailsVisible"></groupRoomDetails>
+      <groupRoomDetails @handleClose="handleDetailsClose" style="height: 300px;overflow: auto;" v-if="detailsVisible"></groupRoomDetails>
     </el-dialog>
     <!-- 内容 -->
     <mescroll-vue :up="mescrollUp" :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
@@ -916,6 +916,10 @@ export default {
             console.log(res);
           });
       }
+    },
+    handleDetailsClose(){
+      this.$emit('handleInIt');
+      this.detailsVisible = false;
     }
   },
   watch: {

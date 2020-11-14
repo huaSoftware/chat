@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 房间详情
  * @LastEditors: hua
- * @LastEditTime: 2020-11-13 21:34:08
+ * @LastEditTime: 2020-11-14 19:35:15
  -->
 <template>
     <div class="room_details" >
@@ -195,7 +195,7 @@ export default {
                         type: "success",
                         duration: 5 * 1000,
                     });
-                    this.$router.push({name:'Home'})
+                    this.handleClose();
                 }) 
             });
         },
@@ -212,9 +212,13 @@ export default {
                             type: "success",
                             duration: 5 * 1000,
                         });
+                        this.handleClose();
                     })
                 }
             });
+        },
+        handleClose(){
+            this.$emit("handleClose")
         }
     },
     destroyed(){

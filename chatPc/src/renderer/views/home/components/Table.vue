@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-11 21:37:21
+ * @LastEditTime: 2020-11-14 19:48:43
  -->
 <template>
   <div class="content">
@@ -132,8 +132,8 @@
         </el-menu>
       </el-col>
       <el-col :span="16" style="height: 100%;">
-        <room v-if="roomStatus === 0 || roomStatus === 3"></room>
-        <groupRoom v-if="roomStatus === 1"></groupRoom>
+        <room v-if="roomStatus === 0 || roomStatus === 3" @handleInIt="init"></room>
+        <groupRoom v-if="roomStatus === 1" @handleInIt="init"></groupRoom>
       </el-col>
     </el-row>
   </div>

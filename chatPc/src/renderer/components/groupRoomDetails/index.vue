@@ -3,7 +3,7 @@
  * @Date: 2019-07-10 10:50:03
  * @description: 房间详情
  * @LastEditors: hua
- * @LastEditTime: 2020-11-13 21:37:42
+ * @LastEditTime: 2020-11-14 19:35:28
  -->
 <template>
     <div class="room_details" >
@@ -202,7 +202,7 @@ export default {
                         type: "success",
                         duration: 5 * 1000,
                     });
-                    this.$router.push({name:'Home'})
+                    this.handleClose();
                 }) 
             });
         },
@@ -219,12 +219,16 @@ export default {
                             type: "success",
                             duration: 5 * 1000,
                         });
+                        this.handleClose();
                     })
                 }
             });
         },
         handleAddCustomer(){
             this.$router.push({ name: "groupChat",query:{ room_uuid: this.currentRoomUuid,room_name:this.currentRoomName} });
+        },
+        handleClose(){
+            this.$emit("handleClose")
         }
     },
     destroyed(){

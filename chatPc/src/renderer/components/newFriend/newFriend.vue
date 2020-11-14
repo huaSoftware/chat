@@ -3,7 +3,7 @@
  * @Date: 2019-02-16 19:35:43
  * @description: 新的朋友列表
  * @LastEditors: hua
- * @LastEditTime: 2020-11-12 21:37:48
+ * @LastEditTime: 2020-11-14 19:58:38
  -->
 <template>
   <div class="newFriend_content">
@@ -49,6 +49,7 @@
 </template>
 
 <script type="text/babel">
+import { mapGetters, mapMutations } from "vuex";
 import vImg from "@/components/v-img";
 import { getAddressBookBeg, delAddressBookBeg } from "@/utils/indexedDB";
 import { MessageBox } from "element-ui";
@@ -70,6 +71,9 @@ export default {
     this.init();
   },
   methods: {
+   ...mapMutations({
+      updateRoomList: "updateRoomList",
+    }),
     init() {
       getAddressBookBeg().then(res => {
         let newFriendAlertNumber = 0;
@@ -106,6 +110,13 @@ export default {
               type: "warning",
             }).then(() => {
               setTimeout(()=>{
+                function compare(property){ 
+                  return function(a,b){ 
+                    var value1 = a[property]; 
+                    var value2 = b[property]; 
+                    return !(value1 - value2); 
+                  } 
+                }
                 roomGet().then(res => {
                   console.log("222222",res)
                   let localRoomList = [];
