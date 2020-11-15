@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-14 19:49:22
+ * @LastEditTime: 2020-11-15 14:08:42
  -->
 <template>
   <div id="msg_empty">
@@ -35,6 +35,10 @@
     <el-dialog title="详情" :visible.sync="detailsVisible">
       <groupRoomDetails @handleClose="handleDetailsClose" style="height: 300px;overflow: auto;" v-if="detailsVisible"></groupRoomDetails>
     </el-dialog>
+    <!-- 用户 -->
+    <el-dialog title="用户" :visible.sync="personInfoVisible">
+      <personInfo :userInfo="chooseUserInfo" :localRoomId="currentRoomUuid" @handleClose="handlePersonInfoClose" style="height: 300px;overflow: auto;" v-if="personInfoVisible"></personInfo>
+    </el-dialog>
     <!-- 内容 -->
     <mescroll-vue :up="mescrollUp" :down="mescrollDown" @init="mescrollInit" @touchstart="closeDefIconsShow()">
       <div class="mscroll-container">
@@ -63,7 +67,7 @@
                 >
                   <i name="error"></i>
                 </span>
-                <vImg :imgUrl="key.head_img" class="img" />
+                <vImg @click.native="handlePersonInfo(key)" :imgUrl="key.head_img" class="img" />
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
@@ -108,7 +112,7 @@
             </div>
             <div class="chat-item" v-else>
               <div class="otherchat">
-                <vImg class="img" :imgUrl="key.head_img" />
+                <vImg @click.native="handlePersonInfo(key)" class="img" :imgUrl="key.head_img" />
                 <div class="nt">
                   <span v-html="key.name"></span>
                 </div>
@@ -185,6 +189,7 @@ import inputWrapper from "./components/input-wrapper/input-wrapper";
 import icons from "./components/icons/icons";
 import def from "./components/def/def";
 import cropperBox from "./components/cropperBox/cropperBox";
+import personInfo from "./components/personInfo/personInfo";
 import msgList from "./msgList";
 import MescrollVue from "mescroll.js/mescroll.vue";
 import { uploadFile,uploadBase64 } from "@/socketioApi/common";
@@ -209,7 +214,8 @@ export default {
     vEmpty,
     inputWrapper,
     msgList,
-    groupRoomDetails
+    groupRoomDetails,
+    personInfo
   },
   computed: {
     ...mapGetters([
@@ -236,9 +242,11 @@ export default {
   data() {
     return {
       menuTop:0,
+      personInfoVisible:false,
       detailsVisible:false,
       msgListVisible:false,
       menuVisible:false,
+      chooseUserInfo:{},
       currentKey:{},
       uuidVal: "",
       scroll: "",
@@ -920,6 +928,14 @@ export default {
     handleDetailsClose(){
       this.$emit('handleInIt');
       this.detailsVisible = false;
+    },
+    handlePersonInfoClose(){
+      this.personInfoVisible = false;
+    },
+    handlePersonInfo(item){
+      console.log(item)
+      this.chooseUserInfo = item;
+      this.personInfoVisible = true;
     }
   },
   watch: {
