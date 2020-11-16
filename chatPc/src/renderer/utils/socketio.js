@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: socketio工具类
  * @LastEditors: hua
- * @LastEditTime: 2020-10-31 13:36:26
+ * @LastEditTime: 2020-11-16 20:07:27
  */
 
 import store from '../store'

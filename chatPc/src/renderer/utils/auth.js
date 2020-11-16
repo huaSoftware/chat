@@ -3,13 +3,14 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-10-28 21:36:13
+ * @LastEditTime: 2020-11-16 20:52:41
  */
 /* 权限函数工具库
  * author hua
  * 2018,3,29
  */
 import store from '../store'
+import { addLocalRoomMsg } from "@/utils/indexedDB"
 
 /* 获取token
  * params:tokenName;令牌名
@@ -58,3 +59,36 @@ export function clearData(){
   store.commit('user/SET_TOKEN', '')
 }
 
+/**
+ * 更新房间列表时，处理房间信息
+ * params roomList
+ * return unread_number
+ */
+export function handleRoomMsg(roomList){
+  let unread_number = 0
+  roomList.forEach((item)=>{
+    if(item.room === null){
+        return;
+    }
+    if(item.room.last_msg !=''){
+      let data = JSON.parse(item.room.last_msg)
+      if(item.save_action === store.getters.LOCAL && data['type'] !== store.getters.CHAT_VIDEO){
+        let msgData = {
+            msg:data['msg'],
+            created_at:data.created_at,
+            head_img:data['head_img'],
+            name:data['name'],
+            send_status:store.getters.SUCCESS,
+            type:data['type'],
+            user_id:data['user_id'],
+            room_uuid:item.room_uuid
+        }
+        addLocalRoomMsg(msgData)
+      }
+      if(item.is_alert){
+        unread_number = unread_number+item.unread_number
+      }
+    }
+  })
+  return unread_number;
+}

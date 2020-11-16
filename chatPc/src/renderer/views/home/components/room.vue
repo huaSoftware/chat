@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-14 19:49:10
+ * @LastEditTime: 2020-11-16 19:46:05
  -->
 <template>
   <div id="msg_empty">
@@ -855,7 +855,7 @@ export default {
       let msgList = JSON.parse(JSON.stringify(this.msgList));
       data["status"] = true;
       msgList[index]["msg"] = JSON.stringify(data);
-      this.$store.dispatch("updateMsgList", msgList);
+      this.updateMsgList(msgList);
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(data.url).then(function() {
@@ -866,7 +866,7 @@ export default {
         let msgList = JSON.parse(JSON.stringify(this.msgList));
         data["status"] = false;
         msgList[index]["msg"] = JSON.stringify(data);
-        this.$store.dispatch("updateMsgList", msgList);
+        this.updateMsgList(msgList);
       });
     },
     recReqImgData(value) {

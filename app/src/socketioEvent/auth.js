@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-11-12 21:41:13
+ * @LastEditTime: 2020-11-16 21:40:27
  */
 import store from "../store";
 import router from "../router";
@@ -38,7 +38,7 @@ function compare(property){
   return function(a,b){ 
     var value1 = a[property]; 
     var value2 = b[property]; 
-    return !(value1 - value2); 
+    return -(value1 - value2); 
   } 
 }
 /*
@@ -360,7 +360,7 @@ export default function setupAuthEvent() {
           }
           localRoomList = localRoomList.concat(data);
           localRoomList.sort(compare('updated_at'));  
-          store.dispatch("updateGroupRoomList", data);
+          store.dispatch("updateGroupRoomList", localRoomList);
         });
       }
     });

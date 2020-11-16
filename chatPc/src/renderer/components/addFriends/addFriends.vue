@@ -3,7 +3,7 @@
  * @Date: 2020-09-30 20:46:21
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-14 20:00:37
+ * @LastEditTime: 2020-11-16 21:38:28
 -->
 <template>
   <div class="container">
@@ -106,9 +106,9 @@ export default {
       setTimeout(()=>{
         function compare(property){ 
           return function(a,b){ 
-            var value1 = a[property]; 
-            var value2 = b[property]; 
-            return !(value1 - value2); 
+            var value1 = a['room'][property]; 
+            var value2 = b['room'][property]; 
+            return -(value1 - value2); 
           } 
         }
         roomGet().then(res => {

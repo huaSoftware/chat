@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-14 19:48:43
+ * @LastEditTime: 2020-11-16 21:38:37
  -->
 <template>
   <div class="content">
@@ -186,7 +186,8 @@ export default {
       "IMG",
       "FILE",
       "CHAT_NOTIFY",
-      "roomStatus"
+      "roomStatus",
+      "CHAT_VIDEO",
     ])
   },
   methods: {
@@ -204,9 +205,9 @@ export default {
       }
       function compare(property){ 
         return function(a,b){ 
-          var value1 = a[property]; 
-          var value2 = b[property]; 
-          return !(value1 - value2); 
+          var value1 = a['room'][property]; 
+          var value2 = b['room'][property]; 
+          return -(value1 - value2); 
         } 
       }
       setTimeout(()=>{
@@ -224,7 +225,7 @@ export default {
               localRoomList.sort(compare('updated_at'))
               //this.updateGroupRoomList(resRoomRelation.data.list);
             }
-            console.log(localRoomList)
+            console.log(1212121,localRoomList)
             this.updateRoomList(localRoomList);
             this.loading = false;
             if(this.$route.query.hasOwnProperty("id")){
@@ -264,6 +265,7 @@ export default {
     formatLastMsg(last_msg) {
       try {
         let data = JSON.parse(last_msg);
+        console.log(111111111,data)
         if (data["type"] == this.IMG) {
           return "[图片]";
         }
@@ -279,9 +281,12 @@ export default {
         if (data["type"] == this.CHAT_NOTIFY) {
           return JSON.parse(data["msg"])["msg"];
         }
-        return data["msg"]+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+         if (data["type"] == this.CHAT_VIDEO) {
+          return "";
+        }
+        return data["msg"];
       } catch (e) {
-        return last_msg+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        return last_msg;
       }
     }
   },

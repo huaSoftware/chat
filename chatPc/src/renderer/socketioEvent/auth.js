@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-11-12 21:41:08
+ * @LastEditTime: 2020-11-16 21:37:52
  */
 import store from "../store";
 import router from "../router";
@@ -36,9 +36,9 @@ import utils from '@/utils/utils'
 
 function compare(property){ 
   return function(a,b){ 
-    var value1 = a[property]; 
-    var value2 = b[property]; 
-    return !(value1 - value2); 
+    var value1 = a['room'][property]; 
+    var value2 = b['room'][property]; 
+    return -(value1 - value2); 
   } 
 }
 /*
@@ -147,7 +147,7 @@ export default function setupAuthEvent() {
     response(data).then((res) => {
       let data = res.data;
       //逻辑处理,存放indexdDB,存放一份实时的在vuex
-      console.log("发送消息监听回复", data);
+      console.log("发送消息监听回复", JSON.stringify(data));
       let index = modifyMsgStatus(data, store.getters.SUCCESS);
       let msgList = JSON.parse(JSON.stringify(store.getters.msgList));
       //这边会有发送后接收不到的问题
@@ -162,7 +162,9 @@ export default function setupAuthEvent() {
           addLocalRoomMsg(msgList[index]);
         }
       } else {
-        msgList = msgList.concat(data);
+        if(data['type'] !== store.getters.CHAT_VIDEO){
+          msgList = msgList.concat(data);
+        }
       }
       store.dispatch("updateMsgList", msgList);
       let reqData = {
@@ -171,7 +173,7 @@ export default function setupAuthEvent() {
         user_id: data["user_id"],
         send_status: store.getters.SUCCESS,
       };
-      if (store.getters.currentRoomSaveAction == store.getters.LOCAL) {
+      if (store.getters.currentRoomSaveAction == store.getters.LOCAL && data['type'] !== store.getters.CHAT_VIDEO) {
         updateLocalRoomMsg(reqData);
       } else if (store.getters.currentRoomSaveAction == store.getters.CLOUD) {
         updateCloudRoomMsg(reqData);
@@ -363,7 +365,8 @@ export default function setupAuthEvent() {
           }
           localRoomList = localRoomList.concat(data);
           localRoomList.sort(compare('updated_at'));  
-          store.dispatch("updateGroupRoomList", data);
+          console.log(1212121,localRoomList)
+          store.dispatch("updateRoomList", localRoomList);
         });
       }
     });

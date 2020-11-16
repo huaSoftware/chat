@@ -3,11 +3,11 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 房间数据管理
  * @LastEditors: hua
- * @LastEditTime: 2020-11-03 21:52:21
+ * @LastEditTime: 2020-11-16 20:56:42
  */
 
 import { addLocalRoomMsg } from "@/utils/indexedDB"
-
+import {handleRoomMsg} from "@/utils/auth";
 export default {
     state: {
         currentRoomUuid: '',//当前房间号
@@ -111,91 +111,12 @@ export default {
         updateRoomList(state, roomList){
             state.roomList = roomList
             //非云端状态下把最后一条聊天记录保存到本地
-            let unread_number = 0
-            roomList.forEach((item)=>{
-                if(item.room === null){
-                    return;
-                }
-                if(item.room.last_msg !=''){
-                    let data = JSON.parse(item.room.last_msg)
-                    if(item.save_action == 0){
-                        let msgData = {
-                            msg:data['msg'],
-                            created_at:data.created_at,
-                            head_img:data['head_img'],
-                            name:data['name'],
-                            send_status:1,
-                            type:data['type'],
-                            user_id:data['user_id'],
-                            room_uuid:item.room_uuid
-                        }
-                        addLocalRoomMsg(msgData)
-                    }/* else if(item.save_action == 1){
-                        let msgData = {
-                            msg:data['msg'],
-                            created_at:item.room.updated_at,
-                            head_img:data['head_img'],
-                            name:data['name'],
-                            send_status:1,
-                            type:data['type'],
-                            user_id:data['user_id'],
-                            room_uuid:item.room_uuid
-                        }
-                        console.log(msgData)
-                        addCloudRoomMsg(msgData)
-                    } */
-                    if(item.is_alert){
-                        unread_number = unread_number+item.unread_number
-                    }
-                }
-            })
-            state.msgAlertNumber = unread_number
+            state.msgAlertNumber = handleRoomMsg(roomList);
         },
         updateGroupRoomList(state, groupRoomList){
             state.groupRoomList = groupRoomList
             //非云端状态下把最后一条聊天记录保存到本地
-            let unread_number = 0
-            console.log("342342",groupRoomList)
-            groupRoomList.forEach((item)=>{
-                if(item.room === null){
-                    return;
-                }
-                if(item.room.last_msg !=''){
-                    console.log(item.room.last_msg)
-                    let data = JSON.parse(item.room.last_msg)
-                    if(item.save_action == 0){
-                        let msgData = {
-                            msg:data['msg'],
-                            created_at:data.created_at,
-                            head_img:data.head_img,
-                            name:data.name,
-                            send_status:1,
-                            type:data['type'],
-                            user_id:data.user_id,
-                            room_uuid:item.room_uuid
-                        }
-                        addLocalRoomMsg(msgData)      
-                    }
-                    
-                    /* else if(item.save_action == 1){
-                        let msgData = {
-                            msg:data['msg'],
-                            created_at:item.created_at,
-                            head_img:item.users.head_img,
-                            name:item.users.nick_name,
-                            send_status:1,
-                            type:data['type'],
-                            user_id:item.users.id,
-                            room_uuid:item.room_uuid
-                        }
-                        addCloudRoomMsg(msgData)
-                    } */
-                    if(item.is_alert){
-                        unread_number = unread_number+item.unread_number
-                    }
-                }
-            })
-            state.groupMsgAlertNumber = unread_number
+            state.groupMsgAlertNumber = handleRoomMsg(groupRoomList);
         },
         updateCurrentRoomUuid(state, currentRoomUuid){
             state.currentRoomUuid = currentRoomUuid

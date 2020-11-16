@@ -3,7 +3,7 @@
  * @Date: 2019-09-03 17:07:10
  * @description: 发送消息接口
  * @LastEditors: hua
- * @LastEditTime: 2020-10-22 21:09:40
+ * @LastEditTime: 2020-11-16 20:05:41
  */
 import {send} from '@/utils/socketio'
 import storage from "@/utils/localstorage"
@@ -48,7 +48,8 @@ export function chatSend(data){
     }
     if(data['data']['save_action'] == store.getters.LOCAL && data['data']['type'] !== store.getters.CHAT_VIDEO){
         addLocalRoomMsg(msgInfo)
-    }/* else if(data['data']['save_action'] == 1){
+    }
+    /* else if(data['data']['save_action'] == 1){
         //delete data.data.save_action;
         delete formatMsgInfo.save_action;
         console.log(msgInfo)

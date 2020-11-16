@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-15 14:08:42
+ * @LastEditTime: 2020-11-16 21:32:03
  -->
 <template>
   <div id="msg_empty">
@@ -305,14 +305,14 @@ export default {
     if (Vue.prototype.$preview.self) {
       Vue.prototype.$preview.self.close();
     }
-    chatSend({
-      data: {
-        msg: JSON.stringify({ type: "end" }),
-        room_uuid: this.currentRoomUuid,
-        type: this.CHAT_VIDEO,
-        save_action: this.LOCAL
-      }
-    });
+    // chatSend({
+    //   data: {
+    //     msg: JSON.stringify({ type: "end" }),
+    //     room_uuid: this.currentRoomUuid,
+    //     type: this.CHAT_VIDEO,
+    //     save_action: this.LOCAL
+    //   }
+    // });
     stopVideo();
     hangUp();
     send("leave", { room_uuid: this.currentRoomUuid });
@@ -456,7 +456,7 @@ export default {
           this.mescrollDown.page.num,
           this.mescrollDown.page.size
         ).then(res => {
-          let msgList = JSON.parse(JSON.stringify(this.msgList));
+          let msgList = [];
           msgList = res.list.concat(msgList);
           this.updateMsgList(msgList);
           this.$nextTick(() => {
@@ -478,7 +478,7 @@ export default {
           page_no: this.mescrollDown.page.num,
           per_page: this.mescrollDown.page.size
         }).then(res => {
-          let msgList = JSON.parse(JSON.stringify(this.msgList));
+          let msgList = [];
           let rawList = res.data.list;
           rawList.map(item => {
             item["msg"] = item["formatMsg"];
@@ -863,7 +863,7 @@ export default {
       let msgList = JSON.parse(JSON.stringify(this.msgList));
       data["status"] = true;
       msgList[index]["msg"] = JSON.stringify(data);
-      this.$store.dispatch("updateMsgList", msgList);
+      this.updateMsgList(msgList);
       var BenzAMRRecorder = require("benz-amr-recorder");
       var amr = new BenzAMRRecorder();
       amr.initWithUrl(data.url).then(function() {
@@ -874,7 +874,7 @@ export default {
         let msgList = JSON.parse(JSON.stringify(this.msgList));
         data["status"] = false;
         msgList[index]["msg"] = JSON.stringify(data);
-        this.$store.dispatch("updateMsgList", msgList);
+        this.updateMsgList(msgList);
       });
     },
     recReqImgData(value) {

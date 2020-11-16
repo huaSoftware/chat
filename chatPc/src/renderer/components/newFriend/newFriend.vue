@@ -112,9 +112,9 @@ export default {
               setTimeout(()=>{
                 function compare(property){ 
                   return function(a,b){ 
-                    var value1 = a[property]; 
-                    var value2 = b[property]; 
-                    return !(value1 - value2); 
+                    var value1 = a['room'][property]; 
+                    var value2 = b['room'][property]; 
+                    return -(value1 - value2); 
                   } 
                 }
                 roomGet().then(res => {
