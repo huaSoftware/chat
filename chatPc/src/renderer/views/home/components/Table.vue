@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-16 21:38:37
+ * @LastEditTime: 2020-11-17 19:51:40
  -->
 <template>
   <div class="content">
@@ -132,8 +132,8 @@
         </el-menu>
       </el-col>
       <el-col :span="16" style="height: 100%;">
-        <room v-if="roomStatus === 0 || roomStatus === 3" @handleInIt="init"></room>
-        <groupRoom v-if="roomStatus === 1" @handleInIt="init"></groupRoom>
+        <room v-if="roomStatus === 0 || roomStatus === 3" @handleInIt="init" @sendMsg="activeIndex=String('0')"></room>
+        <groupRoom v-if="roomStatus === 1" @handleInIt="init" @sendMsg="activeIndex=String('0')"></groupRoom>
       </el-col>
     </el-row>
   </div>
@@ -222,6 +222,7 @@ export default {
           userRoomRelationGet().then(resRoomRelation => {
             if (resRoomRelation.data.list != null) {
               localRoomList = localRoomList.concat(resRoomRelation.data.list);
+              console.log('localRoomList',localRoomList);
               localRoomList.sort(compare('updated_at'))
               //this.updateGroupRoomList(resRoomRelation.data.list);
             }

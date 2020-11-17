@@ -3,7 +3,7 @@
  * @Date: 2019-02-26 09:08:43
  * @description: 聊天室核心页面
  * @LastEditors: hua
- * @LastEditTime: 2020-11-16 21:32:03
+ * @LastEditTime: 2020-11-17 19:52:03
  -->
 <template>
   <div id="msg_empty">
@@ -632,6 +632,7 @@ export default {
       document.getElementById("edit").innerHTML = "";
       this.content = "";
       this.closeDefIconsShow();
+      this.$emit("sendMsg");
     },
     reSendMsg(key) {
       reChatSend({
@@ -644,6 +645,7 @@ export default {
           save_action: this.currentRoomSaveAction
         }
       });
+      this.$emit("sendMsg");
     },
     handleContent(value) {
       this.content = value;

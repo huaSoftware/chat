@@ -3,10 +3,14 @@
  * @Date: 2020-04-18 18:43:22
  * @description: 
  * @LastEditors: hua
- * @LastEditTime: 2020-11-05 22:15:11
+ * @LastEditTime: 2020-11-17 20:30:39
  */
-import { app, BrowserWindow, Menu, ipcMain, screen } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, screen, Tray } from 'electron'
 
+const path = require('path');
+
+//托盘对象
+var appTray = null;
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -41,6 +45,42 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  if(process.platform === 'win32'){
+    //设置托盘图标和菜单
+    var trayMenuTemplate = [
+      {
+        label: '打开',
+        click: () => {
+          mainWindow.show();
+        }
+      },
+      {
+        label: '退出',
+        click: () => {
+          app.quit();
+          app.quit();//因为程序设定关闭为最小化，所以调用两次关闭，防止最大化时一次不能关闭的情况
+        }
+      }
+    ];
+    //系统托盘图标
+    appTray = process.env.NODE_ENV === 'development' ?new Tray('build/icons/icon.ico'):new Tray(`${__dirname}/static/img/icon.ico`);
+    //图标的上下文菜单
+    const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
+    //设置此托盘图标的悬停提示内容
+    appTray.setToolTip('我的托盘图标');
+    //设置此图标的上下文菜单
+    appTray.setContextMenu(contextMenu);
+    //单击右下角小图标显示应用左键
+    appTray.on('click',function(){
+      mainWindow.show();
+    })
+    //右键
+    appTray.on('right-click', () => {
+      appTray.popUpContextMenu(trayMenuTemplate);
+    });
+  };
+  
 }
 
 app.on('ready', createWindow)
