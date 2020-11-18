@@ -3,7 +3,7 @@
  * @Date: 2019-02-01 14:08:47
  * @description: 首页
  * @LastEditors: hua
- * @LastEditTime: 2020-11-12 21:38:18
+ * @LastEditTime: 2020-11-18 20:31:08
  -->
 <template>
   <div class="content">
@@ -59,7 +59,7 @@
       </a>
     </article>
     <!-- 群聊 -->
-    <article class="yd-list yd-list-theme4">
+    <!-- <article class="yd-list yd-list-theme4">
       <a
         @click="handleJoinGroupRoom(item)"
         href="javascript:;"
@@ -86,7 +86,7 @@
           </div>
         </div>
       </a>
-    </article>
+    </article> -->
     <!-- <vImg class="loading" :imgUrl="require('@/assets/loading-bars.svg')" v-if="loading" />-->
     <!-- 参数空时页面 -->
     <vEmpty v-if="roomList.length==0 && loading==false && groupRoomList.length==0"></vEmpty>
@@ -137,6 +137,7 @@ export default {
       "TEXT",
       "IMG",
       "FILE",
+      "GROUP",
       "CHAT_NOTIFY"
     ])
   },
@@ -189,8 +190,18 @@ export default {
       })
     },
     handleJoinRoom(item) {
+      let name = "";
+      if(item.type === 1){
+        name = item.adminUsers.nick_name;
+      }else{
+        if(item.room.type === this.GROUP){
+          name = item.room.name;
+        }else{
+          name = item.users.nick_name;
+        }
+      }
       joinChatSend({
-        name: item.type == 1 ? item.adminUsers.nick_name : item.users.nick_name,
+        name: name,
         room_uuid: item.room_uuid,
         type: item.room.type,
         save_action: item.save_action

@@ -3,7 +3,7 @@
  * @Date: 2019-12-30 20:23:23
  * @description: 有权限socketio监听事件
  * @LastEditors: hua
- * @LastEditTime: 2020-11-16 21:40:27
+ * @LastEditTime: 2020-11-18 20:19:54
  */
 import store from "../store";
 import router from "../router";
@@ -360,7 +360,7 @@ export default function setupAuthEvent() {
           }
           localRoomList = localRoomList.concat(data);
           localRoomList.sort(compare('updated_at'));  
-          store.dispatch("updateGroupRoomList", localRoomList);
+          store.dispatch("updateRoomList", localRoomList);
         });
       }
     });
